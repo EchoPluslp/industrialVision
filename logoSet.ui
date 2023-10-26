@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>logoSet</class>
+ <widget class="QWidget" name="logoSet">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>657</width>
+    <height>251</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>657</width>
+    <height>251</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>657</width>
+    <height>251</height>
+   </size>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>20</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>日志设置</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,3">
+     <item>
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>20</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">/* 期货 1 */
+
+QPushButton::hover 
+{
+	background-color: #1450C7;
+}
+position: absolute;
+left: 432px;
+top: 68px;
+width: 112px;
+height: 60px;
+opacity: 1;
+	
+background: #285790;
+	
+color: rgb(255, 255, 255);
+box-sizing: border-box;
+border-width: 0px 1px 0px 0px;
+border-style: solid;
+border-color: #111117;
+	</string>
+       </property>
+       <property name="text">
+        <string>设置日志路径</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEdit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+        </font>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="2,3">
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>251</width>
+         <height>119</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>316</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>20</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">
+QPushButton::hover 
+{
+	background-color: #1450C7;
+}
+
+position: absolute;
+border-radius: 4px;
+opacity: 1;
+	
+/* 自动布局 */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 5px 12px;
+		
+color: rgb(255, 255, 255);
+background: #285790;
+	</string>
+       </property>
+       <property name="text">
+        <string>读取日志</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>logoSet</receiver>
+   <slot>logSet_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>589</x>
+     <y>50</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>630</x>
+     <y>17</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>logoSet</receiver>
+   <slot>readLog_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>287</x>
+     <y>96</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>423</x>
+     <y>142</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>logSet_click()</slot>
+  <slot>readLog_click()</slot>
+ </slots>
+</ui>

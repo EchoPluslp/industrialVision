@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E2D00FBF-A7BD-441F-A2D7-4FA55BDEB097}</ProjectGuid>
+    <Keyword>QtVS_v302</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
+    <Message Importance="High" Text="QtMsBuild: could not locate qt.targets, qt.props; project may not build correctly." />
+  </Target>
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\Users\qazws\Downloads\Compressed\opencv440\opencv440\build\include;C:\Users\qazws\Downloads\Compressed\opencv440\opencv440\build\include\opencv2;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\mvs\Development\Libraries\win64;C:\Users\qazws\Downloads\Compressed\opencv440\opencv440\build\x64\vc16\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>C:\Users\qazws\Downloads\Compressed\opencv440\opencv440\build\include\opencv2;C:\Users\qazws\Downloads\Compressed\opencv440\opencv440\build\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\qazws\Downloads\Compressed\opencv440\opencv440\build\x64\vc16\lib;F:\mvs\Development\Libraries\win64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ImportGroup Condition="Exists('$(QtMsBuild)\qt_defaults.props')">
+    <Import Project="$(QtMsBuild)\qt_defaults.props" />
+  </ImportGroup>
+  <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <QtInstall>5.12.3</QtInstall>
+    <QtModules>charts;core;gui;websockets;widgets</QtModules>
+  </PropertyGroup>
+  <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <QtInstall>5.12.3</QtInstall>
+    <QtModules>charts;core;gui;websockets;widgets</QtModules>
+  </PropertyGroup>
+  <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
+    <Import Project="$(QtMsBuild)\qt.props" />
+  </ImportGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Disabled</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <AdditionalIncludeDirectories>$(QTDIR)\include\QtXml;E:\CPP-WORK\industrialVision - 画图\industrialVision\x64\Debug\uic;F:\MVS\Development\Includes;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>MvCameraControl.lib;opencv_world440d.lib;Qt5Xmld.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <AdditionalIncludeDirectories>.\;F:\MVS\Development\Includes;$(QTDIR)\include\QtXml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>MvCameraControl.lib;opencv_world440.lib;Qt5Xml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="algorithmLibrary.cpp" />
+    <ClCompile Include="area.cpp" />
+    <ClCompile Include="areacontroller.cpp" />
+    <ClCompile Include="camerathread.cpp" />
+    <ClCompile Include="circlepen.cpp" />
+    <ClCompile Include="connectItemInfo.cpp" />
+    <ClCompile Include="connectServer.cpp" />
+    <ClCompile Include="createModel.cpp" />
+    <ClCompile Include="curve.cpp" />
+    <ClCompile Include="drawfinisheddialog.cpp" />
+    <ClCompile Include="ellipse.cpp" />
+    <ClCompile Include="filecontroller.cpp" />
+    <ClCompile Include="filelistdockwidget.cpp" />
+    <ClCompile Include="globalvar.cpp" />
+    <ClCompile Include="graphicsview.cpp" />
+    <ClCompile Include="industrialVision.cpp" />
+    <ClCompile Include="label.cpp" />
+    <ClCompile Include="labelcontroller.cpp" />
+    <ClCompile Include="labelsdockwidget.cpp" />
+    <ClCompile Include="labeltypedockwidget.cpp" />
+    <ClCompile Include="listwidget.cpp" />
+    <ClCompile Include="login.cpp" />
+    <ClCompile Include="logoSet.cpp" />
+    <ClCompile Include="magnifyingglass.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="menubar.cpp" />
+    <ClCompile Include="MvCamera.cpp" />
+    <ClCompile Include="myactions.cpp" />
+    <ClCompile Include="mycommand.cpp" />
+    <ClCompile Include="myglwidget.cpp" />
+    <ClCompile Include="mygraphicsitems.cpp" />
+    <ClCompile Include="mygraphicsview.cpp" />
+    <ClCompile Include="paintscene.cpp" />
+    <ClCompile Include="paramsitem.cpp" />
+    <ClCompile Include="passwordSet.cpp" />
+    <ClCompile Include="polygon.cpp" />
+    <QtMoc Include="processingthread.h" />
+    <ClCompile Include="processingthread.cpp" />
+    <ClCompile Include="rect.cpp" />
+    <ClCompile Include="Server.cpp" />
+    <ClCompile Include="shape.cpp" />
+    <ClCompile Include="smallMainWindow.cpp" />
+    <ClCompile Include="squarepen.cpp" />
+    <ClCompile Include="statusbar.cpp" />
+    <ClCompile Include="tablewidget.cpp" />
+    <ClCompile Include="toolbar.cpp" />
+    <ClCompile Include="transmitsignals.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="connectServer.ui" />
+    <QtUic Include="createModel.ui" />
+    <QtUic Include="drawfinisheddialog.ui" />
+    <QtUic Include="industrialVision.ui" />
+    <QtUic Include="labelAttr.ui" />
+    <QtUic Include="login.ui" />
+    <QtUic Include="logoSet.ui" />
+    <QtUic Include="passwordSet.ui" />
+    <QtUic Include="smallMainWindow.ui" />
+    <QtUic Include="statusbar.ui" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="industrialVision.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="industrialVision.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="algorithmLibrary.h" />
+    <QtMoc Include="CameraThread.h" />
+    <QtMoc Include="graphicsview.h" />
+    <ClInclude Include="globalvar.h" />
+    <QtMoc Include="myglwidget.h" />
+    <QtMoc Include="logoSet.h" />
+    <ClInclude Include="Mstruct.h" />
+    <QtMoc Include="passwordSet.h" />
+    <ClInclude Include="point.h" />
+    <ClInclude Include="rect.h" />
+    <QtMoc Include="Server.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="resource1.h" />
+    <ClInclude Include="shape.h" />
+    <QtMoc Include="smallMainWindow.h" />
+    <ClInclude Include="squarepen.h" />
+    <QtMoc Include="statusbar.h" />
+    <QtMoc Include="toolbar.h" />
+    <QtMoc Include="TransmitSignals.h" />
+    <QtMoc Include="connectServer.h" />
+    <QtMoc Include="connectItemInfo.h" />
+    <QtMoc Include="tablewidget.h" />
+    <QtMoc Include="listwidget.h" />
+    <QtMoc Include="login.h" />
+    <QtMoc Include="industrialVision.h" />
+    <QtMoc Include="createModel.h" />
+    <QtMoc Include="menubar.h" />
+    <QtMoc Include="myactions.h" />
+    <QtMoc Include="paintscene.h" />
+    <QtMoc Include="drawfinisheddialog.h" />
+    <QtMoc Include="filelistdockwidget.h" />
+    <QtMoc Include="labelsdockwidget.h" />
+    <QtMoc Include="labeltypedockwidget.h" />
+    <QtMoc Include="magnifyingglass.h" />
+    <ClInclude Include="area.h" />
+    <QtMoc Include="areacontroller.h" />
+    <ClInclude Include="circlepen.h" />
+    <ClInclude Include="curve.h" />
+    <ClInclude Include="ellipse.h" />
+    <QtMoc Include="filecontroller.h" />
+    <ClInclude Include="label.h" />
+    <QtMoc Include="labelcontroller.h" />
+    <ClInclude Include="mycommand.h" />
+    <ClInclude Include="mygraphicsitems.h" />
+    <QtMoc Include="mygraphicsview.h" />
+    <ClInclude Include="paramsitem.h" />
+    <ClInclude Include="polygon.h" />
+    <ClInclude Include="preHeader.h" />
+    <ClInclude Include="MvCamera.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
+    <Import Project="$(QtMsBuild)\qt.targets" />
+  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LabelController>
+    <Type IdCount="1" Type="1.搜索区域">
+        <Color R="190" G="35" B="41"/>
+        <Label Id="1" Type="1.搜索区域">
+            <Color R="190" G="35" B="41"/>
+            <Area>
+                <ImageShape LabelType="1" ImageName="Image_w4000_h3000_fn1696840375.bmp">
+                    <Shape WidthOfImage="1490" Type="1" HeightOfImage="1118">
+                        <Item X="972" Width="389" Height="447" Y="393"/>
+                    </Shape>
+                </ImageShape>
+            </Area>
+        </Label>
+    </Type>
+    <Type IdCount="1" Type="2.匹配模板">
+        <Color R="108" G="225" B="4"/>
+        <Label Id="1" Type="2.匹配模板">
+            <Color R="108" G="225" B="4"/>
+            <Area>
+                <ImageShape LabelType="1" ImageName="Image_w4000_h3000_fn1696840375.bmp">
+                    <Shape WidthOfImage="1490" Type="1" HeightOfImage="1118">
+                        <Item X="1036" Width="275" Height="306" Y="456"/>
+                    </Shape>
+                </ImageShape>
+            </Area>
+        </Label>
+    </Type>
+    <Type IdCount="1" Type="3.输出点">
+        <Color R="82" G="174" B="22"/>
+        <Label Id="1" Type="3.输出点">
+            <Color R="82" G="174" B="22"/>
+            <Area>
+                <ImageShape LabelType="5" ImageName="Image_w4000_h3000_fn1696840375.bmp">
+                    <Shape WidthOfImage="1490" Type="5" HeightOfImage="1118">
+                        <Item>
+                            <Point X="742" Y="420" Index="0"/>
+                            <Point X="741" Y="424" Index="1"/>
+                            <Point X="740" Y="427" Index="2"/>
+                            <Point X="738" Y="431" Index="3"/>
+                            <Point X="736" Y="434" Index="4"/>
+                            <Point X="733" Y="436" Index="5"/>
+                            <Point X="729" Y="438" Index="6"/>
+                            <Point X="726" Y="439" Index="7"/>
+                            <Point X="722" Y="440" Index="8"/>
+                            <Point X="717" Y="439" Index="9"/>
+                            <Point X="714" Y="438" Index="10"/>
+                            <Point X="710" Y="436" Index="11"/>
+                            <Point X="707" Y="434" Index="12"/>
+                            <Point X="705" Y="431" Index="13"/>
+                            <Point X="703" Y="427" Index="14"/>
+                            <Point X="702" Y="424" Index="15"/>
+                            <Point X="702" Y="420" Index="16"/>
+                            <Point X="702" Y="415" Index="17"/>
+                            <Point X="703" Y="412" Index="18"/>
+                            <Point X="705" Y="408" Index="19"/>
+                            <Point X="707" Y="405" Index="20"/>
+                            <Point X="710" Y="403" Index="21"/>
+                            <Point X="714" Y="401" Index="22"/>
+                            <Point X="717" Y="400" Index="23"/>
+                            <Point X="722" Y="400" Index="24"/>
+                            <Point X="726" Y="400" Index="25"/>
+                            <Point X="729" Y="401" Index="26"/>
+                            <Point X="733" Y="403" Index="27"/>
+                            <Point X="736" Y="405" Index="28"/>
+                            <Point X="738" Y="408" Index="29"/>
+                            <Point X="740" Y="412" Index="30"/>
+                            <Point X="741" Y="415" Index="31"/>
+                            <Point X="742" Y="420" Index="32"/>
+                        </Item>
+                    </Shape>
+                </ImageShape>
+            </Area>
+        </Label>
+    </Type>
+</LabelController>

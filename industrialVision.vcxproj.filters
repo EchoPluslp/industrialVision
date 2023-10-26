@@ -1,0 +1,400 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Header Files\handelListWidget">
+      <UniqueIdentifier>{497407a3-fc76-4fd4-b6cd-75b36abb6655}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\handelListWidget">
+      <UniqueIdentifier>{ca74e55d-601f-45bc-befd-ea8bf729793a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Form Files\connect">
+      <UniqueIdentifier>{e2ea994f-6c83-4db2-8e34-43c1cc1132db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\connect">
+      <UniqueIdentifier>{ba5a562f-a8ce-4fc7-a1c3-16bb8286e348}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\connect">
+      <UniqueIdentifier>{b9b5739b-8a0c-4f40-9f6c-313d9e3cccc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Components">
+      <UniqueIdentifier>{d90be461-cd95-4226-97e0-9aca5f551728}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\creataModel">
+      <UniqueIdentifier>{9f1b0a6c-8301-4f55-a854-539550d0a343}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\creataModel">
+      <UniqueIdentifier>{ef1577da-1028-4197-8a10-460afdeed5be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Controllers">
+      <UniqueIdentifier>{db971119-65aa-42b3-9daf-27e846c3cc54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components">
+      <UniqueIdentifier>{5e49df7c-34b8-4a4a-b167-7e314d11a8fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Tools">
+      <UniqueIdentifier>{02c17ee9-45ff-461d-a406-bcdef3bcf3e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Tools">
+      <UniqueIdentifier>{ce195e01-b761-46b8-8955-158d588918d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Controllers">
+      <UniqueIdentifier>{d69e0ba2-7c0d-49df-8152-157b59694820}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MvCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="listwidget.cpp">
+      <Filter>Source Files\handelListWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="algorithmLibrary.cpp">
+      <Filter>Source Files\handelListWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="tablewidget.cpp">
+      <Filter>Source Files\handelListWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="paramsitem.cpp">
+      <Filter>Source Files\handelListWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="login.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="connectServer.cpp">
+      <Filter>Source Files\connect</Filter>
+    </ClCompile>
+    <ClCompile Include="connectItemInfo.cpp">
+      <Filter>Source Files\connect</Filter>
+    </ClCompile>
+    <ClCompile Include="transmitsignals.cpp">
+      <Filter>Source Files\connect</Filter>
+    </ClCompile>
+    <ClCompile Include="industrialVision.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="createModel.cpp">
+      <Filter>Source Files\creataModel</Filter>
+    </ClCompile>
+    <ClCompile Include="area.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="areacontroller.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="circlepen.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="curve.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="ellipse.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="filecontroller.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="label.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="labelcontroller.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="mycommand.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="paintscene.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="polygon.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="rect.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="shape.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="squarepen.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="drawfinisheddialog.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="filelistdockwidget.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="labelsdockwidget.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="labeltypedockwidget.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="magnifyingglass.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="menubar.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="myactions.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="mygraphicsitems.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="mygraphicsview.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="statusbar.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="toolbar.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="graphicsview.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="smallMainWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>Source Files\connect</Filter>
+    </ClCompile>
+    <ClCompile Include="camerathread.cpp">
+      <Filter>Source Files\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="globalvar.cpp">
+      <Filter>Source Files\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="processingthread.cpp">
+      <Filter>Source Files\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="myglwidget.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="logoSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="passwordSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="listwidget.h">
+      <Filter>Header Files\handelListWidget</Filter>
+    </QtMoc>
+    <QtMoc Include="tablewidget.h">
+      <Filter>Header Files\handelListWidget</Filter>
+    </QtMoc>
+    <QtMoc Include="login.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="connectServer.h">
+      <Filter>Header Files\connect</Filter>
+    </QtMoc>
+    <QtMoc Include="connectItemInfo.h">
+      <Filter>Header Files\connect</Filter>
+    </QtMoc>
+    <QtMoc Include="TransmitSignals.h">
+      <Filter>Header Files\connect</Filter>
+    </QtMoc>
+    <QtMoc Include="industrialVision.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="menubar.h">
+      <Filter>Header Files\Components</Filter>
+    </QtMoc>
+    <QtMoc Include="myactions.h">
+      <Filter>Header Files\Components</Filter>
+    </QtMoc>
+    <QtMoc Include="toolbar.h">
+      <Filter>Header Files\Components</Filter>
+    </QtMoc>
+    <QtMoc Include="paintscene.h">
+      <Filter>Header Files\Controllers</Filter>
+    </QtMoc>
+    <QtMoc Include="drawfinisheddialog.h">
+      <Filter>Header Files\Components</Filter>
+    </QtMoc>
+    <QtMoc Include="filelistdockwidget.h">
+      <Filter>Header Files\Components</Filter>
+    </QtMoc>
+    <QtMoc Include="labelsdockwidget.h">
+      <Filter>Header Files\Components</Filter>
+    </QtMoc>
+    <QtMoc Include="labeltypedockwidget.h">
+      <Filter>Header Files\Components</Filter>
+    </QtMoc>
+    <QtMoc Include="magnifyingglass.h">
+      <Filter>Header Files\Components</Filter>
+    </QtMoc>
+    <QtMoc Include="mygraphicsview.h">
+      <Filter>Header Files\Components</Filter>
+    </QtMoc>
+    <QtMoc Include="statusbar.h">
+      <Filter>Header Files\Components</Filter>
+    </QtMoc>
+    <QtMoc Include="areacontroller.h">
+      <Filter>Header Files\Controllers</Filter>
+    </QtMoc>
+    <QtMoc Include="filecontroller.h">
+      <Filter>Header Files\Controllers</Filter>
+    </QtMoc>
+    <QtMoc Include="labelcontroller.h">
+      <Filter>Header Files\Controllers</Filter>
+    </QtMoc>
+    <QtMoc Include="graphicsview.h">
+      <Filter>Header Files\Components</Filter>
+    </QtMoc>
+    <QtMoc Include="smallMainWindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Server.h">
+      <Filter>Header Files\connect</Filter>
+    </QtMoc>
+    <QtMoc Include="createModel.h">
+      <Filter>Header Files\creataModel</Filter>
+    </QtMoc>
+    <QtMoc Include="CameraThread.h">
+      <Filter>Header Files\Tools</Filter>
+    </QtMoc>
+    <QtMoc Include="processingthread.h">
+      <Filter>Header Files\Tools</Filter>
+    </QtMoc>
+    <QtMoc Include="myglwidget.h">
+      <Filter>Header Files\Components</Filter>
+    </QtMoc>
+    <QtMoc Include="logoSet.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="passwordSet.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="login.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="connectServer.ui">
+      <Filter>Form Files\connect</Filter>
+    </QtUic>
+    <QtUic Include="createModel.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="statusbar.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="drawfinisheddialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="labelAttr.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="industrialVision.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="smallMainWindow.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="logoSet.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="passwordSet.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="industrialVision.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="industrialVision.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MvCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="preHeader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="paramsitem.h">
+      <Filter>Header Files\handelListWidget</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithmLibrary.h">
+      <Filter>Header Files\handelListWidget</Filter>
+    </ClInclude>
+    <ClInclude Include="mygraphicsitems.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="area.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="circlepen.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="curve.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="ellipse.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="label.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="mycommand.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="polygon.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="rect.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="squarepen.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="shape.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="globalvar.h">
+      <Filter>Header Files\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Mstruct.h">
+      <Filter>Header Files\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="point.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
