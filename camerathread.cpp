@@ -35,11 +35,15 @@ void CameraThread::setSwitchFlag(bool switchFlag)
 	startFlag = switchFlag;
 }
 
+bool CameraThread::getSwitchFlag()
+{
+	return startFlag;
+}
+
 void CameraThread::setRotateIndex(int rotateIndex)
 {
 	rotateIndexValue = rotateIndex;
-	realPictureSize.setWidth(9999);
-	realPictureSize.setHeight(9999);
+//	startRunFlag = true;
 }
 int CameraThread::getRotateIndex()
 {
@@ -47,7 +51,13 @@ int CameraThread::getRotateIndex()
 }
 QSize CameraThread::getrealPictureSize()
 {
+	msleep(30);   //适当缓冲,减少cpu运行率
+
 	return realPictureSize;
+}
+bool CameraThread::getStartRunFlag()
+{
+	return startRunFlag;
 }
 
 
@@ -66,13 +76,15 @@ void CameraThread::run()
 		//添加到容器
 		if(imagePtr.empty())
 			continue;
+		std::lock_guard<std::mutex> lock(mtx);
 
 		//旋转
 		cv::Mat srcCopy = rotateImage(imagePtr, degrees[rotateIndexValue % degrees.size()]);
-		realPictureSize.setWidth(srcCopy.cols);
-		realPictureSize.setHeight(srcCopy.rows);
-
+		dimensions.width = srcCopy.cols;
+		dimensions.height = srcCopy.rows;
 		m_imageVector_1.push_back(srcCopy);
+
+
 
 		msleep(30);   //适当缓冲,减少cpu运行率
 	}

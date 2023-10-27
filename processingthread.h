@@ -70,7 +70,6 @@ public slots:
 	void slot_processThread_Pattren();
 	void set_Grade(QString grade);
 private:
-	//QMutex testMutex;
 	cv::Point2d drawCenterPoint;
 	bool startFlag = false;
 	//判断模板图和实时图是否比例一致

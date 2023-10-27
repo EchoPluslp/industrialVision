@@ -10,7 +10,7 @@
 #include  <QtMath>
 #include<QMenu>
 #pragma execution_character_set("utf-8")
-
+extern int m_rotateIndexInt;
 class MyGLWidget : public QOpenGLWidget
 {
 	Q_OBJECT
@@ -21,9 +21,6 @@ public:
 	~MyGLWidget();
 
 	void setPixmap(QPixmap pixmap, QString text);
-	int currentAngleArcChoose = 0;
-
-
 
 protected:
 	void paintEvent(QPaintEvent*);   //重写paintEvent
@@ -58,7 +55,6 @@ private:
 	void drawcrossHair();
 
 	QAction* rotate;    //旋转90
-	void rotatePic();
 
 	QAction* restore; //还原图片
 	QMenu* RightButtonMenu; //右键菜单

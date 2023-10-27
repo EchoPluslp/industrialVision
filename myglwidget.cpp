@@ -150,29 +150,27 @@ void MyGLWidget::drawcrossHair()
 	painter.drawLine(QLine(0, myPixmap.height() / 2, myPixmap.width(), myPixmap.height() / 2));
 }
 
-void MyGLWidget::rotatePic()
-{
-	QMatrix matrix;
-	matrix.rotate(angleArc[currentAngleArcChoose % angleArc.size()]);
-	myPixmap = myPixmap.transformed(matrix, Qt::SmoothTransformation);
-}
 
 void MyGLWidget::crosshair_Flag() {
 	drawCrossHair_Flag = !drawCrossHair_Flag;
 }
 
 void MyGLWidget::rotate_Flag() {
-	currentAngleArcChoose++;
+	m_rotateIndexInt++;
+	if ((m_rotateIndexInt % angleArc.size()) == 0 )
+	{
+		m_rotateIndexInt = 0;
+	}
 	//传给主界面的值,用于模板图的旋转制作
-	emit valueChanged(currentAngleArcChoose);
+	emit valueChanged(m_rotateIndexInt);
 }
 
 void MyGLWidget::restore_Flag() {
-	currentAngleArcChoose = 0;
+	m_rotateIndexInt = 0;
 	factor = 1.0;
 	XPtInterval = 0;
 	YPtInterval = 0;
 	update();
-	emit valueChanged(currentAngleArcChoose);
+	emit valueChanged(m_rotateIndexInt);
 
 }

@@ -1,5 +1,13 @@
 #include "industrialVision.h"
 
+
+// 在这里定义全局变量
+ Dimension dimensions;
+ std::mutex mtx;
+ std::condition_variable Setcv;
+ bool readyToModify;
+ int m_rotateIndexInt = 0;
+
 industrialVision::industrialVision(QWidget *parent)
 	: QMainWindow(parent)
 {
@@ -107,7 +115,7 @@ industrialVision::industrialVision(QWidget *parent)
 	connectValual.create_server();
 	ui.pushButton_manualOperation->setEnabled(false);
 
-    //设置背景色
+    //设置背景色 
 	ui.menuBar->setStyleSheet("color: rgb(255, 255, 255); background-color: rgba(26, 45, 77, 1);");
 	setButtonClickLimits(false);
 	//白色填充左上角图标
@@ -639,6 +647,7 @@ void industrialVision::restoreWindow()
 
 bool industrialVision::compareAspectRatio(QSize smallPicture)
 {
+	//等待取流线程执行,之了后才有m_wideth和m_height
 	if (smallPicture.width()<smallPicture.height())
 	{
 		if (m_width < m_height) { return true; }
@@ -879,7 +888,7 @@ bool industrialVision::getPatternInfoFromXML(QString path)
         return false;
     }
    
-    
+
     //范围框
      srcQRect.setX(areaNodeREAL_size.x());
     srcQRect.setY(areaNodeREAL_size.y());
@@ -1138,6 +1147,7 @@ int industrialVision::GetWidth()
 	{
 		return nRet;
 	}
+	const_m_width = stIntValue.nCurValue;
 	m_width = stIntValue.nCurValue;
 	ui.width_edit->clear();
 	ui.width_edit->setText(QString::number(m_width, 'f', 0));
@@ -1153,6 +1163,7 @@ int industrialVision::GetHeight()
 	{
 		return nRet;
 	}
+	const_m_width = stIntValue.nCurValue;
 	m_height = stIntValue.nCurValue;
 	ui.height_edit->clear();
 	ui.height_edit->setText(QString::number(m_height, 'f', 0));
@@ -1264,27 +1275,32 @@ void industrialVision::Setinitializationparameters()
 	//高
         GetHeight();
 	
-        //xml路径
+		//设置旋转
+		double m_rotateIndex = settings->value("m_rotateIndex", "0").toDouble();
+		 m_rotateIndexInt = static_cast<int>(m_rotateIndex);
+		m_cameraThread->setRotateIndex(m_rotateIndexInt);
+		if (m_rotateIndexInt == 1 || m_rotateIndexInt == 3)
+		{
+			//交换长宽的值
+			int temp = m_width;
+			m_width = m_height;
+			m_height = temp;
+		}
+		//xml路径
 		QString m_xmlFilePath = settings->value("m_xmlFilePath").toString();
 		if (m_xmlFilePath.isEmpty())
 		{
-            AppendText("xml默认路径为空,请设置模板文件路径",Red);
+			AppendText("xml默认路径为空,请设置模板文件路径", Red);
 		}
 		else {
 			getXMLPATH(m_xmlFilePath);
-			AppendText("加载路径读取xml文件完成",Green);
+			AppendText("加载路径读取xml文件完成", Green);
 		}
-
-		//设置旋转
-		double m_rotateIndex = settings->value("m_rotateIndex","0").toDouble();
-		int m_rotateIndexInt = static_cast<int>(m_rotateIndex);
-
-		m_cameraThread->setRotateIndex(m_rotateIndexInt);
-	settings->endGroup();
-	delete settings;
 
     //设置参数
     OnBnClickedSetParameterButton();
+	settings->endGroup();
+	delete settings;
 }
 
 void industrialVision::SaveInitializationParameters()
@@ -1398,19 +1414,15 @@ void industrialVision::slot_modelPictureReadFlag()
 
 void industrialVision::getRotateValue(int x)
 {
+	AppendText("旋转图像...", Green);
 	m_cameraThread->setRotateIndex(x);
 	//设置展示图片的长宽,用于模板读取的比例设置
-	QSize icon = m_cameraThread->getrealPictureSize();
 	
-	m_width = icon.width();
-	m_height = icon.height();
-	while (m_width == 9999 || m_height == 9999)
-	{
-		QSize icon = m_cameraThread->getrealPictureSize();
-
-		m_width = icon.width();
-		m_height = icon.height();
-	}
+		//交换长宽的值
+		int temp = m_width;
+		m_width = m_height;
+		m_height = temp;
+	
 	if(!m_xmlpath.isEmpty()){
 	if (!getPatternInfoFromXML(m_xmlpath)) {
 		if (!m_processingThread->getmodelAndRealSclar()) {

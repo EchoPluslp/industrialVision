@@ -28,6 +28,8 @@
 #include "camerathread.h"
 #include "processingthread.h"
 #include "passwordSet.h"
+#include "SharedData.h"
+
 using namespace cv;
 using namespace std;
 
@@ -57,6 +59,9 @@ private:
     char                    m_chPixelFormat[MV_MAX_SYMBOLIC_LEN];
     int                     m_width;
 	int                     m_height;
+    int                    const_m_width;
+	int                    const_m_height;
+
     QString                  m_xmlpath;
     QComboBox*               m_ctrlDeviceCombo;                // ch:枚举到的设备 | en:Enumerated device
     int                     m_nDeviceCombo;
@@ -145,7 +150,6 @@ private:
     QImage patternSrcQImage;
     QImage myImageToModel;
     void resetParameters();
-    //框选出来的范围
 public:
      //Mat转QImage
      QImage Mat2QImage(const cv::Mat InputMat);
