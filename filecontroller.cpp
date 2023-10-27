@@ -276,11 +276,10 @@ void FileController::saveFile(LabelController* labelController)
 		std::string str = codec->fromUnicode(dirpath).data();
 
 		cv::imwrite(str, MatSrcImage);
-		//cv::imencode(".bmp", MatSrcImage).tofile("啊啊啊/****.jpg");
 		emit modelFilePATH(path);
 		file.close();
 	}
-	//QMessageBox::warning(0, "通知", "保存成功");
+	QMessageBox::warning(0, "通知", "保存成功");
 
 }
 

@@ -7,7 +7,7 @@
 #include <QListWidgetItem>
 #include <QList>
 #include <QtDebug>
-
+#include "shape.h"
 
 
 // 创建Label时的对话框，用于输入Label的Type
@@ -18,11 +18,12 @@ class DrawFinishedDialog : public QDialog
 		QListWidgetItem* defaultItem = nullptr;
 public:
 	explicit DrawFinishedDialog(QWidget* parent = nullptr);
-
+	bool currentShape;
 	// 在打开对话框时同步对话框的Type列表
 	void setList(const QList<QListWidgetItem*>& list);
 
 	void showEvent(QShowEvent* e);
+	void setShapeFlag(bool flag);
 signals:
 	// 发送要创建的Type
 	void sendTypeName(QString&);

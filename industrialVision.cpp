@@ -993,7 +993,6 @@ void industrialVision::setButtonClickLimits(bool flag)
 {
 	action_SetModelFile->setEnabled(flag);
 	ui.pushButton->setEnabled(flag);
-	ui.pushButton_editVision->setEnabled(flag);
 	ui.pushButton_stopOperation->setEnabled(flag);
 }
 

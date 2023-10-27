@@ -584,11 +584,18 @@ void createModel::drawFinishedSlot(Shape* shape) {
     if (!fileController->hasCurrImage())
         return;
 
-    Shape* copyedShape = shape->clone();
+	Shape* copyedShape = shape->clone();
     if (sender() == paintScene2D) {
         areaController2D->receiveImageShape(fileController->getCurrImageName(), copyedShape);
 
       //  drawFinishedDialog->setList(labelTypeDockWidget->getItemList());
+		if (copyedShape->getType() == Shape::Rect)
+		{
+			drawFinishedDialog->setShapeFlag(true);
+        }
+        else {
+			drawFinishedDialog->setShapeFlag(false);
+        }
         drawFinishedDialog->exec();
     }
     else {
@@ -600,6 +607,7 @@ void createModel::onDrawFinishedButtonClicked()
 {
  
      //   drawFinishedDialog->setList(labelTypeDockWidget->getItemList());
+      
         drawFinishedDialog->exec();
 }
 

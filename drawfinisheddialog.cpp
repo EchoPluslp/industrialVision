@@ -16,7 +16,41 @@ void DrawFinishedDialog::setList(const QList<QListWidgetItem*>& list) {
 
 void DrawFinishedDialog::showEvent(QShowEvent* e)
 {
+	QListWidget* listWidget = ui.listWidget; // 替换成你的 QListWidget 对象
+
+	if (currentShape)
+	{
+		//矩形框
+		for (int i = 0; i < 3; i++) {
+			QListWidgetItem* item = listWidget->item(i); // 获取第i个元素
+			if (item) {
+				item->setHidden(false); // 显示元素
+			}
+			if (i == 2)
+			{
+				item->setHidden(true); // 隐藏最后一个元素
+			}
+		}
+	}
+	else {
+		//输出点
+		for (int i = 0; i < 3; i++) {
+			QListWidgetItem* item = listWidget->item(i); // 获取第i个元素
+			if (item) {
+				item->setHidden(true); // 显示元素
+			}
+			if (i == 2)
+			{
+				item->setHidden(false); // 隐藏最后一个元素
+			}
+		}
+	}
 	ui.lineEdit->selectAll();
+}
+
+void DrawFinishedDialog::setShapeFlag(bool flag)
+{
+	currentShape = flag;
 }
 
 
