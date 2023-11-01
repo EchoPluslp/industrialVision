@@ -9,7 +9,7 @@ TransmitSignals::TransmitSignals()
 TransmitSignals::~TransmitSignals()
 {
 
-}\
+}
 TransmitSignals& TransmitSignals::GetInstance()
 {
     static TransmitSignals RobotControl;

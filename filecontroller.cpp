@@ -259,7 +259,6 @@ void FileController::saveFile(LabelController* labelController)
 		QDomDocument doc;
 		QDomProcessingInstruction instruction = doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\"");
 		doc.appendChild(instruction);
-
 		doc.appendChild(labelController->getElementOfImage(doc, getCurrImageName()));
 
 		QTextStream out_stream(&file);
@@ -271,9 +270,17 @@ void FileController::saveFile(LabelController* labelController)
 		QTextCodec* codec = QTextCodec::codecForName("GB2312");
 		QTextCodec::setCodecForLocale(codec);
 
-		QString dirpath = QApplication::applicationDirPath()+"/model/" + getCurrImageName();
+		QString dirpath = QApplication::applicationDirPath() + "/model/";
+		QDir dir(dirpath);
+		if (!dir.exists())
+		{
+			//不存在则创建
+			 dir.mkdir(dirpath); //只创建一级子目录，即必须保证上级目录存在
+		}
+		
+		QString fullpath = dirpath + getCurrImageName();
 
-		std::string str = codec->fromUnicode(dirpath).data();
+		std::string str = codec->fromUnicode(fullpath).data();
 
 		cv::imwrite(str, MatSrcImage);
 		emit modelFilePATH(path);

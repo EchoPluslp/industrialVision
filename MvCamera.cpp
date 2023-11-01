@@ -81,10 +81,6 @@ int CMvCamera::Close()
 // ch:判断相机是否处于连接状态 | en:Is The Device Connected
 bool CMvCamera::IsDeviceConnected()
 {
-	if (m_hDevHandle == nullptr) 
-	{
-        return false;
-	}
     return MV_CC_IsDeviceConnected(m_hDevHandle);
 }
 
