@@ -156,15 +156,13 @@ createModel::createModel(QWidget* parent) :
     for (int i = 0; i < 3; i++) {
         menuBar->addMenu(menus[i]);
     }
-	menuBar->setStyleSheet("font:20px; color: rgb(255, 255, 255); background-color: rgba(26, 45, 77, 1);");
+	menuBar->setStyleSheet("font:16px; color: rgb(255, 255, 255); background-color: rgba(26, 45, 77, 1);");
 
   //  menus[0]->addAction(openFileAction);
     menus[0]->addSeparator();
     menus[0]->addAction(execPatternAction);
     menus[0]->addSeparator();
-    //menus[0]->addAction(openDirAction);
     menus[0]->addAction(saveAction);
-   // menus[0]->addAction(saveAsAction);
     menus[0]->addAction(importAction);
     menus[0]->addAction(closeFileAction);
 
@@ -186,7 +184,7 @@ createModel::createModel(QWidget* parent) :
     
     // set up tool bar
     toolBar = new ToolBar(this);
-    toolBar->setIconSize(QSize(100, 100));
+    toolBar->setIconSize(QSize(80, 80));
 	toolBar->setStyleSheet("background-color: rgba(35, 65, 114, 1);");
     setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
@@ -243,10 +241,10 @@ createModel::createModel(QWidget* parent) :
 	//toolBar->addAction(squarePenModeAction);
     QWidget* test = new QWidget();
     test->setStyleSheet("color: rgb(255, 255, 255); background-color: rgba(35, 65, 114, 1);");
-    test->setFixedSize(QSize(150, 200));
+    test->setFixedSize(QSize(50, 50));
     
 	toolBar->addWidget(test);
-	test->move(0, 0);
+	//test->move(0, 0);
 
 	toolBar->addSeparator();
     toolBar->addAction(execPatternAction);
