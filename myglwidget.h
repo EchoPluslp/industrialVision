@@ -21,7 +21,7 @@ public:
 	~MyGLWidget();
 
 	void setPixmap(QPixmap pixmap, QString text);
-
+	void MyGLWidget::adjustScale(qreal scaleFactor, const QPoint& centerPos);
 protected:
 	void paintEvent(QPaintEvent*);   //ÖØÐ´paintEvent
 	void mousePressEvent(QMouseEvent* event);
@@ -37,6 +37,7 @@ private:
 	QRect myPaintArea;         //»æ»­ÇøÓò
 	int m_width;            //Í¼Æ¬¿í
 	int m_height;            //Í¼Æ¬¸ß
+	qreal m_scaleFactor = 1.0;
 
 
 

@@ -365,7 +365,7 @@ int CMvCamera::ReadBuffer(cv::Mat& image)
 
 		return nRet;
 	}
-    MvGvspPixelType type =   stImageInfo.enPixelType;
+    MvGvspPixelType type =  stImageInfo.enPixelType;
 	cv::Mat getImage = cv::Mat(stImageInfo.nHeight, stImageInfo.nWidth, CV_8UC1, pDate);
 	getImage.copyTo(image);
 	getImage.release();

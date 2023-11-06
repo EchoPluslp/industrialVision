@@ -21,9 +21,11 @@ void connectItemInfo::Thread_deal()
 
 	char* ch = server_ip.toLatin1().data();
     int x = server_port.toInt();
-    if (!serverItem.init(server_ip.toLatin1().data(), server_port.toInt()))
+	//Server serverItem;
+
+   // if (!serverItem.init(server_ip.toLatin1().data(), server_port.toInt()))
         return;
-    serverItem.start();
+  //  serverItem.start();
 
     //SOCKET s_accept;
     //SOCKET s_server;

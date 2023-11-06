@@ -6,8 +6,17 @@
 #include"QPointF"
 #include<qobject.h>
 #include "transmitsignals.h"
+#include <WS2tcpip.h>
+#include <assert.h>
+#include"qthread.h"
+#include <QtNetwork>
+#include <QTcpServer>
+#include <QTcpSocket>
+#include <QCoreApplication>
+
 #include<opencv2\opencv.hpp>
 #include <opencv2/imgproc/imgproc_c.h>
+#pragma execution_character_set("utf-8")
 
 struct s_SingleTargetMatch
 {
@@ -27,23 +36,32 @@ class Server  :public QObject
 public:
 	Server();
 	 //Server(QObject* parent = nullptr);
-	Server(const Server& other);
 
-	~Server();
-	void close();
-	bool init(const char* ip, unsigned short port);
-	bool start();
-	bool recvMsg(fd_set& fdRead, SOCKET clntSock);
+	//~Server();
+	//void close();
+	//bool init(const char* ip, unsigned short port);
+//	bool start();
+	//bool recvMsg(fd_set& fdRead, SOCKET clntSock);
+	QString Server::recvMsg(QString receiveMessage);
+
 	QPointF currPoint;
 	
 	double dMatchAngle = 0;
-	void setMatchAngle(double angle);
+	//void setMatchAngle(double angle);
 	bool operator_TCPCanSend = false;
-	void setTCPCanSendStatus(bool flag);
+//	void setTCPCanSendStatus(bool flag);
 private:
-	bool coreFunc();
+	//bool coreFunc();
 	SOCKET servSock;
+	QTcpServer* server;
+	bool isBusy = false;
 	std::list<SOCKET> clientList;
+	QQueue<QTcpSocket*> clientQueue;
+	void processNextRequest();
+
 signals:
 	void triggerPattern();
+public slots:
+	void onNewConnection();
+	void onReadyRead();
 };

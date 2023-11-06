@@ -71,14 +71,14 @@ void CameraThread::run()
 	{
 		//将图片添加到处理线程
 		cv::Mat imagePtr;
-		cameraPtr->CommandExecute("TriggerSoftware");
+		//cameraPtr->CommandExecute("TriggerSoftware");
 		cameraPtr->ReadBuffer(imagePtr);
 		//添加到容器
 		if(imagePtr.empty())
 			continue;
 		std::lock_guard<std::mutex> lock(mtx);
 
-		//旋转
+		////旋转
 		cv::Mat srcCopy = rotateImage(imagePtr, degrees[rotateIndexValue % degrees.size()]);
 		dimensions.width = srcCopy.cols;
 		dimensions.height = srcCopy.rows;

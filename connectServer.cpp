@@ -20,14 +20,14 @@ connectServer::connectServer(QMainWindow*parent)
 	//this->setWindowFlags( Qt::WindowTitleHint);
 }
 
-Server connectServer::getConnectItemInfo()
-{
-	return itemInfo->serverItem;
-}
+//Server connectServer::getConnectItemInfo()
+//{
+//	return itemInfo->serverItem;
+//}
 
 connectServer::~connectServer()
 {
-	itemInfo->serverItem.close();
+	//itemInfo->serverItem.close();
 	subThread->requestInterruption();
 	subThread->quit();
 	subThread->wait();
