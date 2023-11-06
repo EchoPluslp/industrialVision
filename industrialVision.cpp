@@ -887,8 +887,16 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 		AppendText("模板图读取错误,请在模板界面设置模板图",Red);
         return false;
     }
-   
-
+   if (areaNodeREAL_size.x()<0|| areaNodeREAL_size.y()<0)
+   {
+	   AppendText("搜索区域坐标错误,请重新制作", Red);
+	   return false;
+   }
+   if (patternAreaREAL_size.x() < 0 || patternAreaREAL_size.y() < 0)
+   {
+	   AppendText("模板匹配坐标错误,请重新制作", Red);
+	   return false;
+   }
     //范围框
      srcQRect.setX(areaNodeREAL_size.x());
     srcQRect.setY(areaNodeREAL_size.y());

@@ -60,7 +60,16 @@ void ProcessingThread::run()
 				{
 					QTime timedebuge;//声明一个时钟对象
 					timedebuge.start();//开始计时
+					if (areaMatRect.x+ areaMatRect.width>tempMap.cols )
+					{
+						areaMatRect.x = tempMap.cols - areaMatRect.width;
+					}else if (areaMatRect.y + areaMatRect.height > tempMap.rows)
+					{
+						areaMatRect.y = tempMap.rows - areaMatRect.height;
 					 
+					}
+					 
+
 					cv::Point2f Point_1 = MatchPicture(patternMat, tempMap(areaMatRect));
 					pattern_Flag = false;
 					resultPointF.setX(Point_1.x);
