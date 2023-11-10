@@ -24,6 +24,7 @@ private:
 signals:
     void create_once_pattern();
     void send_pattern_result(QPoint point);
+	void sendToIndustrString(QString mess,QString color);
 
 public slots:
 };

@@ -7,7 +7,7 @@
  std::condition_variable Setcv;
  bool readyToModify;
  int m_rotateIndexInt = 0;
-
+ int defaultRotateIndexValue = 0;
 industrialVision::industrialVision(QWidget *parent)
 	: QMainWindow(parent)
 {
@@ -45,8 +45,10 @@ industrialVision::industrialVision(QWidget *parent)
 
 	connect(this, &industrialVision::send_Grade, m_processingThread, &ProcessingThread::set_Grade, Qt::QueuedConnection);
 
-    //connect(&TransmitSignals::GetInstance(), &TransmitSignals::create_once_pattern, this, &industrialVision::createOncePattern, Qt::UniqueConnection);
 	connect(&TransmitSignals::GetInstance(), &TransmitSignals::create_once_pattern, m_processingThread, &ProcessingThread::slot_processThread_Pattren);
+	
+	connect(&TransmitSignals::GetInstance(), &TransmitSignals::sendToIndustrString, this, &industrialVision::addTextBrower);
+
 
 	connect(this, &industrialVision::sendResultToServer, &TransmitSignals::GetInstance(), &TransmitSignals::send_pattern_result);
     
@@ -104,11 +106,14 @@ industrialVision::industrialVision(QWidget *parent)
 
     connect(this, &industrialVision::sendResultToServer, &TransmitSignals::GetInstance(), &TransmitSignals::send_pattern_result);
     connect(this, &industrialVision::SLOTAppendText, this, &industrialVision::addTextBrower);
+
 	connect(timer, &QTimer::timeout, this, &industrialVision::updateTime);
 
 	connect(&connectValual, &connectServer::send_createServerCallBack, this, &industrialVision::receive_ServerCreateInfo);
 	
-	connect(ui.openGLWidget, &MyGLWidget::valueChanged, this, &industrialVision::getRotateValue,Qt::QueuedConnection);
+	connect(ui.openGLWidget, &MyGLWidget::rotateIndexValueChanged, this, &industrialVision::getRotateValue,Qt::QueuedConnection);
+	
+	connect(this, &industrialVision::setdefultCamare, ui.openGLWidget, &MyGLWidget::setMouseClickFlag, Qt::QueuedConnection);
 
 	
     //开启服务端
@@ -485,9 +490,7 @@ void industrialVision::getImageOneFrame() {
 }
 
 void industrialVision::createOncePattern()
-{
-	AppendText("【提示】接受到数据,开始匹配", Green);
-		
+{		
 /*	  if (resultPointF.x() == 0 && resultPointF.y() == 0) {
 	
 		   AppendText("【错误】触发接受匹配收到,模板图制作错误", Red);
@@ -498,12 +501,20 @@ void industrialVision::createOncePattern()
 		  if (resultPointF.x() != -m_width && resultPointF.y() != -m_height)
       {
           AppendText("【提示】触发接受匹配完成,匹配成功",Green);
+		  char xxx[10];
+		  char yyy[10];
+		  sprintf(xxx, "%.1f", finall_Total_Result.ptCenter.x);
+		  sprintf(yyy, "%.1f", finall_Total_Result.ptCenter.y);
+
           QString  resultFont  = "x:坐标";
-          resultFont.append(QString::number(resultPointF.x()));
+
+          resultFont.append(QString::fromLocal8Bit(xxx));
 		  resultFont.append(",");
 		  resultFont.append("y:坐标");
-		  resultFont.append(QString::number(resultPointF.y()));
+		  resultFont.append(QString::fromLocal8Bit(yyy));
 		  resultFont.append(".");
+		  resultFont.append("匹配用时:");
+		  resultFont.append(QString::number(matchTime_total));
 
 		  AppendText(resultFont,Green);
 		  total_count++;
@@ -549,7 +560,7 @@ void industrialVision::addTextBrower(QString text,QString flag)
 	QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
 	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
 	settings->beginGroup("Idus");
-	//曝光
+	//
 	QString logDirectory = settings->value("logDirectory").toString();
     if (logDirectory.isEmpty()) {
         logDirectory = QCoreApplication::applicationDirPath();
@@ -759,30 +770,38 @@ void industrialVision::rotatePicture()
     rotate_image = !rotate_image;
 }
 
+//保存当前状态为默认状态并锁定 ,方便下次打开
 void industrialVision::click_manualOperation()
 {
-    click_stopOperation();
-	DisplayWindowInitial();
-  /*  if (!openCamcal()) {
-        return;
-    }*/
-        
-    m_pcMyCamera->SetEnumValue("TriggerMode", MV_TRIGGER_MODE_ON);
-    m_nTriggerMode = MV_TRIGGER_MODE_ON;
-    m_nTriggerSource = MV_TRIGGER_SOURCE_SOFTWARE;
-    int nRet = m_pcMyCamera->SetEnumValue("TriggerSource", m_nTriggerSource);
+	//锁定状态
+	
+	emit setdefultCamare(defaultCamcare);
+	//设置相机参数不可修改或者可以更改
+	ui.gain_edit->setDisabled(defaultCamcare);
+	ui.framerate_edit->setDisabled(defaultCamcare);
+	ui.grade_edit->setDisabled(defaultCamcare);
+	ui.exposure_edit->setDisabled(defaultCamcare);
 
-    if (MV_OK != nRet)
-    {
-        ShowErrorMsg(QString("Set Software Trigger Fail"), nRet);
-    }
-
-    if (FALSE == m_bOpenDevice || TRUE == m_bStartGrabbing || NULL == m_pcMyCamera)
-    {
-        AppendText("状态获取失败",Red);
-        ShowErrorMsg(QString("状态获取失败"), nRet);
-        return;
-    }
+	if (defaultCamcare)
+	{
+		ui.gain_edit->setStyleSheet("background-color: grey;");
+		ui.framerate_edit->setStyleSheet("background-color: grey;");
+		ui.grade_edit->setStyleSheet("background-color: grey;");
+		ui.exposure_edit->setStyleSheet("background-color: grey;");	
+		//将字体颜色修改为红色
+		ui.pushButton_manualOperation->setStyleSheet("/* 证券 */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* 背景/4 页签选中色 */ background: #285790; color: rgb(255, 0, 0); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
+		//锁定状态,设置当前旋转方向为默认方向
+		defaultRotateIndexValue = m_rotateIndexInt;
+	}
+	else {
+		ui.gain_edit->setStyleSheet("background-color: #10171F;");
+		ui.framerate_edit->setStyleSheet("background-color: #10171F;");
+		ui.grade_edit->setStyleSheet("background-color: #10171F;");
+		ui.exposure_edit->setStyleSheet("background-color: #10171F;");
+		//将字体颜色修改为默认颜色
+		ui.pushButton_manualOperation->setStyleSheet("/* 证券 */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* 背景/4 页签选中色 */ background: #285790; color: rgb(255, 255, 255); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
+	}
+	defaultCamcare = !defaultCamcare;
 }
 
 
@@ -1000,6 +1019,7 @@ bool industrialVision::DisplayWindowInitial()
 void industrialVision::setButtonClickLimits(bool flag)
 {
 	action_SetModelFile->setEnabled(flag);
+	ui.pushButton_manualOperation->setEnabled(flag);
 	ui.pushButton->setEnabled(flag);
 	ui.pushButton_stopOperation->setEnabled(flag);
 }
@@ -1286,6 +1306,9 @@ void industrialVision::Setinitializationparameters()
 		double m_rotateIndex = settings->value("m_rotateIndex", "0").toDouble();
 		 m_rotateIndexInt = static_cast<int>(m_rotateIndex);
 		m_cameraThread->setRotateIndex(m_rotateIndexInt);
+
+			defaultRotateIndexValue = m_rotateIndexInt;
+		
 		if (m_rotateIndexInt == 1 || m_rotateIndexInt == 3)
 		{
 			//交换长宽的值

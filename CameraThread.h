@@ -41,6 +41,8 @@ signals:
 private:
 	int m_cameraIndex;
 	int rotateIndexValue = 0;
+	int defaultRotateIndexValue = -1;
+
 	CMvCamera* cameraPtr = NULL;
 };
 

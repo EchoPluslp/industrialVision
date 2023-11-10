@@ -185,4 +185,18 @@ class RedoAction : public MyActions
 public:
 	explicit RedoAction(QObject* parent = nullptr);
 };
+//ËÑË÷ÇøÓò
+class searchAreaRectAction : public MyActions
+{
+	Q_OBJECT
+public:
+	explicit searchAreaRectAction(QObject* parent = nullptr);
+};
+//ÌØÕ÷Æ¥ÅäÇøÓò
+class featureMatchingRectAction : public MyActions
+{
+	Q_OBJECT
+public:
+	explicit featureMatchingRectAction(QObject* parent = nullptr);
+};
 #endif // MYACTIONS_H

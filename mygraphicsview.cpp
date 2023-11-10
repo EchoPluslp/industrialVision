@@ -26,15 +26,24 @@ void MyGraphicsView::resizeEvent(QResizeEvent* event)
 void MyGraphicsView::wheelEvent(QWheelEvent* event)
 {
 	QPoint delta = event->angleDelta();
+
+	QPointF scenePos = mapToScene(event->pos());  // 获取鼠标事件位置在场景中的坐标
+
 	if (delta.y() > 0) {
+		// 放大
 		scale(1 / m_scale, 1 / m_scale);
 		m_scale + SCALE_STEP >= MAX_SCALE ? m_scale = MAX_SCALE : m_scale += SCALE_STEP;
-		scale(m_scale, m_scale);
+		setTransformationAnchor(QGraphicsView::AnchorUnderMouse);  // 设置锚点为鼠标位置
+		setTransform(QTransform::fromScale(m_scale, m_scale), true);  // 应用缩放变换
 	}
 	else {
+		// 缩小
 		scale(1 / m_scale, 1 / m_scale);
 		m_scale - SCALE_STEP <= 1.0 ? m_scale = 1.0 : m_scale -= SCALE_STEP;
-		scale(m_scale, m_scale);
+		setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+		setTransform(QTransform::fromScale(m_scale, m_scale), true);
 	}
+
+	centerOn(scenePos);  // 使缩放后鼠标位置保持在视图中心
 }
 

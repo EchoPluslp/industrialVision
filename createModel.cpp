@@ -100,6 +100,17 @@ createModel::createModel(QWidget* parent) :
     connect(curseModeAction, &CurseModeAction::triggered,
         this, &createModel::onCurseModeTriggered);
 
+    //搜索区域
+	auto searchAreaRectActionItem = new searchAreaRectAction(this);
+	connect(searchAreaRectActionItem, &searchAreaRectAction::triggered,
+		this, &createModel::onSearchAreaRectTriggered);
+    
+    //特征匹配
+	auto featureMatchingRectActionItem = new featureMatchingRectAction(this);
+	connect(featureMatchingRectActionItem, &featureMatchingRectAction::triggered,
+		this, &createModel::onFeatureMatchingTriggered);
+
+
     auto twoDModeAction = new TwoDModeAction(this);
     //connect(twoDModeAction, &TwoDModeAction::triggered,
     //    this, &createModel::on2DModeTriggered);
@@ -119,11 +130,13 @@ createModel::createModel(QWidget* parent) :
         this, &createModel::onRedoTriggered, Qt::ConnectionType::DirectConnection);
 
 
+
+
     QActionGroup* drawingActionGroup = new QActionGroup(this);
     //选择
     drawingActionGroup->addAction(curseModeAction);
     //矩形
-    drawingActionGroup->addAction(rectModeAction);
+   // drawingActionGroup->addAction(rectModeAction);
     //椭圆
     drawingActionGroup->addAction(ellipseModeAction);
     //多边形
@@ -166,16 +179,16 @@ createModel::createModel(QWidget* parent) :
     menus[0]->addAction(importAction);
     menus[0]->addAction(closeFileAction);
 
-    menus[1]->addAction(undoAction);
-    //menus[1]->addAction(redoAction);
-    //menus[1]->addAction(nextImageAction);
-   // menus[1]->addAction(prevImageAction);
-    menus[1]->addAction(rectModeAction);
-    menus[1]->addAction(ellipseModeAction);
-    menus[1]->addAction(polygonModeAction);
-   // menus[1]->addAction(curveModeAction);
-    menus[1]->addAction(squarePenModeAction);
-    menus[1]->addAction(circlePenModeAction);
+  //  menus[1]->addAction(undoAction);
+  //  //menus[1]->addAction(redoAction);
+  //  //menus[1]->addAction(nextImageAction);
+  // // menus[1]->addAction(prevImageAction);
+  ////  menus[1]->addAction(rectModeAction);
+  //  menus[1]->addAction(ellipseModeAction);
+  //  menus[1]->addAction(polygonModeAction);
+  // // menus[1]->addAction(curveModeAction);
+  //  menus[1]->addAction(squarePenModeAction);
+  //  menus[1]->addAction(circlePenModeAction);
 
     menus[2]->addAction(magnifyAction);
 
@@ -210,12 +223,14 @@ createModel::createModel(QWidget* parent) :
   //  radiusLayout->setSpacing(0);
   //  radiusWidget->setLayout(radiusLayout);
 	toolBar->addSeparator();
-    //导入
-	toolBar->addAction(importAction);
-	toolBar->addSeparator();
-
     toolBar->addAction(getImageAction);
+     //搜索区域
     toolBar->addSeparator();
+	toolBar->addAction(searchAreaRectActionItem);
+	toolBar->addSeparator();
+    //特征匹配
+   toolBar->addAction(featureMatchingRectActionItem);
+   toolBar->addSeparator();
 
     //放大镜
 	toolBar->addAction(magnifyAction);
@@ -226,13 +241,15 @@ createModel::createModel(QWidget* parent) :
 	toolBar->addSeparator();
     //选择
 	toolBar->addAction(curseModeAction);
-	toolBar->addSeparator();
+//	toolBar->addSeparator();
     //矩形
-	toolBar->addAction(rectModeAction);
+//	toolBar->addAction(rectModeAction);
 	toolBar->addSeparator();
     //椭圆
 	toolBar->addAction(setPointAction);
 	toolBar->addSeparator();
+	//导入
+	toolBar->addAction(importAction);
     //多边形
 	//toolBar->addAction(polygonModeAction);
 	toolBar->addSeparator();
@@ -587,13 +604,8 @@ void createModel::drawFinishedSlot(Shape* shape) {
         areaController2D->receiveImageShape(fileController->getCurrImageName(), copyedShape);
 
       //  drawFinishedDialog->setList(labelTypeDockWidget->getItemList());
-		if (copyedShape->getType() == Shape::Rect)
-		{
-			drawFinishedDialog->setShapeFlag(true);
-        }
-        else {
-			drawFinishedDialog->setShapeFlag(false);
-        }
+		drawFinishedDialog->setShapeFlag(paintScene->currShapeType);
+        
         drawFinishedDialog->exec();
     }
     else {
@@ -646,6 +658,18 @@ void createModel::onExecPatternAction()
 void createModel::sendXMLPathToIndustria(QString path)
 {
     emit sendXMLPath(path);
+}
+
+void createModel::onSearchAreaRectTriggered()
+{
+	paintScene->setCurrentShape(Shape::Figure::searchAreaRect);
+
+}
+
+void createModel::onFeatureMatchingTriggered()
+{
+	paintScene->setCurrentShape(Shape::Figure::featureMatchingRect);
+
 }
 
 

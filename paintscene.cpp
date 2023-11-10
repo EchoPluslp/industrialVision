@@ -17,8 +17,8 @@ currShapeType(Shape::Figure::Empty), currShape(nullptr), radius(20), isDrawing(f
 	crossLineY->setPen(crossPen);
 	squarePenCurse->setPen(crossPen);
 	circlePenCurse->setPen(crossPen);
-	addItem(crossLineX);
-	addItem(crossLineY);
+	//addItem(crossLineX);
+	//addItem(crossLineY);
 
 
 	currPixmap = nullptr;
@@ -186,6 +186,14 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 			currShape = new Rect;
 			break;
 		}
+		case Shape::searchAreaRect: {
+			currShape = new Rect;
+			break;
+		}
+		case Shape::featureMatchingRect: {
+			currShape = new Rect;
+			break;
+		}
 		case Shape::Ellipse: {
 			currShape = new Ellipse;
 			break;
@@ -317,7 +325,6 @@ void PaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
 			circlePenCurse->setVisible(false);
 		}
 	}
-
 
 	// 发送当前鼠标位置
 	emit scenePos(QPoint(int(event->scenePos().x()), int(event->scenePos().y())));

@@ -161,6 +161,7 @@ public:
      //false 没有更新 true 已经更新
      bool  shishiPiPei_FLAG = false;
 	 bool  small_window_flag = false;
+	 bool   defaultCamcare= true;
 
      bool openCamcal();
      void AppendText(const QString& text,QString flag);
@@ -170,7 +171,7 @@ public:
 	 ProcessingThread* m_processingThread;   //处理线程对象
 	 QPixmap MatToPixmap(const cv::Mat cvMat);
 	 QPoint getCenterPointFromCircle(QList<QPoint> listCircle);
-	 MyGLWidget glWidget = new MyGLWidget(this);
+	// MyGLWidget glWidget = new MyGLWidget(this);
      int rotateValue;
 
 private slots:
@@ -211,6 +212,7 @@ signals:
     void singal_sendPatternImage(QString patternImage_Path,QRectF patternRect,QRectF qrect,QPoint centerPoint,QPoint patternRectCenterPoint);
     void signal_processThread_pattren();
     void send_Grade(QString grade);
+    void setdefultCamare(bool flag);
 };
 
 #endif

@@ -18,12 +18,12 @@ class DrawFinishedDialog : public QDialog
 		QListWidgetItem* defaultItem = nullptr;
 public:
 	explicit DrawFinishedDialog(QWidget* parent = nullptr);
-	bool currentShape;
+	Shape::Figure currentShape;
 	// 在打开对话框时同步对话框的Type列表
 	void setList(const QList<QListWidgetItem*>& list);
 
 	void showEvent(QShowEvent* e);
-	void setShapeFlag(bool flag);
+	void setShapeFlag(Shape::Figure flag);
 signals:
 	// 发送要创建的Type
 	void sendTypeName(QString&);

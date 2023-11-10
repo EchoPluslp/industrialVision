@@ -74,6 +74,10 @@ public slots:
 	void sendImgToFileController(QImage image,QString path);
 	void onExecPatternAction();
 	void sendXMLPathToIndustria(QString xmlPath);
+	void onSearchAreaRectTriggered();
+
+	void onFeatureMatchingTriggered();
+
 private:
 	Ui::createModel* ui;
 

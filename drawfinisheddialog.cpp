@@ -17,38 +17,40 @@ void DrawFinishedDialog::setList(const QList<QListWidgetItem*>& list) {
 void DrawFinishedDialog::showEvent(QShowEvent* e)
 {
 	QListWidget* listWidget = ui.listWidget; // 替换成你的 QListWidget 对象
-
-	if (currentShape)
-	{
-		//矩形框
-		for (int i = 0; i < 3; i++) {
-			QListWidgetItem* item = listWidget->item(i); // 获取第i个元素
-			if (item) {
-				item->setHidden(false); // 显示元素
+	
+		switch (currentShape) {
+		case Shape::searchAreaRect: {
+			for (int i = 0; i < 3; i++) {
+				QListWidgetItem* item = listWidget->item(i); // 获取第i个元素
+				if (i==0) {
+					item->setHidden(false); // 显示元素
+					item->setSelected(true);
+					ui.lineEdit->setText(item->text());
+					continue;;
+				}
+					item->setHidden(true); // 隐藏最后1,2个元素		
 			}
-			if (i == 2)
-			{
-				item->setHidden(true); // 隐藏最后一个元素
+			break;
+			}
+		case Shape::featureMatchingRect: {
+			//矩形框
+			for (int i = 0; i < 3; i++) {
+				QListWidgetItem* item = listWidget->item(i); // 获取第i个元素
+				if (i==1) {
+					item->setHidden(false); // 显示元素
+					item->setSelected(true);
+					ui.lineEdit->setText(item->text());
+					continue;
+				}
+					item->setHidden(true); // 隐藏最后一个元素				
+			}
+			break;
 			}
 		}
-	}
-	else {
-		//输出点
-		for (int i = 0; i < 3; i++) {
-			QListWidgetItem* item = listWidget->item(i); // 获取第i个元素
-			if (item) {
-				item->setHidden(true); // 显示元素
-			}
-			if (i == 2)
-			{
-				item->setHidden(false); // 隐藏最后一个元素
-			}
-		}
-	}
 	ui.lineEdit->selectAll();
 }
 
-void DrawFinishedDialog::setShapeFlag(bool flag)
+void DrawFinishedDialog::setShapeFlag(Shape::Figure flag)
 {
 	currentShape = flag;
 }

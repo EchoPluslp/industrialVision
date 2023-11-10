@@ -37,7 +37,7 @@ public:
 	Server();
 	 //Server(QObject* parent = nullptr);
 
-	//~Server();
+	~Server();
 	//void close();
 	//bool init(const char* ip, unsigned short port);
 //	bool start();
@@ -58,9 +58,10 @@ private:
 	std::list<SOCKET> clientList;
 	QQueue<QTcpSocket*> clientQueue;
 	void processNextRequest();
-
+	int timestart = 1000;
 signals:
 	void triggerPattern();
+	void logoString(QString message, QString color);
 public slots:
 	void onNewConnection();
 	void onReadyRead();

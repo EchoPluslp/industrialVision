@@ -1,5 +1,5 @@
 #include "Server.h"
-s_SingleTargetMatch finall_Total_Result;
+s_SingleTargetMatch finall_Total_Result; 
  
 Server::Server() 
 {
@@ -7,19 +7,32 @@ Server::Server()
 
 	connect(server, &QTcpServer::newConnection, this, &Server::onNewConnection);
 	connect(this, &Server::triggerPattern, &TransmitSignals::GetInstance(), &TransmitSignals::create_once_pattern, Qt::UniqueConnection);
+	connect(this, &Server::logoString, &TransmitSignals::GetInstance(), &TransmitSignals::sendToIndustrString,Qt::QueuedConnection);
 
+	//  //读取上次关闭时的状态
+	QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
+	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
+	settings->beginGroup("Idus");
+	//定时设置时间
+	QString timevalueQString = settings->value("timevalue","1000").toString();
+	timestart = timevalueQString.toInt();
 	if (server->listen(QHostAddress::LocalHost, 60000)) {
-		qDebug() << "服务器已启动，等待客户端连接...";
+		emit logoString("服务器已启动，等待客户端连接...", "GREEN");
 	}
 	else {
-		qDebug() << "无法启动服务器";
+			emit logoString("无法启动服务器...", "GREEN");
 	}
 }
 
 void Server::onNewConnection()
 {
 	QTcpSocket* clientSocket = server->nextPendingConnection();
-	qDebug() << "客户端 " << clientSocket->peerAddress().toString() << ":" << clientSocket->peerPort() << " 连接成功";
+	QString x = QString::number(clientSocket->peerPort());
+	QString logString =  "客户端 " + clientSocket->peerAddress().toString() + ":" + x + " 连接成功";
+	emit logoString(logString, "GREEN");
+
+	clientQueue.clear();
+	isBusy = false;
 
 	// 将客户端连接添加到请求队列
 	clientQueue.enqueue(clientSocket);
@@ -32,34 +45,46 @@ void Server::onNewConnection()
 void Server::onReadyRead()
 {
 	QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
+
 	if (!clientSocket) {
+		QString logStringFromClient = "服务端接受到消息异常: 请重启";
 		return;
 	}
 
 	QByteArray data = clientSocket->readAll();
 	QString message = QString(data);
 
-	qDebug() << "接收到来自客户端的消息: " << message;
+	QString logStringFromClient =  "接收到来自客户端的消息: " + message;
+	emit logoString(logStringFromClient, "GREEN");
 
 
 	// 在这里可以对客户端消息进行处理，例如将消息转为大写
 	QString sendMessager = recvMsg(message);
 
-	//QString messagesned = QString("T;1;100;1;1;1,2321,321,0#;");
-
 	// 发送处理后的消息回客户端
 	clientSocket->write(sendMessager.toUtf8());
 	// 处理完请求后，继续处理下一个请求
 	processNextRequest();
+
+	QString logStringToClient = "给客户端发送数据:" + sendMessager;
+
+	emit logoString(logStringToClient, "GREEN");
+
 }
 
+
+Server::~Server()
+{
+	server->close();
+}
 
 QString Server::recvMsg(QString receiveMessage)
 {
 	QString send_buf = "T;1;100;1;1;1,";
 	if (receiveMessage <= 0)
 	{
-		qDebug() << "recv func error, error num is : " << WSAGetLastError();
+		QString logStringToClient = "接受receiveMessage函数异常:";
+		emit logoString(logStringToClient, "RED");
 		return false;
 	}
 	emit triggerPattern(); 	
@@ -70,13 +95,14 @@ QString Server::recvMsg(QString receiveMessage)
 	// 连接定时器的timeout信号到一个槽函数，该槽函数在定时器超时时触发
 	QObject::connect(&timer, &QTimer::timeout, [&]() {
 		// 在定时器超时时执行中断处理
-		qDebug() << "定时器触发，中断当前处理";
+		QString logStringToClient = "定时器触发，中断当前处理";
+		emit logoString(logStringToClient, "GRAY");
 
 		finall_Total_Result.flag = true; // 修改flag的值
 		finall_Total_Result.pattern_flag = false;
 		});
 
-	timer.start(1000); // 启动定时器，设置超时时间为1秒
+	timer.start(timestart); // 启动定时器，设置超时时间为1秒
 
 	while (!finall_Total_Result.flag) {
 		// 在这里等待，直到定时器触发或flag变为true
@@ -87,7 +113,7 @@ QString Server::recvMsg(QString receiveMessage)
 	timer.deleteLater();
 	//重置flag值
 	finall_Total_Result.flag = false;
-	if (finall_Total_Result.pattern_flag) {
+	if (finall_Total_Result.pattern_flag){
 		char s[10];
 		char xx[10];
 		sprintf(s, "%.1f", finall_Total_Result.ptCenter.x);
@@ -107,6 +133,7 @@ QString Server::recvMsg(QString receiveMessage)
 		strcpy(p, angle_String.c_str());
 		send_buf.append(p);
 		send_buf.append("#;");
+		delete[] p;
 	}
 	else {
 		QString errSend  = "T;1;100;0;1;0,999,999,999#;";
@@ -127,7 +154,7 @@ void Server::processNextRequest()
 
 	// 处理客户端请求
 	isBusy = true;
-
+	//onReadyRead();
 	connect(clientSocket, &QTcpSocket::readyRead, this, &Server::onReadyRead);
 }
 

@@ -4,7 +4,8 @@ MyGLWidget::MyGLWidget(QWidget* parent)
 	: QOpenGLWidget(parent)
 {
 	myText = "";
-	crosshair = new QAction(tr("十字线"), this);
+	crosshair = new QAction(this);
+	crosshair->setText("十字线");
 	crosshair->setFont(QFont(tr("宋体"), 26, QFont::Bold, false));//宋体26号，加粗，斜体字
 	connect(crosshair, &QAction::triggered, this, &MyGLWidget::crosshair_Flag);
 
@@ -29,9 +30,6 @@ MyGLWidget::MyGLWidget(QWidget* parent)
 	RightButtonMenu->setMaximumHeight(300);
 }
 
-MyGLWidget::MyGLWidget()
-{
-}
 
 MyGLWidget::~MyGLWidget()
 {
@@ -57,6 +55,38 @@ void MyGLWidget::setPixmap(QPixmap pixmap, QString text)
 	this->update();
 }
 
+void MyGLWidget::setMouseClickFlag(bool flag)
+{
+	if (flag)
+	{
+
+		// 设置 crosshair 的文本并禁用点击触发事件
+		crosshair->setText(tr("十字线（已锁定）"));
+		crosshair->setDisabled(flag);
+
+		//// 设置 rotate 的文本并禁用点击触发事件
+		rotate->setText(tr("旋转（已锁定）"));
+		rotate->setDisabled(flag);
+
+		//// 设置 restore 的文本并禁用点击触发事件
+		restore->setText(tr("还原图片（已锁定）"));
+		restore->setDisabled(flag);
+	}else {
+		// 设置 crosshair 的文本并禁用点击触发事件
+		crosshair->setText(tr("十字线"));
+		crosshair->setDisabled(flag);
+
+		//// 设置 rotate 的文本并禁用点击触发事件
+		rotate->setText(tr("旋转"));
+		rotate->setDisabled(flag);
+
+		//// 设置 restore 的文本并禁用点击触发事件
+		restore->setText(tr("还原图片"));
+		restore->setDisabled(flag);
+	}
+}
+
+
 void MyGLWidget::paintEvent(QPaintEvent* event)
 {
 	const QRect& rect = event->rect();
@@ -79,7 +109,7 @@ void MyGLWidget::mousePressEvent(QMouseEvent* event)
 {
 	if (event->button() == Qt::RightButton)
 	{
-			RightButtonMenu->clear();
+		RightButtonMenu->clear();
 		RightButtonMenu->addAction(crosshair);
 		RightButtonMenu->addSeparator();    //分割线
 		RightButtonMenu->addAction(rotate);
@@ -162,15 +192,15 @@ void MyGLWidget::rotate_Flag() {
 		m_rotateIndexInt = 0;
 	}
 	//传给主界面的值,用于模板图的旋转制作
-	emit valueChanged(m_rotateIndexInt);
+	emit rotateIndexValueChanged(m_rotateIndexInt);
 }
 
 void MyGLWidget::restore_Flag() {
-	m_rotateIndexInt = 0;
+	m_rotateIndexInt = defaultRotateIndexValue;
 	factor = 1.0;
 	XPtInterval = 0;
 	YPtInterval = 0;
 	update();
-	emit valueChanged(m_rotateIndexInt);
+	emit rotateIndexValueChanged(m_rotateIndexInt);
 
 }

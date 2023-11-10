@@ -9,15 +9,17 @@
 #include <QtGui/QWheelEvent>
 #include  <QtMath>
 #include<QMenu>
+#include<QLabel>
 #pragma execution_character_set("utf-8")
 extern int m_rotateIndexInt;
+extern int defaultRotateIndexValue;
+
 class MyGLWidget : public QOpenGLWidget
 {
 	Q_OBJECT
 
 public:
 	MyGLWidget(QWidget* parent);
-	MyGLWidget();
 	~MyGLWidget();
 
 	void setPixmap(QPixmap pixmap, QString text);
@@ -39,14 +41,11 @@ private:
 	int m_height;            //图片高
 	qreal m_scaleFactor = 1.0;
 
-
-
 	double factor = 1.0;//放大缩小的倍数
 	int XPtInterval = 0;    //平移X轴的值
 	int YPtInterval = 0;    //平移Y轴的值
 	bool Pressed = false;           //鼠标是否被摁压
 	QPoint oldPos;          //旧的鼠标位置
-
 	
 	void wheelEvent(QWheelEvent* e);     //鼠标滑轮事件
 	int action;          //动作(放大,缩小,移动...)
@@ -64,7 +63,8 @@ public slots:
 	void crosshair_Flag();
 	void rotate_Flag();
 	void restore_Flag();
+	void setMouseClickFlag(bool flag);
 signals:
-	void valueChanged(int value);
+	void rotateIndexValueChanged(int value);
 };
 #endif // MYGLWIDGET_H

@@ -169,3 +169,17 @@ RedoAction::RedoAction(QObject* parent) : MyActions(parent)
 	setShortcuts(QKeySequence::Redo);
 	setFont(QFont(tr("宋体"), 30, QFont::Bold, false));//宋体26号，加粗，斜体字
 }
+searchAreaRectAction::searchAreaRectAction(QObject* parent) : MyActions(parent)
+{
+	//setIcon(QIcon("./Image/Icon/redo"));
+	setText("搜索区域");
+	//setShortcuts(QKeySequence::Redo);
+	setFont(QFont(tr("宋体"), 30, QFont::Bold, false));//宋体26号，加粗，斜体字
+}
+featureMatchingRectAction::featureMatchingRectAction(QObject* parent) : MyActions(parent)
+{
+	//setIcon(QIcon("./Image/Icon/redo"));
+	setText("特征匹配");
+	//setShortcuts(QKeySequence::Redo);
+	setFont(QFont(tr("宋体"), 30, QFont::Bold, false));//宋体26号，加粗，斜体字
+}

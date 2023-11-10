@@ -23,7 +23,9 @@ public:
 		Curve,
 		CirclePen,
 		SquarePen,
-		Point
+		Point,
+		searchAreaRect,
+		featureMatchingRect
 	};
 	Shape();
 	virtual ~Shape() = 0;

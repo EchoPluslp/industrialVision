@@ -63,6 +63,141 @@ border: 1px solid #000000;
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout">
              <item>
+              <widget class="QPushButton" name="pushButton_continuousOperation">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Adobe 宋体 Std L</family>
+                 <pointsize>24</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                 <underline>false</underline>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">/* 证券 */
+
+QPushButton::hover 
+{
+	background-color: #1450C7;
+}
+position: absolute;
+left: 1px;
+top: 67px;
+width: 190px;
+height: 61px;
+opacity: 1;
+	
+/* 背景/4 页签选中色 */
+background: #285790;
+	
+color: rgb(255, 255, 255);
+box-sizing: border-box;
+border: 1px solid ;
+border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;
+	</string>
+               </property>
+               <property name="text">
+                <string>连续工作</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_manualOperation">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Adobe 宋体 Std L</family>
+                 <pointsize>24</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                 <underline>false</underline>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">/* 证券 */
+
+QPushButton::hover 
+{
+	background-color: #1450C7;
+}
+position: absolute;
+left: 1px;
+top: 67px;
+width: 190px;
+height: 61px;
+opacity: 1;
+	
+/* 背景/4 页签选中色 */
+background: #285790;
+	
+color: rgb(255, 255, 255);
+box-sizing: border-box;
+border: 1px solid ;
+border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;
+	</string>
+               </property>
+               <property name="text">
+                <string>锁定状态</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_editVision">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Adobe 宋体 Std L</family>
+                 <pointsize>24</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                 <underline>false</underline>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">/* 证券 */
+
+QPushButton::hover 
+{
+	background-color: #1450C7;
+}
+position: absolute;
+left: 1px;
+top: 67px;
+width: 190px;
+height: 61px;
+opacity: 1;
+	
+/* 背景/4 页签选中色 */
+background: #285790;
+	
+color: rgb(255, 255, 255);
+box-sizing: border-box;
+border: 1px solid ;
+border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;
+	</string>
+               </property>
+               <property name="text">
+                <string>视觉模板</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="QPushButton" name="pushButton">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -155,51 +290,6 @@ border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_editVision">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Adobe 宋体 Std L</family>
-                 <pointsize>24</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                 <underline>false</underline>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">/* 证券 */
-
-QPushButton::hover 
-{
-	background-color: #1450C7;
-}
-position: absolute;
-left: 1px;
-top: 67px;
-width: 190px;
-height: 61px;
-opacity: 1;
-	
-/* 背景/4 页签选中色 */
-background: #285790;
-	
-color: rgb(255, 255, 255);
-box-sizing: border-box;
-border: 1px solid ;
-border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;
-	</string>
-               </property>
-               <property name="text">
-                <string>视觉模板</string>
-               </property>
-              </widget>
-             </item>
-             <item>
               <widget class="QPushButton" name="pushButton_stopOperation">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -241,96 +331,6 @@ border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;
                </property>
                <property name="text">
                 <string>停止</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_manualOperation">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Adobe 宋体 Std L</family>
-                 <pointsize>24</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                 <underline>false</underline>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">/* 证券 */
-
-QPushButton::hover 
-{
-	background-color: #1450C7;
-}
-position: absolute;
-left: 1px;
-top: 67px;
-width: 190px;
-height: 61px;
-opacity: 1;
-	
-/* 背景/4 页签选中色 */
-background: #285790;
-	
-color: rgb(255, 255, 255);
-box-sizing: border-box;
-border: 1px solid ;
-border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;
-	</string>
-               </property>
-               <property name="text">
-                <string>手动工作</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_continuousOperation">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Adobe 宋体 Std L</family>
-                 <pointsize>24</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                 <underline>false</underline>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">/* 证券 */
-
-QPushButton::hover 
-{
-	background-color: #1450C7;
-}
-position: absolute;
-left: 1px;
-top: 67px;
-width: 190px;
-height: 61px;
-opacity: 1;
-	
-/* 背景/4 页签选中色 */
-background: #285790;
-	
-color: rgb(255, 255, 255);
-box-sizing: border-box;
-border: 1px solid ;
-border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;
-	</string>
-               </property>
-               <property name="text">
-                <string>连续工作</string>
                </property>
               </widget>
              </item>
@@ -421,9 +421,9 @@ border: 1px solid #3B4756;</string>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="4,1,1">
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_12" stretch="1,0">
+          <layout class="QVBoxLayout" name="verticalLayout_12" stretch="1">
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout_11" stretch="1,5">
+            <layout class="QVBoxLayout" name="verticalLayout_11" stretch="1,0,5">
              <item>
               <widget class="QLabel" name="label_8">
                <property name="font">
@@ -455,13 +455,104 @@ border-color: #000000;
               </widget>
              </item>
              <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_11">
+               <item>
+                <widget class="QPushButton" name="get_camera_Parameter_button">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Adobe 宋体 Std L</family>
+                   <pointsize>21</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">/* 期货 2 */
+
+QPushButton::hover 
+{
+	background-color: #1450C7;
+}
+position: absolute;
+left: 544px;
+top: 68px;
+width: 144px;
+height: 60px;
+opacity: 1;
+	
+background: #285790;
+	
+color: rgb(255, 255, 255);
+box-sizing: border-box;
+border-width: 0px 1px 0px 0px;
+border-style: solid;
+border-color: #111117;
+	</string>
+                 </property>
+                 <property name="text">
+                  <string>获得参数</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="set_camera_Parameter_button">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>21</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">/* 期货 2 */
+
+QPushButton::hover 
+{
+	background-color: #1450C7;
+}
+position: absolute;
+left: 544px;
+top: 68px;
+width: 144px;
+height: 60px;
+opacity: 1;
+	
+background: #285790;
+	
+color: rgb(255, 255, 255);
+box-sizing: border-box;
+border-width: 0px 1px 0px 0px;
+border-style: solid;
+border-color: #111117;
+	</string>
+                 </property>
+                 <property name="text">
+                  <string>设置参数</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
               <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="1,1">
                <item>
                 <layout class="QVBoxLayout" name="verticalLayout_6" stretch="2,2,2,2">
                  <item>
                   <layout class="QHBoxLayout" name="horizontalLayout_10">
                    <item>
-                    <widget class="QLabel" name="label_10">
+                    <widget class="QLabel" name="label">
                      <property name="font">
                       <font>
                        <pointsize>20</pointsize>
@@ -480,12 +571,12 @@ border: 1px solid #3B4756;
 	</string>
                      </property>
                      <property name="text">
-                      <string>相机型号:</string>
+                      <string>曝光时间:</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLineEdit" name="lineEdit_2">
+                    <widget class="QLineEdit" name="exposure_edit">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -498,6 +589,9 @@ border: 1px solid #3B4756;
                        <pointsize>16</pointsize>
                       </font>
                      </property>
+                     <property name="autoFillBackground">
+                      <bool>false</bool>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">/* 矩形 5 */
 
@@ -508,11 +602,8 @@ box-sizing: border-box;
 border: 1px solid #3B4756;
 	</string>
                      </property>
-                     <property name="text">
+                     <property name="inputMask">
                       <string/>
-                     </property>
-                     <property name="readOnly">
-                      <bool>true</bool>
                      </property>
                     </widget>
                    </item>
@@ -688,9 +779,9 @@ border: 1px solid #3B4756;
                <item>
                 <layout class="QVBoxLayout" name="verticalLayout_10">
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,2">
+                  <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0">
                    <item>
-                    <widget class="QLabel" name="label">
+                    <widget class="QLabel" name="label_10">
                      <property name="font">
                       <font>
                        <pointsize>20</pointsize>
@@ -709,12 +800,12 @@ border: 1px solid #3B4756;
 	</string>
                      </property>
                      <property name="text">
-                      <string>曝光时间:</string>
+                      <string>相机型号:</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLineEdit" name="exposure_edit">
+                    <widget class="QLineEdit" name="lineEdit_2">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -727,9 +818,6 @@ border: 1px solid #3B4756;
                        <pointsize>16</pointsize>
                       </font>
                      </property>
-                     <property name="autoFillBackground">
-                      <bool>false</bool>
-                     </property>
                      <property name="styleSheet">
                       <string notr="true">/* 矩形 5 */
 
@@ -740,8 +828,11 @@ box-sizing: border-box;
 border: 1px solid #3B4756;
 	</string>
                      </property>
-                     <property name="inputMask">
+                     <property name="text">
                       <string/>
+                     </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
                      </property>
                     </widget>
                    </item>
@@ -921,97 +1012,6 @@ border: 1px solid #3B4756;
                 </layout>
                </item>
               </layout>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_11">
-             <item>
-              <widget class="QPushButton" name="get_camera_Parameter_button">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Adobe 宋体 Std L</family>
-                 <pointsize>21</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">/* 期货 2 */
-
-QPushButton::hover 
-{
-	background-color: #1450C7;
-}
-position: absolute;
-left: 544px;
-top: 68px;
-width: 144px;
-height: 60px;
-opacity: 1;
-	
-background: #285790;
-	
-color: rgb(255, 255, 255);
-box-sizing: border-box;
-border-width: 0px 1px 0px 0px;
-border-style: solid;
-border-color: #111117;
-	</string>
-               </property>
-               <property name="text">
-                <string>获得参数</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="set_camera_Parameter_button">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <pointsize>21</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">/* 期货 2 */
-
-QPushButton::hover 
-{
-	background-color: #1450C7;
-}
-position: absolute;
-left: 544px;
-top: 68px;
-width: 144px;
-height: 60px;
-opacity: 1;
-	
-background: #285790;
-	
-color: rgb(255, 255, 255);
-box-sizing: border-box;
-border-width: 0px 1px 0px 0px;
-border-style: solid;
-border-color: #111117;
-	</string>
-               </property>
-               <property name="text">
-                <string>设置参数</string>
-               </property>
-              </widget>
              </item>
             </layout>
            </item>
@@ -1269,7 +1269,7 @@ background: #172437;
      <x>0</x>
      <y>0</y>
      <width>1580</width>
-     <height>32</height>
+     <height>33</height>
     </rect>
    </property>
    <property name="font">
@@ -1318,7 +1318,7 @@ background: #172437;
    <slot>click_continuousOperation()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>894</x>
+     <x>1202</x>
      <y>115</y>
     </hint>
     <hint type="destinationlabel">
@@ -1334,7 +1334,7 @@ background: #172437;
    <slot>click_manualOperation()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>742</x>
+     <x>1004</x>
      <y>115</y>
     </hint>
     <hint type="destinationlabel">
@@ -1350,7 +1350,7 @@ background: #172437;
    <slot>click_stopOperation()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>590</x>
+     <x>806</x>
      <y>115</y>
     </hint>
     <hint type="destinationlabel">

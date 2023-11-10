@@ -84,8 +84,6 @@ void CameraThread::run()
 		dimensions.height = srcCopy.rows;
 		m_imageVector_1.push_back(srcCopy);
 
-
-
 		msleep(30);   //适当缓冲,减少cpu运行率
 	}
 }
