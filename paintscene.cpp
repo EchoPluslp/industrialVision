@@ -396,6 +396,13 @@ void PaintScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event) {
 			currShape->mouseRelease(event);
 
 			emit drawFinished(currShape);
+			if (currShapeType == Shape::searchAreaRect)
+			{
+				setCurrentShape(Shape::Figure::featureMatchingRect);
+			}else if (currShapeType == Shape::featureMatchingRect)
+			{
+				setCurrentShape(Shape::Figure::Empty);
+			}
 			removeItem(currShape->getItem());
 			delete currShape;
 			currShape = nullptr;
