@@ -60,6 +60,9 @@ public:
 	QGraphicsRectItem* squarePenCurse;
 	QGraphicsEllipseItem* circlePenCurse;
 
+	
+	QGraphicsLineItem* crosshairLinePosX;
+	QGraphicsLineItem* crosshairLinePosY;
 
 public:
 	PaintScene(QObject* parent = nullptr);

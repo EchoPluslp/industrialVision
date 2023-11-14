@@ -451,16 +451,28 @@ void industrialVision::click_editVision()
 }
 
 void industrialVision::getImageOneFrame() {
-	 //cv::Mat imagePtr;
-  //   m_pcMyCamera->CommandExecute("TriggerSoftware");
-  //   m_pcMyCamera->ReadBuffer(imagePtr);
+	// 创建一个定时器
+	QTimer timer;
+	timer.setSingleShot(true); // 设置为单次触发
+
+	// 连接定时器的timeout信号到一个槽函数，该槽函数在定时器超时时触发
+	QObject::connect(&timer, &QTimer::timeout, [&]() {
+		emit cameraTovisualTemplate( QImage(), QString());
+		});
+
+	timer.start(1000); // 启动定时器，设置超时时间为1秒
+
+
 	while (m_imageVector_1.isEmpty())
 	{
-		
+		QCoreApplication::processEvents(); // 允许Qt事件处理
 	}
+	//定时器停止
+	timer.stop();
+	timer.deleteLater();
+
 	cv::Mat tempMat;
 	 m_imageVector_1.at(0).copyTo(tempMat);
-//	myImageToModel = QImage((const unsigned char*)(tempMat.data), tempMat.cols, tempMat.rows, QImage::Format_Indexed8);
 	myImageToModel = Mat2QImage(tempMat);
 		int wid = myImageToModel.width();
 	int height = myImageToModel.height();
@@ -477,10 +489,7 @@ void industrialVision::getImageOneFrame() {
 	QTextCodec* codec = QTextCodec::codecForName("GB2312");
 	QTextCodec::setCodecForLocale(codec);
 	
-
 	QString dirpath = QApplication::applicationDirPath() + "/model/";
-
-
 	string str = codec->fromUnicode(dirpath).data();
 
 

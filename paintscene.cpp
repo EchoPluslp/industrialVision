@@ -10,13 +10,19 @@ currShapeType(Shape::Figure::Empty), currShape(nullptr), radius(20), isDrawing(f
 	crossLineY = new QGraphicsLineItem;
 	squarePenCurse = new QGraphicsRectItem(0, 0, 0, 0);
 	circlePenCurse = new QGraphicsEllipseItem(0, 0, 0, 0);
-
+	crosshairLinePosX = new QGraphicsLineItem;
+	crosshairLinePosY = new QGraphicsLineItem;
 	QPen crossPen;
 	crossPen.setColor(QColor("green"));
 	crossLineX->setPen(crossPen);
 	crossLineY->setPen(crossPen);
 	squarePenCurse->setPen(crossPen);
 	circlePenCurse->setPen(crossPen);
+	QPen crossPencrossHair;
+	crossPencrossHair.setColor(QColor("red"));
+	crosshairLinePosX->setPen(crossPencrossHair);
+	crosshairLinePosY->setPen(crossPencrossHair);
+
 	//addItem(crossLineX);
 	//addItem(crossLineY);
 
@@ -255,10 +261,21 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 		}
 
 		if (currShapeType == Shape::CirclePen) {
-			addItem(circlePenCurse);
-			circlePenCurse->setRect(event->scenePos().x() - radius, event->scenePos().y() - radius, 2 * radius, 2 * radius);
-			circlePenCurse->setZValue(currPixmap->zValue() + 1);
-			circlePenCurse->setVisible(true);
+			// 如果当前形状类型是带笔的十字线
+			crosshairLinePosX->setLine(event->scenePos().x(), event->scenePos().y() - radius, event->scenePos().x(), event->scenePos().y() + radius);
+			crosshairLinePosY->setLine(event->scenePos().x() - radius, event->scenePos().y(), event->scenePos().x() + radius, event->scenePos().y());
+
+   // 添加垂直线（sendPosX）到图形场景中
+			addItem(crosshairLinePosX);
+			// 添加水平线（sendPosY）到图形场景中
+			addItem(crosshairLinePosY);
+
+			// 将Z值设置为当前像素图的Z值加1
+			crosshairLinePosX->setZValue(currPixmap->zValue() + 1);
+			crosshairLinePosY->setZValue(currPixmap->zValue() + 1);
+			// 使sendPosX和sendPosY可见
+			crosshairLinePosX->setVisible(true);
+			crosshairLinePosY->setVisible(true);
 		}
 		else {
 			circlePenCurse->setVisible(false);
@@ -316,13 +333,25 @@ void PaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
 			squarePenCurse->setVisible(false);
 		}
 		if (currShapeType == Shape::CirclePen) {
-			addItem(circlePenCurse);
-			circlePenCurse->setRect(event->scenePos().x() - radius, event->scenePos().y() - radius, 2 * radius, 2 * radius);
-			circlePenCurse->setZValue(currPixmap->zValue() + 1);
-			circlePenCurse->setVisible(true);
+			// 如果当前形状类型是带笔的十字线
+	   // 添加垂直线（sendPosX）到图形场景中
+		
+
+			crosshairLinePosX->setLine(event->scenePos().x(), event->scenePos().y() - radius, event->scenePos().x(), event->scenePos().y() + radius);
+			crosshairLinePosY->setLine(event->scenePos().x() - radius, event->scenePos().y(), event->scenePos().x() + radius, event->scenePos().y());
+			
+			addItem(crosshairLinePosX);
+			addItem(crosshairLinePosY);
+			// 将Z值设置为当前像素图的Z值加1
+			crosshairLinePosX->setZValue(currPixmap->zValue() + 1);
+			crosshairLinePosY->setZValue(currPixmap->zValue() + 1);
+			// 使sendPosX和sendPosY可见
+			crosshairLinePosX->setVisible(true);
+			crosshairLinePosY->setVisible(true);
 		}
 		else {
-			circlePenCurse->setVisible(false);
+			crosshairLinePosX->setVisible(false);
+			crosshairLinePosY->setVisible(false);
 		}
 	}
 

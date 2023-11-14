@@ -15,6 +15,11 @@ MyGraphicsView::MyGraphicsView(QWidget* parent) : QGraphicsView(parent)
 	setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 }
 
+QPoint MyGraphicsView::returnMouseInView()
+{
+	return graphicPos;
+}
+
 //告知Shape和PaintScene缩放
 void MyGraphicsView::resizeEvent(QResizeEvent* event)
 {
@@ -46,4 +51,6 @@ void MyGraphicsView::wheelEvent(QWheelEvent* event)
 
 	centerOn(scenePos);  // 使缩放后鼠标位置保持在视图中心
 }
+
+
 

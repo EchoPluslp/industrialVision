@@ -289,6 +289,7 @@ createModel::createModel(QWidget* parent) :
 
 
     graphicsView2D = new MyGraphicsView();
+
     paintScene2D = new PaintScene();
 
     graphicsView2D->setScene(paintScene2D);
@@ -400,6 +401,8 @@ createModel::createModel(QWidget* parent) :
     centralWidget3D = new QWidget();
     graphicsViewMain = new MyGraphicsView(centralWidget3D);
     paintSceneMain = new PaintScene(centralWidget3D);
+
+
 
     graphicsViewMain->setScene(paintSceneMain);
     graphicsViewMain->fitInView(paintSceneMain->sceneRect());
@@ -644,6 +647,12 @@ void createModel::onGetImageTriggered()
 
 void createModel::sendImgToFileController(QImage image,QString modePath)
 {
+    if (image.isNull())
+    {
+		QMessageBox::warning(nullptr, tr("Path"),
+			tr("相机状态异常,未获取到图片"));
+        return;
+    }
 	fileController->getImageFromCamera(image);
 
    // fileController->getImageFromCamera(image,modePath);
