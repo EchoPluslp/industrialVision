@@ -42,7 +42,7 @@ public:
 	cv::Mat ImageToMat(QImage& image); //QImage转Mat
 
 	//模板匹配相关函数::
-	cv::Point2f MatchPicture(cv::Mat templateImage, cv::Mat srcImage);
+	cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc, bool modelflag);
 	int GetTopLayer(cv::Mat* matTempl, int iMinDstLength);
 	cv::Size GetBestRotationSize(cv::Size sizeSrc, cv::Size sizeDst, double dRAngle);
 	cv::Point2f ptRotatePt2f(cv::Point2f ptInput, cv::Point2f ptOrg, double dAngle);
@@ -65,10 +65,13 @@ signals:
 	void signal_newPixmap(QPixmap newPixmap, int id);
 	void signal_patternResult(QPointF qpointf,int dateTime);
 	void signal_modelPictureReadFlag();
+	void QPointSendtoFileControl(QPoint resulePoint);
 public slots:
 	void slot_recievePatternImage(QString pattern_Path, QRectF pattern_Rect, QRectF areaRect,QPoint centerPoint, QPoint patternRectCenterPoint);
 	void slot_processThread_Pattren();
 	void set_Grade(QString grade);
+	void slot_processMatchPicture(QImage patternImage,QImage sourceImage);
+
 private:
 	cv::Point2d drawCenterPoint;
 	bool startFlag = false;

@@ -386,6 +386,7 @@ void FileController::getImageFromCamera(QImage image)
 	path.append(fileName);
 	addFile(fileName, path, image);
 	addedSucceeded = true;
+
 	if (addedSucceeded) {
 		emit updateFiles();
 	}
@@ -455,11 +456,12 @@ void FileController::onExecPattern(LabelController* labelController)
 	QRect areaChooseSize;
 	QRect patternArea;
 
-	QRect areaChooseREAL_Size;
-	QRect patternAreaREAL_size;
+	QImage cuurImage = m_image[m_currImageName];
+	int cuurImageWidth = cuurImage.width();
+	int cuurImageHeight = cuurImage.height();
 
 	for (Label* label : labelController->getLabelsOfImage(currImageName)) {
-		if (label->getType().contains("区域选择"))
+		if (label->getType().contains("搜索区域"))
 		{
 			if (label) {
 				const Area* area = label->getArea();
@@ -467,14 +469,14 @@ void FileController::onExecPattern(LabelController* labelController)
 					Shape* shape = area->getShape(currImageName);
 					QSize shapeSize = shape->m_currSize;
 					areaChooseSize = shape->getSize();
-					areaChooseREAL_Size.setX(((double)areaChooseSize.x() / (double)shapeSize.width()) * 4024);
-					areaChooseREAL_Size.setY(((double)areaChooseSize.y() / (double)shapeSize.height()) * 3036);
-					areaChooseREAL_Size.setWidth(((double)areaChooseSize.width() / (double)shapeSize.width()) * 4024);
-					areaChooseREAL_Size.setHeight(((double)areaChooseSize.height() / (double)shapeSize.height()) * 3036);
+					areaChooseREAL_Size.setX(((double)areaChooseSize.x() / (double)shapeSize.width()) * cuurImageWidth);
+					areaChooseREAL_Size.setY(((double)areaChooseSize.y() / (double)shapeSize.height()) * cuurImageHeight);
+					areaChooseREAL_Size.setWidth(((double)areaChooseSize.width() / (double)shapeSize.width()) * cuurImageWidth);
+					areaChooseREAL_Size.setHeight(((double)areaChooseSize.height() / (double)shapeSize.height()) * cuurImageHeight);
 				} 
 			}
 		}
-		if (label->getType().contains("模板匹配"))
+		if (label->getType().contains("匹配模板"))
 		{
 			if (label) {
 				const Area* area = label->getArea();
@@ -482,13 +484,25 @@ void FileController::onExecPattern(LabelController* labelController)
 					Shape* shape = area->getShape(currImageName);
 					QSize shapeSize = shape->m_currSize;
 					patternArea = shape->getSize();
-					patternAreaREAL_size.setX(((double)patternArea.x() / (double)shapeSize.width()) * 4024);
-					patternAreaREAL_size.setY(((double)patternArea.y() / (double)shapeSize.height()) * 3036);
-					patternAreaREAL_size.setWidth(((double)patternArea.width() / (double)shapeSize.width()) * 4024);
-					patternAreaREAL_size.setHeight(((double)patternArea.height() / (double)shapeSize.height()) *3036);
+					patternAreaREAL_size.setX(((double)patternArea.x() / (double)shapeSize.width()) * cuurImageWidth);
+					patternAreaREAL_size.setY(((double)patternArea.y() / (double)shapeSize.height()) * cuurImageHeight);
+					patternAreaREAL_size.setWidth(((double)patternArea.width() / (double)shapeSize.width()) * cuurImageWidth);
+					patternAreaREAL_size.setHeight(((double)patternArea.height() / (double)shapeSize.height()) * cuurImageHeight);
 				}
 			}
 		}
+	}
+	//没有搜索区域,则全图
+	if (areaChooseREAL_Size.x()==0&& areaChooseREAL_Size.y() == 0 && areaChooseREAL_Size.width() == 0 && areaChooseREAL_Size.height() == 0 )
+	{
+		areaChooseREAL_Size.setWidth(cuurImageWidth);
+		areaChooseREAL_Size.setHeight(cuurImageHeight);
+	}
+	if (patternAreaREAL_size.x() == 0 && patternAreaREAL_size.y() == 0 && patternAreaREAL_size.width() == 0 && patternAreaREAL_size.height() == 0)
+	{
+		QMessageBox::warning(nullptr, tr("Warning"),
+			"没有特征区域");
+		return;
 	}
 	//获取区域
 	if(patternAreaREAL_size.x()>0 && patternAreaREAL_size.y() >0 && patternAreaREAL_size.width() > 0 && patternAreaREAL_size.height() > 0){
@@ -498,15 +512,22 @@ void FileController::onExecPattern(LabelController* labelController)
 
 	cv::Rect areaChooseRealSize(areaChooseREAL_Size.x(), areaChooseREAL_Size.y(), areaChooseREAL_Size.width(), areaChooseREAL_Size.height());
 	cv::Rect patternAreaRealSize (patternAreaREAL_size.x(), patternAreaREAL_size.y(), patternAreaREAL_size.width(), patternAreaREAL_size.height());
-	cv::Mat srcImg = MatSrcImage(areaChooseRealSize);
+	srcImgMat = MatSrcImage(areaChooseRealSize);
 	cv::Mat patternImg = MatSrcImage(patternAreaRealSize);
-	cv::Point2f Point_1 = MatchPicture(patternImg, srcImg, true);
-	cv::circle(srcImg, cv::Point(Point_1.x + patternImg.cols / 2, Point_1.y + patternImg.rows / 2), 30, cv::Scalar(255), -1);
-	cv::imshow("1",srcImg);
-	}
+	emit sendImageToPattern(Mat2QImage(patternImg), Mat2QImage(srcImgMat));
 
+	//cv::Point2f Point_1 = MatchPicture(patternImg, srcImg, true);
+	//cv::circle(srcImg, cv::Point(Point_1.x + patternImg.cols / 2, Point_1.y + patternImg.rows / 2), 30, cv::Scalar(255), -1);
+	//cv::imshow("1",srcImg);
+	}
 }
 
+void FileController::slot_receiveDrawPoint(QPoint resultPoint) {
+
+	cv::circle(srcImgMat, cv::Point(resultPoint.x(), resultPoint.y()), 30, cv::Scalar(255), -1);
+	cv::namedWindow("运行测试结果", cv::WINDOW_NORMAL);
+	cv::imshow("运行测试结果", srcImgMat);
+}
 QStringList FileController::findFiles(const QString& startDir, QStringList filters)
 {
 	QStringList fileNames;
@@ -621,3 +642,15 @@ cv::Mat FileController::QImage2Mat(QImage image)
 	return mat;
 }
 
+QImage FileController::Mat2QImage(const cv::Mat cvImage)
+{
+	cv::Mat temp = cvImage.clone();
+
+	std::vector<uchar> imgBuf;
+	imencode(".bmp", temp, imgBuf);
+
+	QByteArray baImg((char*)imgBuf.data(), static_cast<int>(imgBuf.size()));
+	QImage image;
+	image.loadFromData(baImg, "BMP");
+	return image;
+}

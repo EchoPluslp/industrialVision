@@ -70,7 +70,7 @@ void ProcessingThread::run()
 					}
 					 
 
-					cv::Point2f Point_1 = MatchPicture(patternMat, tempMap(areaMatRect));
+					cv::Point2f Point_1 = MatchPicture(patternMat, tempMap(areaMatRect),false);
 					pattern_Flag = false;
 					resultPointF.setX(Point_1.x);
 					resultPointF.setY(Point_1.y);
@@ -122,7 +122,6 @@ QImage ProcessingThread::cvMatToImage(const cv::Mat cvMat)
 	}
 }
 
-//可以将此处修改为算法处理函数
 //Mat->QPixmap
 QPixmap ProcessingThread::cvMatToPixmap(const cv::Mat cvMat)
 {
@@ -226,7 +225,7 @@ void ProcessingThread::slot_recievePatternImage(QString pattern_Path,QRectF patt
 }
 
 //模板图,原图
-cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc)
+cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bool modelflag)
 {
 	if (m_matSrc.empty() || m_matDst.empty())
 	{patternNG();return resultPoint;}
@@ -486,13 +485,18 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc)
         if (i + 1 == m_iMaxPos)
             break;
         if (sstm.ptCenter.x > 0 && sstm.ptCenter.y > 0) {
+			if (modelflag)
+			{
+				return cv::Point2d(sstm.ptCenter.x, sstm.ptCenter.y);
+			}
             lastResult.setX(areaMatRect.x + sstm.ptCenter.x);
             lastResult.setY(areaMatRect.y + sstm.ptCenter.y);
             resultPoint.x = areaMatRect.x + sstm.ptCenter.x;
 			resultPoint.y = areaMatRect.y + sstm.ptCenter.y;
 
+
 			//有输出点
-			if (!(centerPointInProcess.x() == 0 && centerPointInProcess.y() == 0))
+			if ((!(centerPointInProcess.x() == 0 && centerPointInProcess.y() == 0)))
 			{     
 				
 				QPoint centerPointx = calculateOffsetB(patternRectCenterPointInProcess, centerPointInProcess,initialDistance,initialDirection,QPoint(lastResult.x(), lastResult.y()));
@@ -511,12 +515,6 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc)
             finall_Total_Result.dMatchedAngle = sstm.dMatchedAngle;
             finall_Total_Result.pattern_flag = true;
             finall_Total_Result.flag = true;
-
-
-            QString title_Context = "【提示】匹配成功:---X坐标:%1,Y坐标:%2,角度:%3";
-            QString X_COUNT(QString::number(lastResult.x()));
-            QString Y_COUNT(QString::number(lastResult.y()));
-            QString ANGLE_COUNT(QString::number(sstm.dMatchedAngle));
         }
         return finall_Total_Result.ptCenter;
     }
@@ -960,6 +958,54 @@ void ProcessingThread::slot_processThread_Pattren()
 void ProcessingThread::set_Grade(QString grade)
 {
 	m_dScore = grade.toDouble();
+}
+void ProcessingThread::slot_processMatchPicture(QImage patternImage, QImage sourceImage)
+{
+	cv::Mat patternImageMat = ImageToMat(patternImage);
+	cv::Mat sourceImageMat = ImageToMat(sourceImage);
+
+	m_TemplData.clear();
+	int iTopLayer = GetTopLayer(&patternImageMat, (int)sqrt((double)256));
+	cv::buildPyramid(patternImageMat, m_TemplData.vecPyramid, iTopLayer);
+	s_TemplData* templData = &m_TemplData;
+	templData->iBorderColor = mean(patternImageMat).val[0] < 128 ? 255 : 0;
+	int iSize = templData->vecPyramid.size();
+	templData->resize(iSize);
+	for (int i = 0; i < iSize; i++)
+	{
+		double invArea = 1. / ((double)templData->vecPyramid[i].rows * templData->vecPyramid[i].cols);
+		cv::Scalar templMean, templSdv;
+		double templNorm = 0, templSum2 = 0;
+
+		meanStdDev(templData->vecPyramid[i], templMean, templSdv);
+		templNorm = templSdv[0] * templSdv[0] + templSdv[1] * templSdv[1] + templSdv[2] * templSdv[2] + templSdv[3] * templSdv[3];
+
+		if (templNorm < DBL_EPSILON)
+		{
+			templData->vecResultEqual1[i] = true;
+		}
+		templSum2 = templNorm + templMean[0] * templMean[0] + templMean[1] * templMean[1] + templMean[2] * templMean[2] + templMean[3] * templMean[3];
+
+
+		templSum2 /= invArea;
+		templNorm = std::sqrt(templNorm);
+		templNorm /= std::sqrt(invArea); // care of accuracy here
+
+
+		templData->vecInvArea[i] = invArea;
+		templData->vecTemplMean[i] = templMean;
+		templData->vecTemplNorm[i] = templNorm;
+	}
+	//设置输出点坐标
+
+	templData->bIsPatternLearned = true;
+
+	cv::Point2d resultPoint = MatchPicture(patternImageMat, sourceImageMat,true);
+	
+	emit QPointSendtoFileControl(QPoint(resultPoint.x, resultPoint.y));
+	  
+	templData->bIsPatternLearned = false;
+
 }
 double ProcessingThread::calculateInitialDistance(QPoint A, QPoint B)
 {

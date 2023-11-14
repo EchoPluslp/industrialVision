@@ -443,6 +443,11 @@ void industrialVision::click_editVision()
 
     connect(&createModelItem, &createModel::sendXMLPath , this, &industrialVision::getXMLPATH, Qt::UniqueConnection);
 
+	connect(createModelItem.fileController2D, &FileController::sendImageToPattern, m_processingThread, &ProcessingThread::slot_processMatchPicture, Qt::UniqueConnection);
+	
+	connect(m_processingThread, &ProcessingThread::QPointSendtoFileControl,createModelItem.fileController2D, &FileController::slot_receiveDrawPoint, Qt::UniqueConnection);
+
+
     createModelItem.show();
     //更新xml文件
     shishiPiPei_FLAG = false;
@@ -1402,9 +1407,7 @@ void industrialVision::smallwindow_button_click()
 	// 设置视频展示区域的比例
     small_window_flag = !small_window_flag;
     setWindowFlags(Qt::WindowStaysOnTopHint);
-
     show();
-
 }
 
 void industrialVision::slot_displayPixmap(QPixmap newPixmap, int index)

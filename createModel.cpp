@@ -208,20 +208,7 @@ createModel::createModel(QWidget* parent) :
     QLabel* radiusLabel = new QLabel(toolBar);
     radiusLabel->setFont(QFont("微软雅黑", 16, 1));
     radiusLabel->setMargin(0);
-   /* connect(radiusSlider, &QSlider::valueChanged, [=](int value) {
-        radiusLabel->setText(QString::number(value));
-        });*/
 
-   // QFrame* hframe = new QFrame(this);
-   // hframe->setFrameShape(QFrame::HLine);      // 设置水平方向
-
-  //  QWidget* radiusWidget = new QWidget(toolBar);
-  //  QHBoxLayout* radiusLayout = new QHBoxLayout(toolBar);
-  //  radiusLayout->addWidget(hframe);
-  ////  radiusLayout->addWidget(radiusLabel);
-  //  radiusLayout->setMargin(0);
-  //  radiusLayout->setSpacing(0);
-  //  radiusWidget->setLayout(radiusLayout);
 	toolBar->addSeparator();
     toolBar->addAction(getImageAction);
      //搜索区域
@@ -230,6 +217,9 @@ createModel::createModel(QWidget* parent) :
 	toolBar->addSeparator();
     //特征匹配
    toolBar->addAction(featureMatchingRectActionItem);
+   toolBar->addSeparator();
+   //输出点
+   toolBar->addAction(setPointAction);
    toolBar->addSeparator();
 
     //放大镜
@@ -244,9 +234,7 @@ createModel::createModel(QWidget* parent) :
 //	toolBar->addSeparator();
     //矩形
 //	toolBar->addAction(rectModeAction);
-	toolBar->addSeparator();
     //椭圆
-	toolBar->addAction(setPointAction);
 	toolBar->addSeparator();
 	//导入
 	toolBar->addAction(importAction);

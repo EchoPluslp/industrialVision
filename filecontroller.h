@@ -39,10 +39,11 @@ class FileController : public QObject
 	QString m_currImageName;
 	cv::Point MatchPicture(cv::Mat templateImage, cv::Mat srcImage, bool threSholdFlag);
 	cv::Mat CalculateNcc(cv::Mat src, cv::Mat temp, cv::Mat& result);
-
-
-
-
+	QImage FileController::Mat2QImage(const cv::Mat cvImage);
+	cv::Mat srcImgMat;
+	
+	QRect areaChooseREAL_Size;
+	QRect patternAreaREAL_size;
 public:
 	FileController(QObject* parent = nullptr);
 	~FileController();
@@ -107,6 +108,9 @@ signals:
 	void updateFiles();
 	void currImageChanged(const QString&);
 	void modelFilePATH( QString xmlPath);
+	void sendImageToPattern(QImage patternImage, QImage sourceImage);
+public slots:
+	void slot_receiveDrawPoint(QPoint resultPoint);
 };
 
 #endif // FILECONTROLLER_H

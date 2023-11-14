@@ -78,7 +78,7 @@ public slots:
 
 	void onFeatureMatchingTriggered();
 
-private:
+public:
 	Ui::createModel* ui;
 
 	MenuBar* menuBar;
