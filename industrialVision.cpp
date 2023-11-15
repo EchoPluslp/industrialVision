@@ -1419,11 +1419,11 @@ void industrialVision::smallwindow_button_click()
 	// 获取并保存当前窗口的位置和大小
 	originalGeometry = geometry();
 
-    setFixedSize(600, 452);
-		//设置窗口大小
-	QEventLoop eventloop;
-	QTimer::singleShot(500, &eventloop, SLOT(quit()));
-	eventloop.exec();
+	setGeometry(50, 50, 200, 133);
+	// 设置窗口可拖动调整大小，并设置最小和最大大小
+	setMinimumSize(200, 133);  // 设置最小为200x200
+	setMaximumSize(800, 533);  // 设置最大为800x533
+
 	// 设置视频展示区域的比例
     small_window_flag = !small_window_flag;
     setWindowFlags(Qt::WindowStaysOnTopHint);
