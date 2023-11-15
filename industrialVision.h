@@ -78,6 +78,7 @@ private:
     cv::Point2f resultPoint;
     cv::Mat rotaete_imgTemp;
 	QPoint centerPoint;
+	QRect originalGeometry; // 用于保存初始窗口位置和大小
 
 
     double                      m_dToleranceAngle =0;
@@ -173,6 +174,28 @@ public:
 	 QPoint getCenterPointFromCircle(QList<QPoint> listCircle);
 	// MyGLWidget glWidget = new MyGLWidget(this);
      int rotateValue;
+
+	 protected:
+		 void closeEvent(QCloseEvent* event) override {
+			 // 创建 QMessageBox 对话框
+			 QMessageBox msgBox(QMessageBox::Question, "确认关闭", "确定要关闭窗口吗？", QMessageBox::Yes | QMessageBox::No, this);
+
+			 msgBox.setButtonText(QMessageBox::Yes, "是");
+			 msgBox.setButtonText(QMessageBox::No, "否");
+
+			 // 显示对话框，获取用户选择
+			 int result = msgBox.exec();
+			 if (result == QMessageBox::Yes) {
+				 // 用户点击了确认按钮，关闭窗口
+				 event->accept();
+			 }
+			 else {
+				 // 用户点击了取消按钮，忽略关闭事件
+				 event->ignore();
+			 }
+		 }
+
+
 
 private slots:
 	void click_continuousOperation();

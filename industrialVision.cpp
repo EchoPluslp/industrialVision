@@ -73,8 +73,8 @@ industrialVision::industrialVision(QWidget *parent)
 
     connect(action_SetModelFile, &QAction::triggered,
         this, &industrialVision::setModelXMLFile);
-
 	action_SetModelFile->setEnabled(false);
+
 	 action_RestoreWindow = new QAction();
     action_RestoreWindow->setText("窗口切换");
     action_RestoreWindow->setFont(QFont(tr("宋体"), 40, QFont::Bold, false));
@@ -655,15 +655,18 @@ void industrialVision::restoreWindow()
     ///其他设置
 	small_window_flag = !small_window_flag;
 	//设置窗口大小
+	
 	setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
 	setMinimumSize(0, 0);
-	setGeometry(QApplication::desktop()->availableGeometry());
-
+	//setGeometry(QApplication::desktop()->availableGeometry());
+	
 	setWindowFlags(Qt::WindowMinimizeButtonHint |
                    Qt::WindowMaximizeButtonHint |Qt::WindowCloseButtonHint);
-	setWindowState(Qt::WindowFullScreen);
-	setWindowState(Qt::WindowMinimized);
-	setWindowState(Qt::WindowMaximized);
+	//setWindowState(Qt::WindowFullScreen);
+	//setWindowState(Qt::WindowMinimized);
+	//setWindowState(Qt::WindowMaximized);
+	setGeometry(originalGeometry);
+
     show();
      //设置视频展示区域的比例
    // setFixedSize(this->width(), this->height());
@@ -1413,6 +1416,8 @@ void industrialVision::smallwindow_button_click()
 	}
 	ui.textEdit_2->setVisible(small_window_flag);
 	ui.textBrowser_record->setVisible(small_window_flag);
+	// 获取并保存当前窗口的位置和大小
+	originalGeometry = geometry();
 
     setFixedSize(600, 452);
 		//设置窗口大小
