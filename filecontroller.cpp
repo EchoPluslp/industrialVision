@@ -374,6 +374,8 @@ void FileController::importFromFile(LabelController* labelController)
 				tr("视觉模板设置错误,请重新设置模板信息"));
 			return;
 		}
+		labelController->deleteAllLabel();
+
 		getImageFromCameraFromImport(icomString);
 
 		labelController->createFromElement(root);

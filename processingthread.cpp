@@ -153,6 +153,7 @@ int ProcessingThread::GetTopLayer(cv::Mat* matTempl, int iMinDstLength)
 	return iTopLayer;
 }
 
+
 void ProcessingThread::slot_recievePatternImage(QString pattern_Path,QRectF pattern_Rect,QRectF areaRect, QPoint centerPoint, QPoint patternRectCenterPoint)
 {
 	areaMatRect.x = areaRect.x();
@@ -241,7 +242,15 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
     //建立金字塔
     std::vector<cv::Mat> vecMatSrcPyr;
     cv::buildPyramid(m_matSrc, vecMatSrcPyr, iTopLayer);
-    s_TemplData* pTemplData = &m_TemplData;
+	s_TemplData* pTemplData;
+
+	if (modelflag)
+	{
+		pTemplData = &m_TemplData_model;
+	}
+	else {
+		pTemplData = &m_TemplData;
+	}
     int cols = pTemplData->vecPyramid[iTopLayer].cols;
     int rows = pTemplData->vecPyramid[iTopLayer].rows;
     double x = 2.0 / max(pTemplData->vecPyramid[iTopLayer].cols, pTemplData->vecPyramid[iTopLayer].rows);
@@ -959,15 +968,17 @@ void ProcessingThread::set_Grade(QString grade)
 {
 	m_dScore = grade.toDouble();
 }
+
+//模板匹配界面窗口运行
 void ProcessingThread::slot_processMatchPicture(QImage patternImage, QImage sourceImage)
 {
 	cv::Mat patternImageMat = ImageToMat(patternImage);
 	cv::Mat sourceImageMat = ImageToMat(sourceImage);
 
-	m_TemplData.clear();
+	m_TemplData_model.clear();
 	int iTopLayer = GetTopLayer(&patternImageMat, (int)sqrt((double)256));
-	cv::buildPyramid(patternImageMat, m_TemplData.vecPyramid, iTopLayer);
-	s_TemplData* templData = &m_TemplData;
+	cv::buildPyramid(patternImageMat, m_TemplData_model.vecPyramid, iTopLayer);
+	s_TemplData* templData = &m_TemplData_model;
 	templData->iBorderColor = mean(patternImageMat).val[0] < 128 ? 255 : 0;
 	int iSize = templData->vecPyramid.size();
 	templData->resize(iSize);
@@ -1002,10 +1013,7 @@ void ProcessingThread::slot_processMatchPicture(QImage patternImage, QImage sour
 
 	cv::Point2d resultPoint = MatchPicture(patternImageMat, sourceImageMat,true);
 	
-	emit QPointSendtoFileControl(QPoint(resultPoint.x, resultPoint.y));
-	  
-	templData->bIsPatternLearned = false;
-
+	emit QPointSendtoFileControl(QPoint(resultPoint.x, resultPoint.y));	 
 }
 double ProcessingThread::calculateInitialDistance(QPoint A, QPoint B)
 {

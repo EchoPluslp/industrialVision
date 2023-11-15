@@ -95,6 +95,8 @@ private:
 	//模板匹配相关参数
 		//初始化时的参数
 	s_TemplData      m_TemplData;
+	s_TemplData      m_TemplData_model;
+
 	double                      m_dToleranceAngle = 5;
 	double                  m_dScore = 0.8;//得分阈值
 	double                  m_iMaxPos = 2;//最多数量

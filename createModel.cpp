@@ -675,7 +675,6 @@ void createModel::onFeatureMatchingTriggered()
 
 void createModel::onImportTriggered()
 {
-	labelController->deleteAllLabel();
 
     fileController->importFromFile(labelController);
     QString item = fileController->returnImportFilepath();
