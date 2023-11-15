@@ -65,7 +65,7 @@ signals:
 	void signal_newPixmap(QPixmap newPixmap, int id);
 	void signal_patternResult(QPointF qpointf,int dateTime);
 	void signal_modelPictureReadFlag();
-	void QPointSendtoFileControl(QPoint resulePoint);
+	void QPointSendtoFileControl(QPoint resulePoint,int modelTotalTime);
 public slots:
 	void slot_recievePatternImage(QString pattern_Path, QRectF pattern_Rect, QRectF areaRect,QPoint centerPoint, QPoint patternRectCenterPoint);
 	void slot_processThread_Pattren();

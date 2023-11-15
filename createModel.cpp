@@ -198,15 +198,6 @@ createModel::createModel(QWidget* parent) :
     menus[1]->addSeparator();
 	menus[1]->addAction(curseModeAction);
 	menus[1]->addSeparator();
-  //  //menus[1]->addAction(redoAction);
-  //  //menus[1]->addAction(nextImageAction);
-  // // menus[1]->addAction(prevImageAction);
-  ////  menus[1]->addAction(rectModeAction);
-  //  menus[1]->addAction(ellipseModeAction);
-  //  menus[1]->addAction(polygonModeAction);
-  // // menus[1]->addAction(curveModeAction);
-  //  menus[1]->addAction(squarePenModeAction);
-  //  menus[1]->addAction(circlePenModeAction);
 
     menus[2]->addAction(magnifyAction);
 
@@ -215,17 +206,11 @@ createModel::createModel(QWidget* parent) :
     
     // set up tool bar
     toolBar = new ToolBar(this);
-    toolBar->setIconSize(QSize(59, 59));
-	toolBar->setStyleSheet(" color: rgb(255, 255, 255);background-color: rgba(35, 65, 114, 1);");
+    toolBar->setIconSize(QSize(60, 60));
+	toolBar->setStyleSheet("font:24px;color: rgb(255, 255, 255);background-color: rgba(35, 65, 114, 1);");
     setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-    //QSlider* radiusSlider = new QSlider(Qt::Horizontal);
-    //radiusSlider->setParent(toolBar);
-   // radiusSlider->setRange(1, 1);
-    //radiusSlider->setFixedWidth(100);
-    QLabel* radiusLabel = new QLabel(toolBar);
-    radiusLabel->setFont(QFont("Î¢ÈíÑÅºÚ", 16, 1));
-    radiusLabel->setMargin(0);
+	toolBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
 	toolBar->addSeparator();
     toolBar->addAction(getImageAction);
@@ -264,7 +249,7 @@ createModel::createModel(QWidget* parent) :
 	//toolBar->addAction(squarePenModeAction);
     QWidget* test = new QWidget();
     test->setStyleSheet("color: rgb(255, 255, 255); background-color: rgba(35, 65, 114, 1);");
-    test->setFixedSize(QSize(50, 50));
+    test->setFixedSize(QSize(20, 20));
     
 	toolBar->addWidget(test);
 	//test->move(0, 0);
@@ -287,7 +272,7 @@ createModel::createModel(QWidget* parent) :
     toolBar->addSeparator();
   //  toolBar->addAction(twoDModeAction);
     this->addToolBar(Qt::TopToolBarArea, toolBar);
-
+    toolBar->setMovable(false);
     // Init 2D
     labelTypeDockWidget2D = new LabelTypeDockWidget();
     labelsDockWidget2D = new LabelsDockWidget();
@@ -485,7 +470,7 @@ createModel::createModel(QWidget* parent) :
 
    // addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, labelTypeDockWidget2D);
     addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, labelsDockWidget2D);
-    addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, fileListDockWidget2D);
+  //  addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, fileListDockWidget2D);
     on2DModeTriggered();
 
 	//°×É«Ìî³ä×óÉÏ½ÇÍ¼±ê
@@ -595,7 +580,7 @@ void createModel::on2DModeTriggered()
    // labelTypeDockWidget2D->show();
     fileListDockWidget2D->setStyleSheet("color: rgb(255, 255, 255); background-color: rgba(26, 45, 77, 1);");
 
-    fileListDockWidget2D->show();
+   // fileListDockWidget2D->show();
    // labelTypeDockWidget = labelTypeDockWidget2D;
     labelsDockWidget = labelsDockWidget2D;
     fileListDockWidget = fileListDockWidget2D;

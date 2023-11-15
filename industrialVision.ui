@@ -1247,7 +1247,7 @@ z-index: 0;</string>
          <widget class="QTextBrowser" name="textBrowser_record">
           <property name="font">
            <font>
-            <pointsize>18</pointsize>
+            <pointsize>14</pointsize>
            </font>
           </property>
           <property name="styleSheet">

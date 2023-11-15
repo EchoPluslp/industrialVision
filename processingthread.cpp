@@ -234,7 +234,7 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
 	{patternNG();return resultPoint;}
     if (m_matDst.size().area() > m_matSrc.size().area())
 	{patternNG();return resultPoint;}
-    if (!m_TemplData.bIsPatternLearned)
+    if (!modelflag &&!m_TemplData.bIsPatternLearned)
 	{patternNG();return resultPoint;}
 
     //
@@ -1011,9 +1011,14 @@ void ProcessingThread::slot_processMatchPicture(QImage patternImage, QImage sour
 
 	templData->bIsPatternLearned = true;
 
-	cv::Point2d resultPoint = MatchPicture(patternImageMat, sourceImageMat,true);
+	QTime timedebuge;//声明一个时钟对象
+	timedebuge.start();//开始计时
+
+	cv::Point2d resultPoint = MatchPicture(patternImageMat, sourceImageMat, true);
+
+	int total_time = timedebuge.elapsed();
 	
-	emit QPointSendtoFileControl(QPoint(resultPoint.x, resultPoint.y));	 
+	emit QPointSendtoFileControl(QPoint(resultPoint.x, resultPoint.y), total_time);
 }
 double ProcessingThread::calculateInitialDistance(QPoint A, QPoint B)
 {

@@ -550,13 +550,17 @@ void FileController::onExecPattern(LabelController* labelController)
 	}
 }
 
-void FileController::slot_receiveDrawPoint(QPoint resultPoint) {
+void FileController::slot_receiveDrawPoint(QPoint resultPoint,int totalModelTime) {
 
 	cv::Mat srcImgClone = srcImgMat.clone();
+	// 在左上方写下totalModelTime文字
+	std::string text = "TotalTime : " + std::to_string(totalModelTime)+"MS";
+
+	cv::putText(srcImgClone, text, cv::Point(80, 100), cv::FONT_HERSHEY_SIMPLEX, 4, cv::Scalar(255, 255, 255),2);
 
 	cv::circle(srcImgClone, cv::Point(resultPoint.x(), resultPoint.y()), 30, cv::Scalar(255), -1);
-	cv::namedWindow("运行测试结果", cv::WINDOW_AUTOSIZE);
-	cv::imshow("运行测试结果", srcImgClone);
+	cv::namedWindow("TestResult", cv::WINDOW_KEEPRATIO);
+	cv::imshow("TestResult", srcImgClone);
 }
 QStringList FileController::findFiles(const QString& startDir, QStringList filters)
 {

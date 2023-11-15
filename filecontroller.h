@@ -115,7 +115,7 @@ signals:
 	void modelFilePATH( QString xmlPath);
 	void sendImageToPattern(QImage patternImage, QImage sourceImage);
 public slots:
-	void slot_receiveDrawPoint(QPoint resultPoint);
+	void slot_receiveDrawPoint(QPoint resultPoint,int totalModelTime);
 };
 
 #endif // FILECONTROLLER_H
