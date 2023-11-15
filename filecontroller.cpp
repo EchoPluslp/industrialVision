@@ -219,23 +219,24 @@ void FileController::openDir(LabelController* labelController)
 void FileController::saveFile(LabelController* labelController)
 {
 	if (m_currImageName == "")
-		return; 
+		return;
 	if (m_imageList.empty())
 		return;
-
-	QString currImageDir = QFileInfo(getCurrImagePath()).path();
-
-	QStringList xmlFile = findFiles(currImageDir, QStringList() << getCurrImageName() + ".xml");
-
-	if (xmlFile.count() == 1) {
+	if (!labelController->checkSaveLabelOn())
+	{
+		return;
+	}
+		//通过导入进来的,只改变画图的框,不能改变图片的属性
+	if (!importFilepath.isNull()) {
 		//已经存在，则覆盖
-		QFile file(xmlFile[0]);
+		QFile file(importFilepath);
 		if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
 			return;
 		}
-		QDomDocument doc;
+		QDomDocument doc;  
 		QDomProcessingInstruction instruction;
 		instruction = doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\"");
+
 		doc.appendChild(instruction);
 
 		doc.appendChild(labelController->getElementOfImage(doc, getCurrImageName()));
@@ -243,10 +244,11 @@ void FileController::saveFile(LabelController* labelController)
 		QTextStream out_stream(&file);
 		doc.save(out_stream, 4);
 		file.close();
+		QMessageBox::warning(0, "通知", "保存成功");
+		emit modelFilePATH(importFilepath);
 	}
 	else {
 		//未存在，则新建
-
 		QString path = QFileDialog::getSaveFileName(nullptr,
 			tr("Open File"),
 			"",
@@ -275,9 +277,9 @@ void FileController::saveFile(LabelController* labelController)
 		if (!dir.exists())
 		{
 			//不存在则创建
-			 dir.mkdir(dirpath); //只创建一级子目录，即必须保证上级目录存在
+			dir.mkdir(dirpath); //只创建一级子目录，即必须保证上级目录存在
 		}
-		
+
 		QString fullpath = dirpath + getCurrImageName();
 
 		std::string str = codec->fromUnicode(fullpath).data();
@@ -285,40 +287,64 @@ void FileController::saveFile(LabelController* labelController)
 		cv::imwrite(str, MatSrcImage);
 		emit modelFilePATH(path);
 		file.close();
+		QMessageBox::warning(0, "通知", "保存成功");
+
 	}
-	QMessageBox::warning(0, "通知", "保存成功");
+
 
 }
 
 void FileController::saveAsFile(LabelController* labelController)
 {
+	if (m_currImageName == "")
+		return;
+	if (m_imageList.empty())
+		return;
+	if (!labelController->checkSaveLabelOn())
+	{
+		return;
+	}
+
+	//另存为
 	QString path = QFileDialog::getSaveFileName(nullptr,
 		tr("Open File"),
-		".",
+		"",
 		tr("XML Files(*.xml)"));
-	if (!path.isEmpty()) {
-		QFile file(path);
-		if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-			QMessageBox::warning(nullptr, tr("Write File"),
-				tr("未打开文件:\n%1").arg(path));
-			return;
-		}
 
-		QDomDocument doc;
-		//XML Head
-		QDomProcessingInstruction instruction;
-		instruction = doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\"");
-		doc.appendChild(instruction);
+	QFile file(path);
+	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+		return;
+	}
+	QDomDocument doc;
+	QDomProcessingInstruction instruction = doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\"");
+	doc.appendChild(instruction);
+	doc.appendChild(labelController->getElementOfImage(doc, getCurrImageName()));
 
-		doc.appendChild(labelController->getElement(doc));
-		QTextStream out_stream(&file);
-		doc.save(out_stream, 4);
-		file.close();
+	QTextStream out_stream(&file);
+	doc.save(out_stream, 4);
+
+	QImage currentImage = getImage(getCurrImageName());
+	currentImage = currentImage.convertToFormat(QImage::Format_Indexed8);
+	cv::Mat MatSrcImage = QImage2Mat(currentImage);
+	QTextCodec* codec = QTextCodec::codecForName("GB2312");
+	QTextCodec::setCodecForLocale(codec);
+
+	QString dirpath = QApplication::applicationDirPath() + "/model/";
+	QDir dir(dirpath);
+	if (!dir.exists())
+	{
+		//不存在则创建
+		dir.mkdir(dirpath); //只创建一级子目录，即必须保证上级目录存在
 	}
-	else {
-		QMessageBox::warning(nullptr, tr("Path"),
-			tr("还未选择文件."));
-	}
+
+	QString fullpath = dirpath + getCurrImageName();
+
+	std::string str = codec->fromUnicode(fullpath).data();
+
+	cv::imwrite(str, MatSrcImage);
+	emit modelFilePATH(path);
+	file.close();	
+	QMessageBox::warning(0, "通知", "另存为成功");
 
 }
 
@@ -352,6 +378,8 @@ void FileController::importFromFile(LabelController* labelController)
 
 		labelController->createFromElement(root);
 
+		importFilepath = path;
+
 	}
 	else {
 		QMessageBox::warning(nullptr, tr("Path"),
@@ -380,15 +408,17 @@ QString FileController::getImageNameFromXML(QDomElement elem) {
 
 void FileController::getImageFromCamera(QImage image)
 {
+
 	bool addedSucceeded = false;
 	QString fileName =  image.text("name");
 	QString path =  QCoreApplication::applicationDirPath();
 	path.append(fileName);
 	addFile(fileName, path, image);
 	addedSucceeded = true;
-
+	//通过采集图片的时候,重置导入路径
+	importFilepath.clear();
 	if (addedSucceeded) {
-		emit updateFiles();
+		emit updateFiles( );
 	}
 }
 
@@ -515,18 +545,16 @@ void FileController::onExecPattern(LabelController* labelController)
 	srcImgMat = MatSrcImage(areaChooseRealSize);
 	cv::Mat patternImg = MatSrcImage(patternAreaRealSize);
 	emit sendImageToPattern(Mat2QImage(patternImg), Mat2QImage(srcImgMat));
-
-	//cv::Point2f Point_1 = MatchPicture(patternImg, srcImg, true);
-	//cv::circle(srcImg, cv::Point(Point_1.x + patternImg.cols / 2, Point_1.y + patternImg.rows / 2), 30, cv::Scalar(255), -1);
-	//cv::imshow("1",srcImg);
 	}
 }
 
 void FileController::slot_receiveDrawPoint(QPoint resultPoint) {
 
-	cv::circle(srcImgMat, cv::Point(resultPoint.x(), resultPoint.y()), 30, cv::Scalar(255), -1);
-	cv::namedWindow("运行测试结果", cv::WINDOW_NORMAL);
-	cv::imshow("运行测试结果", srcImgMat);
+	cv::Mat srcImgClone = srcImgMat.clone();
+
+	cv::circle(srcImgClone, cv::Point(resultPoint.x(), resultPoint.y()), 30, cv::Scalar(255), -1);
+	cv::namedWindow("运行测试结果", cv::WINDOW_AUTOSIZE);
+	cv::imshow("运行测试结果", srcImgClone);
 }
 QStringList FileController::findFiles(const QString& startDir, QStringList filters)
 {
@@ -653,4 +681,7 @@ QImage FileController::Mat2QImage(const cv::Mat cvImage)
 	QImage image;
 	image.loadFromData(baImg, "BMP");
 	return image;
+}
+QString FileController::returnImportFilepath() {
+	return importFilepath;
 }

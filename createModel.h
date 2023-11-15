@@ -84,6 +84,7 @@ public:
 	MenuBar* menuBar;
 	ToolBar* toolBar;
 	StatusBar* statusBar;
+	 QString windowTitleItem;
 
 	DrawFinishedDialog* drawFinishedDialog;
 	DrawFinishedDialog* drawFinishedDialog2D;

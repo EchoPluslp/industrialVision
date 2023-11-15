@@ -10,6 +10,7 @@ createModel::createModel(QWidget* parent) :
     ui->setupUi(this);
 
     setWindowTitle("Ä£°åÉèÖÃ");
+    windowTitleItem = windowTitle();
     QWidget* c = this->takeCentralWidget();
     if (c) delete c;
 
@@ -264,7 +265,7 @@ createModel::createModel(QWidget* parent) :
     //toolBar->addAction(openFileAction);
    // toolBar->addAction(openDirAction);
     toolBar->addAction(saveAction);
-    //toolBar->addAction(saveAsAction);
+    toolBar->addAction(saveAsAction);
     toolBar->addAction(closeFileAction);
     toolBar->addSeparator();
   //  toolBar->addAction(twoDModeAction);
@@ -504,6 +505,7 @@ void createModel::onSaveAsTriggered() {
 void createModel::onCloseFileTriggered() {
     CloseImageCommand* closeImageCommand = new CloseImageCommand(fileController);
     undoStack->push(closeImageCommand);
+    labelController->deleteAllLabel();
 }
 
 void createModel::onNextImageTriggered() {
@@ -631,6 +633,7 @@ void createModel::onMagnifyTriggered()
 void createModel::onGetImageTriggered()
 {
     emit getImageFromCamera();
+	setWindowTitle(windowTitleItem);
 }
 
 void createModel::sendImgToFileController(QImage image,QString modePath)
@@ -672,7 +675,13 @@ void createModel::onFeatureMatchingTriggered()
 
 void createModel::onImportTriggered()
 {
+	labelController->deleteAllLabel();
+
     fileController->importFromFile(labelController);
+    QString item = fileController->returnImportFilepath();
+    QString title(windowTitleItem);
+    title.append("[" + item + "]");
+    setWindowTitle(title);
 }
 
 

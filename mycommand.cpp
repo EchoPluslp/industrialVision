@@ -40,10 +40,6 @@ void CreateLabelCommand::undo()
 }
 
 
-
-
-
-
 DeleteCurrLabelCommand::DeleteCurrLabelCommand(LabelController* labelController, QString type, int id, QUndoCommand* parent) : QUndoCommand(parent)
 {
 
@@ -110,6 +106,7 @@ CloseImageCommand::CloseImageCommand(FileController* fileController, QUndoComman
 	m_fileController = fileController;
 }
 
+//É¾³ýµ±Ç°
 void CloseImageCommand::redo()
 {
 	m_imageName = m_fileController->getCurrImageName();

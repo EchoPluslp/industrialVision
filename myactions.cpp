@@ -52,13 +52,6 @@ NextImageAction::NextImageAction(QObject* parent) : MyActions(parent) {
 	setShortcut(tr("Tab"));
 }
 
-SaveAsAction::SaveAsAction(QObject* parent) : MyActions(parent) {
-	//setIcon(QIcon("./Image/Icon/save_all"));
-	//setText("保存全部");
-	setFont(QFont(tr("宋体"), 30, QFont::Bold, false));//宋体26号，加粗，斜体字
-	setShortcuts(QKeySequence::SaveAs);
-}
-
 DeleteLabelAction::DeleteLabelAction(QObject* parent) : MyActions(parent) {
 	setIcon(QIcon("./Image/Icon/delete_label"));
 	setText("删除操作");
@@ -154,7 +147,13 @@ SaveAction::SaveAction(QObject* parent) : MyActions(parent)
 	setShortcuts(QKeySequence::Save);
 	setFont(QFont(tr("宋体"), 30, QFont::Bold, false));//宋体26号，加粗，斜体字
 }
-
+SaveAsAction::SaveAsAction(QObject* parent) : MyActions(parent)
+{
+	setIcon(QIcon("./Image/Icon/save"));
+	setText("另存为");
+	setShortcuts(QKeySequence::Save);
+	setFont(QFont(tr("宋体"), 30, QFont::Bold, false));//宋体26号，加粗，斜体字
+}
 UndoAction::UndoAction(QObject* parent) : MyActions(parent)
 {
 	setIcon(QIcon("./Image/Icon/undo"));

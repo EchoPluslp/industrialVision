@@ -103,7 +103,7 @@ border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;
 	</string>
                </property>
                <property name="text">
-                <string>连续工作</string>
+                <string>开启相机</string>
                </property>
               </widget>
              </item>
@@ -1269,7 +1269,7 @@ background: #172437;
      <x>0</x>
      <y>0</y>
      <width>1580</width>
-     <height>33</height>
+     <height>32</height>
     </rect>
    </property>
    <property name="font">

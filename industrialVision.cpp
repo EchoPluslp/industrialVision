@@ -1032,6 +1032,7 @@ bool industrialVision::DisplayWindowInitial()
 
 void industrialVision::setButtonClickLimits(bool flag)
 {
+	ui.pushButton_editVision->setEnabled(flag);
 	action_SetModelFile->setEnabled(flag);
 	ui.pushButton_manualOperation->setEnabled(flag);
 	ui.pushButton->setEnabled(flag);

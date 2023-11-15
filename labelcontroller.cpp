@@ -271,3 +271,18 @@ LabelController* LabelController::createFromElement(QDomElement elem)
 	}
 	return this;
 }
+
+bool LabelController::checkSaveLabelOn()
+{
+	//判断是否符合规范,主要判断搜索区域和特征区域,输出点是否有多个
+	for (auto type : m_typeToCount.keys()) {
+		QList<Label*> labelList = m_typeToLabel.value(type);
+		if (labelList.count() > 1)
+		{
+			QMessageBox::warning(nullptr, tr("保存异常"),
+				tr("保存状态异常,请保持搜索区域,特征匹配,输出点各自最多1个"));
+			return false;
+		}
+	}
+	return  true;
+}

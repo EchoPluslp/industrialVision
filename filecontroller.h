@@ -40,16 +40,21 @@ class FileController : public QObject
 	cv::Point MatchPicture(cv::Mat templateImage, cv::Mat srcImage, bool threSholdFlag);
 	cv::Mat CalculateNcc(cv::Mat src, cv::Mat temp, cv::Mat& result);
 	QImage FileController::Mat2QImage(const cv::Mat cvImage);
-	cv::Mat srcImgMat;
 	
-	QRect areaChooseREAL_Size;
+	//搜索范围图
+	cv::Mat srcImgMat;
+	cv::Point srcImgResultPoint;
+	
+		QRect areaChooseREAL_Size;
 	QRect patternAreaREAL_size;
+
+	QString importFilepath;
 public:
 	FileController(QObject* parent = nullptr);
 	~FileController();
 
 	cv::Mat QImage2Mat(QImage image);
-
+	QString FileController::returnImportFilepath();
 public slots:
 	//添加一个文件
 	bool addFile(QString& fileName, const QString& filePath, const QImage& image);
@@ -65,7 +70,7 @@ public slots:
 	//保存单张图片的Label信息
 	void saveFile(LabelController* labelController);
 
-	//保存当前所有图片的Label信息
+	//另存为
 	void saveAsFile(LabelController* labelController);
 
 	//手动导入Label信息

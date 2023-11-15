@@ -71,6 +71,8 @@ public slots:
 	//从DOM节点恢复信息
 	LabelController* createFromElement(QDomElement elem);
 
+	//判断当前的label是否符合规范
+	bool checkSaveLabelOn();
 signals:
 	void labelCreated(const QString&, int);
 	void labelDeleted(const QString&, int);
