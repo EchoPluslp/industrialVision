@@ -767,6 +767,9 @@ box-sizing: border-box;
 border: 1px solid #3B4756;
 	</string>
                      </property>
+                     <property name="inputMethodHints">
+                      <set>Qt::ImhDigitsOnly</set>
+                     </property>
                      <property name="readOnly">
                       <bool>false</bool>
                      </property>
@@ -1318,7 +1321,7 @@ background: #172437;
    <slot>click_continuousOperation()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1202</x>
+     <x>212</x>
      <y>115</y>
     </hint>
     <hint type="destinationlabel">
@@ -1334,7 +1337,7 @@ background: #172437;
    <slot>click_manualOperation()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1004</x>
+     <x>410</x>
      <y>115</y>
     </hint>
     <hint type="destinationlabel">
@@ -1350,7 +1353,7 @@ background: #172437;
    <slot>click_stopOperation()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>806</x>
+     <x>1202</x>
      <y>115</y>
     </hint>
     <hint type="destinationlabel">
@@ -1382,7 +1385,7 @@ background: #172437;
    <slot>click_createServer()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>318</x>
+     <x>1004</x>
      <y>115</y>
     </hint>
     <hint type="destinationlabel">
@@ -1398,7 +1401,7 @@ background: #172437;
    <slot>openShiShiPiPei()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>166</x>
+     <x>781</x>
      <y>115</y>
     </hint>
     <hint type="destinationlabel">
@@ -1414,8 +1417,8 @@ background: #172437;
    <slot>OnBnClickedSetParameterButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>859</x>
-     <y>1012</y>
+     <x>858</x>
+     <y>859</y>
     </hint>
     <hint type="destinationlabel">
      <x>1564</x>
@@ -1431,7 +1434,7 @@ background: #172437;
    <hints>
     <hint type="sourcelabel">
      <x>437</x>
-     <y>1012</y>
+     <y>859</y>
     </hint>
     <hint type="destinationlabel">
      <x>1565</x>

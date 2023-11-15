@@ -207,7 +207,7 @@ createModel::createModel(QWidget* parent) :
     // set up tool bar
     toolBar = new ToolBar(this);
     toolBar->setIconSize(QSize(60, 60));
-	toolBar->setStyleSheet("font:24px;color: rgb(255, 255, 255);background-color: rgba(35, 65, 114, 1);");
+	toolBar->setStyleSheet("font:bold 24px;color: rgb(255, 255, 255);background-color: rgba(35, 65, 114, 1);");
     setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
 	toolBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -249,7 +249,7 @@ createModel::createModel(QWidget* parent) :
 	//toolBar->addAction(squarePenModeAction);
     QWidget* test = new QWidget();
     test->setStyleSheet("color: rgb(255, 255, 255); background-color: rgba(35, 65, 114, 1);");
-    test->setFixedSize(QSize(20, 20));
+    test->setFixedSize(QSize(100, 100));
     
 	toolBar->addWidget(test);
 	//test->move(0, 0);

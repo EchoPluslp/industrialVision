@@ -81,7 +81,7 @@ private:
 
 
     double                      m_dToleranceAngle =0;
-    double                  m_dScore = 0.8;//得分阈值
+    double                  m_dScore = 80;//得分阈值
     double                  m_iMaxPos =   2;//最多数量
     double                  m_dMaxOverlap  = 0;
     bool                       rotate_image = false;

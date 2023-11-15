@@ -966,7 +966,25 @@ void ProcessingThread::slot_processThread_Pattren()
 
 void ProcessingThread::set_Grade(QString grade)
 {
-	m_dScore = grade.toDouble();
+	// 将QString转换为整数
+	int m_dScoreint = grade.toInt();
+
+	// 检查值是否在 [0, 100] 范围内
+	if (m_dScoreint >= 0 && m_dScoreint <= 100)
+	{
+		// 将其转换为带有两位小数的十进制数
+		double m_dScoreDecimal = static_cast<double>(m_dScoreint) / 100.0;
+
+		// 使用 'f' 格式规范将十进制数格式化为带有两位小数的QString
+		QString formattedGrade = QString::number(m_dScoreDecimal, 'f', 2);
+
+		m_dScore = formattedGrade.toDouble();
+	}
+	else
+	{
+
+		m_dScore = 0.8;
+	}
 }
 
 //模板匹配界面窗口运行

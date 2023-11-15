@@ -1087,7 +1087,7 @@ int industrialVision::GetExposureTime()
 	{
 		return nRet;
 	}
-	m_dExposureEdit = stFloatValue.fCurValue;
+	m_dExposureEdit = stFloatValue.fCurValue / 100.0;
     ui.exposure_edit->clear();
     ui.exposure_edit->setText(QString::number(m_dExposureEdit,'f', 0));
 
@@ -1096,9 +1096,8 @@ int industrialVision::GetExposureTime()
 
 int industrialVision::SetExposureTime()
 {
-	m_pcMyCamera->SetEnumValue("ExposureAuto", MV_EXPOSURE_AUTO_MODE_OFF);
-
-    m_dExposureEdit = ui.exposure_edit->text().toFloat();
+	//外面显示的值是除以了100的
+    m_dExposureEdit = ui.exposure_edit->text().toFloat() * 100;
 	return m_pcMyCamera->SetFloatValue("ExposureTime", (float)m_dExposureEdit);
 }
 
@@ -1241,7 +1240,22 @@ void industrialVision::OnBnClickedSetParameterButton()
 	{
 		AppendText("参数设置成功",Green);
 	}
-    m_dScore = ui.grade_edit->text().toDouble();
+	//得分
+	QString String_m_grade = ui.grade_edit->text();
+	double ba = String_m_grade.toDouble();//QString 转换为 char*  
+
+	if (0 < ba && ba < 100)
+	{ //在0-1范围内
+		String_m_grade = QString::number(ba, 'f', 0);
+	}
+	else
+	{ //设为默认值  
+		String_m_grade = QString::number(m_dScore, 'f', 0);
+	}
+	ui.grade_edit->clear();
+	ui.grade_edit->setText(String_m_grade);
+	emit send_Grade(String_m_grade);
+
 }
 
 void industrialVision::Setinitializationparameters()
@@ -1286,15 +1300,15 @@ void industrialVision::Setinitializationparameters()
 
 	//得分
 	QString String_m_grade = settings->value("m_grade").toString();
-	double ba = String_m_grade.toDouble();//QString 转换为 char*  
+	int ba = String_m_grade.toInt();//QString 转换为 char*  
 
-	if (0< ba && ba  < 1)
+	if (0< ba && ba  < 100)
 	{ //在0-1范围内
-		String_m_grade = QString::number(ba, 'f', 2);
+		String_m_grade = QString::number(ba, 'f', 0);
 	}
 	else
 	{ //设为默认值  
-		String_m_grade = QString::number(m_dScore, 'f', 2);
+		String_m_grade = QString::number(m_dScore, 'f', 0);
 	}
 
 
