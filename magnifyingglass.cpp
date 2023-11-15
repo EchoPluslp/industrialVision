@@ -4,7 +4,7 @@
 #include <QLabel>
 MagnifyingGlass::MagnifyingGlass(QWidget* parent) : QDockWidget(parent)
 {
-	setWindowTitle("Magnifying");
+	setWindowTitle("·Å´ó¾µ");
 
 	setFeatures(QDockWidget::DockWidgetClosable);
 	setFeatures(QDockWidget::DockWidgetMovable);
@@ -45,8 +45,6 @@ MagnifyingGlass::MagnifyingGlass(QWidget* parent) : QDockWidget(parent)
 	layout->addWidget(view);
 	dockContent->setLayout(layout);
 	setWidget(dockContent);
-
-
 }
 
 

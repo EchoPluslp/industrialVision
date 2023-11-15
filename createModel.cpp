@@ -170,17 +170,34 @@ createModel::createModel(QWidget* parent) :
     for (int i = 0; i < 3; i++) {
         menuBar->addMenu(menus[i]);
     }
-	menuBar->setStyleSheet("font:16px; color: rgb(255, 255, 255); background-color: rgba(26, 45, 77, 1);");
+	menuBar->setStyleSheet("font:14px; color: rgb(255, 255, 255); background-color: rgba(26, 45, 77, 1);");
 
   //  menus[0]->addAction(openFileAction);
     menus[0]->addSeparator();
+	menus[0]->addAction(importAction);
+	menus[0]->addSeparator();
+
     menus[0]->addAction(execPatternAction);
     menus[0]->addSeparator();
-    menus[0]->addAction(saveAction);
-    menus[0]->addAction(importAction);
-    menus[0]->addAction(closeFileAction);
 
-  //  menus[1]->addAction(undoAction);
+    menus[0]->addAction(saveAction);
+	menus[0]->addSeparator();
+
+	menus[0]->addAction(saveAsAction);
+	menus[0]->addSeparator();
+
+    menus[0]->addAction(closeFileAction);
+	menus[0]->addSeparator();
+
+	menus[1]->addSeparator();
+    menus[1]->addAction(searchAreaRectActionItem);
+	menus[1]->addSeparator();
+	menus[1]->addAction(featureMatchingRectActionItem);
+    menus[1]->addSeparator();
+	menus[1]->addAction(setPointAction);
+    menus[1]->addSeparator();
+	menus[1]->addAction(curseModeAction);
+	menus[1]->addSeparator();
   //  //menus[1]->addAction(redoAction);
   //  //menus[1]->addAction(nextImageAction);
   // // menus[1]->addAction(prevImageAction);
@@ -198,8 +215,8 @@ createModel::createModel(QWidget* parent) :
     
     // set up tool bar
     toolBar = new ToolBar(this);
-    toolBar->setIconSize(QSize(80, 80));
-	toolBar->setStyleSheet("background-color: rgba(35, 65, 114, 1);");
+    toolBar->setIconSize(QSize(59, 59));
+	toolBar->setStyleSheet(" color: rgb(255, 255, 255);background-color: rgba(35, 65, 114, 1);");
     setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     //QSlider* radiusSlider = new QSlider(Qt::Horizontal);
@@ -480,9 +497,10 @@ createModel::createModel(QWidget* parent) :
 createModel::~createModel()
 {
     delete ui;
+    magnifying2D->close();
     SAFE_DELETE(magnifying2D);
     SAFE_DELETE(graphicsView2D)
-        SAFE_DELETE(paintScene2D);
+    SAFE_DELETE(paintScene2D);
 }
 
 void createModel::closeEvent(QCloseEvent* event)
