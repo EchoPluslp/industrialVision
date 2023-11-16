@@ -45,6 +45,9 @@ industrialVision::industrialVision(QWidget *parent)
 
 	connect(this, &industrialVision::send_Grade, m_processingThread, &ProcessingThread::set_Grade, Qt::QueuedConnection);
 
+	connect(this, &industrialVision::openSourceArea, m_processingThread, &ProcessingThread::slot_setSourceArea, Qt::QueuedConnection);
+
+	
 	connect(&TransmitSignals::GetInstance(), &TransmitSignals::create_once_pattern, m_processingThread, &ProcessingThread::slot_processThread_Pattren);
 	
 	connect(&TransmitSignals::GetInstance(), &TransmitSignals::sendToIndustrString, this, &industrialVision::addTextBrower);
@@ -450,7 +453,6 @@ void industrialVision::click_editVision()
 
     createModelItem.show();
     //更新xml文件
-    shishiPiPei_FLAG = false;
     AppendText("打开视觉模板界面",Green);
 
 }
@@ -736,18 +738,21 @@ QPoint industrialVision::getCenterPointFromCircle(QList<QPoint> listCircle)
 	return QPoint(min_x + (max_x - min_x) / 2, min_y + (max_y - min_y) / 2);
 }
 
-
+//搜索区域按钮
 void industrialVision::openShiShiPiPei()
 {
-    if (shishiPiPei_FLAG) {
-        AppendText("实时匹配关闭",Red);
-        QMessageBox::information(this, "提示信息", "实时匹配关闭");
+    if (sourceAreaOn) {
+		AppendText("搜索区域开启", Green);
+		ui.pushButton->setStyleSheet("/* 证券 */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* 背景/4 页签选中色 */ background: #285790; color: rgb(255, 0, 0); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
+
     }
     else {
-        AppendText("实时匹配开启",Green);
-        QMessageBox::information(this, "提示信息", "实时匹配开启");
+		AppendText("搜索区域关闭", Red);
+		ui.pushButton->setStyleSheet("/* 证券 */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* 背景/4 页签选中色 */ background: #285790; color: rgb(255, 255, 255); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
     }
-    shishiPiPei_FLAG = !shishiPiPei_FLAG;
+	
+	emit openSourceArea(sourceAreaOn);
+	sourceAreaOn = !sourceAreaOn;
 }
 
 void industrialVision::openshizixian()
@@ -1380,7 +1385,7 @@ void industrialVision::SaveInitializationParameters()
 	settings->setValue("m_height", ui.height_edit->text());
 	settings->setValue("m_xmlFilePath", m_xmlpath); 
 	settings->setValue("m_rotateIndex", m_cameraThread->getRotateIndex());
-	
+
 	settings->endGroup();
 	delete settings;
 
@@ -1429,7 +1434,9 @@ void industrialVision::smallwindow_button_click()
     setWindowFlags(Qt::WindowStaysOnTopHint);
     show();
 }
-
+                                                      
+//todo,,, 实时范围框
+// 高级设置界面
 void industrialVision::slot_displayPixmap(QPixmap newPixmap, int index)
 {
 	if (newPixmap.isNull())
@@ -1505,7 +1512,6 @@ void industrialVision::actionPasswordAction()
 int industrialVision::CloseDevice()
 {
     m_bThreadState = FALSE;
-    shishiPiPei_FLAG = FALSE;
     if (m_pcMyCamera)
     {
         m_pcMyCamera->Close();

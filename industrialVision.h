@@ -160,7 +160,7 @@ public:
 
      bool industrialVision::getPatternInfoFromXML(QString path);
      //false 没有更新 true 已经更新
-     bool  shishiPiPei_FLAG = false;
+     bool  sourceAreaOn = true;
 	 bool  small_window_flag = false;
 	 bool   defaultCamcare= true;
 
@@ -236,6 +236,7 @@ signals:
     void signal_processThread_pattren();
     void send_Grade(QString grade);
     void setdefultCamare(bool flag);
+    void openSourceArea(bool flag);
 };
 
 #endif

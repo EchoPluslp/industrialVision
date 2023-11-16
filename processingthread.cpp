@@ -67,9 +67,7 @@ void ProcessingThread::run()
 					{
 						areaMatRect.y = tempMap.rows - areaMatRect.height;
 					 
-					}
-					 
-
+					}		 
 					cv::Point2f Point_1 = MatchPicture(patternMat, tempMap(areaMatRect),false);
 					pattern_Flag = false;
 					resultPointF.setX(Point_1.x);
@@ -95,6 +93,18 @@ void ProcessingThread::run()
 					patternNG();
 				}
 				pattern_Flag = false;
+				//判断是否需要展示范围图
+				if (area_Flag)
+				{
+					QPen pen;
+					pen.setStyle(Qt::SolidLine);            //定义画笔的风格，直线、虚线等
+					pen.setWidth(10);                        //定义画笔的大小
+					pen.setBrush(Qt::red);
+					QPainter painter(&newPixmap_1);
+					painter.setPen(pen);
+					painter.drawRect(areaMatRect.x, areaMatRect.y, areaMatRect.width, areaMatRect.height);
+					
+				}
 				//将处理好的图像发现到主界面
 				emit signal_newPixmap(newPixmap_1, 0);
 				m_width = newPixmap_1.width();
@@ -1037,6 +1047,10 @@ void ProcessingThread::slot_processMatchPicture(QImage patternImage, QImage sour
 	int total_time = timedebuge.elapsed();
 	
 	emit QPointSendtoFileControl(QPoint(resultPoint.x, resultPoint.y), total_time);
+}
+void ProcessingThread::slot_setSourceArea(bool flag)
+{
+	area_Flag = flag;
 }
 double ProcessingThread::calculateInitialDistance(QPoint A, QPoint B)
 {

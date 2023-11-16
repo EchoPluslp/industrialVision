@@ -237,7 +237,7 @@ border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;
 	</string>
                </property>
                <property name="text">
-                <string>实时匹配</string>
+                <string>搜索区域</string>
                </property>
               </widget>
              </item>

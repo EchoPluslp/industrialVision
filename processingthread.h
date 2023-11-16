@@ -71,7 +71,7 @@ public slots:
 	void slot_processThread_Pattren();
 	void set_Grade(QString grade);
 	void slot_processMatchPicture(QImage patternImage,QImage sourceImage);
-
+	void slot_setSourceArea(bool flag);
 private:
 	cv::Point2d drawCenterPoint;
 	bool startFlag = false;
@@ -86,6 +86,8 @@ private:
 	QPointF resultPointF;
 	QPoint patternRectCenterPointInProcess;
 	bool pattern_Flag;
+	bool area_Flag = false;
+
 	//匹配结果
 	cv::Point2f resultPoint;
 	//矫正后的结果
