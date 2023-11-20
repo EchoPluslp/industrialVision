@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>logoPath</class>
+ <widget class="QWidget" name="logoPath">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>566</width>
+    <height>263</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">
+QPushButton::hover 
+{
+	background-color: #1450C7;
+}
+position: absolute;
+left: 432px;
+top: 68px;
+width: 112px;
+height: 60px;
+opacity: 1;
+	
+background: #285790;
+	
+color: rgb(255, 255, 255);
+box-sizing: border-box;
+border-width: 0px 1px 0px 0px;
+border-style: solid;
+border-color: #111117;
+	</string>
+         </property>
+         <property name="text">
+          <string>设置Logo</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_logoPath">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QPushButton" name="pushButton_2">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">
+QPushButton::hover 
+{
+	background-color: #1450C7;
+}
+position: absolute;
+left: 432px;
+top: 68px;
+width: 112px;
+height: 60px;
+opacity: 1;
+	
+background: #285790;
+	
+color: rgb(255, 255, 255);
+box-sizing: border-box;
+border-width: 0px 1px 0px 0px;
+border-style: solid;
+border-color: #111117;
+	</string>
+         </property>
+         <property name="text">
+          <string>设置名称</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_namePath">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QPushButton" name="pushButton_3">
+       <property name="styleSheet">
+        <string notr="true">
+QPushButton::hover 
+{
+	background-color: #1450C7;
+}
+position: absolute;
+left: 432px;
+top: 68px;
+width: 112px;
+height: 60px;
+opacity: 1;
+	
+background: #285790;
+	
+color: rgb(255, 255, 255);
+box-sizing: border-box;
+border-width: 0px 1px 0px 0px;
+border-style: solid;
+border-color: #111117;
+	</string>
+       </property>
+       <property name="text">
+        <string>保存</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_4">
+       <property name="styleSheet">
+        <string notr="true">
+QPushButton::hover 
+{
+	background-color: #1450C7;
+}
+position: absolute;
+left: 432px;
+top: 68px;
+width: 112px;
+height: 60px;
+opacity: 1;
+	
+background: #285790;
+	
+color: rgb(255, 255, 255);
+box-sizing: border-box;
+border-width: 0px 1px 0px 0px;
+border-style: solid;
+border-color: #111117;
+	</string>
+       </property>
+       <property name="text">
+        <string>取消</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>logoPath</receiver>
+   <slot>logoSet_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>84</x>
+     <y>45</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>132</x>
+     <y>4</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>logoPath</receiver>
+   <slot>namePath_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>104</x>
+     <y>133</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>35</x>
+     <y>7</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_3</sender>
+   <signal>clicked()</signal>
+   <receiver>logoPath</receiver>
+   <slot>setParam_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>202</x>
+     <y>235</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_4</sender>
+   <signal>clicked()</signal>
+   <receiver>logoPath</receiver>
+   <slot>cancelParam_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>481</x>
+     <y>219</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>562</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>logoSet_click()</slot>
+  <slot>namePath_click()</slot>
+  <slot>setParam_click()</slot>
+  <slot>cancelParam_click()</slot>
+ </slots>
+</ui>

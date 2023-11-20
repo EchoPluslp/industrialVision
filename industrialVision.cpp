@@ -99,6 +99,13 @@ industrialVision::industrialVision(QWidget *parent)
 	connect(action_password, &QAction::triggered,
 		this, &industrialVision::actionPasswordAction);
 
+	auto action_setLogoPath = new QAction();
+	action_setLogoPath->setText("图标设置");
+	action_setLogoPath->setFont(QFont(tr("宋体"), 40, QFont::Bold, false));
+	ui.menuBar->addAction(action_setLogoPath);
+	connect(action_setLogoPath, &QAction::triggered,
+		this, &industrialVision::actionLogAndPathAction);
+
 
 	auto action_helpInfo = new QAction();
     action_helpInfo->setText("帮助");
@@ -454,7 +461,6 @@ void industrialVision::click_editVision()
     createModelItem.show();
     //更新xml文件
     AppendText("打开视觉模板界面",Green);
-
 }
 
 void industrialVision::getImageOneFrame() {
@@ -1104,6 +1110,8 @@ int industrialVision::GetExposureTime()
 
 int industrialVision::SetExposureTime()
 {
+	m_pcMyCamera->SetEnumValue("ExposureAuto", MV_EXPOSURE_AUTO_MODE_OFF);
+
 	//外面显示的值是除以了100的
     m_dExposureEdit = ui.exposure_edit->text().toFloat() * 100;
 	return m_pcMyCamera->SetFloatValue("ExposureTime", (float)m_dExposureEdit);
@@ -1467,7 +1475,6 @@ void industrialVision::logQuery()
 
 void industrialVision::helpInfo()
 {
-	
 }
 
 void industrialVision::updateTime()
@@ -1506,6 +1513,12 @@ void industrialVision::actionPasswordAction()
 {
 	//打开密码设置界面
 	passwordSetItem.show();
+}
+
+void industrialVision::actionLogAndPathAction()
+{
+	logoPathItem.show();
+
 }
 
 

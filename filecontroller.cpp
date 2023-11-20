@@ -374,9 +374,11 @@ void FileController::importFromFile(LabelController* labelController)
 				tr("视觉模板设置错误,请重新设置模板信息"));
 			return;
 		}
-		labelController->deleteAllLabel();
 
-		getImageFromCameraFromImport(icomString);
+		if (!getImageFromCameraFromImport(icomString)) {
+			return;
+		}
+		labelController->deleteAllLabel();
 
 		labelController->createFromElement(root);
 
@@ -387,8 +389,8 @@ void FileController::importFromFile(LabelController* labelController)
 		QMessageBox::warning(nullptr, tr("Path"),
 			tr("未选择文件."));
 	}
-
 }
+
 QString FileController::getImageNameFromXML(QDomElement elem) {
 	elem = elem.cloneNode(true).toElement();
 	qDebug() << elem.tagName();
@@ -438,7 +440,7 @@ void FileController::getImageFromCamera(QImage image,QString modePath)
 
 //模板设置界面导入功能设置
 //name指定的图片文件名,不易修改,因为与label绑定
-void FileController::getImageFromCameraFromImport(QString imageName)
+bool FileController::getImageFromCameraFromImport(QString imageName)
 {
 	bool addedSucceeded = false;
 
@@ -447,6 +449,12 @@ void FileController::getImageFromCameraFromImport(QString imageName)
 	 QString fileName = stringModelNameAndPath.at(1);
 	QImage image(stringModelNameAndPath.at(0)+ fileName);
 	int x = image.width();
+	if (x==0)
+	{
+		QMessageBox::warning(nullptr, tr("图片异常"),
+			"模板图片异常,导入失败");
+		return addedSucceeded;
+	}
 	addFile(fileName, stringModelNameAndPath.at(0), image);
 	addedSucceeded = true;
 	if (addedSucceeded) {

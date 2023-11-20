@@ -10,9 +10,17 @@ login::login(QWidget* parent) :
 	ui->dabeijing->setPixmap(QPixmap("Image/login/dabeijing.png"));
 	ui->label->setPixmap(QPixmap("Image/login/user-fill.png"));
 	ui->label_2->setPixmap(QPixmap("Image/login/lock-fill.png"));	
-	ui->label_logo->setPixmap(QPixmap("Image/login/logo.png"));
-	ui->label_text->setPixmap(QPixmap("Image/login/text.png"));
-	setWindowTitle(" ");
+
+	//  //读取上次关闭时的状态
+	QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
+	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
+	settings->beginGroup("Idus");
+	QString logoPath = settings->value("logopath", "Image/login/logo.png").toString();
+	QString textPath= settings->value("textpath", "Image/login/text.png").toString();
+
+	ui->label_logo->setPixmap(QPixmap(logoPath));
+	ui->label_text->setPixmap(QPixmap(textPath));
+	setWindowTitle("登录界面");
 	setWindowFlags(Qt::WindowStaysOnTopHint);
 
 	//白色填充左上角图标

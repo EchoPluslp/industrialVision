@@ -4,6 +4,12 @@
 bool checkOnly();
 
 int main(int argc, char *argv[]){
+
+
+#if (QT_VERSION > QT_VERSION_CHECK(5,6,0))
+	QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
+
 	QApplication a(argc, argv);
 	 
 	//  //读取上次关闭时的状态
@@ -12,6 +18,11 @@ int main(int argc, char *argv[]){
 	settings->beginGroup("Idus");
 	//曝光
 	QString password = settings->value("password").toString();
+	if (!checkOnly())
+	{
+		QMessageBox::critical(NULL, "错误信息", "视觉软件已经启动,请关闭后再重新打开");
+		return NULL;
+	}
 	if (password.isNull() || password.size() == 0)
 	{
 		industrialVision w;

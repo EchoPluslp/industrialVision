@@ -119,6 +119,7 @@
     <ClCompile Include="labeltypedockwidget.cpp" />
     <ClCompile Include="listwidget.cpp" />
     <ClCompile Include="login.cpp" />
+    <ClCompile Include="logoPath.cpp" />
     <ClCompile Include="logoSet.cpp" />
     <ClCompile Include="magnifyingglass.cpp" />
     <ClCompile Include="main.cpp" />
@@ -152,6 +153,7 @@
     <QtUic Include="industrialVision.ui" />
     <QtUic Include="labelAttr.ui" />
     <QtUic Include="login.ui" />
+    <QtUic Include="logoPath.ui" />
     <QtUic Include="logoSet.ui" />
     <QtUic Include="passwordSet.ui" />
     <QtUic Include="smallMainWindow.ui" />
@@ -170,6 +172,7 @@
     <ClInclude Include="globalvar.h" />
     <QtMoc Include="myglwidget.h" />
     <QtMoc Include="logoSet.h" />
+    <QtMoc Include="logoPath.h" />
     <ClInclude Include="Mstruct.h" />
     <QtMoc Include="passwordSet.h" />
     <ClInclude Include="point.h" />

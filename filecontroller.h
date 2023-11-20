@@ -83,7 +83,7 @@ public slots:
 	void getImageFromCamera(QImage image,QString modePath);
 
 	//根据图片名加载图片
-	void getImageFromCameraFromImport(QString imageName);
+	bool getImageFromCameraFromImport(QString imageName);
 
 	//从root获得fileName
 	QString FileController::getImageNameFromXML(QDomElement root);

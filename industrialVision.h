@@ -19,6 +19,7 @@
 #include "connectServer.h"
 #include "createModel.h"
 #include "logoSet.h"
+#include "logoPath.h"
 #include"smallMainWindow.h"
 #include  <QtXml>
 #include <QDateTime>
@@ -106,6 +107,8 @@ private:
 private:
 	Ui::industrialVision ui;
     logoSet logoset;
+	logoPath logoPathItem;
+
     /*ch:最开始时的窗口初始化 | en:Window initialization*/
     bool DisplayWindowInitial();
     void setButtonClickLimits(bool flag);
@@ -227,6 +230,7 @@ private slots:
          void slot_modelPictureReadFlag();
          void getRotateValue(int x);
          void actionPasswordAction();
+         void actionLogAndPathAction();
 signals:
     void sendQimageToVisualTemplate(QImage data);
     void cameraTovisualTemplate(QImage img,QString path);
