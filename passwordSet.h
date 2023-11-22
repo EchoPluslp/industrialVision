@@ -17,11 +17,15 @@ public:
 	//已选操作和属性设置 
 	~passwordSet();
 	bool passwordSet::isAlphaNumeric(const QString& str);
+	QString stringRole;
+	void setcurrentRole(QString stringRole);
 private:
 	Ui::password* ui;
 
 public slots:
-	void passwordSetclick();
+	void passwordAdminSetclick();
+	void passwordUserSetclick();
+
 	void readSetPassword();
 };
 #endif

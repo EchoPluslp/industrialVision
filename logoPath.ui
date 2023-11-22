@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>566</width>
-    <height>263</height>
+    <width>683</width>
+    <height>312</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -49,7 +49,7 @@ border-color: #111117;
 	</string>
          </property>
          <property name="text">
-          <string>设置Logo</string>
+          <string>图标设置</string>
          </property>
         </widget>
        </item>
@@ -98,7 +98,7 @@ border-color: #111117;
 	</string>
          </property>
          <property name="text">
-          <string>设置名称</string>
+          <string>软件名称设置</string>
          </property>
         </widget>
        </item>

@@ -5,6 +5,8 @@
 #pragma once
 #pragma execution_character_set("utf-8")
 #define SAFE_DELETE(p) { if (p) { delete (p);     (p) = nullptr; } }
+#define ROLE_USER "操作员"
+#define ROLE_ADMIN "管理员"
 
 #include <QtWidgets/QMainWindow>
 #include "ui_industrialVision.h"
@@ -48,6 +50,7 @@ public:
     const QString Green = "GREEN";
 	const  QString Red = "GED";
 	const  QString Gray = "GRAY";
+	  QString CURRENT_ROLE;
 
 	 connectServer connectValual;
 
@@ -66,8 +69,9 @@ private:
     QString                  m_xmlpath;
     QComboBox*               m_ctrlDeviceCombo;                // ch:枚举到的设备 | en:Enumerated device
     int                     m_nDeviceCombo;
-   // QAction* action_SetModelFile;
-    QAction *action_SetModelFile;
+
+
+
     int matchTime_total;
     QPointF resultPointF;
     createModel createModelItem;
@@ -95,7 +99,13 @@ private:
 
     bool flag_90 = false;//90度标识符
     //菜单栏按钮
+	QMenu* menus;
+
+    QAction *action_SetModelFile;
     QAction *action_RestoreWindow;
+    QAction *action_setLogoPath;
+    QAction *action_SetAttributes;
+    QAction *action_password;
 
     //界面计时器
 	QTimer* timer  = new QTimer;  //初始化定时器
@@ -178,6 +188,8 @@ public:
 	// MyGLWidget glWidget = new MyGLWidget(this);
      int rotateValue;
 
+     void setCURRENT_ROLE(QString currentROle);
+
 	 protected:
 		 void closeEvent(QCloseEvent* event) override {
 			 // 创建 QMessageBox 对话框
@@ -224,7 +236,7 @@ private slots:
      void smallwindow_button_click();
 		 void slot_displayPixmap(QPixmap newPixmap, int index);
          void slot_get_patternResult(QPointF resultPoint,int matchTime);
-         void logQuery(); 
+         void action_AttributesSet();
          void helpInfo();
          void updateTime();
          void slot_modelPictureReadFlag();

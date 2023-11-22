@@ -63,50 +63,58 @@ industrialVision::industrialVision(QWidget *parent)
 	//connect(action_shizixian, &QAction::triggered,
 	//	this, &industrialVision::openShiShiPiPei);
 
-	//QMenu* menus;
-	//menus = new QMenu("&工具", ui.menuBar);
-	//ui.menuBar->addMenu(menus);
-	//menus->addAction(action_shizixian);
 
 
-	action_SetModelFile = new QAction();
-	action_SetModelFile->setFont(QFont(tr("宋体"), 60, QFont::Bold, false));//宋体26号，加粗，斜体字
-    action_SetModelFile->setText("模板设置");
-    ui.menuBar->addAction(action_SetModelFile);
-
-    connect(action_SetModelFile, &QAction::triggered,
-        this, &industrialVision::setModelXMLFile);
-	action_SetModelFile->setEnabled(false);
-
-	 action_RestoreWindow = new QAction();
-    action_RestoreWindow->setText("窗口切换");
-    action_RestoreWindow->setFont(QFont(tr("宋体"), 40, QFont::Bold, false));
+	action_RestoreWindow = new QAction();
+	action_RestoreWindow->setText("实时显示");
+	action_RestoreWindow->setFont(QFont(tr("宋体"), 40, QFont::Bold, false));
 	ui.menuBar->addAction(action_RestoreWindow);
 	connect(action_RestoreWindow, &QAction::triggered,
 		this, &industrialVision::restoreWindow);
 
-	auto action_logQuery = new QAction();
-    action_logQuery->setText("日志设置");
-    action_logQuery->setFont(QFont(tr("宋体"),40, QFont::Bold, false));
-	ui.menuBar->addAction(action_logQuery);
-	connect(action_logQuery, &QAction::triggered,
-		this, &industrialVision::logQuery);
+	action_SetModelFile = new QAction();
+	action_SetModelFile->setFont(QFont(tr("宋体"), 60, QFont::Bold, false));//宋体26号，加粗，斜体字
+    action_SetModelFile->setText("工程导入");
+    ui.menuBar->addAction(action_SetModelFile);
+    connect(action_SetModelFile, &QAction::triggered,
+        this, &industrialVision::setModelXMLFile);
+	action_SetModelFile->setEnabled(false);
 
-	auto action_password = new QAction();
+	 
+	action_SetAttributes = new QAction();
+	action_SetAttributes->setText("属性设置");
+	action_SetAttributes->setFont(QFont(tr("宋体"),40, QFont::Bold, false));
+	connect(action_SetAttributes, &QAction::triggered,
+		this, &industrialVision::action_AttributesSet);
+
+	action_password = new QAction();
 	action_password->setText("密码设置");
 	action_password->setFont(QFont(tr("宋体"), 40, QFont::Bold, false));
-	ui.menuBar->addAction(action_password);
 	connect(action_password, &QAction::triggered,
 		this, &industrialVision::actionPasswordAction);
 
-	auto action_setLogoPath = new QAction();
+	 action_setLogoPath = new QAction();
 	action_setLogoPath->setText("图标设置");
 	action_setLogoPath->setFont(QFont(tr("宋体"), 40, QFont::Bold, false));
-	ui.menuBar->addAction(action_setLogoPath);
 	connect(action_setLogoPath, &QAction::triggered,
 		this, &industrialVision::actionLogAndPathAction);
 
+	//QMenu* menus;
+	//menus = new QMenu("&设置", ui.menuBar);
+	//ui.menuBar->addMenu(menus);
+	//if (CURRENT_ROLE == ROLE_ADMIN)
+	//{
+	//	//图标设置                                                                                                                                                                                                                   
+	//	menus->addAction(action_setLogoPath);
+	//	//日志设置
+	//	menus->addAction(action_AttributesSet);
+	//}
+	////密码设置
+	//menus->addAction(action_password);
 
+	menus = new QMenu("&设置", ui.menuBar);
+	ui.menuBar->addMenu(menus);
+	
 	auto action_helpInfo = new QAction();
     action_helpInfo->setText("帮助");
     action_helpInfo->setFont(QFont(tr("宋体"),40, QFont::Bold, false));
@@ -744,13 +752,32 @@ QPoint industrialVision::getCenterPointFromCircle(QList<QPoint> listCircle)
 	return QPoint(min_x + (max_x - min_x) / 2, min_y + (max_y - min_y) / 2);
 }
 
+void industrialVision::setCURRENT_ROLE(QString currentROle)
+{
+	this->CURRENT_ROLE = currentROle;
+	//窗口栏增加当前权限
+	QString title(windowTitle());
+	title.append("[" + CURRENT_ROLE + "]");
+	setWindowTitle(title);
+	
+	//增加设置界面,管理员和操作员分开
+	if (CURRENT_ROLE == ROLE_ADMIN)
+	{
+		//图标设置                                                                                                                                                                                                                   
+		menus->addAction(action_setLogoPath);
+		//日志设置
+		menus->addAction(action_SetAttributes);
+	}
+	//密码设置
+	menus->addAction(action_password);
+}
+
 //搜索区域按钮
 void industrialVision::openShiShiPiPei()
 {
     if (sourceAreaOn) {
 		AppendText("搜索区域开启", Green);
 		ui.pushButton->setStyleSheet("/* 证券 */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* 背景/4 页签选中色 */ background: #285790; color: rgb(255, 0, 0); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
-
     }
     else {
 		AppendText("搜索区域关闭", Red);
@@ -801,7 +828,6 @@ void industrialVision::rotatePicture()
 //保存当前状态为默认状态并锁定 ,方便下次打开
 void industrialVision::click_manualOperation()
 {
-	//锁定状态
 	
 	emit setdefultCamare(defaultCamcare);
 	//设置相机参数不可修改或者可以更改
@@ -816,8 +842,15 @@ void industrialVision::click_manualOperation()
 		ui.framerate_edit->setStyleSheet("background-color: grey;");
 		ui.grade_edit->setStyleSheet("background-color: grey;");
 		ui.exposure_edit->setStyleSheet("background-color: grey;");	
+		ui.lineEdit_2->setStyleSheet("background-color: grey;");
+		ui.width_edit->setStyleSheet("background-color: grey;");
+		ui.height_edit->setStyleSheet("background-color: grey;");
+		ui.pixelformat_edit->setStyleSheet("background-color: grey;");
+
 		//将字体颜色修改为红色
 		ui.pushButton_manualOperation->setStyleSheet("/* 证券 */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* 背景/4 页签选中色 */ background: #285790; color: rgb(255, 0, 0); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
+		ui.pushButton_manualOperation->setText("解锁状态");
+
 		//锁定状态,设置当前旋转方向为默认方向
 		defaultRotateIndexValue = m_rotateIndexInt;
 	}
@@ -826,8 +859,14 @@ void industrialVision::click_manualOperation()
 		ui.framerate_edit->setStyleSheet("background-color: #10171F;");
 		ui.grade_edit->setStyleSheet("background-color: #10171F;");
 		ui.exposure_edit->setStyleSheet("background-color: #10171F;");
+		ui.lineEdit_2->setStyleSheet("background-color: #10171F;");
+		ui.width_edit->setStyleSheet("background-color: #10171F;");
+		ui.height_edit->setStyleSheet("background-color: #10171F;");
+		ui.pixelformat_edit->setStyleSheet("background-color: #10171F;");
+
 		//将字体颜色修改为默认颜色
 		ui.pushButton_manualOperation->setStyleSheet("/* 证券 */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* 背景/4 页签选中色 */ background: #285790; color: rgb(255, 255, 255); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
+		ui.pushButton_manualOperation->setText("锁定状态");
 	}
 	defaultCamcare = !defaultCamcare;
 }
@@ -1421,7 +1460,7 @@ void industrialVision::smallwindow_button_click()
 	for (int i = 0; i < actions.size(); i++)
 	{
 		QAction* actionItem = actions.at(i);
-		if (actionItem->text() == "窗口切换")
+		if (actionItem->text() == "实时显示")
 		{
             continue;
 		}
@@ -1466,7 +1505,8 @@ void industrialVision::slot_get_patternResult(QPointF resultPoint,int matchTime)
 	createOncePattern();
 }
 
-void industrialVision::logQuery()
+//属性设置
+void industrialVision::action_AttributesSet()
 {
 	//设置路径,与打开文件S
 	logoset.show();
@@ -1512,6 +1552,7 @@ void industrialVision::getRotateValue(int x)
 void industrialVision::actionPasswordAction()
 {
 	//打开密码设置界面
+	passwordSetItem.setcurrentRole(CURRENT_ROLE);
 	passwordSetItem.show();
 }
 

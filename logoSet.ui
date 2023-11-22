@@ -18,8 +18,8 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>657</width>
-    <height>251</height>
+    <width>16777215</width>
+    <height>16777215</height>
    </size>
   </property>
   <property name="font">
@@ -30,8 +30,8 @@
   <property name="windowTitle">
    <string>日志设置</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
     <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,3">
      <item>
       <widget class="QPushButton" name="pushButton_2">
@@ -93,8 +93,8 @@ border-color: #111117;
      </item>
     </layout>
    </item>
-   <item row="1" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="2,3">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,3">
      <item>
       <widget class="QPushButton" name="pushButton">
        <property name="sizePolicy">

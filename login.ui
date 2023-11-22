@@ -141,7 +141,7 @@ color: #323232;
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1,0">
+      <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,1">
        <item>
         <widget class="QLabel" name="label_4">
          <property name="font">
@@ -165,9 +165,9 @@ color: #323232;
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="username">
+        <widget class="QComboBox" name="username">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -175,28 +175,20 @@ color: #323232;
          <property name="font">
           <font>
            <pointsize>20</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
           </font>
          </property>
-         <property name="styleSheet">
-          <string notr="true">/* 矩形 */
-
-position: absolute;
-left: 0px;
-top: 0px;
-width: 300px;
-height: 40px;
-border-radius: 4px;
-opacity: 1;
-	
-background: #FFFFFF;
-	
-box-sizing: border-box;
-border: 1px solid #D8DFED;
-	</string>
-         </property>
-         <property name="text">
-          <string>123</string>
-         </property>
+         <item>
+          <property name="text">
+           <string>操作员</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>管理员</string>
+          </property>
+         </item>
         </widget>
        </item>
       </layout>
