@@ -198,50 +198,6 @@ border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Adobe 宋体 Std L</family>
-                 <pointsize>24</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">/* 证券 */
-
-QPushButton::hover 
-{
-	background-color: #1450C7;
-}
-position: absolute;
-left: 1px;
-top: 67px;
-width: 190px;
-height: 61px;
-opacity: 1;
-	
-/* 背景/4 页签选中色 */
-background: #285790;
-	
-color: rgb(255, 255, 255);
-box-sizing: border-box;
-border: 1px solid ;
-border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;
-	</string>
-               </property>
-               <property name="text">
-                <string>搜索区域</string>
-               </property>
-              </widget>
-             </item>
-             <item>
               <widget class="QPushButton" name="pushButton_connect">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -457,49 +413,6 @@ border-color: #000000;
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_11">
                <item>
-                <widget class="QPushButton" name="set_camera_Parameter_button">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>21</pointsize>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                  </font>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">/* 期货 2 */
-
-QPushButton::hover 
-{
-	background-color: #1450C7;
-}
-position: absolute;
-left: 544px;
-top: 68px;
-width: 144px;
-height: 60px;
-opacity: 1;
-	
-background: #285790;
-	
-color: rgb(255, 255, 255);
-box-sizing: border-box;
-border-width: 0px 1px 0px 0px;
-border-style: solid;
-border-color: #111117;
-	</string>
-                 </property>
-                 <property name="text">
-                  <string>设置参数</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
                 <widget class="QPushButton" name="get_camera_Parameter_button">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -540,6 +453,49 @@ border-color: #111117;
                  </property>
                  <property name="text">
                   <string>获取参数</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="set_camera_Parameter_button">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>21</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">/* 期货 2 */
+
+QPushButton::hover 
+{
+	background-color: #1450C7;
+}
+position: absolute;
+left: 544px;
+top: 68px;
+width: 144px;
+height: 60px;
+opacity: 1;
+	
+background: #285790;
+	
+color: rgb(255, 255, 255);
+box-sizing: border-box;
+border-width: 0px 1px 0px 0px;
+border-style: solid;
+border-color: #111117;
+	</string>
+                 </property>
+                 <property name="text">
+                  <string>设置参数</string>
                  </property>
                 </widget>
                </item>
@@ -1391,22 +1347,6 @@ background: #172437;
     <hint type="destinationlabel">
      <x>287</x>
      <y>739</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton</sender>
-   <signal>clicked()</signal>
-   <receiver>industrialVision</receiver>
-   <slot>openShiShiPiPei()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>781</x>
-     <y>115</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>288</x>
-     <y>96</y>
     </hint>
    </hints>
   </connection>

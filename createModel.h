@@ -71,6 +71,7 @@ public slots:
 	void onSetPointTriggered();
 	void onUndoTriggered();
 	void onRedoTriggered();
+	void helpActionTriggered();
 	void sendImgToFileController(QImage image,QString path);
 	void onExecPatternAction();
 	void sendXMLPathToIndustria(QString xmlPath);

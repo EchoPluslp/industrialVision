@@ -24,7 +24,6 @@ class LabelController : public QObject
 	//记录为某Type的Label分发的Id
 	QMap<QString, int> m_typeToCount;
 	//记录某Type下的所有Label
-	QMap<QString, QList<Label*> > m_typeToLabel;
 	//记录某Type对应的Color,其中Color由Controller自动生成
 	QMap<QString, QColor> m_typeToColor;
 
@@ -34,6 +33,8 @@ class LabelController : public QObject
 	bool createType(const QString& type);
 public:
 	LabelController(QObject* parent = nullptr);
+	QMap<QString, QList<Label*> > m_typeToLabel;
+
 	~LabelController();
 
 

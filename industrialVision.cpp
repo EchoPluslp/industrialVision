@@ -82,7 +82,7 @@ industrialVision::industrialVision(QWidget *parent)
 
 	 
 	action_SetAttributes = new QAction();
-	action_SetAttributes->setText("属性设置");
+	action_SetAttributes->setText("图标设置");
 	action_SetAttributes->setFont(QFont(tr("宋体"),40, QFont::Bold, false));
 	connect(action_SetAttributes, &QAction::triggered,
 		this, &industrialVision::action_AttributesSet);
@@ -777,11 +777,11 @@ void industrialVision::openShiShiPiPei()
 {
     if (sourceAreaOn) {
 		AppendText("搜索区域开启", Green);
-		ui.pushButton->setStyleSheet("/* 证券 */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* 背景/4 页签选中色 */ background: #285790; color: rgb(255, 0, 0); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
+		//ui.pushButton->setStyleSheet("/* 证券 */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* 背景/4 页签选中色 */ background: #285790; color: rgb(255, 0, 0); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
     }
     else {
 		AppendText("搜索区域关闭", Red);
-		ui.pushButton->setStyleSheet("/* 证券 */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* 背景/4 页签选中色 */ background: #285790; color: rgb(255, 255, 255); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
+		//ui.pushButton->setStyleSheet("/* 证券 */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* 背景/4 页签选中色 */ background: #285790; color: rgb(255, 255, 255); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
     }
 	
 	emit openSourceArea(sourceAreaOn);
@@ -925,7 +925,7 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 					areaNodeREAL_size.setWidth(((double)areaNode.width() / small_Picture.width()) * m_width);
 					areaNodeREAL_size.setHeight(((double)areaNode.height() / small_Picture.height()) * m_height);
                 }
-                else if (typeName.contains("匹配模板")) {
+                else if (typeName.contains("特征区域")) {
 					patternArea = currentShape->getItem()->boundingRect();
 					patternAreaREAL_size.setX(((double)patternArea.x() / small_Picture.width()) * m_width);
 					patternAreaREAL_size.setY(((double)patternArea.y() / small_Picture.height()) * m_height);
@@ -1069,8 +1069,8 @@ bool industrialVision::DisplayWindowInitial()
 			int nRet = m_pcMyCamera->Open(pDeviceInfo);   //打开相机
 			if (MV_OK != nRet)
 			{
-				delete m_pcMyCamera;
-				m_pcMyCamera = NULL;
+				//delete m_pcMyCamera;
+				//m_pcMyCamera = NULL;
 				QMessageBox::warning(this, "警告", "打开设备失败！");
 				return false;
 			}
@@ -1088,7 +1088,7 @@ void industrialVision::setButtonClickLimits(bool flag)
 	//ui.pushButton_editVision->setEnabled(flag);
 	action_SetModelFile->setEnabled(flag);
 	ui.pushButton_manualOperation->setEnabled(flag);
-	ui.pushButton->setEnabled(flag);
+	//ui.pushButton->setEnabled(flag);
 	ui.pushButton_stopOperation->setEnabled(flag);
 }
 

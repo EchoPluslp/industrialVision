@@ -199,4 +199,11 @@ class featureMatchingRectAction : public MyActions
 public:
 	explicit featureMatchingRectAction(QObject* parent = nullptr);
 };
+class helpAction : public MyActions
+{
+	Q_OBJECT
+public:
+	explicit helpAction(QObject* parent = nullptr);
+};
+
 #endif // MYACTIONS_H

@@ -12,7 +12,7 @@ LabelsDockWidget::LabelsDockWidget(QWidget* parent) : QDockWidget(parent) {
 
 		QFont myFont;
 		//设置文字大小
-		myFont.setPointSize(20);
+		myFont.setPointSize(30);
 		//设置文字字体
 		setFont(myFont);
 		//setText(title);
@@ -22,13 +22,20 @@ LabelsDockWidget::LabelsDockWidget(QWidget* parent) : QDockWidget(parent) {
 		setAllowedAreas(Qt::DockWidgetArea::RightDockWidgetArea);
 		setFeatures(QDockWidget::NoDockWidgetFeatures);
 		setFeatures(QDockWidget::DockWidgetClosable);
-		setFeatures(QDockWidget::DockWidgetMovable);
+		//setFeatures(QDockWidget::DockWidgetMovable);
 	}
 
 
 	{
 		// ListWidget
 		listWidget = new QListWidget(this);
+		// 创建一个字体对象
+		QFont font;
+		font.setPointSize(12); // 设置字体大小为12点
+
+		// 设置 QListWidget 的字体
+		listWidget->setFont(font);
+
 		connect(listWidget, &QListWidget::itemClicked,
 			[&](QListWidgetItem* item) {
 				emit itemClicked(item->text());
@@ -41,12 +48,12 @@ LabelsDockWidget::LabelsDockWidget(QWidget* parent) : QDockWidget(parent) {
 			});
 	}
 	{
-		pushButton = new QPushButton(this);
-		pushButton->setText("删除");
-		connect(pushButton, &QPushButton::clicked,
+		//pushButton = new QPushButton(this);
+		//pushButton->setText("删除");
+	/*	connect(pushButton, &QPushButton::clicked,
 			[&]() {
 				emit deleteCurrLabel(currLabelName());
-			});
+			});*/
 	}
 
 
@@ -54,7 +61,7 @@ LabelsDockWidget::LabelsDockWidget(QWidget* parent) : QDockWidget(parent) {
 		dockContent = new QWidget(this);
 		QVBoxLayout* layout = new QVBoxLayout(this);
 		layout->addWidget(listWidget, 1);
-		layout->addWidget(pushButton, 0);
+		//layout->addWidget(pushButton, 0);
 		layout->setSpacing(0);
 		layout->setMargin(0);
 		layout->setContentsMargins(0, 0, 0, 0);

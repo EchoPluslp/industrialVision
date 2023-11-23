@@ -68,6 +68,25 @@ void DrawFinishedDialog::setShapeFlag(Shape::Figure flag)
 {
 	currentShape = flag;
 }
+void DrawFinishedDialog::emitcurrentShapeType(Shape::Figure flag) {
+	//emit sendTypeName(flag);
+	if (flag == Shape::searchAreaRect)
+	{
+		QString string("1.搜索区域");
+		emit sendTypeName(string);
+
+	}else if (flag == Shape::featureMatchingRect)
+	{
+		QString string("2.特征区域");
+		emit sendTypeName(string);
+	}
+	else if (flag == Shape::CirclePen)
+	{
+		QString string("3.输出点");
+		emit sendTypeName(string);
+	}
+
+}
 
 
 void DrawFinishedDialog::on_listWidget_itemClicked(QListWidgetItem* item)

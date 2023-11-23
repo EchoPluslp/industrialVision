@@ -516,7 +516,7 @@ void FileController::onExecPattern(LabelController* labelController)
 				} 
 			}
 		}
-		if (label->getType().contains("Æ¥ÅäÄ£°å"))
+		if (label->getType().contains("ÌØÕ÷ÇøÓò"))
 		{
 			if (label) {
 				const Area* area = label->getArea();

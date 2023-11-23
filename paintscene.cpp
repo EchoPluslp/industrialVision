@@ -403,6 +403,10 @@ void PaintScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event) {
 			{
 				setCurrentShape(Shape::Figure::Empty);
 			}
+			else if (currShapeType == Shape::CirclePen)
+			{
+				setCurrentShape(Shape::Figure::Empty);
+			}
 			removeItem(currShape->getItem());
 			delete currShape;
 			currShape = nullptr;

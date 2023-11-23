@@ -77,14 +77,17 @@ bool LabelController::addLabel(Label* label)
 bool LabelController::deleteLabel(const QString& type, int id)
 {
 	for (QList<Label*>& labelList : m_typeToLabel) {
-		for (Label*& label : labelList) {
+		for (int i = 0; i < labelList.size();i++) {
+			Label* label = labelList.at(i);
 			if (label->getType() == type && label->getId() == id) {
-				labelList.removeOne(label);
+				labelList.removeAt(i);
 				SAFE_DELETE(label);
 				emit labelDeleted(type, id);
+				break;
 			}
 		}
 	}
+	
 	return true;
 }
 
@@ -280,7 +283,7 @@ bool LabelController::checkSaveLabelOn()
 		if (labelList.count() > 1)
 		{
 			QMessageBox::warning(nullptr, tr("保存异常"),
-				tr("保存状态异常,请保持搜索区域,特征匹配,输出点各自最多1个"));
+				tr("保存状态异常,请保持搜索区域,特征区域,输出点各自最多1个"));
 			return false;
 		}
 	}

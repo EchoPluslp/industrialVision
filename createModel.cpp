@@ -79,6 +79,9 @@ createModel::createModel(QWidget* parent) :
     connect(deleteLabelAction, &DeleteLabelAction::triggered,
         [=]() {
             emit labelsDockWidget->deleteCurrLabel(labelsDockWidget->currLabelName());
+
+			paintScene2D->updateShapes(labelController2D, fileController2D->getCurrImageName());
+
         });
 
     auto polygonModeAction = new PolygonModeAction(this);
@@ -129,8 +132,10 @@ createModel::createModel(QWidget* parent) :
     auto redoAction = new RedoAction(this);
     connect(redoAction, &MagnifyAction::triggered,
         this, &createModel::onRedoTriggered, Qt::ConnectionType::DirectConnection);
-
-
+    
+		auto helpActionitem = new helpAction(this);
+	connect(helpActionitem, &helpAction::triggered,
+		this, &createModel::helpActionTriggered, Qt::ConnectionType::DirectConnection);
 
 
     QActionGroup* drawingActionGroup = new QActionGroup(this);
@@ -163,8 +168,8 @@ createModel::createModel(QWidget* parent) :
     menuBar = new MenuBar(this);
     QMenu* menus[3];
     menus[0] = new QMenu("文件", menuBar);
-    menus[1] = new QMenu("编辑", menuBar);
-    menus[2] = new QMenu("工具", menuBar);
+    menus[1] = new QMenu("工具", menuBar);
+    menus[2] = new QMenu("帮助", menuBar);
     // menus[3] = new QMenu("&Help", menuBar);
     //修改地址
     for (int i = 0; i < 3; i++) {
@@ -177,8 +182,6 @@ createModel::createModel(QWidget* parent) :
 	menus[0]->addAction(importAction);
 	menus[0]->addSeparator();
 
-    menus[0]->addAction(execPatternAction);
-    menus[0]->addSeparator();
 
     menus[0]->addAction(saveAction);
 	menus[0]->addSeparator();
@@ -199,20 +202,31 @@ createModel::createModel(QWidget* parent) :
 	menus[1]->addAction(curseModeAction);
 	menus[1]->addSeparator();
 
-    menus[2]->addAction(magnifyAction);
+	menus[2]->addAction(helpActionitem);
 
     this->setMenuBar(menuBar);
 
     
     // set up tool bar
     toolBar = new ToolBar(this);
-    toolBar->setIconSize(QSize(60, 60));
-	toolBar->setStyleSheet("font:bold 24px;color: rgb(255, 255, 255);background-color: rgba(35, 65, 114, 1);");
+    toolBar->setIconSize(QSize(45, 45));
+	toolBar->setStyleSheet("font:bold 20px;color: rgb(255, 255, 255);background-color: rgba(35, 65, 114, 1);");
     setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
 	toolBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
 	toolBar->addSeparator();
+	//导入
+	toolBar->addAction(importAction);
+	toolBar->addSeparator();
+	QWidget* test1 = new QWidget();
+	test1->setStyleSheet("color: rgb(255, 255, 255); background-color: rgba(35, 65, 114, 1);");
+	test1->setFixedSize(QSize(20, 20));
+
+	toolBar->addWidget(test1);
+	toolBar->addSeparator();
+
+    //采集图片
     toolBar->addAction(getImageAction);
      //搜索区域
     toolBar->addSeparator();
@@ -226,11 +240,13 @@ createModel::createModel(QWidget* parent) :
    toolBar->addSeparator();
 
     //放大镜
-	toolBar->addAction(magnifyAction);
-	toolBar->addSeparator();
+	//toolBar->addAction(magnifyAction);
+	//toolBar->addSeparator();
 
     //撤销
 	toolBar->addAction(undoAction);
+	toolBar->addSeparator();
+	toolBar->addAction(deleteLabelAction);
 	toolBar->addSeparator();
     //选择
 	toolBar->addAction(curseModeAction);
@@ -239,26 +255,20 @@ createModel::createModel(QWidget* parent) :
 //	toolBar->addAction(rectModeAction);
     //椭圆
 	toolBar->addSeparator();
-	//导入
-	toolBar->addAction(importAction);
+
     //多边形
 	//toolBar->addAction(polygonModeAction);
 	toolBar->addSeparator();
     //掩膜
 	//toolBar->addAction(circlePenModeAction);
 	//toolBar->addAction(squarePenModeAction);
-    QWidget* test = new QWidget();
-    test->setStyleSheet("color: rgb(255, 255, 255); background-color: rgba(35, 65, 114, 1);");
-    test->setFixedSize(QSize(100, 100));
+    QWidget* test3 = new QWidget();
+    test3->setStyleSheet("color: rgb(255, 255, 255); background-color: rgba(35, 65, 114, 1);");
+    test3->setFixedSize(QSize(20, 20));
     
-	toolBar->addWidget(test);
+	toolBar->addWidget(test3);
 	//test->move(0, 0);
 
-	toolBar->addSeparator();
-    toolBar->addAction(execPatternAction);
-    toolBar->addSeparator();
-	toolBar->addAction(deleteLabelAction);
-	toolBar->addSeparator();
     //toolBar->addAction(nextImageAction);
    // toolBar->addAction(prevImageAction);
     //toolBar->addAction(redoAction);
@@ -267,12 +277,20 @@ createModel::createModel(QWidget* parent) :
     //toolBar->addAction(openFileAction);
    // toolBar->addAction(openDirAction);
     toolBar->addAction(saveAction);
+	toolBar->addSeparator();
     toolBar->addAction(saveAsAction);
+	toolBar->addSeparator();
+	toolBar->addAction(execPatternAction);
+	toolBar->addSeparator();
     toolBar->addAction(closeFileAction);
     toolBar->addSeparator();
+
   //  toolBar->addAction(twoDModeAction);
     this->addToolBar(Qt::TopToolBarArea, toolBar);
-    toolBar->setMovable(false);
+    toolBar->setMovable(false);// 设置工具栏不可移动
+	toolBar->setFloatable(false); // 设置工具栏不可浮动
+	toolBar->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
     // Init 2D
     labelTypeDockWidget2D = new LabelTypeDockWidget();
     labelsDockWidget2D = new LabelsDockWidget();
@@ -506,9 +524,19 @@ void createModel::onSaveAsTriggered() {
 }
 
 void createModel::onCloseFileTriggered() {
-    CloseImageCommand* closeImageCommand = new CloseImageCommand(fileController);
-    undoStack->push(closeImageCommand);
-    labelController->deleteAllLabel();
+    //判断是否关闭
+	QMessageBox::StandardButton reply;
+	reply = QMessageBox::question(this, "确认关闭", "确定要关闭文件吗?", QMessageBox::Yes | QMessageBox::No);
+
+	if (reply == QMessageBox::Yes) {
+		// 用户选择了"是"
+		CloseImageCommand* closeImageCommand = new CloseImageCommand(fileController);
+		undoStack->push(closeImageCommand);
+		labelController->deleteAllLabel();
+	}
+	else {
+		// 用户选择了"否"或者关闭对话框
+	}
 }
 
 void createModel::onNextImageTriggered() {
@@ -600,9 +628,10 @@ void createModel::drawFinishedSlot(Shape* shape) {
         areaController2D->receiveImageShape(fileController->getCurrImageName(), copyedShape);
 
       //  drawFinishedDialog->setList(labelTypeDockWidget->getItemList());
-		drawFinishedDialog->setShapeFlag(paintScene->currShapeType);
-        
-        drawFinishedDialog->exec();
+		//drawFinishedDialog->setShapeFlag(paintScene->currShapeType);
+        drawFinishedDialog->emitcurrentShapeType(paintScene->currShapeType);
+        //drawFinishedDialog->exec();
+
     }
     else {
         return;
@@ -705,7 +734,8 @@ void createModel::onRedoTriggered()
 {
     undoStack->redo();
 }
+void createModel::helpActionTriggered() {
 
-
+}
 
 

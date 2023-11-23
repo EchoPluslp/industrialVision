@@ -10,7 +10,7 @@ MyActions::~MyActions() {}
 ExecPatternAction::ExecPatternAction(QObject* parent) : MyActions(parent) {
 	setIcon(QIcon("./Image/Icon/open_file"));
 
-	setText("试运行");
+	setText("效果预览");
 	setFont(QFont(tr("宋体"), 30, QFont::Bold, false));//宋体26号，加粗，斜体字
 	//setShortcuts(QKeySequence::Open);
 }
@@ -68,7 +68,7 @@ CloseFileAction::CloseFileAction(QObject* parent) : MyActions(parent) {
 }
 
 SetPointAction::SetPointAction(QObject* parent) : MyActions(parent) {
-	setIcon(QIcon("./Image/Icon/circle_pen_mode"));
+	setIcon(QIcon("./Image/Icon/sendpoint"));
 	setText("输出点");
 	setFont(QFont(tr("宋体"), 30, QFont::Bold, false));//宋体26号，加粗，斜体字
 	//setShortcut(tr("Ctrl+R"));
@@ -137,7 +137,7 @@ MagnifyAction::MagnifyAction(QObject* parent) : MyActions(parent) {
 ImportAction::ImportAction(QObject* parent) : MyActions(parent)
 {
 	setIcon((QIcon("./Image/Icon/import")));
-	setText("导入");
+	setText("导入模板");
 	setFont(QFont(tr("宋体"), 30, QFont::Bold, false));//宋体26号，加粗，斜体字
 }
 
@@ -150,7 +150,7 @@ SaveAction::SaveAction(QObject* parent) : MyActions(parent)
 }
 SaveAsAction::SaveAsAction(QObject* parent) : MyActions(parent)
 {
-	setIcon(QIcon("./Image/Icon/save"));
+	setIcon(QIcon("./Image/Icon/savefor"));
 	setText("另存为");
 	//setShortcuts(QKeySequence::Save);
 	setFont(QFont(tr("宋体"), 30, QFont::Bold, false));//宋体26号，加粗，斜体字
@@ -179,7 +179,14 @@ searchAreaRectAction::searchAreaRectAction(QObject* parent) : MyActions(parent)
 featureMatchingRectAction::featureMatchingRectAction(QObject* parent) : MyActions(parent)
 {
 	setIcon(QIcon("./Image/Icon/square_pen_mode"));
-	setText("特征匹配");
+	setText("特征区域");
+	//setShortcuts(QKeySequence::Redo);
+	setFont(QFont(tr("宋体"), 30, QFont::Bold, false));//宋体26号，加粗，斜体字
+}
+helpAction::helpAction(QObject* parent) : MyActions(parent)
+{
+	setIcon(QIcon("./Image/Icon/square_pen_mode"));
+	setText("帮助");
 	//setShortcuts(QKeySequence::Redo);
 	setFont(QFont(tr("宋体"), 30, QFont::Bold, false));//宋体26号，加粗，斜体字
 }

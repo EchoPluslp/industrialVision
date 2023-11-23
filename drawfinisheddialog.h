@@ -24,6 +24,9 @@ public:
 
 	void showEvent(QShowEvent* e);
 	void setShapeFlag(Shape::Figure flag);
+	void emitcurrentShapeType(Shape::Figure flag);
+
+	
 signals:
 	// 发送要创建的Type
 	void sendTypeName(QString&);
