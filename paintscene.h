@@ -89,7 +89,7 @@ public slots:
 	//设定圆形、方画笔粗细
 	void setRadius(int value);
 
-protected:
+public:
 	void mousePressEvent(QGraphicsSceneMouseEvent* event);
 	void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
 	void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);

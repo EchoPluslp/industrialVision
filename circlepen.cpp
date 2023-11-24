@@ -36,12 +36,12 @@ void CirclePen::mouseRelease(QGraphicsSceneMouseEvent* event)
 	int x = int(event->scenePos().x());
 	int y = int(event->scenePos().y());
 
-	QPainterPath p;
-	p.addEllipse(QRect(x - m_radius < 0 ? 0 : x - m_radius,
-		y - m_radius < 0 ? 0 : y - m_radius,
-		2 * m_radius,
-		2 * m_radius));
-	m_path = m_path.united(p);
+	//QPainterPath p;
+	//p.addEllipse(QRect(x - m_radius < 0 ? 0 : x - m_radius,
+	//	y - m_radius < 0 ? 0 : y - m_radius,
+	//	2 * m_radius,
+	//	2 * m_radius));
+	//m_path = m_path.united(p);
 	pathItem->setPath(m_path);
 	//ÉèÖÃÑ¡Ôñ×´Ì¬
 }

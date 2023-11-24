@@ -17,14 +17,15 @@ class MyGraphicsView : public QGraphicsView
 public:
 	explicit MyGraphicsView(QWidget* parent = nullptr);
 	QPoint returnMouseInView();
-
+	QPoint lastMiddleMousePos;
+	//void mousePressEvent(QMouseEvent* event);
+	//void mouseMoveEvent(QMouseEvent* event);
+	//void mouseReleaseEvent(QMouseEvent* event);
 protected:
 	void resizeEvent(QResizeEvent* event) override;
 	void wheelEvent(QWheelEvent* event) override;
 	
-	//void mousePressEvent(QMouseEvent* event);
-	//void mouseMoveEvent(QMouseEvent* event);
-	//void mouseReleaseEvent(QMouseEvent* event);
+
 
 
 

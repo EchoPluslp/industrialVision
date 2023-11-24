@@ -3,16 +3,19 @@
 
 
 #define MAX_SCALE 3
-#define SCALE_STEP 0.05
+#define MIN_SCALE 0.5
+#define SCALE_STEP 0.03
 
 
 MyGraphicsView::MyGraphicsView(QWidget* parent) : QGraphicsView(parent)
 {
 	setAlignment(Qt::AlignCenter);
 	setRenderHint(QPainter::Antialiasing);
-	setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-	setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+	//setDragMode(QGraphicsView::ScrollHandDrag);
+	m_scale = 1.0;
 }
 
 QPoint MyGraphicsView::returnMouseInView()
@@ -30,26 +33,30 @@ void MyGraphicsView::resizeEvent(QResizeEvent* event)
 //滚轮缩放
 void MyGraphicsView::wheelEvent(QWheelEvent* event)
 {
+
 	QPoint delta = event->angleDelta();
+	QPointF scenePos = mapToScene(event->pos());
+	
+	qreal scaleFactor = 1.0 + (delta.y() > 0 ? SCALE_STEP : -SCALE_STEP);
+	qreal newScale = m_scale * scaleFactor;
 
-	QPointF scenePos = mapToScene(event->pos());  // 获取鼠标事件位置在场景中的坐标
-
-	if (delta.y() > 0) {
-		// 放大
-		scale(1 / m_scale, 1 / m_scale);
-		m_scale + SCALE_STEP >= MAX_SCALE ? m_scale = MAX_SCALE : m_scale += SCALE_STEP;
-		setTransformationAnchor(QGraphicsView::AnchorUnderMouse);  // 设置锚点为鼠标位置
-		setTransform(QTransform::fromScale(m_scale, m_scale), true);  // 应用缩放变换
+	if (newScale > MAX_SCALE) {
+		scaleFactor = MAX_SCALE ;
 	}
-	else {
-		// 缩小
-		scale(1 / m_scale, 1 / m_scale);
-		m_scale - SCALE_STEP <= 1.0 ? m_scale = 1.0 : m_scale -= SCALE_STEP;
-		setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
-		setTransform(QTransform::fromScale(m_scale, m_scale), true);
+	else if (newScale < MIN_SCALE) {
+		scaleFactor = MIN_SCALE ;
 	}
 
-	centerOn(scenePos);  // 使缩放后鼠标位置保持在视图中心
+	if (scaleFactor == MAX_SCALE || scaleFactor == MIN_SCALE)
+	{
+		return;
+	}
+	scale(scaleFactor, scaleFactor);
+
+	centerOn(scenePos);
+	update();
+	
+	m_scale = transform().m11();
 }
 
 

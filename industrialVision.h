@@ -99,7 +99,7 @@ private:
 
     bool flag_90 = false;//90度标识符
     //菜单栏按钮
-	QMenu* menus;
+	QMenu* SettingMenus;
 
     QAction *action_SetModelFile;
     QAction *action_RestoreWindow;
@@ -177,7 +177,6 @@ public:
 	 bool  small_window_flag = false;
 	 bool   defaultCamcare= true;
 
-     bool openCamcal();
      void AppendText(const QString& text,QString flag);
      void restoreWindow();
      bool compareAspectRatio(QSize smallPicture);
@@ -189,7 +188,8 @@ public:
      int rotateValue;
 
      void setCURRENT_ROLE(QString currentROle);
-
+     //重新初始化
+     void reinitialize();
 	 protected:
 		 void closeEvent(QCloseEvent* event) override {
 			 // 创建 QMessageBox 对话框
@@ -243,6 +243,7 @@ private slots:
          void getRotateValue(int x);
          void actionPasswordAction();
          void actionLogAndPathAction();
+         void actionuserSwitch();
 signals:
     void sendQimageToVisualTemplate(QImage data);
     void cameraTovisualTemplate(QImage img,QString path);
@@ -253,6 +254,7 @@ signals:
     void send_Grade(QString grade);
     void setdefultCamare(bool flag);
     void openSourceArea(bool flag);
+    void sign_switchLogin();
 };
 
 #endif

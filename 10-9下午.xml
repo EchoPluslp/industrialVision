@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LabelController>
-    <Type IdCount="1" Type="2.匹配模板">
-        <Color B="41" G="35" R="190"/>
-        <Label Type="2.匹配模板" Id="1">
-            <Color B="41" G="35" R="190"/>
+    <Type IdCount="1" Type="1.搜索区域">
+        <Color B="41" R="190" G="35"/>
+        <Label Type="1.搜索区域" Id="1">
+            <Color B="41" R="190" G="35"/>
             <Area>
-                <ImageShape ImageName="Image_w4024_h3036_fn1699623241.bmp" LabelType="1" modepath="E:/CPP-WORK/industrialVision - 230615 - 修改相机采集代码/industrialVision/x64/Release/model/">
-                    <Shape HeightOfImage="1191" WidthOfImage="1578" Type="1">
-                        <Item X="491" Width="242" Y="602" Height="229"/>
+                <ImageShape modepath="E:/CPP-WORK/industrialVision - 230615 - 修改相机采集代码/industrialVision/x64/Release/model/" ImageName="Image_w3072_h2048_fn1700810595.bmp" LabelType="1">
+                    <Shape WidthOfImage="1870" HeightOfImage="1247" Type="1">
+                        <Item Y="34" Width="1815" Height="1208" X="45"/>
+                    </Shape>
+                </ImageShape>
+            </Area>
+        </Label>
+    </Type>
+    <Type IdCount="1" Type="2.特征区域">
+        <Color B="4" R="108" G="225"/>
+        <Label Type="2.特征区域" Id="1">
+            <Color B="4" R="108" G="225"/>
+            <Area>
+                <ImageShape modepath="E:/CPP-WORK/industrialVision - 230615 - 修改相机采集代码/industrialVision/x64/Release/model/" ImageName="Image_w3072_h2048_fn1700810595.bmp" LabelType="1">
+                    <Shape WidthOfImage="1870" HeightOfImage="1247" Type="1">
+                        <Item Y="413" Width="788" Height="611" X="611"/>
                     </Shape>
                 </ImageShape>
             </Area>

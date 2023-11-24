@@ -94,27 +94,21 @@ industrialVision::industrialVision(QWidget *parent)
 		this, &industrialVision::actionPasswordAction);
 
 	 action_setLogoPath = new QAction();
-	action_setLogoPath->setText("图标设置");
+	action_setLogoPath->setText("日志设置");
 	action_setLogoPath->setFont(QFont(tr("宋体"), 40, QFont::Bold, false));
 	connect(action_setLogoPath, &QAction::triggered,
 		this, &industrialVision::actionLogAndPathAction);
 
-	//QMenu* menus;
-	//menus = new QMenu("&设置", ui.menuBar);
-	//ui.menuBar->addMenu(menus);
-	//if (CURRENT_ROLE == ROLE_ADMIN)
-	//{
-	//	//图标设置                                                                                                                                                                                                                   
-	//	menus->addAction(action_setLogoPath);
-	//	//日志设置
-	//	menus->addAction(action_AttributesSet);
-	//}
-	////密码设置
-	//menus->addAction(action_password);
-
-	menus = new QMenu("&设置", ui.menuBar);
-	ui.menuBar->addMenu(menus);
+	SettingMenus = new QMenu("&设置", ui.menuBar);
+	ui.menuBar->addMenu(SettingMenus);
 	
+	auto action_userSwitch = new QAction();
+	action_userSwitch->setText("用户切换");
+	action_userSwitch->setFont(QFont(tr("宋体"), 40, QFont::Bold, false));
+	ui.menuBar->addAction(action_userSwitch);
+	connect(action_userSwitch, &QAction::triggered,
+		this, &industrialVision::actionuserSwitch);
+
 	auto action_helpInfo = new QAction();
     action_helpInfo->setText("帮助");
     action_helpInfo->setFont(QFont(tr("宋体"),40, QFont::Bold, false));
@@ -147,19 +141,6 @@ industrialVision::industrialVision(QWidget *parent)
      AppendText("系统启动成功",Green);
 }
 
-// ch:取流线程 | en:Grabbing thread
-unsigned int __stdcall GrabThread(void* pUser)
-{
-    if (pUser)
-    {
-        industrialVision* pCam = (industrialVision*)pUser;
-
-      //  pCam->GrabThreadProcess();
-
-        return 0;
-    }
-    return -1;
-}
 
  void industrialVision::click_continuousOperation() {
      
@@ -246,166 +227,6 @@ unsigned int __stdcall GrabThread(void* pUser)
 		 m_bStartGrabbing = true;
 }
 
- bool  industrialVision::openCamcal() {
-
-	 QString strMsg;
-	 //获取指定Combo控件
-   // m_ctrlDeviceCombo = this->findChild<QComboBox*>(stringObjectName);
-
-	 //清空comboxlist列表
-	 m_ctrlDeviceCombo->clear();
-
-	 //m_ctrlDeviceCombo.ResetContent();
-	 memset(&m_stDevList, 0, sizeof(MV_CC_DEVICE_INFO_LIST));
-
-	 // ch:枚举子网内所有设备 | en:Enumerate all devices within subnet
-	 int nRet = CMvCamera::EnumDevices(MV_GIGE_DEVICE | MV_USB_DEVICE, &m_stDevList);
-	 if (MV_OK != nRet)
-	 {
-		 QString ss = QString::number(nRet);
-		 QString text = "子网内没有设备";
-		 text.append(ss);
-		 AppendText(text, Green);
-		 return false;
-	 }
-
-	 // ch:将值加入到信息列表框中并显示出来 | en:Add value to the information list box and display
-	 for (unsigned int i = 0; i < m_stDevList.nDeviceNum; i++)
-	 {
-		 MV_CC_DEVICE_INFO* pDeviceInfo = m_stDevList.pDeviceInfo[i];
-		 if (NULL == pDeviceInfo)
-		 {
-			 continue;
-		 }
-
-		 wchar_t* pUserName = NULL;
-		 if (pDeviceInfo->nTLayerType == MV_GIGE_DEVICE)
-		 {
-			 int nIp1 = ((m_stDevList.pDeviceInfo[i]->SpecialInfo.stGigEInfo.nCurrentIp & 0xff000000) >> 24);
-			 int nIp2 = ((m_stDevList.pDeviceInfo[i]->SpecialInfo.stGigEInfo.nCurrentIp & 0x00ff0000) >> 16);
-			 int nIp3 = ((m_stDevList.pDeviceInfo[i]->SpecialInfo.stGigEInfo.nCurrentIp & 0x0000ff00) >> 8);
-			 int nIp4 = (m_stDevList.pDeviceInfo[i]->SpecialInfo.stGigEInfo.nCurrentIp & 0x000000ff);
-			 if (strcmp("", (char*)pDeviceInfo->SpecialInfo.stGigEInfo.chUserDefinedName) != 0)
-			 {
-				 DWORD dwLenUserName = MultiByteToWideChar(CP_ACP, 0, (LPCSTR)(pDeviceInfo->SpecialInfo.stGigEInfo.chUserDefinedName), -1, NULL, 0);
-				 pUserName = new wchar_t[dwLenUserName];
-				 MultiByteToWideChar(CP_ACP, 0, (LPCSTR)(pDeviceInfo->SpecialInfo.stGigEInfo.chUserDefinedName), -1, pUserName, dwLenUserName);
-			 }
-			 else
-			 {
-				 char strUserName[256] = { 0 };
-				 sprintf_s(strUserName, 256, "%s %s (%s)", pDeviceInfo->SpecialInfo.stGigEInfo.chManufacturerName,
-					 pDeviceInfo->SpecialInfo.stGigEInfo.chModelName,
-					 pDeviceInfo->SpecialInfo.stGigEInfo.chSerialNumber);
-				 DWORD dwLenUserName = MultiByteToWideChar(CP_ACP, 0, (LPCSTR)(strUserName), -1, NULL, 0);
-				 pUserName = new wchar_t[dwLenUserName];
-				 MultiByteToWideChar(CP_ACP, 0, (LPCSTR)(strUserName), -1, pUserName, dwLenUserName);
-			 }
-			 // strMsg.Format(_T("[%d]GigE:    %s  (%d.%d.%d.%d)"), i, pUserName, nIp1, nIp2, nIp3, nIp4);
-			 m_ctrlDeviceCombo->addItem(QString::fromStdWString(pUserName), i);
-		 }
-		 else if (pDeviceInfo->nTLayerType == MV_USB_DEVICE)
-		 {
-			 if (strcmp("", (char*)pDeviceInfo->SpecialInfo.stUsb3VInfo.chUserDefinedName) != 0)
-			 {
-				 DWORD dwLenUserName = MultiByteToWideChar(CP_ACP, 0, (LPCSTR)(pDeviceInfo->SpecialInfo.stUsb3VInfo.chUserDefinedName), -1, NULL, 0);
-				 pUserName = new wchar_t[dwLenUserName];
-				 MultiByteToWideChar(CP_ACP, 0, (LPCSTR)(pDeviceInfo->SpecialInfo.stUsb3VInfo.chUserDefinedName), -1, pUserName, dwLenUserName);
-			 }
-			 else
-			 {
-				 AppendText("无法识别的设备", Red);
-				 QMessageBox::critical(this, "错误信息", "无法识别的设备");
-				 return false;
-
-			 }
-
-			 if (pUserName)
-			 {
-				 delete[] pUserName;
-				 pUserName = NULL;
-			 }
-		 }
-
-		 if (0 == m_stDevList.nDeviceNum)
-		 {
-			 AppendText("没有设备信息", Red);
-			 QMessageBox::critical(this, "错误信息", "没有设备信息");
-			 return false;
-		 }
-		 // m_ctrlDeviceCombo.SetCurSel(0);
-		  //comBoxList->setCursor
-		  //-----------------------------------打开设备
-		 if (TRUE == m_bOpenDevice)
-		 {
-			 AppendText("已打开相机", Green);
-			 return false;
-		 }
-		 m_nDeviceCombo = m_ctrlDeviceCombo->currentIndex();
-
-		 int nIndex = m_nDeviceCombo;
-		 if ((nIndex < 0) | (nIndex >= MV_MAX_DEVICE_NUM))
-		 {
-			 QString text = QString::number(nRet);
-			 AppendText("没有选择设备" + text, Red);
-			 ShowErrorMsg("请选择设备", nRet);
-			 return false;
-		 }
-
-		 // ch:由设备信息创建设备实例 | en:Device instance created by device information
-		 if (NULL == m_stDevList.pDeviceInfo[nIndex])
-		 {
-			 AppendText("设备不存在", Red);
-			 QMessageBox::critical(this, "错误信息", "设备不存在");
-			 return false;
-		 }
-
-		 m_pcMyCamera = new CMvCamera;
-		 //m_pcMyCamera->SetBoolValue("AcquisitionFrameRateEnable", true);
-		 //m_pcMyCamera->SetFloatValue("AcquisitionFrameRate", 0.5);
-		 if (NULL == m_pcMyCamera)
-		 {
-			 AppendText("m_pcMyCamera参数为null", Red);
-			 return false;
-		 }
-
-		 nRet = m_pcMyCamera->Open(m_stDevList.pDeviceInfo[nIndex]);
-		 if (MV_OK != nRet)
-		 {
-			 delete m_pcMyCamera;
-			 m_pcMyCamera = NULL;
-			 QString text = QString::number(nRet);
-			 AppendText("设备打开失败" + text, Red);
-			 ShowErrorMsg("设备打开失败", nRet);
-			 return false;
-		 }
-
-		 // ch:探测网络最佳包大小(只对GigE相机有效) | en:Detection network optimal package size(It only works for the GigE camera)
-		 if (m_stDevList.pDeviceInfo[nIndex]->nTLayerType == MV_GIGE_DEVICE)
-		 {
-			 unsigned int nPacketSize = 0;
-			 nRet = m_pcMyCamera->GetOptimalPacketSize(&nPacketSize);
-			 if (nRet == MV_OK)
-			 {
-				 nRet = m_pcMyCamera->SetIntValue("GevSCPSPacketSize", nPacketSize);
-				 if (nRet != MV_OK)
-				 {
-					 QString text = QString::number(nRet);
-					 AppendText("网络侦测包大小设置失败" + text, Red);
-				 }
-			 }
-			 else
-			 {
-				 QString text = QString::number(nRet);
-				 AppendText("网络侦测包接受失败" + text, Red);
-			 }
-		 }
-		 //相机打开设置
-		 m_bOpenDevice = TRUE;
-		 AppendText("打开相机成功", Green);
-		 return true;
-	 }
- }
 
 bool industrialVision::nativeEvent(const QByteArray& eventType, void* message, long* result)
 {
@@ -759,17 +580,17 @@ void industrialVision::setCURRENT_ROLE(QString currentROle)
 	QString title(windowTitle());
 	title.append("[" + CURRENT_ROLE + "]");
 	setWindowTitle(title);
-	
+	SettingMenus->clear();
 	//增加设置界面,管理员和操作员分开
 	if (CURRENT_ROLE == ROLE_ADMIN)
 	{
 		//图标设置                                                                                                                                                                                                                   
-		menus->addAction(action_setLogoPath);
+		SettingMenus->addAction(action_setLogoPath);
 		//日志设置
-		menus->addAction(action_SetAttributes);
+		SettingMenus->addAction(action_SetAttributes);
 	}
 	//密码设置
-	menus->addAction(action_password);
+	SettingMenus->addAction(action_password);
 }
 
 //搜索区域按钮
@@ -1556,6 +1377,13 @@ void industrialVision::actionPasswordAction()
 	passwordSetItem.show();
 }
 
+//切换用户
+void industrialVision::actionuserSwitch()
+{
+	emit sign_switchLogin();
+	//close();
+}
+
 void industrialVision::actionLogAndPathAction()
 {
 	logoPathItem.show();
@@ -1584,6 +1412,14 @@ int industrialVision::CloseDevice()
     m_nSaveImageBufSize = 0;
 
     return MV_OK;
+}
+
+void industrialVision::reinitialize() {
+	//设置日志
+	AppendText("切换用户按钮点击", Green);
+	setWindowTitle("V-Gp System V1.0");
+	//重新加载设置界
+	//重新设置标题
 }
 
 void industrialVision::resetParameters()

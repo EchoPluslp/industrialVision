@@ -75,6 +75,7 @@ createModel::createModel(QWidget* parent) :
     connect(ellipseModeAction, &EllipseModeAction::triggered,
         this, &createModel::onEllipseModeTriggered);
 
+    //删除操作
     auto deleteLabelAction = new DeleteLabelAction(this);
     connect(deleteLabelAction, &DeleteLabelAction::triggered,
         [=]() {
@@ -201,6 +202,9 @@ createModel::createModel(QWidget* parent) :
     menus[1]->addSeparator();
 	menus[1]->addAction(curseModeAction);
 	menus[1]->addSeparator();
+    menus[1]->addAction(undoAction);
+    menus[1]->addSeparator();
+    menus[1]->addAction(deleteLabelAction);
 
 	menus[2]->addAction(helpActionitem);
 
@@ -508,6 +512,30 @@ createModel::~createModel()
 
 void createModel::closeEvent(QCloseEvent* event)
 {
+}
+
+void createModel::keyPressEvent(QKeyEvent* event)
+{
+	switch (event->key()) {
+		// 处理 Backspace 或 Delete 键的按下事件
+
+	case Qt::Key_Backspace:
+    {
+		undoStack->undo();
+		break;
+
+    }
+	case Qt::Key_Delete:
+    {
+		emit labelsDockWidget->deleteCurrLabel(labelsDockWidget->currLabelName());
+		paintScene2D->updateShapes(labelController2D, fileController2D->getCurrImageName());
+		break;
+    }
+    default:
+		// 调用基类的处理函数处理其他键盘按键
+		QMainWindow::keyPressEvent(event);
+		break;
+	}
 }
 
 

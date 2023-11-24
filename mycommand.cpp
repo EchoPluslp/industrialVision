@@ -63,15 +63,7 @@ void DeleteCurrLabelCommand::redo()
 {
 	if (m_labelController)
 		m_labelController->deleteLabel(m_type, m_id);
-	for (QList<Label*>& labelList :m_labelController->m_typeToLabel) {
-		for (Label*& label : labelList) {
-		/*	if (label->getType() == m_type && label->getId() == m_id) {
-				labelList.removeOne(label);
-				SAFE_DELETE(label);
-			}*/
 
-		}
-	}
 }
 
 

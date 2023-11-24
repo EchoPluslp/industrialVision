@@ -25,6 +25,7 @@ login::login(QWidget* parent) :
 	QPixmap pixmap(100, 100);
 	pixmap.fill(Qt::white);
 	setWindowIcon(QIcon(pixmap));
+	connect(&w, &industrialVision::sign_switchLogin,this,&login::slot_switchLog,Qt::DirectConnection);
 }
 
 void login::login_in() {
@@ -36,7 +37,7 @@ void login::login_in() {
 			w.setCURRENT_ROLE(ROLE_ADMIN);
 
 			w.showNormal();
-			this->close();
+			this->hide();
 			 return;
 		}
     }else if (username == ROLE_USER)
@@ -45,7 +46,7 @@ void login::login_in() {
 			w.setCURRENT_ROLE(ROLE_USER);
 
 			w.showNormal();
-			this->close();
+			this->hide();
 			return;
 		}
     }
@@ -55,6 +56,19 @@ void login::login_in() {
 login::~login()
 {
     delete ui;
+}
+
+void login::slot_switchLog()
+{
+	 ui->password->setText("");//获取密码
+	// w = new industrialVision();
+
+		w.hide();
+	// 重新初始化 w 窗口
+	w.reinitialize();  // 假设你在 industrialVision 类中实现了 reinitialize 方法
+
+	this->show();
+
 }
 
 void login::setPassword(QString passwordAdmin, QString passwordUser)

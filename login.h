@@ -26,6 +26,7 @@ private:
 
 public slots:
 	void login_in();
+	void slot_switchLog();
 
 };
 #endif

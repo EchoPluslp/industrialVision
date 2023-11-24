@@ -47,6 +47,10 @@ public:
 	explicit createModel(QWidget* parent = nullptr);
 	~createModel();
 	void closeEvent(QCloseEvent* event);
+protected:
+	void keyPressEvent(QKeyEvent* event) override;
+	void handleBackspaceOrDelete();
+
 public slots:
 	void onGetImageTriggered();
 	void onOpenFileTriggered();

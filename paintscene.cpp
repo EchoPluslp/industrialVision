@@ -142,11 +142,13 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 	}
 
 	// 限制画笔在rect内
+	bool currentInRectFlag = false ;
 	if (!rect.contains(event->scenePos())) {
 		QPointF newPos = event->scenePos();
 		newPos.setX(qMin(rect.right(), qMax(newPos.x(), rect.left())));
 		newPos.setY(qMin(rect.bottom(), qMax(newPos.y(), rect.top())));
 		event->setScenePos(newPos);
+		currentInRectFlag = true;
 	}
 
 	// 没有画笔工具时可选中对象，否则不可
@@ -187,6 +189,10 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 	if (!isDrawing) {
 		isDrawing = true;
 		ifTrackMouse = true;
+		if (currentInRectFlag && (currShapeType != Shape::Empty))
+		{
+
+		}else {
 		switch (currShapeType) {
 		case Shape::Rect: {
 			currShape = new Rect;
@@ -233,7 +239,8 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 			break;
 		}
 		}
-
+	}
+		
 		if (currShape) {
 			currShape->setPen(currPen, currBrush);
 			addItem(currShape->getItem());
@@ -281,7 +288,7 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 			circlePenCurse->setVisible(false);
 		}
 
-
+		QPointF xx = event->scenePos();
 		if (currPixmap->contains(event->scenePos()))
 			emit sendCurrPosToThreeview(double(event->scenePos().x()) / double(currPixmap->pixmap().width()),
 				double(event->scenePos().y()) / double(currPixmap->pixmap().height()));
@@ -345,7 +352,7 @@ void PaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
 			// 将Z值设置为当前像素图的Z值加1
 			crosshairLinePosX->setZValue(currPixmap->zValue() + 1);
 			crosshairLinePosY->setZValue(currPixmap->zValue() + 1);
-			// 使sendPosX和sendPosY可见
+			// 使sendPo  sX和sendPosY可见
 			crosshairLinePosX->setVisible(true);
 			crosshairLinePosY->setVisible(true);
 		}
@@ -396,20 +403,12 @@ void PaintScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event) {
 			currShape->mouseRelease(event);
 
 			emit drawFinished(currShape);
-			if (currShapeType == Shape::searchAreaRect)
-			{
-				setCurrentShape(Shape::Figure::featureMatchingRect);
-			}else if (currShapeType == Shape::featureMatchingRect)
-			{
-				setCurrentShape(Shape::Figure::Empty);
-			}
-			else if (currShapeType == Shape::CirclePen)
-			{
-				setCurrentShape(Shape::Figure::Empty);
-			}
+		
 			removeItem(currShape->getItem());
 			delete currShape;
 			currShape = nullptr;
+			setCurrentShape(Shape::Figure::Empty);
+
 		}
 		else {
 			currShape->mouseRelease(event);
