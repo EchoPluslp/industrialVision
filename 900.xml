@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LabelController>
+    <Type IdCount="2" Type="1.搜索区域">
+        <Color G="35" B="41" R="190"/>
+        <Label Id="2" Type="1.搜索区域">
+            <Color G="35" B="41" R="190"/>
+            <Area>
+                <ImageShape modepath="E:/CPP-WORK/industrialVision - 230615 - 修改相机采集代码/industrialVision/x64/Release/model/" ImageName="Image_w3072_h2048_fn1700873921.bmp" LabelType="1">
+                    <Shape HeightOfImage="1251" WidthOfImage="1876" Type="1">
+                        <Item Width="1862" Y="29" X="13" Height="1221"/>
+                    </Shape>
+                </ImageShape>
+            </Area>
+        </Label>
+    </Type>
+    <Type IdCount="4" Type="2.特征区域">
+        <Color G="225" B="4" R="108"/>
+        <Label Id="4" Type="2.特征区域">
+            <Color G="225" B="4" R="108"/>
+            <Area>
+                <ImageShape modepath="E:/CPP-WORK/industrialVision - 230615 - 修改相机采集代码/industrialVision/x64/Release/model/" ImageName="Image_w3072_h2048_fn1700873921.bmp" LabelType="1">
+                    <Shape HeightOfImage="1251" WidthOfImage="1876" Type="1">
+                        <Item Width="132" Y="673" X="321" Height="147"/>
+                    </Shape>
+                </ImageShape>
+            </Area>
+        </Label>
+    </Type>
+</LabelController>
