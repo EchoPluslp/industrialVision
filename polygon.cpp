@@ -65,24 +65,10 @@ void Polygon::mouseRelease(QGraphicsSceneMouseEvent* event)
 
 
 
-
-
-
-
-
-
-
-
-
 bool Polygon::quitDrawing(QGraphicsSceneMouseEvent* event)
 {
 	return m_quit;
 }
-
-
-
-
-
 
 
 
@@ -111,13 +97,6 @@ void Polygon::resizeEvent(QSize newSize)
 		polygonItem->setPolygon(newone);
 	}
 }
-
-
-
-
-
-
-
 
 
 QGraphicsItem* Polygon::getItem() const

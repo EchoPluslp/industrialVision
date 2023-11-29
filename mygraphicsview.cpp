@@ -11,8 +11,8 @@ MyGraphicsView::MyGraphicsView(QWidget* parent) : QGraphicsView(parent)
 {
 	setAlignment(Qt::AlignCenter);
 	setRenderHint(QPainter::Antialiasing);
-	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 	//setDragMode(QGraphicsView::ScrollHandDrag);
 	m_scale = 1.0;

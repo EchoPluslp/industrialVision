@@ -63,11 +63,13 @@ void ProcessingThread::run()
 					if (areaMatRect.x+ areaMatRect.width>tempMap.cols )
 					{
 						areaMatRect.x = tempMap.cols - areaMatRect.width;
-					}else if (areaMatRect.y + areaMatRect.height > tempMap.rows)
+					}
+					if (areaMatRect.y + areaMatRect.height > tempMap.rows)
 					{
 						areaMatRect.y = tempMap.rows - areaMatRect.height;
-					 
-					}		 
+					}	
+
+					//tempMap(areaMatRect)
 					cv::Point2f Point_1 = MatchPicture(patternMat, tempMap(areaMatRect),false);
 					pattern_Flag = false;
 					resultPointF.setX(Point_1.x);
@@ -78,7 +80,6 @@ void ProcessingThread::run()
 					emit signal_patternResult(resultPointF, total_time);
 					if (resultPointF.x() != -m_width && resultPointF.y()!=m_height) {
 						QPainter painter(&newPixmap_1);
-
 						QPen pen;
 						pen.setStyle(Qt::SolidLine);            //定义画笔的风格，直线、虚线等
 						pen.setWidth(10);                        //定义画笔的大小
@@ -246,12 +247,33 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
 	{patternNG();return resultPoint;}
     if (!modelflag &&!m_TemplData.bIsPatternLearned)
 	{patternNG();return resultPoint;}
-
-    //
+	
+    //12
     int iTopLayer = GetTopLayer(&m_matDst, (int)sqrt((double)256));
     //建立金字塔
     std::vector<cv::Mat> vecMatSrcPyr;
     cv::buildPyramid(m_matSrc, vecMatSrcPyr, iTopLayer);
+	cv::Mat matResult;
+	cv::Mat mas = m_TemplData_mask.vecPyramid[0];
+
+	int ix = 6;
+	//原图
+	int x2 = vecMatSrcPyr.size();
+	cv::Mat user_src = vecMatSrcPyr.at(ix);
+	//模板图
+	cv::Mat user_model = m_TemplData_model.vecPyramid[ix];
+	//mask图
+	cv::Mat user_mask = m_TemplData_mask.vecPyramid[ix];
+
+	cv::matchTemplate(user_src, user_model, matResult, cv::TM_CCOEFF_NORMED, user_mask);
+	double minValue, maxValue;
+	Point minLoc, maxLoc;
+	minMaxLoc(matResult, &minValue, &maxValue, &minLoc, &maxLoc);
+	cout << minValue << endl;
+	cout << maxValue << endl;
+
+	rectangle(user_src, maxLoc, cv::Point(maxLoc.x + user_model.cols, maxLoc.y + user_model.rows), Scalar(0, 255, 0), 2, 8);
+	//
 	s_TemplData* pTemplData;
 
 	if (modelflag)
@@ -291,7 +313,7 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
 
     for (int i = 0; i < iSize; i++)
     {
-        cv::Mat matRotatedSrc, matR = getRotationMatrix2D(ptCenter, vecAngles[i], 1);
+        cv::Mat matRotatedSrc, matRotatedSrc_Mask, matR = getRotationMatrix2D(ptCenter, vecAngles[i], 1);
         cv::Mat matResult;
         cv::Point ptMaxLoc;
         double dValue, dMaxVal;
@@ -303,8 +325,8 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
         matR.at<double>(0, 2) += fTranslationX;
         matR.at<double>(1, 2) += fTranslationY;
         warpAffine(vecMatSrcPyr[iTopLayer], matRotatedSrc, matR, sizeBest, INTER_LINEAR, BORDER_CONSTANT, Scalar(pTemplData->iBorderColor));
-
-        MatchTemplate(matRotatedSrc, pTemplData, matResult, iTopLayer, false);
+		
+        MatchTemplate(matRotatedSrc, pTemplData, matResult, iTopLayer, false, matRotatedSrc);
 
         if (bCalMaxByBlock)
         {
@@ -383,12 +405,12 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
                 double dBigValue = -1;
                 for (int j = 0; j < iSize; j++)
                 {
-                    Mat matResult, matRotatedSrc;
+                    Mat matResult, matRotatedSrc, matRotatedSrc_Mask;
                     double dMaxValue = 0;
                     Point ptMaxLoc;
                     GetRotatedROI(vecMatSrcPyr[iLayer], pTemplData->vecPyramid[iLayer].size(), ptLT * 2, vecAngles[j], matRotatedSrc);
 
-                    MatchTemplate(matRotatedSrc, pTemplData, matResult, iLayer, true);
+                    MatchTemplate(matRotatedSrc, pTemplData, matResult, iLayer, true, matRotatedSrc_Mask);
                     //matchTemplate (matRotatedSrc, pTemplData->vecPyramid[iLayer], matResult, CV_TM_CCOEFF_NORMED);
                     minMaxLoc(matResult, 0, &dMaxValue, 0, &ptMaxLoc);
                     vecNewMatchParameter[j] = s_MatchParameter(ptMaxLoc, dMaxValue, vecAngles[j]);
@@ -634,12 +656,17 @@ Point2f ProcessingThread::ptRotatePt2f(Point2f ptInput, Point2f ptOrg, double dA
 	return Point2f((float)dX, (float)dY);
 }
 
-void ProcessingThread::MatchTemplate(cv::Mat& matSrc, s_TemplData* pTemplData, cv::Mat& matResult, int iLayer, bool bUseSIMD)
+void ProcessingThread::MatchTemplate(cv::Mat& matSrc, s_TemplData* pTemplData, cv::Mat& matResult, int iLayer, bool bUseSIMD, cv::Mat& matSrcMask)
 {
-	cv::matchTemplate(matSrc, pTemplData->vecPyramid[iLayer], matResult, cv::TM_CCORR);
+	cv::Mat temp = pTemplData->vecPyramid[iLayer];
+	cv::Mat mask = m_TemplData_mask.vecPyramid[iLayer];
+	imwrite("A11111fs.bmp", mask);
+	cv::matchTemplate(matSrc, pTemplData->vecPyramid[iLayer], matResult, cv::TM_CCORR, mask);
 	CCOEFF_Denominator(matSrc, pTemplData, matResult, iLayer);
-}
+	//cv::matchTemplate(matSrc, pTemplData->vecPyramid[iLayer], matResult, cv::TM_CCORR, mask);
 
+}
+ 
 void ProcessingThread::CCOEFF_Denominator(cv::Mat& matSrc, s_TemplData* pTemplData, cv::Mat& matResult, int iLayer)
 {
 	if (pTemplData->vecResultEqual1[iLayer])
@@ -998,14 +1025,28 @@ void ProcessingThread::set_Grade(QString grade)
 }
 
 //模板匹配界面窗口运行
-void ProcessingThread::slot_processMatchPicture(QImage patternImage, QImage sourceImage)
+void ProcessingThread::slot_processMatchPicture(QImage patternImage, QImage sourceImage,QImage maskImage)
 {
 	cv::Mat patternImageMat = ImageToMat(patternImage);
 	cv::Mat sourceImageMat = ImageToMat(sourceImage);
-
+	cv::Mat maskImageMat = ImageToMat(maskImage);
 	m_TemplData_model.clear();
 	int iTopLayer = GetTopLayer(&patternImageMat, (int)sqrt((double)256));
 	cv::buildPyramid(patternImageMat, m_TemplData_model.vecPyramid, iTopLayer);
+	cv::buildPyramid(maskImageMat, m_TemplData_mask.vecPyramid, iTopLayer);
+	for (int i = 0 ;i < m_TemplData_mask.vecPyramid.size();i++)
+	{
+		cv::Mat* countx = &m_TemplData_mask.vecPyramid[i];
+		// 选择适当的阈值，这里使用 128 作为例子，可以根据实际情况调整
+		int threshold_value = 1;
+
+		// 应用二值化操作
+		cv::threshold(*countx, *countx, threshold_value, 255, cv::THRESH_BINARY);
+
+		int x = 10; 
+	}
+
+	
 	s_TemplData* templData = &m_TemplData_model;
 	templData->iBorderColor = mean(patternImageMat).val[0] < 128 ? 255 : 0;
 	int iSize = templData->vecPyramid.size();

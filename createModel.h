@@ -15,7 +15,7 @@
 #include <QImage>
 #include <QList>
 #include <QImageReader>
-
+#include <QToolButton>
 #include "menubar.h"
 #include "toolbar.h"
 #include "myactions.h"

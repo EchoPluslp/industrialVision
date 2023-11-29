@@ -82,7 +82,7 @@ industrialVision::industrialVision(QWidget *parent)
 
 	 
 	action_SetAttributes = new QAction();
-	action_SetAttributes->setText("图标设置");
+	action_SetAttributes->setText("日志设置");
 	action_SetAttributes->setFont(QFont(tr("宋体"),40, QFont::Bold, false));
 	connect(action_SetAttributes, &QAction::triggered,
 		this, &industrialVision::action_AttributesSet);
@@ -94,7 +94,7 @@ industrialVision::industrialVision(QWidget *parent)
 		this, &industrialVision::actionPasswordAction);
 
 	 action_setLogoPath = new QAction();
-	action_setLogoPath->setText("日志设置");
+	action_setLogoPath->setText("图标设置");
 	action_setLogoPath->setFont(QFont(tr("宋体"), 40, QFont::Bold, false));
 	connect(action_setLogoPath, &QAction::triggered,
 		this, &industrialVision::actionLogAndPathAction);
@@ -745,6 +745,18 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 					areaNodeREAL_size.setY(((double)areaNode.y() / small_Picture.height()) * m_height);
 					areaNodeREAL_size.setWidth(((double)areaNode.width() / small_Picture.width()) * m_width);
 					areaNodeREAL_size.setHeight(((double)areaNode.height() / small_Picture.height()) * m_height);
+					areaNodeREAL_size.setX(areaNodeREAL_size.x()<0 ? 0: areaNodeREAL_size.x());
+					areaNodeREAL_size.setY(areaNodeREAL_size.y() < 0 ? 0 : areaNodeREAL_size.y());
+
+					if (areaNodeREAL_size.x() + areaNodeREAL_size.width() > m_width)
+					{
+						areaNodeREAL_size.setWidth(m_width - areaNodeREAL_size.x());
+					}
+					if (areaNodeREAL_size.y() + areaNodeREAL_size.height() > m_height)
+					{
+						areaNodeREAL_size.setHeight(m_height - areaNodeREAL_size.y());
+
+					}
                 }
                 else if (typeName.contains("特征区域")) {
 					patternArea = currentShape->getItem()->boundingRect();
@@ -752,10 +764,22 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 					patternAreaREAL_size.setY(((double)patternArea.y() / small_Picture.height()) * m_height);
 					patternAreaREAL_size.setWidth(((double)patternArea.width() / small_Picture.width()) * m_width);
 					patternAreaREAL_size.setHeight(((double)patternArea.height() / small_Picture.height()) * m_height);
-                    Area* m_area_item = new Area;
+					patternAreaREAL_size.setX(patternAreaREAL_size.x() < 0 ? 0 : patternAreaREAL_size.x());
+					patternAreaREAL_size.setY(patternAreaREAL_size.y() < 0 ? 0 : patternAreaREAL_size.y());
+
+					Area* m_area_item = new Area;
 					//给patternImageName赋值用于读取模板图
 					 pattern_Path = m_area_item->getFileName(labelElem.firstChildElement("Area")).trimmed();
 					 SAFE_DELETE(m_area_item);
+					 if (patternAreaREAL_size.x() + patternAreaREAL_size.width() > m_width)
+					 {
+						 patternAreaREAL_size.setWidth(m_width - patternAreaREAL_size.x());
+					 }
+					 if (patternAreaREAL_size.y() + patternAreaREAL_size.height() > m_height)
+					 {
+						 patternAreaREAL_size.setHeight(m_height - patternAreaREAL_size.y());
+
+					 }
 				}
 				else if (typeName.contains("输出点")) {
 					//找到输出点并且获取其中心坐标
@@ -843,8 +867,7 @@ industrialVision::~industrialVision()
 
 	//保存关闭时的状态
 	SaveInitializationParameters();
-	if (!open_mv)
-		return;
+
     CloseDevice();
 
 }
@@ -1324,7 +1347,7 @@ void industrialVision::slot_get_patternResult(QPointF resultPoint,int matchTime)
 	resultPointF.setY(resultPoint.y());
     matchTime_total = matchTime;
 	createOncePattern();
-}
+}  
 
 //属性设置
 void industrialVision::action_AttributesSet()
@@ -1352,14 +1375,23 @@ void industrialVision::slot_modelPictureReadFlag()
 void industrialVision::getRotateValue(int x)
 {
 	AppendText("旋转图像...", Green);
+	int oldX =  m_cameraThread->getRotateIndex();
 	m_cameraThread->setRotateIndex(x);
 	//设置展示图片的长宽,用于模板读取的比例设置
-	
+		// 判断 x 和 oldX 是否同时为奇数
+	bool bothOdd = (x % 2 == 1) && (oldX % 2 == 1);
+	// 判断 x 和 oldX 是否同时为偶数（0 也算偶数）
+	bool bothEven = (x % 2 == 0) && (oldX % 2 == 0);
+
+	if (bothOdd|| bothEven)
+	{
+		//点击的时还原 不交换长宽值
+	}else{
 		//交换长宽的值
 		int temp = m_width;
 		m_width = m_height;
 		m_height = temp;
-	
+	}
 	if(!m_xmlpath.isEmpty()){
 	if (!getPatternInfoFromXML(m_xmlpath)) {
 		if (!m_processingThread->getmodelAndRealSclar()) {

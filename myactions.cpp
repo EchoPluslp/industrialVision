@@ -179,7 +179,7 @@ searchAreaRectAction::searchAreaRectAction(QObject* parent) : MyActions(parent)
 featureMatchingRectAction::featureMatchingRectAction(QObject* parent) : MyActions(parent)
 {
 	setIcon(QIcon("./Image/Icon/square_pen_mode"));
-	setText("特征区域");
+	setText("矩形");
 	//setShortcuts(QKeySequence::Redo);
 	setFont(QFont(tr("宋体"), 30, QFont::Bold, false));//宋体26号，加粗，斜体字
 }

@@ -42,11 +42,11 @@ public:
 	cv::Mat ImageToMat(QImage& image); //QImage转Mat
 
 	//模板匹配相关函数::
-	cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc, bool modelflag);
+	cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc, bool modelflag );
 	int GetTopLayer(cv::Mat* matTempl, int iMinDstLength);
 	cv::Size GetBestRotationSize(cv::Size sizeSrc, cv::Size sizeDst, double dRAngle);
 	cv::Point2f ptRotatePt2f(cv::Point2f ptInput, cv::Point2f ptOrg, double dAngle);
-	void MatchTemplate(cv::Mat& matSrc, s_TemplData* pTemplData, cv::Mat& matResult, int iLayer, bool bUseSIMD);
+	void MatchTemplate(cv::Mat& matSrc, s_TemplData* pTemplData, cv::Mat& matResult, int iLayer, bool bUseSIMD, cv::Mat& matSrcMask);
 	void CCOEFF_Denominator(cv::Mat& matSrc, s_TemplData* pTemplData, cv::Mat& matResult, int iLayer);
 	cv::Point GetNextMaxLoc(cv::Mat& matResult, cv::Point ptMaxLoc, cv::Size sizeTemplate, double& dMaxValue, double dMaxOverlap, s_BlockMax& blockMax);
 	cv::Point GetNextMaxLoc(cv::Mat& matResult, cv::Point ptMaxLoc, cv::Size sizeTemplate, double& dMaxValue, double dMaxOverlap);
@@ -70,7 +70,7 @@ public slots:
 	void slot_recievePatternImage(QString pattern_Path, QRectF pattern_Rect, QRectF areaRect,QPoint centerPoint, QPoint patternRectCenterPoint);
 	void slot_processThread_Pattren();
 	void set_Grade(QString grade);
-	void slot_processMatchPicture(QImage patternImage,QImage sourceImage);
+	void slot_processMatchPicture(QImage patternImage,QImage sourceImage, QImage maskImage);
 	void slot_setSourceArea(bool flag);
 private:
 	cv::Point2d drawCenterPoint;
@@ -80,6 +80,7 @@ private:
 
 	int m_threadId;
 	QImage patternQImage;
+	cv::Mat testMask;
 	cv::Mat patternMat;
 	cv::Rect areaMatRect;
 	QPoint centerPointInProcess;
@@ -98,7 +99,9 @@ private:
 		//初始化时的参数
 	s_TemplData      m_TemplData;
 	s_TemplData      m_TemplData_model;
+	s_TemplData      m_TemplData_mask;
 
+	//度数设置
 	double                      m_dToleranceAngle = 5;
 	double                  m_dScore = 0.8;//得分阈值
 	double                  m_iMaxPos = 2;//最多数量

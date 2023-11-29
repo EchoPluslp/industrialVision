@@ -64,6 +64,8 @@ public:
 	QGraphicsLineItem* crosshairLinePosX;
 	QGraphicsLineItem* crosshairLinePosY;
 
+	bool middleButtonPressed;  // 用于追踪鼠标中键的按下状态
+
 public:
 	PaintScene(QObject* parent = nullptr);
 	~PaintScene();

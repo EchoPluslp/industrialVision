@@ -491,7 +491,7 @@ void FileController::openFileByPath(const QString& path)
 }
 
 void FileController::onExecPattern(LabelController* labelController)
-{ 
+{
 	QString currImageName = getCurrImageName();
 	QRect areaChooseSize;
 	QRect patternArea;
@@ -513,7 +513,7 @@ void FileController::onExecPattern(LabelController* labelController)
 					areaChooseREAL_Size.setY(((double)areaChooseSize.y() / (double)shapeSize.height()) * cuurImageHeight);
 					areaChooseREAL_Size.setWidth(((double)areaChooseSize.width() / (double)shapeSize.width()) * cuurImageWidth);
 					areaChooseREAL_Size.setHeight(((double)areaChooseSize.height() / (double)shapeSize.height()) * cuurImageHeight);
-				} 
+				}
 			}
 		}
 		if (label->getType().contains("特征区域"))
@@ -522,39 +522,94 @@ void FileController::onExecPattern(LabelController* labelController)
 				const Area* area = label->getArea();
 				if (area) {
 					Shape* shape = area->getShape(currImageName);
-					QSize shapeSize = shape->m_currSize;
-					patternArea = shape->getSize();
-					patternAreaREAL_size.setX(((double)patternArea.x() / (double)shapeSize.width()) * cuurImageWidth);
-					patternAreaREAL_size.setY(((double)patternArea.y() / (double)shapeSize.height()) * cuurImageHeight);
-					patternAreaREAL_size.setWidth(((double)patternArea.width() / (double)shapeSize.width()) * cuurImageWidth);
-					patternAreaREAL_size.setHeight(((double)patternArea.height() / (double)shapeSize.height()) * cuurImageHeight);
+					currType = shape->getType();
+					//判断是否当前图像的类型
+					if (currType == Shape::Rect)
+					{
+						QSize shapeSize = shape->m_currSize;
+						patternArea = shape->getSize();
+						patternAreaREAL_size_rect.setX(((double)patternArea.x() / (double)shapeSize.width()) * cuurImageWidth);
+						patternAreaREAL_size_rect.setY(((double)patternArea.y() / (double)shapeSize.height()) * cuurImageHeight);
+						patternAreaREAL_size_rect.setWidth(((double)patternArea.width() / (double)shapeSize.width()) * cuurImageWidth);
+						patternAreaREAL_size_rect.setHeight(((double)patternArea.height() / (double)shapeSize.height()) * cuurImageHeight);
+					}
+					else if (currType == Shape::Polygon)
+					{
+						MyGraphicsPolygonItem* currItem = (MyGraphicsPolygonItem*)shape->getItem();
+						double ratio = double(cuurImageWidth) / double(shape->m_currSize.width());
+
+						QPolygonF prev = currItem->polygon();
+						for (int i = 0; i < prev.count(); i++) {
+							auto point = prev.at(i);
+							patternAreaREAL_size_polygon << QPointF(point * ratio);
+						}
+					}
 				}
 			}
 		}
 	}
 	//没有搜索区域,则全图
-	if (areaChooseREAL_Size.x()==0&& areaChooseREAL_Size.y() == 0 && areaChooseREAL_Size.width() == 0 && areaChooseREAL_Size.height() == 0 )
+	if (areaChooseREAL_Size.x() == 0 && areaChooseREAL_Size.y() == 0 && areaChooseREAL_Size.width() == 0 && areaChooseREAL_Size.height() == 0)
 	{
 		areaChooseREAL_Size.setWidth(cuurImageWidth);
 		areaChooseREAL_Size.setHeight(cuurImageHeight);
 	}
-	if (patternAreaREAL_size.x() == 0 && patternAreaREAL_size.y() == 0 && patternAreaREAL_size.width() == 0 && patternAreaREAL_size.height() == 0)
-	{
-		QMessageBox::warning(nullptr, tr("Warning"),
-			"没有特征区域");
-		return;
-	}
-	//获取区域
-	if(patternAreaREAL_size.x()>0 && patternAreaREAL_size.y() >0 && patternAreaREAL_size.width() > 0 && patternAreaREAL_size.height() > 0){
-	QImage currentImage = getImage(getCurrImageName());
-	currentImage = currentImage.convertToFormat(QImage::Format_Indexed8);
-	cv::Mat MatSrcImage  = QImage2Mat(currentImage);
 
+	QImage currentImage = getImage(getCurrImageName()).convertToFormat(QImage::Format_Indexed8);
+	cv::Mat MatSrcImage = QImage2Mat(currentImage);
 	cv::Rect areaChooseRealSize(areaChooseREAL_Size.x(), areaChooseREAL_Size.y(), areaChooseREAL_Size.width(), areaChooseREAL_Size.height());
-	cv::Rect patternAreaRealSize (patternAreaREAL_size.x(), patternAreaREAL_size.y(), patternAreaREAL_size.width(), patternAreaREAL_size.height());
+
 	srcImgMat = MatSrcImage(areaChooseRealSize);
-	cv::Mat patternImg = MatSrcImage(patternAreaRealSize);
-	emit sendImageToPattern(Mat2QImage(patternImg), Mat2QImage(srcImgMat));
+	if (currType == Shape::Rect)
+	{
+		if (patternAreaREAL_size_rect.x() == 0 && patternAreaREAL_size_rect.y() == 0 && patternAreaREAL_size_rect.width() == 0 && patternAreaREAL_size_rect.height() == 0)
+		{
+			QMessageBox::warning(nullptr, tr("Warning"),
+				"没有特征区域");
+			return;
+		}
+		//获取区域
+		if (patternAreaREAL_size_rect.x() > 0 && patternAreaREAL_size_rect.y() > 0 && patternAreaREAL_size_rect.width() > 0 && patternAreaREAL_size_rect.height() > 0) {
+			cv::Rect patternAreaRealSize(patternAreaREAL_size_rect.x(), patternAreaREAL_size_rect.y(), patternAreaREAL_size_rect.width(), patternAreaREAL_size_rect.height());
+			cv::Mat patternImg = MatSrcImage(patternAreaRealSize);
+
+			emit sendImageToPattern(Mat2QImage(patternImg), Mat2QImage(srcImgMat),QImage());
+		}
+	}else if (currType == Shape::Polygon)
+	{
+		// 将QPolygonF中的点坐标转换为vector<cv::Point>
+		std::vector<cv::Point> points;
+		for (const QPointF& point : patternAreaREAL_size_polygon) {
+			points.emplace_back(static_cast<int>(point.x()), static_cast<int>(point.y()));
+		}
+		points.pop_back();
+		// 创建一个与图像相同大小的黑色掩码
+		cv::Mat mask = cv::Mat::zeros(srcImgMat.size(), srcImgMat.type());
+
+
+		// 将点坐标转换为vector<vector<cv::Point>>形式以符合cv::fillPoly的要求
+		std::vector<std::vector<cv::Point>> pts = { points };
+		// 在掩码上填充多边形区域
+		cv::fillPoly(mask, pts, cv::Scalar(255, 255, 255));
+
+		// 使用掩码提取多边形区域
+		cv::Mat result;
+		cv::bitwise_and(srcImgMat, mask, result);
+		// 查找包含多边形的最小矩形 边界框
+		cv::Rect boundingRect = cv::boundingRect(points);
+
+		// 裁剪图像，去掉旁边的黑色区域
+		cv::Mat croppedResult = result(boundingRect).clone();
+
+
+		// 选择适当的阈值，这里使用 128 作为例子，可以根据实际情况调整
+		int threshold_value = 1;
+
+		// 应用二值化操作
+		cv::threshold(croppedResult, mask, threshold_value, 255, cv::THRESH_BINARY);
+
+		emit sendImageToPattern(Mat2QImage(croppedResult), Mat2QImage(srcImgMat), Mat2QImage(mask));
+
 	}
 }
 
@@ -564,10 +619,10 @@ void FileController::slot_receiveDrawPoint(QPoint resultPoint,int totalModelTime
 	// 在左上方写下totalModelTime文字
 	std::string text = "TotalTime : " + std::to_string(totalModelTime)+"MS";
 
-	cv::putText(srcImgClone, text, cv::Point(80, 100), cv::FONT_HERSHEY_SIMPLEX, 4, cv::Scalar(255, 255, 255),2);
+	cv::putText(srcImgClone, text, cv::Point(20, 100), cv::FONT_HERSHEY_SIMPLEX, 4, cv::Scalar(255, 255, 255),2);
 
 	cv::circle(srcImgClone, cv::Point(resultPoint.x(), resultPoint.y()), 30, cv::Scalar(255), -1);
-	cv::namedWindow("TestResult", cv::WINDOW_KEEPRATIO);
+	cv::namedWindow("TestResult", cv::WINDOW_AUTOSIZE);
 	cv::imshow("TestResult", srcImgClone);
 }
 QStringList FileController::findFiles(const QString& startDir, QStringList filters)

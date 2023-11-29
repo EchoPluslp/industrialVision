@@ -16,11 +16,12 @@ void Ellipse::mouseRelease(QGraphicsSceneMouseEvent* event)
 	auto width = event->scenePos().x() - ellipseItem->rect().x();
 	auto height = event->scenePos().y() - ellipseItem->rect().y();
 	ellipseItem->setRect(ellipseItem->rect().x(), ellipseItem->rect().y(), width, height);
+	
 	m_quit = true;
 }
 
 bool Ellipse::quitDrawing(QGraphicsSceneMouseEvent* event)
-{
+{ 
 	return m_quit;
 }
 

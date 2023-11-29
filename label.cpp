@@ -87,6 +87,7 @@ Label* Label::createFromElement(QDomElement elem)
 	m_color = QColor(colorElem.attribute("R", "0").toInt(),
 		colorElem.attribute("G", "0").toInt(),
 		colorElem.attribute("B", "0").toInt());
+
 	m_area = new Area;
 	m_area->createFromElement(elem.firstChildElement("Area"));
 

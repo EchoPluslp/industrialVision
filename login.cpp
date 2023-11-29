@@ -44,7 +44,6 @@ void login::login_in() {
     {
 		if (pwd == passwordUser) {
 			w.setCURRENT_ROLE(ROLE_USER);
-
 			w.showNormal();
 			this->hide();
 			return;

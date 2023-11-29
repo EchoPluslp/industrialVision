@@ -46,9 +46,12 @@ class FileController : public QObject
 	cv::Point srcImgResultPoint;
 	
 		QRect areaChooseREAL_Size;
-	QRect patternAreaREAL_size;
-
+	QRect patternAreaREAL_size_rect;
+	QPolygonF patternAreaREAL_size_polygon;
 	QString importFilepath;
+
+	//当前特征区域的类型
+	Shape::Figure currType;
 public:
 	FileController(QObject* parent = nullptr);
 	~FileController();
@@ -113,7 +116,7 @@ signals:
 	void updateFiles();
 	void currImageChanged(const QString&);
 	void modelFilePATH( QString xmlPath);
-	void sendImageToPattern(QImage patternImage, QImage sourceImage);
+	void sendImageToPattern(QImage patternImage, QImage sourceImage, QImage maskImage);
 public slots:
 	void slot_receiveDrawPoint(QPoint resultPoint,int totalModelTime);
 };

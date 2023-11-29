@@ -174,7 +174,7 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 
 	// »­Í¼Ê±ÏÔÊ¾µÄ±Ê´¥
 	QPen pen;
-	pen.setColor(QColor(0x16, 0xa0, 0x85));
+	pen.setColor(QColor(0, 0, 255));
 	pen.setWidth(radius < 3 ? radius : 3);
 	setPen(pen, QBrush());
 
@@ -200,10 +200,12 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 		}
 		case Shape::searchAreaRect: {
 			currShape = new Rect;
+			currPen.setColor(QColor(255, 0, 0));
 			break;
 		}
 		case Shape::featureMatchingRect: {
 			currShape = new Rect;
+			currPen.setColor(QColor(0, 255, 0));
 			break;
 		}
 		case Shape::Ellipse: {

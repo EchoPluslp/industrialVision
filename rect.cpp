@@ -11,13 +11,27 @@ void Rect::mouseMove(QGraphicsSceneMouseEvent* event) {
 	auto height = event->scenePos().y() - rectItem->rect().y();
 	rectItem->setRect(rectItem->rect().x(), rectItem->rect().y(), width, height);
 }
-
+ 
 void Rect::mouseRelease(QGraphicsSceneMouseEvent* event)
 {
 	auto width = event->scenePos().x() - rectItem->rect().x();
 	auto height = event->scenePos().y() - rectItem->rect().y();
-	rectItem->setRect(rectItem->rect().x(), rectItem->rect().y(), width, height);
-	//m_quit = true;
+	int x = rectItem->rect().x();
+	int  y = rectItem->rect().y();
+
+	if (width < 0)
+	{
+		x = x + width;
+		width = abs(width);
+	}
+	if (height < 0)
+	{
+		y = y + height;
+		height = abs(height);
+
+	}
+	rectItem->setRect(x, y, width, height);
+	m_quit = true;
 }
 
 bool Rect::quitDrawing(QGraphicsSceneMouseEvent* event)

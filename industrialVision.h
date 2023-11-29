@@ -203,6 +203,11 @@ public:
 			 if (result == QMessageBox::Yes) {
 				 // 用户点击了确认按钮，关闭窗口
 				 event->accept();
+				 //关闭所有界面
+				 passwordSetItem.close();
+				 createModelItem.close();
+				 logoset.close();
+				 logoPathItem.close();
 			 }
 			 else {
 				 // 用户点击了取消按钮，忽略关闭事件
