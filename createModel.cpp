@@ -237,8 +237,23 @@ createModel::createModel(QWidget* parent) :
 	toolBar->addAction(searchAreaRectActionItem);
 	toolBar->addSeparator();
     //特征匹配
-   toolBar->addAction(featureMatchingRectActionItem);
+   //创建下拉菜单
+   QMenu* menuSelection = new QMenu(this);
+   menuSelection->addAction(featureMatchingRectActionItem);
+   menuSelection->addAction(polygonModeAction);
+   menuSelection->addAction(ellipseModeAction);
+
+   QToolButton* aBtn = new QToolButton(this);
+   aBtn->setPopupMode(QToolButton::InstantPopup);
+   aBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+   //aBtn->setDefaultAction(ui->actSelPopMenu);
+   aBtn->setMenu(menuSelection);
+   aBtn->setText("特征区域");
+   aBtn->setIcon(QIcon("./Image/Icon/credit-card"));
+   toolBar->addWidget(aBtn);
    toolBar->addSeparator();
+
+
    //输出点
    toolBar->addAction(setPointAction);
    toolBar->addSeparator();
