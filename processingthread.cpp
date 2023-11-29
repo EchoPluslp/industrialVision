@@ -1048,6 +1048,33 @@ void ProcessingThread::slot_processMatchPicture(QImage patternImage, QImage sour
 	
 	emit QPointSendtoFileControl(QPoint(resultPoint.x, resultPoint.y), total_time);
 }
+
+//模板图匹配 多边长算法
+void ProcessingThread::slot_processMatchPictureWithMask(QImage patternImage, QImage sourceImage, QImage maskImage) {
+
+	QTime timedebuge;//声明一个时钟对象
+	timedebuge.start();//开始计时
+
+
+
+	cv::Mat patternImageMat = ImageToMat(patternImage);
+	cv::Mat sourceImageMat = ImageToMat(sourceImage);
+	cv::Mat maskImageMat = ImageToMat(maskImage);
+
+	cv::Mat resultMat;
+	cv::matchTemplate(sourceImageMat, patternImageMat, resultMat, cv::TM_CCOEFF_NORMED, maskImageMat);
+	double minValue, maxValue;
+	Point minLoc, maxLoc;
+	minMaxLoc(resultMat, &minValue, &maxValue, &minLoc, &maxLoc);
+	
+	int total_time = timedebuge.elapsed();
+
+	rectangle(sourceImageMat, maxLoc, cv::Point(maxLoc.x + patternImageMat.cols, maxLoc.y + patternImageMat.rows), Scalar(0, 255, 0), 2, 8);
+	//两个图进行匹配
+	emit QPointSendtoFileControl(QPoint( maxLoc.x + patternImageMat.cols/2,resultPoint.y+ patternImageMat.rows / 2), total_time);
+
+}
+
 void ProcessingThread::slot_setSourceArea(bool flag)
 {
 	area_Flag = flag;

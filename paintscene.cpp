@@ -414,15 +414,12 @@ void PaintScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event) {
 			currShape->mouseRelease(event);
 		}
 	}
-	
 	for (auto i : selectedItems()) {
 		if (i) {
 			emit itemSelected(i);
 		}
 
 	}
-
-
 	QGraphicsScene::mouseReleaseEvent(event);
 }
 

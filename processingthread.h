@@ -72,6 +72,7 @@ public slots:
 	void set_Grade(QString grade);
 	void slot_processMatchPicture(QImage patternImage,QImage sourceImage);
 	void slot_setSourceArea(bool flag);
+	void slot_processMatchPictureWithMask(QImage patternImage, QImage sourceImage,QImage maskImage);
 private:
 	cv::Point2d drawCenterPoint;
 	bool startFlag = false;

@@ -283,7 +283,8 @@ void industrialVision::click_editVision()
     connect(&createModelItem, &createModel::sendXMLPath , this, &industrialVision::getXMLPATH, Qt::UniqueConnection);
 
 	connect(createModelItem.fileController2D, &FileController::sendImageToPattern, m_processingThread, &ProcessingThread::slot_processMatchPicture, Qt::UniqueConnection);
-	
+	connect(createModelItem.fileController2D, &FileController::sendImageToPatternWithMask, m_processingThread, &ProcessingThread::slot_processMatchPictureWithMask, Qt::UniqueConnection);
+
 	connect(m_processingThread, &ProcessingThread::QPointSendtoFileControl,createModelItem.fileController2D, &FileController::slot_receiveDrawPoint, Qt::UniqueConnection);
 
 
@@ -747,6 +748,7 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 					areaNodeREAL_size.setHeight(((double)areaNode.height() / small_Picture.height()) * m_height);
                 }
                 else if (typeName.contains("特征区域")) {
+
 					patternArea = currentShape->getItem()->boundingRect();
 					patternAreaREAL_size.setX(((double)patternArea.x() / small_Picture.width()) * m_width);
 					patternAreaREAL_size.setY(((double)patternArea.y() / small_Picture.height()) * m_height);
@@ -756,6 +758,7 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 					//给patternImageName赋值用于读取模板图
 					 pattern_Path = m_area_item->getFileName(labelElem.firstChildElement("Area")).trimmed();
 					 SAFE_DELETE(m_area_item);
+
 				}
 				else if (typeName.contains("输出点")) {
 					//找到输出点并且获取其中心坐标

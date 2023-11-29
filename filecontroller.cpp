@@ -495,6 +495,7 @@ void FileController::onExecPattern(LabelController* labelController)
 	QString currImageName = getCurrImageName();
 	QRect areaChooseSize;
 	QRect patternArea;
+	Shape::Figure currType;
 
 	QImage cuurImage = m_image[m_currImageName];
 	int cuurImageWidth = cuurImage.width();
@@ -522,12 +523,29 @@ void FileController::onExecPattern(LabelController* labelController)
 				const Area* area = label->getArea();
 				if (area) {
 					Shape* shape = area->getShape(currImageName);
-					QSize shapeSize = shape->m_currSize;
-					patternArea = shape->getSize();
-					patternAreaREAL_size.setX(((double)patternArea.x() / (double)shapeSize.width()) * cuurImageWidth);
-					patternAreaREAL_size.setY(((double)patternArea.y() / (double)shapeSize.height()) * cuurImageHeight);
-					patternAreaREAL_size.setWidth(((double)patternArea.width() / (double)shapeSize.width()) * cuurImageWidth);
-					patternAreaREAL_size.setHeight(((double)patternArea.height() / (double)shapeSize.height()) * cuurImageHeight);
+					currType = shape->getType();
+					//判断是否当前图像的类型
+
+					if (currType == Shape::Rect)
+					{
+						QSize shapeSize = shape->m_currSize;
+						patternArea = shape->getSize();
+						patternAreaREAL_size_rect.setX(((double)patternArea.x() / (double)shapeSize.width()) * cuurImageWidth);
+						patternAreaREAL_size_rect.setY(((double)patternArea.y() / (double)shapeSize.height()) * cuurImageHeight);
+						patternAreaREAL_size_rect.setWidth(((double)patternArea.width() / (double)shapeSize.width()) * cuurImageWidth);
+						patternAreaREAL_size_rect.setHeight(((double)patternArea.height() / (double)shapeSize.height()) * cuurImageHeight);
+					}
+					else if (currType == Shape::Polygon)
+					{
+						MyGraphicsPolygonItem* currItem = (MyGraphicsPolygonItem*)shape->getItem();
+						double ratio = double(cuurImageWidth) / double(shape->m_currSize.width());
+
+						QPolygonF prev = currItem->polygon();
+						for (int i = 0; i < prev.count(); i++) {
+							auto point = prev.at(i);
+							patternAreaREAL_size_polygon << QPointF(point * ratio);
+						}
+					}
 				}
 			}
 		}
@@ -538,23 +556,61 @@ void FileController::onExecPattern(LabelController* labelController)
 		areaChooseREAL_Size.setWidth(cuurImageWidth);
 		areaChooseREAL_Size.setHeight(cuurImageHeight);
 	}
-	if (patternAreaREAL_size.x() == 0 && patternAreaREAL_size.y() == 0 && patternAreaREAL_size.width() == 0 && patternAreaREAL_size.height() == 0)
+	QImage currentImage = getImage(getCurrImageName()).convertToFormat(QImage::Format_Indexed8);
+	cv::Mat MatSrcImage = QImage2Mat(currentImage);
+	cv::Rect areaChooseRealSize(areaChooseREAL_Size.x(), areaChooseREAL_Size.y(), areaChooseREAL_Size.width(), areaChooseREAL_Size.height());
+
+	srcImgMat = MatSrcImage(areaChooseRealSize);
+
+	if (currType == Shape::Rect)
+	{
+	if (patternAreaREAL_size_rect.x() == 0 && patternAreaREAL_size_rect.y() == 0 && patternAreaREAL_size_rect.width() == 0 && patternAreaREAL_size_rect.height() == 0)
 	{
 		QMessageBox::warning(nullptr, tr("Warning"),
 			"没有特征区域");
 		return;
 	}
 	//获取区域
-	if(patternAreaREAL_size.x()>0 && patternAreaREAL_size.y() >0 && patternAreaREAL_size.width() > 0 && patternAreaREAL_size.height() > 0){
-	QImage currentImage = getImage(getCurrImageName());
-	currentImage = currentImage.convertToFormat(QImage::Format_Indexed8);
-	cv::Mat MatSrcImage  = QImage2Mat(currentImage);
+	if (patternAreaREAL_size_rect.x() > 0 && patternAreaREAL_size_rect.y() > 0 && patternAreaREAL_size_rect.width() > 0 && patternAreaREAL_size_rect.height() > 0) {
+		cv::Rect patternAreaRealSize(patternAreaREAL_size_rect.x(), patternAreaREAL_size_rect.y(), patternAreaREAL_size_rect.width(), patternAreaREAL_size_rect.height());
+		cv::Mat patternImg = MatSrcImage(patternAreaRealSize);
+		emit sendImageToPattern(Mat2QImage(patternImg), Mat2QImage(srcImgMat));
+		}
+	}
+	else if (currType == Shape::Polygon) {
+		//多边形
+		// 将QPolygonF中的点坐标转换为vector<cv::Point>
+		std::vector<cv::Point> points;
+		for (const QPointF& point : patternAreaREAL_size_polygon) {
+			points.emplace_back(static_cast<int>(point.x()), static_cast<int>(point.y()));
+		}
+		//points.pop_back();
+		// 创建一个与模板图像相同大小的黑色掩码
+		cv::Mat mask = cv::Mat::zeros(MatSrcImage.size(), MatSrcImage.type());
+			
 
-	cv::Rect areaChooseRealSize(areaChooseREAL_Size.x(), areaChooseREAL_Size.y(), areaChooseREAL_Size.width(), areaChooseREAL_Size.height());
-	cv::Rect patternAreaRealSize (patternAreaREAL_size.x(), patternAreaREAL_size.y(), patternAreaREAL_size.width(), patternAreaREAL_size.height());
-	srcImgMat = MatSrcImage(areaChooseRealSize);
-	cv::Mat patternImg = MatSrcImage(patternAreaRealSize);
-	emit sendImageToPattern(Mat2QImage(patternImg), Mat2QImage(srcImgMat));
+		// 将点坐标转换为vector<vector<cv::Point>>形式以符合cv::fillPoly的要求
+		std::vector<std::vector<cv::Point>> pts = { points };
+		// 在掩码上填充多边形区域
+		cv::fillPoly(mask, pts, cv::Scalar(255, 255, 255));
+
+		// 使用掩码提取多边形区域
+		cv::Mat result;
+		cv::bitwise_and(MatSrcImage, mask, result);
+		// 查找包含多边形的最小矩形 边界框
+		cv::Rect boundingRect = cv::boundingRect(points);
+
+		// 裁剪图像，去掉旁边的黑色区域
+		cv::Mat croppedResult = result(boundingRect).clone();
+
+
+		// 选择适当的阈值，这里使用 128 作为例子，可以根据实际情况调整
+		int threshold_value = 1;
+
+		// 应用二值化操作
+		cv::threshold(croppedResult, mask, threshold_value, 255, cv::THRESH_BINARY);
+		QPoint srcImageMat(areaChooseREAL_Size.x(), areaChooseREAL_Size.y());
+		emit sendImageToPatternWithMask(Mat2QImage(croppedResult), Mat2QImage(srcImgMat), Mat2QImage(mask));
 	}
 }
 
@@ -565,7 +621,7 @@ void FileController::slot_receiveDrawPoint(QPoint resultPoint,int totalModelTime
 	std::string text = "TotalTime : " + std::to_string(totalModelTime)+"MS";
 
 	cv::putText(srcImgClone, text, cv::Point(80, 100), cv::FONT_HERSHEY_SIMPLEX, 4, cv::Scalar(255, 255, 255),2);
-
+	12312
 	cv::circle(srcImgClone, cv::Point(resultPoint.x(), resultPoint.y()), 30, cv::Scalar(255), -1);
 	cv::namedWindow("TestResult", cv::WINDOW_KEEPRATIO);
 	cv::imshow("TestResult", srcImgClone);
