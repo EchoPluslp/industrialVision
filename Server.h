@@ -28,6 +28,16 @@ struct s_SingleTargetMatch
 	int height;
 	bool pattern_flag = false;
 };
+class CustomData {
+public:
+	QString isOK;
+	double x;
+	double y;
+	double a;
+	double matchRatio;
+};
+
+
 
 
 class Server  :public QObject
@@ -43,13 +53,16 @@ public:
 //	bool start();
 	//bool recvMsg(fd_set& fdRead, SOCKET clntSock);
 	QString Server::recvMsg(QString receiveMessage);
+	QJsonObject Server::recvMsgByJson(QString receiveMessage, QString cmdID);
 
+	
 	QPointF currPoint;
 	
 	double dMatchAngle = 0;
 	//void setMatchAngle(double angle);
 	bool operator_TCPCanSend = false;
 //	void setTCPCanSendStatus(bool flag);
+	bool isJsonString(const QString& str);
 private:
 	//bool coreFunc();
 	SOCKET servSock;

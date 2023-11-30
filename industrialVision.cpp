@@ -745,17 +745,45 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 					areaNodeREAL_size.setY(((double)areaNode.y() / small_Picture.height()) * m_height);
 					areaNodeREAL_size.setWidth(((double)areaNode.width() / small_Picture.width()) * m_width);
 					areaNodeREAL_size.setHeight(((double)areaNode.height() / small_Picture.height()) * m_height);
-                }
+					
+					areaNodeREAL_size.setX(areaNodeREAL_size.x() < 0 ? 0 : areaNodeREAL_size.x());
+					areaNodeREAL_size.setY(areaNodeREAL_size.y() < 0 ? 0 : areaNodeREAL_size.y());
+
+					if (areaNodeREAL_size.x() + areaNodeREAL_size.width() > m_width)
+					{
+						areaNodeREAL_size.setWidth(m_width - areaNodeREAL_size.x());
+					}
+					if (areaNodeREAL_size.y() + areaNodeREAL_size.height() > m_height)
+					{
+						areaNodeREAL_size.setHeight(m_height - areaNodeREAL_size.y());
+
+					}
+				}
                 else if (typeName.contains("特征区域")) {
 					patternArea = currentShape->getItem()->boundingRect();
 					patternAreaREAL_size.setX(((double)patternArea.x() / small_Picture.width()) * m_width);
 					patternAreaREAL_size.setY(((double)patternArea.y() / small_Picture.height()) * m_height);
 					patternAreaREAL_size.setWidth(((double)patternArea.width() / small_Picture.width()) * m_width);
 					patternAreaREAL_size.setHeight(((double)patternArea.height() / small_Picture.height()) * m_height);
-                    Area* m_area_item = new Area;
+					
+					patternAreaREAL_size.setX(patternAreaREAL_size.x() < 0 ? 0 : patternAreaREAL_size.x());
+					patternAreaREAL_size.setY(patternAreaREAL_size.y() < 0 ? 0 : patternAreaREAL_size.y());
+
+					Area* m_area_item = new Area;
 					//给patternImageName赋值用于读取模板图
 					 pattern_Path = m_area_item->getFileName(labelElem.firstChildElement("Area")).trimmed();
 					 SAFE_DELETE(m_area_item);
+					
+					 if (patternAreaREAL_size.x() + patternAreaREAL_size.width() > m_width)
+					 {
+						 patternAreaREAL_size.setWidth(m_width - patternAreaREAL_size.x());
+					 }
+					 if (patternAreaREAL_size.y() + patternAreaREAL_size.height() > m_height)
+					 {
+						 patternAreaREAL_size.setHeight(m_height - patternAreaREAL_size.y());
+
+					 }
+
 				}
 				else if (typeName.contains("输出点")) {
 					//找到输出点并且获取其中心坐标
