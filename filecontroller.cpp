@@ -522,12 +522,27 @@ void FileController::onExecPattern(LabelController* labelController)
 				const Area* area = label->getArea();
 				if (area) {
 					Shape* shape = area->getShape(currImageName);
-					QSize shapeSize = shape->m_currSize;
-					patternArea = shape->getSize();
-					patternAreaREAL_size.setX(((double)patternArea.x() / (double)shapeSize.width()) * cuurImageWidth);
-					patternAreaREAL_size.setY(((double)patternArea.y() / (double)shapeSize.height()) * cuurImageHeight);
-					patternAreaREAL_size.setWidth(((double)patternArea.width() / (double)shapeSize.width()) * cuurImageWidth);
-					patternAreaREAL_size.setHeight(((double)patternArea.height() / (double)shapeSize.height()) * cuurImageHeight);
+					currType = shape->getType();
+					//判断是否当前图像的类型
+					if (currType == Shape::Rect)
+					{
+						QSize shapeSize = shape->m_currSize;
+						patternArea = shape->getSize();
+						patternAreaREAL_size_rect.setX(((double)patternArea.x() / (double)shapeSize.width()) * cuurImageWidth);
+						patternAreaREAL_size_rect.setY(((double)patternArea.y() / (double)shapeSize.height()) * cuurImageHeight);
+						patternAreaREAL_size_rect.setWidth(((double)patternArea.width() / (double)shapeSize.width()) * cuurImageWidth);
+						patternAreaREAL_size_rect.setHeight(((double)patternArea.height() / (double)shapeSize.height()) * cuurImageHeight);
+					}
+					else if (currType == Shape::Ellipse)
+					{
+						QSize shapeSize = shape->m_currSize;
+		  				MyGraphicsEllipseItem* patternArea = (MyGraphicsEllipseItem*)shape->getItem();
+						auto item = patternArea->rect();
+						patternAreaREAL_size_rect.setX(((double)item.x() / (double)shapeSize.width()) * cuurImageWidth);
+						patternAreaREAL_size_rect.setY(((double)item.y() / (double)shapeSize.height()) * cuurImageHeight);
+						patternAreaREAL_size_rect.setWidth(((double)item.width() / (double)shapeSize.width()) * cuurImageWidth);
+						patternAreaREAL_size_rect.setHeight(((double)item.height() / (double)shapeSize.height()) * cuurImageHeight);
+					}
 				}
 			}
 		}
@@ -538,23 +553,54 @@ void FileController::onExecPattern(LabelController* labelController)
 		areaChooseREAL_Size.setWidth(cuurImageWidth);
 		areaChooseREAL_Size.setHeight(cuurImageHeight);
 	}
-	if (patternAreaREAL_size.x() == 0 && patternAreaREAL_size.y() == 0 && patternAreaREAL_size.width() == 0 && patternAreaREAL_size.height() == 0)
-	{
-		QMessageBox::warning(nullptr, tr("Warning"),
-			"没有特征区域");
-		return;
-	}
-	//获取区域
-	if(patternAreaREAL_size.x()>0 && patternAreaREAL_size.y() >0 && patternAreaREAL_size.width() > 0 && patternAreaREAL_size.height() > 0){
-	QImage currentImage = getImage(getCurrImageName());
-	currentImage = currentImage.convertToFormat(QImage::Format_Indexed8);
-	cv::Mat MatSrcImage  = QImage2Mat(currentImage);
-
+	QImage currentImage = getImage(getCurrImageName()).convertToFormat(QImage::Format_Indexed8);
+	cv::Mat MatSrcImage = QImage2Mat(currentImage);
 	cv::Rect areaChooseRealSize(areaChooseREAL_Size.x(), areaChooseREAL_Size.y(), areaChooseREAL_Size.width(), areaChooseREAL_Size.height());
-	cv::Rect patternAreaRealSize (patternAreaREAL_size.x(), patternAreaREAL_size.y(), patternAreaREAL_size.width(), patternAreaREAL_size.height());
+
 	srcImgMat = MatSrcImage(areaChooseRealSize);
-	cv::Mat patternImg = MatSrcImage(patternAreaRealSize);
-	emit sendImageToPattern(Mat2QImage(patternImg), Mat2QImage(srcImgMat));
+	if (currType == Shape::Rect)
+	{
+		if (patternAreaREAL_size_rect.x() == 0 && patternAreaREAL_size_rect.y() == 0 && patternAreaREAL_size_rect.width() == 0 && patternAreaREAL_size_rect.height() == 0)
+		{
+			QMessageBox::warning(nullptr, tr("Warning"),
+				"没有特征区域");
+			return;
+		}
+		//获取区域
+		if (patternAreaREAL_size_rect.x() >= 0 && patternAreaREAL_size_rect.y() >= 0 && patternAreaREAL_size_rect.width() > 0 && patternAreaREAL_size_rect.height() > 0) {
+			cv::Rect patternAreaRealSize(patternAreaREAL_size_rect.x(), patternAreaREAL_size_rect.y(), patternAreaREAL_size_rect.width(), patternAreaREAL_size_rect.height());
+			cv::Mat patternImg = MatSrcImage(patternAreaRealSize);
+
+			emit sendImageToPattern(Mat2QImage(patternImg), Mat2QImage(srcImgMat));
+		}
+	}
+	else if (currType == Shape::Ellipse)
+	{
+		if (patternAreaREAL_size_rect.x() == 0 && patternAreaREAL_size_rect.y() == 0 && patternAreaREAL_size_rect.width() == 0 && patternAreaREAL_size_rect.height() == 0)
+		{
+			QMessageBox::warning(nullptr, tr("Warning"),
+				"没有特征区域");
+			return;
+		}
+		//获取区域
+		if (patternAreaREAL_size_rect.x() >= 0 && patternAreaREAL_size_rect.y() >= 0 && patternAreaREAL_size_rect.width() > 0 && patternAreaREAL_size_rect.height() > 0) {
+			cv::Rect patternAreaRealSize(patternAreaREAL_size_rect.x(), patternAreaREAL_size_rect.y(), patternAreaREAL_size_rect.width(), patternAreaREAL_size_rect.height());
+			cv::Mat patternImg = MatSrcImage(patternAreaRealSize);
+
+		// 定义椭圆参数
+		cv::Point center(patternAreaREAL_size_rect.x() + patternAreaREAL_size_rect.width()/2, patternAreaREAL_size_rect.y()
+		+ patternAreaREAL_size_rect.height() / 2);
+		int width = patternAreaREAL_size_rect.width();
+		int length = patternAreaREAL_size_rect.height();
+
+		// 创建椭圆的掩码
+		cv::Mat mask = cv::Mat::zeros(MatSrcImage.size(), CV_8UC1);
+		cv::ellipse(mask, center, cv::Size(width / 2, length / 2), 0, 0, 360, 255, -1);
+		cv::Mat maskPattern = mask(patternAreaRealSize);
+
+
+		emit sendImageToPatternWithMask(Mat2QImage(patternImg), Mat2QImage(srcImgMat), Mat2QImage(maskPattern));
+		}
 	}
 }
 

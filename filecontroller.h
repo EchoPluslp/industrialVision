@@ -44,9 +44,12 @@ class FileController : public QObject
 	//搜索范围图
 	cv::Mat srcImgMat;
 	cv::Point srcImgResultPoint;
-	
+
+	//当前特征区域的类型
+	Shape::Figure currType;
 		QRect areaChooseREAL_Size;
-	QRect patternAreaREAL_size;
+	QRect patternAreaREAL_size_rect;
+	QRect patternAreaREAL_size_ellipse;
 
 	QString importFilepath;
 public:
@@ -114,6 +117,7 @@ signals:
 	void currImageChanged(const QString&);
 	void modelFilePATH( QString xmlPath);
 	void sendImageToPattern(QImage patternImage, QImage sourceImage);
+	void sendImageToPatternWithMask(QImage patternImage, QImage sourceImage,QImage maskImage);
 public slots:
 	void slot_receiveDrawPoint(QPoint resultPoint,int totalModelTime);
 };

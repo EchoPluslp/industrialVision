@@ -21,7 +21,7 @@ void Ellipse::mouseRelease(QGraphicsSceneMouseEvent* event)
 
 bool Ellipse::quitDrawing(QGraphicsSceneMouseEvent* event)
 {
-	return m_quit;
+	return true;
 }
 
 void Ellipse::resizeEvent(QSize newSize)

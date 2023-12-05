@@ -33,6 +33,7 @@
 #include "mygraphicsview.h"
 #include "magnifyingglass.h"
 #include "mycommand.h"
+#include <QToolButton>
 #include "ui_createModel.h"
 
 namespace Ui {

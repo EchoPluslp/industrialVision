@@ -284,6 +284,8 @@ void industrialVision::click_editVision()
 
 	connect(createModelItem.fileController2D, &FileController::sendImageToPattern, m_processingThread, &ProcessingThread::slot_processMatchPicture, Qt::UniqueConnection);
 	
+	connect(createModelItem.fileController2D, &FileController::sendImageToPatternWithMask, m_processingThread, &ProcessingThread::slot_processMatchPictureWithMask, Qt::UniqueConnection);
+
 	connect(m_processingThread, &ProcessingThread::QPointSendtoFileControl,createModelItem.fileController2D, &FileController::slot_receiveDrawPoint, Qt::UniqueConnection);
 
 
@@ -781,7 +783,6 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 					 if (patternAreaREAL_size.y() + patternAreaREAL_size.height() > m_height)
 					 {
 						 patternAreaREAL_size.setHeight(m_height - patternAreaREAL_size.y());
-
 					 }
 
 				}

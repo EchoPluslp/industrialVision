@@ -20,6 +20,32 @@
 
 extern s_SingleTargetMatch finall_Total_Result;
 
+class ResultPoint
+{
+public:
+	double X;
+	double Y;
+	double T;
+	double Score;
+
+public:
+	ResultPoint()
+	{
+		//cout << "create ResultPoint object!" << endl;
+	}
+	ResultPoint(double x, double y, double t, double score)
+	{
+		X = (int)x;
+		Y = (int)y;
+		T = t;
+		Score = score;
+	}
+	~ResultPoint()
+	{
+		//cout << "release ResultPoint object!" << endl;
+	}
+};
+
 class ProcessingThread : public QThread
 {
 	Q_OBJECT
@@ -71,6 +97,7 @@ public slots:
 	void slot_processThread_Pattren();
 	void set_Grade(QString grade);
 	void slot_processMatchPicture(QImage patternImage,QImage sourceImage);
+	ResultPoint slot_processMatchPictureWithMask(QImage patternImage, QImage sourceImage, QImage maskImage);
 	void slot_setSourceArea(bool flag);
 private:
 	cv::Point2d drawCenterPoint;

@@ -68,6 +68,7 @@ void ProcessingThread::run()
 						areaMatRect.y = tempMap.rows - areaMatRect.height;
 					 
 					}		 
+
 					cv::Point2f Point_1 = MatchPicture(patternMat, tempMap(areaMatRect),false);
 					pattern_Flag = false;
 					resultPointF.setX(Point_1.x);
@@ -1048,10 +1049,101 @@ void ProcessingThread::slot_processMatchPicture(QImage patternImage, QImage sour
 	
 	emit QPointSendtoFileControl(QPoint(resultPoint.x, resultPoint.y), total_time);
 }
+
+
+//旋转图像
+Mat ImageRotate(Mat image, double angle)
+{
+	Mat newImg;
+	Point2f pt = Point2f((float)image.cols / 2, (float)image.rows / 2);
+	Mat M = getRotationMatrix2D(pt, angle, 1.0);
+	warpAffine(image, newImg, M, image.size());
+	return newImg;
+}
+
+ResultPoint ProcessingThread::slot_processMatchPictureWithMask(QImage patternImage, QImage sourceImage,QImage maskImage)
+{
+	QTime timedebuge;//声明一个时钟对象
+	timedebuge.start();//开始计时
+
+	cv::Mat patternImageMat = ImageToMat(patternImage);
+	cv::Mat sourceImageMat = ImageToMat(sourceImage);
+	cv::Mat maskImageMat = ImageToMat(maskImage);
+	int patternWidth = patternImageMat.cols;
+	int patternHeight = patternImageMat.rows;
+
+	double step = 360 / ((360 / 1) / 100);
+	double start = 0;
+	double range = 360;
+
+	//定义图片匹配所需要的参数
+	int resultCols = sourceImageMat.cols - patternImageMat.cols + 1;
+	int resultRows = sourceImageMat.rows - patternImageMat.rows + 1;
+	Mat result = Mat(resultCols, resultRows, CV_8U);
+	Mat src, model,mask;
+	sourceImageMat.copyTo(src);
+	patternImageMat.copyTo(model);
+	maskImageMat.copyTo(mask);
+	//对模板图像和待检测图像分别进行图像金字塔下采样  6层
+	for (int i = 0; i <  4; i++)
+	{
+		pyrDown(src, src, Size(src.cols / 2, src.rows / 2));
+		pyrDown(model, model, Size(model.cols / 2, model.rows / 2));
+		pyrDown(mask, mask, Size(mask.cols / 2, mask.rows / 2));
+	 // 阈值化处理，保持二值图特性
+		cv::threshold(mask, mask, 128, 255, cv::THRESH_BINARY);
+
+	}
+
+
+	TemplateMatchModes matchMode = TM_CCOEFF_NORMED;
+
+	//在没有旋转的情况下进行第一次匹配
+	double minVal, maxVal;
+	Point minLoc, maxLoc;
+	matchTemplate(src, model, result, matchMode,mask);
+	minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc);
+	Point location = maxLoc;
+	double temp = maxVal;
+	double angle = 0;
+	Mat newImg;
+
+	do
+	{
+		for (int i = 0; i <= (int)range / step; i++)
+		{
+			newImg = ImageRotate(model, start + step * i);
+			matchTemplate(src, newImg, result, matchMode, mask);
+			double minval, maxval;
+			Point minloc, maxloc;
+			minMaxLoc(result, &minval, &maxval, &minloc, &maxloc);
+			if (maxval > temp)
+			{
+				location = maxloc;
+				temp = maxval;
+				angle = start + step * i;
+			}
+		}
+		range = step * 2;
+		start = angle - step;
+		step = step / 10;
+	} while (step > 5);
+	if (temp > 0.6)
+	{
+		 ResultPoint itemn(location.x * pow(2, 4), location.y * pow(2, 4), -angle, temp);
+		 int total_time = timedebuge.elapsed();
+		 emit QPointSendtoFileControl(QPoint(itemn.X + patternWidth/2 , itemn.Y + patternHeight / 2), total_time);
+		 return itemn;
+	}
+
+}
+
+
 void ProcessingThread::slot_setSourceArea(bool flag)
 {
 	area_Flag = flag;
 }
+
 double ProcessingThread::calculateInitialDistance(QPoint A, QPoint B)
 {
 	double distance = sqrt(pow(B.x() - A.x(), 2) + pow(B.y() - A.y(), 2));

@@ -75,7 +75,10 @@ void DrawFinishedDialog::emitcurrentShapeType(Shape::Figure flag) {
 		QString string("1.ËÑË÷ÇøÓò");
 		emit sendTypeName(string);
 
-	}else if (flag == Shape::featureMatchingRect)
+	}
+	else if (flag == Shape::featureMatchingRect ||
+		flag == Shape::Polygon ||
+		flag == Shape::Ellipse)
 	{
 		QString string("2.ÌØÕ÷ÇøÓò");
 		emit sendTypeName(string);
