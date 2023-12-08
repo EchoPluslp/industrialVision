@@ -543,6 +543,17 @@ void FileController::onExecPattern(LabelController* labelController)
 						patternAreaREAL_size_rect.setWidth(((double)item.width() / (double)shapeSize.width()) * cuurImageWidth);
 						patternAreaREAL_size_rect.setHeight(((double)item.height() / (double)shapeSize.height()) * cuurImageHeight);
 					}
+					else if (currType == Shape::Polygon)
+					{
+						MyGraphicsPolygonItem* currItem = (MyGraphicsPolygonItem*)shape->getItem();
+						double ratio = double(cuurImageWidth) / double(shape->m_currSize.width());
+
+						QPolygonF prev = currItem->polygon();
+						for (int i = 0; i < prev.count(); i++) {
+							auto point = prev.at(i);
+							patternAreaREAL_size_polygon << QPointF(point * ratio);
+						}
+					}
 				}
 			}
 		}
@@ -601,6 +612,40 @@ void FileController::onExecPattern(LabelController* labelController)
 
 		emit sendImageToPatternWithMask(Mat2QImage(patternImg), Mat2QImage(srcImgMat), Mat2QImage(maskPattern));
 		}
+	}
+	else if (currType == Shape::Polygon) {
+		// 将QPolygonF中的点坐标转换为vector<cv::Point>
+		std::vector<cv::Point> points;
+		for (const QPointF& point : patternAreaREAL_size_polygon) {
+			points.emplace_back(static_cast<int>(point.x()), static_cast<int>(point.y()));
+		}
+		points.pop_back();
+		// 创建一个与图像相同大小的黑色掩码
+		cv::Mat mask = cv::Mat::zeros(srcImgMat.size(), srcImgMat.type());
+
+
+		// 将点坐标转换为vector<vector<cv::Point>>形式以符合cv::fillPoly的要求
+		std::vector<std::vector<cv::Point>> pts = { points };
+		// 在掩码上填充多边形区域
+		cv::fillPoly(mask, pts, cv::Scalar(255, 255, 255));
+
+		// 使用掩码提取多边形区域
+		cv::Mat result;
+		cv::bitwise_and(srcImgMat, mask, result);
+		// 查找包含多边形的最小矩形 边界框
+		cv::Rect boundingRect = cv::boundingRect(points);
+
+		// 裁剪图像，去掉旁边的黑色区域
+		cv::Mat croppedResult = result(boundingRect).clone();
+
+
+		// 选择适当的阈值，这里使用 128 作为例子，可以根据实际情况调整
+		int threshold_value = 1;
+
+		// 应用二值化操作
+		cv::threshold(croppedResult, mask, threshold_value, 255, cv::THRESH_BINARY);
+
+		emit sendImageToPatternWithMask(Mat2QImage(croppedResult), Mat2QImage(srcImgMat), Mat2QImage(mask));
 	}
 }
 

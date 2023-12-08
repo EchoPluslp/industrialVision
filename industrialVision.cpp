@@ -40,6 +40,8 @@ industrialVision::industrialVision(QWidget *parent)
 	connect(m_processingThread, &ProcessingThread::signal_patternResult, this, &industrialVision::slot_get_patternResult, Qt::BlockingQueuedConnection);
 
 	connect(this, &industrialVision::singal_sendPatternImage, m_processingThread, &ProcessingThread::slot_recievePatternImage, Qt::QueuedConnection);
+	
+	connect(this, &industrialVision::singal_sendPatternImageWithMaskEllipse, m_processingThread, &ProcessingThread::slot_recievePatternImageWithMask, Qt::QueuedConnection);
 
 	connect(this, &industrialVision::signal_processThread_pattren, m_processingThread, &ProcessingThread::slot_processThread_Pattren, Qt::QueuedConnection);
 
@@ -78,7 +80,7 @@ industrialVision::industrialVision(QWidget *parent)
     ui.menuBar->addAction(action_SetModelFile);
     connect(action_SetModelFile, &QAction::triggered,
         this, &industrialVision::setModelXMLFile);
-	action_SetModelFile->setEnabled(false);
+	action_SetModelFile->setEnabled(true);
 
 	 
 	action_SetAttributes = new QAction();
@@ -344,13 +346,6 @@ void industrialVision::getImageOneFrame() {
 
 void industrialVision::createOncePattern()
 {		
-/*	  if (resultPointF.x() == 0 && resultPointF.y() == 0) {
-	
-		   AppendText("【错误】触发接受匹配收到,模板图制作错误", Red);
-		 ui.texstBrowser_titleStatus->clear();
-	      ui.texstBrowser_titleStatus->setPixmap(QPixmap("Image/industory/NG.png"));
-
-	  } else*/
 		  if (resultPointF.x() != -m_width && resultPointF.y() != -m_height)
       {
           AppendText("【提示】触发接受匹配完成,匹配成功",Green);
@@ -708,6 +703,7 @@ bool industrialVision::getPatternInfoFromXML(QString path)
     cv::Rect srcRect;
     QString pattern_Path;
 	QList<QPoint> QpointList;
+	int currentPattern_OBJ;
     if (!doc.setContent(&xml_MODEL_FILE))
     {
         xml_MODEL_FILE.close();
@@ -762,30 +758,40 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 					}
 				}
                 else if (typeName.contains("特征区域")) {
-					patternArea = currentShape->getItem()->boundingRect();
-					patternAreaREAL_size.setX(((double)patternArea.x() / small_Picture.width()) * m_width);
-					patternAreaREAL_size.setY(((double)patternArea.y() / small_Picture.height()) * m_height);
-					patternAreaREAL_size.setWidth(((double)patternArea.width() / small_Picture.width()) * m_width);
-					patternAreaREAL_size.setHeight(((double)patternArea.height() / small_Picture.height()) * m_height);
+					//判断当前特征区域是哪种类型
+					currentPattern_OBJ = currentShape->getType();
 					
-					patternAreaREAL_size.setX(patternAreaREAL_size.x() < 0 ? 0 : patternAreaREAL_size.x());
-					patternAreaREAL_size.setY(patternAreaREAL_size.y() < 0 ? 0 : patternAreaREAL_size.y());
+					if (currentPattern_OBJ == Shape::Rect || currentPattern_OBJ == Shape::Ellipse)
+					{
+					currentShape->getItem();
+					patternArea = currentShape->getItem()->boundingRect();
+					patternAreaREAL_size_rect.setX(((double)patternArea.x() / small_Picture.width()) * m_width);
+					patternAreaREAL_size_rect.setY(((double)patternArea.y() / small_Picture.height()) * m_height);
+					patternAreaREAL_size_rect.setWidth(((double)patternArea.width() / small_Picture.width()) * m_width);
+					patternAreaREAL_size_rect.setHeight(((double)patternArea.height() / small_Picture.height()) * m_height);
+					
+					patternAreaREAL_size_rect.setX(patternAreaREAL_size_rect.x() < 0 ? 0 : patternAreaREAL_size_rect.x());
+					patternAreaREAL_size_rect.setY(patternAreaREAL_size_rect.y() < 0 ? 0 : patternAreaREAL_size_rect.y());
 
 					Area* m_area_item = new Area;
-					//给patternImageName赋值用于读取模板图
+					//给patternImageName赋值用于读取特征图
 					 pattern_Path = m_area_item->getFileName(labelElem.firstChildElement("Area")).trimmed();
 					 SAFE_DELETE(m_area_item);
 					
-					 if (patternAreaREAL_size.x() + patternAreaREAL_size.width() > m_width)
+					 if (patternAreaREAL_size_rect.x() + patternAreaREAL_size_rect.width() > m_width)
 					 {
-						 patternAreaREAL_size.setWidth(m_width - patternAreaREAL_size.x());
+						 patternAreaREAL_size_rect.setWidth(m_width - patternAreaREAL_size_rect.x());
 					 }
-					 if (patternAreaREAL_size.y() + patternAreaREAL_size.height() > m_height)
+					 if (patternAreaREAL_size_rect.y() + patternAreaREAL_size_rect.height() > m_height)
 					 {
-						 patternAreaREAL_size.setHeight(m_height - patternAreaREAL_size.y());
+						 patternAreaREAL_size_rect.setHeight(m_height - patternAreaREAL_size_rect.y());
 					 }
-
 				}
+					else if (currentShape->m_type == Shape::Polygon)
+					{
+						//321
+					}
+			}
 				else if (typeName.contains("输出点")) {
 					//找到输出点并且获取其中心坐标
 					QDomElement elemPoint = labelElem.firstChildElement("Area");
@@ -811,16 +817,17 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 							centerPoint = getCenterPointFromCircle(QpointList);
 							centerPoint.setX(((double)centerPoint.x() / small_Picture.width()) * m_width);
 							centerPoint.setY(((double)centerPoint.y() / small_Picture.height()) * m_height);
-							patternRectCenterPoint.setX(patternAreaREAL_size.x() + (patternAreaREAL_size.width() / 2));
-							patternRectCenterPoint.setY(patternAreaREAL_size.y() + (patternAreaREAL_size.height() / 2));
+						//	patternRectCenterPoint.setX(patternAreaREAL_size.x() + (patternAreaREAL_size.width() / 2));
+							//patternRectCenterPoint.setY(patternAreaREAL_size.y() + (patternAreaREAL_size.height() / 2));
 						}
 				}
 			}
         }
     }
+
     if (pattern_Path.isEmpty())
     {
-		AppendText("模板图读取错误,请在模板界面设置模板图",Red);
+		AppendText("特征区域读取错误,请在模板界面设置模板图",Red);
         return false;
     }
    if (areaNodeREAL_size.x()<0|| areaNodeREAL_size.y()<0)
@@ -828,24 +835,35 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 	   AppendText("搜索区域坐标错误,请重新制作", Red);
 	   return false;
    }
-   if (patternAreaREAL_size.x() < 0 || patternAreaREAL_size.y() < 0)
-   {
-	   AppendText("模板匹配坐标错误,请重新制作", Red);
-	   return false;
+   //范围框
+   srcQRect.setX(areaNodeREAL_size.x());
+   srcQRect.setY(areaNodeREAL_size.y());
+   srcQRect.setWidth(areaNodeREAL_size.width());
+   srcQRect.setHeight(areaNodeREAL_size.height());
+   //没有设置范围框,则默认全图
+   if (srcQRect.x() == 0 && srcQRect.y() == 0 && srcQRect.width() == 0 && srcQRect.height() == 0) {
+	   srcQRect.setWidth(m_width);
+	   srcQRect.setHeight(m_height);
    }
-    //范围框
-     srcQRect.setX(areaNodeREAL_size.x());
-    srcQRect.setY(areaNodeREAL_size.y());
-	srcQRect.setWidth(areaNodeREAL_size.width());
-	srcQRect.setHeight(areaNodeREAL_size.height());
-	//没有设置范围框,则默认全图
-	if (srcQRect.x() == 0 && srcQRect.y() == 0 && srcQRect.width() == 0 && srcQRect.height() == 0) {
-		srcQRect.setWidth(m_width);
-		srcQRect.setHeight(m_height);
-    }
-    //发送给peocessingthread线程 路径,匹配模板中心点坐标,范围图中心点坐标
-    emit singal_sendPatternImage(pattern_Path, patternAreaREAL_size,srcQRect, centerPoint, patternRectCenterPoint);
-	return true;
+
+   if(currentPattern_OBJ == Shape::Rect){
+	if (patternAreaREAL_size_rect.x() < 0 || patternAreaREAL_size_rect.y() < 0)
+		{
+	   AppendText("特征区域坐标错误,请重新制作", Red);
+	   return false;
+		}
+		//发送给peocessingthread线程 路径,匹配模板中心点坐标,范围图中心点坐标
+		emit singal_sendPatternImage(pattern_Path, patternAreaREAL_size_rect,srcQRect, centerPoint, patternRectCenterPoint);
+		return true;
+	}else if (currentPattern_OBJ == Shape::Ellipse)
+	{
+		//123
+		emit singal_sendPatternImageWithMaskEllipse(pattern_Path, patternAreaREAL_size_rect, srcQRect, centerPoint, patternRectCenterPoint);
+		return true;
+
+	}
+
+   return false;
 }
 
 void industrialVision::click_stopOperation() {
@@ -936,7 +954,7 @@ bool industrialVision::DisplayWindowInitial()
 void industrialVision::setButtonClickLimits(bool flag)
 {
 	//ui.pushButton_editVision->setEnabled(flag);
-	action_SetModelFile->setEnabled(flag);
+	action_SetModelFile->setEnabled(true);
 	ui.pushButton_manualOperation->setEnabled(flag);
 	//ui.pushButton->setEnabled(flag);
 	ui.pushButton_stopOperation->setEnabled(flag);
@@ -1459,10 +1477,11 @@ void industrialVision::resetParameters()
 	areaNodeREAL_size.setY(0);
 	areaNodeREAL_size.setWidth(0);
 	areaNodeREAL_size.setHeight(0);
-		patternAreaREAL_size.setX(0);
-		patternAreaREAL_size.setY(0);
-		patternAreaREAL_size.setWidth(0);
-		patternAreaREAL_size.setHeight(0);
+	//重置rect
+		patternAreaREAL_size_rect.setX(0);
+		patternAreaREAL_size_rect.setY(0);
+		patternAreaREAL_size_rect.setWidth(0);
+		patternAreaREAL_size_rect.setHeight(0);
 
 }
 

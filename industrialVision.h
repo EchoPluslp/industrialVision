@@ -158,7 +158,7 @@ private:
     bool  AcquiesceScale = false;
     //模板匹配需要的参数
     QRectF areaNodeREAL_size;
-    QRectF patternAreaREAL_size;
+    QRectF patternAreaREAL_size_rect;
     QPointF lastResult;
     //从本地读取的模板图
     QImage patternSrcQImage;
@@ -255,6 +255,7 @@ signals:
     void setdefultCamare(bool flag);
     void openSourceArea(bool flag);
     void sign_switchLogin();
+    void singal_sendPatternImageWithMaskEllipse(QString patternImage_Path, QRectF patternRect, QRectF qrect, QPoint centerPoint, QPoint patternRectCenterPoint);
 };
 
 #endif

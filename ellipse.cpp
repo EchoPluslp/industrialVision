@@ -112,3 +112,4 @@ Shape* Ellipse::createFromElement(QDomElement elem)
 {
 	return QRect();
 }
+

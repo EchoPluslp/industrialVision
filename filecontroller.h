@@ -50,6 +50,7 @@ class FileController : public QObject
 		QRect areaChooseREAL_Size;
 	QRect patternAreaREAL_size_rect;
 	QRect patternAreaREAL_size_ellipse;
+	QPolygonF patternAreaREAL_size_polygon;
 
 	QString importFilepath;
 public:

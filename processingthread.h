@@ -62,6 +62,8 @@ public:
 
 	void run();
 
+	ResultPoint slot_processMatchPictureWithSource(cv::Mat srcMat);
+
 	QImage cvMatToImage(const cv::Mat cvMat);
 	QPixmap cvMatToPixmap(const cv::Mat cvMat);
 	QImage tempqimageFromCamare;
@@ -99,6 +101,7 @@ public slots:
 	void slot_processMatchPicture(QImage patternImage,QImage sourceImage);
 	ResultPoint slot_processMatchPictureWithMask(QImage patternImage, QImage sourceImage, QImage maskImage);
 	void slot_setSourceArea(bool flag);
+	void slot_recievePatternImageWithMask(QString pattern_Path, QRectF pattern_Rect, QRectF areaRect, QPoint centerPoint, QPoint patternRectCenterPoint);
 private:
 	cv::Point2d drawCenterPoint;
 	bool startFlag = false;
@@ -108,6 +111,9 @@ private:
 	int m_threadId;
 	QImage patternQImage;
 	cv::Mat patternMat;
+	cv::Mat patternMatEllipse;
+	cv::Mat patternMatEllipseMask;
+
 	cv::Rect areaMatRect;
 	QPoint centerPointInProcess;
 	QPointF resultPointF;

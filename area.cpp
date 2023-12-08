@@ -191,6 +191,7 @@ Shape* Area::getFromElementToPattern(QDomElement elem)
 			continue;
 
 		Shape* shape = nullptr;
+		QString  x = shapeElem.attribute("Type", "0");
 		switch (shapeElem.attribute("Type", "0").toInt()) {
 		case Shape::Rect: {
 			shape = new Rect;

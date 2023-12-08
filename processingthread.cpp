@@ -67,17 +67,35 @@ void ProcessingThread::run()
 					{
 						areaMatRect.y = tempMap.rows - areaMatRect.height;
 					 
-					}		 
+					}	
+					cv::Point2f Point_1;
+					ResultPoint Point_2;
+					if (false)
+					{
+						 Point_1 = MatchPicture(patternMat, tempMap(areaMatRect), false);
 
-					cv::Point2f Point_1 = MatchPicture(patternMat, tempMap(areaMatRect),false);
-					pattern_Flag = false;
-					resultPointF.setX(Point_1.x);
-					resultPointF.setY(Point_1.y);
+						 pattern_Flag = false;
+						 resultPointF.setX(Point_1.x);
+						 resultPointF.setY(Point_1.y);
+
+						 int total_time = timedebuge.elapsed();
+
+						 emit signal_patternResult(resultPointF, total_time);
 					
-					int total_time = timedebuge.elapsed();
+					}
+					else {
+					
 
-					emit signal_patternResult(resultPointF, total_time);
-					if (resultPointF.x() != -m_width && resultPointF.y()!=m_height) {
+						Point_2 = slot_processMatchPictureWithSource(tempMap(areaMatRect));
+						pattern_Flag = false;
+						int total_time = timedebuge.elapsed();
+						resultPointF.setX(Point_2.X);
+						resultPointF.setY(Point_2.Y);
+
+						emit signal_patternResult(resultPointF, total_time);
+
+					}
+					if (resultPointF.x() != -m_width && resultPointF.y() != m_height) {
 						QPainter painter(&newPixmap_1);
 
 						QPen pen;
@@ -87,6 +105,7 @@ void ProcessingThread::run()
 						painter.setPen(pen);
 						painter.drawEllipse(QPointF(drawCenterPoint.x, drawCenterPoint.y), 50, 50);
 					}
+
 				}
 
 				//可以执行匹配,但是比例不对的情况,也就说不同比例时,触发了匹配,匹配错误
@@ -119,6 +138,7 @@ void ProcessingThread::run()
 		msleep(20);   //此处缓冲可减少cpu运行率,注意不要慢于相机线程的缓冲
 	}
 }
+
 
 //Mat->QImage
 QImage ProcessingThread::cvMatToImage(const cv::Mat cvMat)
@@ -1061,6 +1081,116 @@ Mat ImageRotate(Mat image, double angle)
 	return newImg;
 }
 
+ResultPoint ProcessingThread::slot_processMatchPictureWithSource( cv::Mat sourceImage)
+{            
+	QTime timedebuge;//声明一个时钟对象
+	timedebuge.start();//开始计时
+
+	cv::Mat patternImageMat = patternMatEllipse;
+	cv::Mat sourceImageMat = sourceImage;
+	cv::Mat maskImageMat = patternMatEllipseMask;
+	int patternWidth = patternImageMat.cols;
+	int patternHeight = patternImageMat.rows;
+
+	double step = 2;
+	double start = 0;
+	double range = 20;
+
+	//定义图片匹配所需要的参数
+	int resultCols = sourceImageMat.cols - patternImageMat.cols + 1;
+	int resultRows = sourceImageMat.rows - patternImageMat.rows + 1;
+	Mat result = Mat(resultCols, resultRows, CV_8U);
+	Mat src, model, mask, maskTemplate;
+	sourceImageMat.copyTo(src);
+	patternImageMat.copyTo(model);
+	maskImageMat.copyTo(mask);
+	//对模板图像和待检测图像分别进行图像金字塔下采样  6层
+	for (int i = 0; i < 3; i++)
+	{
+		pyrDown(src, src, Size(src.cols / 2, src.rows / 2));
+		pyrDown(model, model, Size(model.cols / 2, model.rows / 2));
+		pyrDown(mask, mask, Size(mask.cols / 2, mask.rows / 2));
+		// 阈值化处理，保持二值图特性
+		cv::threshold(mask, mask, 128, 255, cv::THRESH_BINARY);
+
+	}
+	mask.copyTo(maskTemplate);
+
+
+	TemplateMatchModes matchMode = TM_CCOEFF_NORMED;
+
+	//在没有旋转的情况下进行第一次匹配
+	double minVal, maxVal;
+	Point minLoc, maxLoc;
+	matchTemplate(src, model, result, matchMode, mask);
+	minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc);
+	Point location = maxLoc;
+	double temp = maxVal;
+	if (isinf(temp))
+	{
+		//第一次就没找到
+		patternNG();
+		return ResultPoint(-m_width, -m_height,0,0);
+	}
+	double angle = 0;
+	Mat newImg;
+	Mat maskImg;
+
+	do
+	{
+		for (int i = 0; i <= (int)range / step; i++)
+		{
+			newImg = ImageRotate(model, start + step * i);
+			maskImg = ImageRotate(maskTemplate, start + step * i);
+
+			matchTemplate(src, newImg, result, matchMode, maskImg);
+			double minval, maxval;
+			Point minloc, maxloc;
+			minMaxLoc(result, &minval, &maxval, &minloc, &maxloc);
+			if (isinf(temp))
+			{
+				temp = 0;
+			}
+			if (maxval > temp)
+			{
+				location = maxloc;
+				temp = maxval;
+				angle = start + step * i;
+			}
+		}
+		range = step * 2; 
+		start = angle - step;
+		step = step / 10;
+	} while (step > 5);                  
+	if (temp > m_dScore)
+	{
+		ResultPoint itemn(areaMatRect.x+location.x * pow(2, 3) + patternWidth / 2 , areaMatRect.y+location.y * pow(2, 3)+ patternHeight / 2, -angle, temp);
+
+		drawCenterPoint.x = itemn.X;
+		drawCenterPoint.y = itemn.Y;
+
+		lastResult.setX(itemn.X - (m_width / 2));  //向右为x正方向
+		lastResult.setY((m_height / 2) - itemn.Y);//向上为y正方向
+
+		
+		finall_Total_Result.ptCenter = cv::Point2d(lastResult.x(), lastResult.y());
+		finall_Total_Result.dMatchedAngle = itemn.T;
+		finall_Total_Result.pattern_flag = true;
+		finall_Total_Result.flag = true;
+		int total_time = timedebuge.elapsed();
+		//emit QPointSendtoFileControl(QPoint(itemn.X + patternWidth / 2, itemn.Y + patternHeight / 2), total_time);
+		return itemn;
+	}
+	else {
+		//未匹配成功
+		patternNG();
+		return ResultPoint(-m_width, -m_height,0,0);
+
+	}
+
+}
+
+
 ResultPoint ProcessingThread::slot_processMatchPictureWithMask(QImage patternImage, QImage sourceImage,QImage maskImage)
 {
 	QTime timedebuge;//声明一个时钟对象
@@ -1072,29 +1202,28 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithMask(QImage patternIma
 	int patternWidth = patternImageMat.cols;
 	int patternHeight = patternImageMat.rows;
 
-	double step = 360 / ((360 / 1) / 100);
+	double step = 1;
 	double start = 0;
-	double range = 360;
+	double range = 20;
 
 	//定义图片匹配所需要的参数
 	int resultCols = sourceImageMat.cols - patternImageMat.cols + 1;
 	int resultRows = sourceImageMat.rows - patternImageMat.rows + 1;
 	Mat result = Mat(resultCols, resultRows, CV_8U);
-	Mat src, model,mask;
+	Mat src, model,mask,maskTemplate;
 	sourceImageMat.copyTo(src);
 	patternImageMat.copyTo(model);
 	maskImageMat.copyTo(mask);
-	//对模板图像和待检测图像分别进行图像金字塔下采样  6层
-	for (int i = 0; i <  4; i++)
+	//对模板图像和待检测图像分别进行图像金字塔下采样  3层
+	for (int i = 0; i <  3; i++)
 	{
 		pyrDown(src, src, Size(src.cols / 2, src.rows / 2));
 		pyrDown(model, model, Size(model.cols / 2, model.rows / 2));
 		pyrDown(mask, mask, Size(mask.cols / 2, mask.rows / 2));
 	 // 阈值化处理，保持二值图特性
 		cv::threshold(mask, mask, 128, 255, cv::THRESH_BINARY);
-
 	}
-
+	mask.copyTo(maskTemplate);
 
 	TemplateMatchModes matchMode = TM_CCOEFF_NORMED;
 
@@ -1107,16 +1236,20 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithMask(QImage patternIma
 	double temp = maxVal;
 	double angle = 0;
 	Mat newImg;
+	Mat maskImageWith;
 
 	do
 	{
-		for (int i = 0; i <= (int)range / step; i++)
+		for (int i = 0; i <= (int)range / step; i++) 
 		{
 			newImg = ImageRotate(model, start + step * i);
-			matchTemplate(src, newImg, result, matchMode, mask);
+			maskImageWith = ImageRotate(maskTemplate, start + step * i);
+			cv::threshold(maskImageWith, maskImageWith, 128, 255, cv::THRESH_BINARY);
+
+			matchTemplate(src, newImg, result, matchMode, maskImageWith);
 			double minval, maxval;
 			Point minloc, maxloc;
-			minMaxLoc(result, &minval, &maxval, &minloc, &maxloc);
+			minMaxLoc(result, &minval, &maxval,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               &minloc, &maxloc);
 			if (maxval > temp)
 			{
 				location = maxloc;
@@ -1127,21 +1260,59 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithMask(QImage patternIma
 		range = step * 2;
 		start = angle - step;
 		step = step / 10;
-	} while (step > 5);
-	if (temp > 0.6)
+	} while (step > 2);                                                                                                                                                                                                                                                                                                                                                          
+	if (temp > m_dScore)
 	{
-		 ResultPoint itemn(location.x * pow(2, 4), location.y * pow(2, 4), -angle, temp);
+		 ResultPoint itemn(location.x * pow(2, 3), location.y * pow(2, 3), angle, temp);
 		 int total_time = timedebuge.elapsed();
 		 emit QPointSendtoFileControl(QPoint(itemn.X + patternWidth/2 , itemn.Y + patternHeight / 2), total_time);
 		 return itemn;
 	}
-
 }
 
 
 void ProcessingThread::slot_setSourceArea(bool flag)
 {
 	area_Flag = flag;
+}
+
+void ProcessingThread::slot_recievePatternImageWithMask(QString pattern_Path, QRectF pattern_Rect, QRectF areaRect, QPoint centerPoint, QPoint patternRectCenterPoint)
+{
+	areaMatRect.x = areaRect.x();
+	areaMatRect.y = areaRect.y();
+	areaMatRect.width = areaRect.width();
+	areaMatRect.height = areaRect.height();
+
+
+	String pattern_STD_Path = pattern_Path.toLocal8Bit().constData();
+	size_t pos = pattern_STD_Path.find("="); // 找到等号的位置
+	if (pos != string::npos) { // 如果找到了等号
+		pattern_STD_Path.erase(pos, 1); // 删除等号字符
+	}
+
+	//原图
+	Mat ReadImagestd = imread(pattern_STD_Path, CV_8UC1);
+
+	if (ReadImagestd.empty())
+	{
+		emit signal_modelPictureReadFlag();
+		//模板图读取错误!!!
+		return;
+	}
+	Mat patternMatEllipse1 = ReadImagestd(Rect(pattern_Rect.x(), pattern_Rect.y(), pattern_Rect.width(), pattern_Rect.height())).clone();
+	patternMatEllipse = patternMatEllipse1;
+	// 定义椭圆参数
+	cv::Point center(pattern_Rect.x() + pattern_Rect.width() / 2, pattern_Rect.y()
+		+ pattern_Rect.height() / 2);
+	int width = pattern_Rect.width();
+	int length = pattern_Rect.height();
+
+	// 创建椭圆的掩码
+	cv::Mat mask = cv::Mat::zeros(ReadImagestd.size(), CV_8UC1);
+	cv::ellipse(mask, center, cv::Size(width / 2, length / 2), 0, 0, 360, 255, -1);
+	cv::Rect patternAreaRealSize(pattern_Rect.x(), pattern_Rect.y(), pattern_Rect.width(), pattern_Rect.height());
+
+	patternMatEllipseMask = mask(patternAreaRealSize);	
 }
 
 double ProcessingThread::calculateInitialDistance(QPoint A, QPoint B)
