@@ -89,7 +89,8 @@ public:
 	double calculateInitialDirection(QPoint A, QPoint B);
 	QPoint calculateOffsetB(QPoint A, QPoint B, double initialDistance, double initialDirection, QPoint A_offset);
 
-signals:
+	void setShapeType(int value);
+signals: 
 	void signal_newPixmap(QPixmap newPixmap, int id);
 	void signal_patternResult(QPointF qpointf,int dateTime);
 	void signal_modelPictureReadFlag();
@@ -102,12 +103,15 @@ public slots:
 	ResultPoint slot_processMatchPictureWithMask(QImage patternImage, QImage sourceImage, QImage maskImage);
 	void slot_setSourceArea(bool flag);
 	void slot_recievePatternImageWithMask(QString pattern_Path, QRectF pattern_Rect, QRectF areaRect, QPoint centerPoint, QPoint patternRectCenterPoint);
+	void slot_recievePatternImageWithPolygonMask(QString pattern_Path, QPolygonF pattern_Rect, QRectF areaRect, QPoint centerPoint, QPoint patternRectCenterPoint);
+
 private:
 	cv::Point2d drawCenterPoint;
 	bool startFlag = false;
 	//判断模板图和实时图是否比例一致
 	bool modelAndRealSclar = false;
 
+	int shape_type;
 	int m_threadId;
 	QImage patternQImage;
 	cv::Mat patternMat;

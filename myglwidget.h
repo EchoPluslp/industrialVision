@@ -41,7 +41,7 @@ private:
 	int m_height;            //图片高
 	qreal m_scaleFactor = 1.0;
 
-	double factor = 1.0;//放大缩小的倍数
+	double factor = 0.3;//放大缩小的倍数
 	int XPtInterval = 0;    //平移X轴的值
 	int YPtInterval = 0;    //平移Y轴的值
 	bool Pressed = false;           //鼠标是否被摁压

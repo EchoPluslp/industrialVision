@@ -99,9 +99,9 @@ void MyGLWidget::paintEvent(QPaintEvent* event)
 		//	//按照高度等比例缩放图片
 	int H = this->height();
 	int realH = myPixmap.height();
-	QPixmap pix = myPixmap.scaledToHeight(H - 5);//图片缩放到指定高度
+	//QPixmap pix = myPixmap.scaledToHeight(H - 5);//图片缩放到指定高度
 
-		painter.drawPixmap(QRect(0, 0, pix.width() * factor, (pix.height() - 25) * factor), pix);
+		painter.drawPixmap(QRect(0, 0, myPixmap.width() * factor, (myPixmap.height() - 25) * factor), myPixmap);
 	}
 }
 
@@ -146,7 +146,7 @@ void MyGLWidget::mouseReleaseEvent(QMouseEvent* event)//鼠标释放
 
 void MyGLWidget::mouseDoubleClickEvent(QMouseEvent* event)
 { 
-	factor=1.0;
+	factor=0.3;
     XPtInterval = 0;
     YPtInterval = 0;
     update();

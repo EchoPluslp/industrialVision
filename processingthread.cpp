@@ -70,7 +70,7 @@ void ProcessingThread::run()
 					}	
 					cv::Point2f Point_1;
 					ResultPoint Point_2;
-					if (false)
+					if (shape_type)
 					{
 						 Point_1 = MatchPicture(patternMat, tempMap(areaMatRect), false);
 
@@ -84,8 +84,7 @@ void ProcessingThread::run()
 					
 					}
 					else {
-					
-
+				
 						Point_2 = slot_processMatchPictureWithSource(tempMap(areaMatRect));
 						pattern_Flag = false;
 						int total_time = timedebuge.elapsed();
@@ -550,7 +549,7 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
             lastResult.setX(lastResult.x()- (m_width / 2));  //向右为x正方向
             lastResult.setY((m_height / 2) - lastResult.y());//向上为y正方向
 			
-		 
+		  
             finall_Total_Result.ptCenter = cv::Point2d(lastResult.x(), lastResult.y());
             finall_Total_Result.dMatchedAngle = sstm.dMatchedAngle;
             finall_Total_Result.pattern_flag = true;
@@ -1094,7 +1093,7 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithSource( cv::Mat source
 
 	double step = 2;
 	double start = 0;
-	double range = 20;
+	double range = 10;
 
 	//定义图片匹配所需要的参数
 	int resultCols = sourceImageMat.cols - patternImageMat.cols + 1;
@@ -1112,7 +1111,6 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithSource( cv::Mat source
 		pyrDown(mask, mask, Size(mask.cols / 2, mask.rows / 2));
 		// 阈值化处理，保持二值图特性
 		cv::threshold(mask, mask, 128, 255, cv::THRESH_BINARY);
-
 	}
 	mask.copyTo(maskTemplate);
 
@@ -1128,9 +1126,10 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithSource( cv::Mat source
 	double temp = maxVal;
 	if (isinf(temp))
 	{
+		temp = 0;
 		//第一次就没找到
-		patternNG();
-		return ResultPoint(-m_width, -m_height,0,0);
+		//patternNG();
+		//return ResultPoint(-m_width, -m_height,0,0);
 	}
 	double angle = 0;
 	Mat newImg;
@@ -1147,9 +1146,9 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithSource( cv::Mat source
 			double minval, maxval;
 			Point minloc, maxloc;
 			minMaxLoc(result, &minval, &maxval, &minloc, &maxloc);
-			if (isinf(temp))
+			if (isinf(maxval))
 			{
-				temp = 0;
+				maxval = 0;
 			}
 			if (maxval > temp)
 			{
@@ -1299,6 +1298,7 @@ void ProcessingThread::slot_recievePatternImageWithMask(QString pattern_Path, QR
 		//模板图读取错误!!!
 		return;
 	}
+
 	Mat patternMatEllipse1 = ReadImagestd(Rect(pattern_Rect.x(), pattern_Rect.y(), pattern_Rect.width(), pattern_Rect.height())).clone();
 	patternMatEllipse = patternMatEllipse1;
 	// 定义椭圆参数
@@ -1313,6 +1313,67 @@ void ProcessingThread::slot_recievePatternImageWithMask(QString pattern_Path, QR
 	cv::Rect patternAreaRealSize(pattern_Rect.x(), pattern_Rect.y(), pattern_Rect.width(), pattern_Rect.height());
 
 	patternMatEllipseMask = mask(patternAreaRealSize);	
+}
+
+void ProcessingThread::slot_recievePatternImageWithPolygonMask(QString pattern_Path, QPolygonF pattern_Rect, QRectF areaRect, QPoint centerPoint, QPoint patternRectCenterPoint)
+{
+	areaMatRect.x = areaRect.x();
+	areaMatRect.y = areaRect.y();
+	areaMatRect.width = areaRect.width();
+	areaMatRect.height = areaRect.height();
+
+
+	String pattern_STD_Path = pattern_Path.toLocal8Bit().constData();
+	size_t pos = pattern_STD_Path.find("="); // 找到等号的位置
+	if (pos != string::npos) { // 如果找到了等号
+		pattern_STD_Path.erase(pos, 1); // 删除等号字符
+	}
+
+	//原图
+	Mat ReadImagestd = imread(pattern_STD_Path, CV_8UC1);
+	if (ReadImagestd.empty())
+	{
+		emit signal_modelPictureReadFlag();
+		//模板图读取错误!!!
+		return;
+	}
+
+	//获得模板图
+		// 将QPolygonF中的点坐标转换为vector<cv::Point>
+	std::vector<cv::Point> points;
+	for (const QPointF& point : pattern_Rect) {
+		points.emplace_back(static_cast<int>(point.x()), static_cast<int>(point.y()));
+	}
+	points.pop_back();
+	// 创建一个与图像相同大小的黑色掩码
+	cv::Mat mask = cv::Mat::zeros(ReadImagestd.size(), ReadImagestd.type());
+
+
+	// 将点坐标转换为vector<vector<cv::Point>>形式以符合cv::fillPoly的要求
+	std::vector<std::vector<cv::Point>> pts = { points };
+	// 在掩码上填充多边形区域
+	cv::fillPoly(mask, pts, cv::Scalar(255, 255, 255));
+
+	// 使用掩码提取多边形区域
+	cv::Mat result;
+	cv::bitwise_and(ReadImagestd, mask, result);
+	// 查找包含多边形的最小矩形 边界框
+	cv::Rect boundingRect = cv::boundingRect(points);
+
+	// 裁剪图像，去掉旁边的黑色区域
+	cv::Mat croppedResult = result(boundingRect).clone();
+
+
+	// 选择适当的阈值，这里使用 128 作为例子，可以根据实际情况调整
+	int threshold_value = 1;
+
+	// 应用二值化操作
+	//模板图,mask图
+	cv::threshold(croppedResult, mask, threshold_value, 255, cv::THRESH_BINARY);
+
+	patternMatEllipseMask = mask;
+	patternMatEllipse = croppedResult;
+
 }
 
 double ProcessingThread::calculateInitialDistance(QPoint A, QPoint B)
@@ -1354,4 +1415,9 @@ QPoint ProcessingThread::calculateOffsetB(QPoint A, QPoint B, double initialDist
 
 		QPoint B_offset = { finalB_x,finalB_y };
 		return B_offset;
+}
+
+void ProcessingThread::setShapeType(int value)
+{
+	shape_type = value;
 }

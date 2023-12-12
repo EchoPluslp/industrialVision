@@ -43,6 +43,9 @@ industrialVision::industrialVision(QWidget *parent)
 	
 	connect(this, &industrialVision::singal_sendPatternImageWithMaskEllipse, m_processingThread, &ProcessingThread::slot_recievePatternImageWithMask, Qt::QueuedConnection);
 
+	connect(this, &industrialVision::singal_sendPatternImageWithMaskPolygon, m_processingThread, &ProcessingThread::slot_recievePatternImageWithPolygonMask, Qt::QueuedConnection);
+
+
 	connect(this, &industrialVision::signal_processThread_pattren, m_processingThread, &ProcessingThread::slot_processThread_Pattren, Qt::QueuedConnection);
 
 	connect(this, &industrialVision::send_Grade, m_processingThread, &ProcessingThread::set_Grade, Qt::QueuedConnection);
@@ -229,7 +232,6 @@ industrialVision::industrialVision(QWidget *parent)
 		 m_bStartGrabbing = true;
 }
 
-
 bool industrialVision::nativeEvent(const QByteArray& eventType, void* message, long* result)
 {
 	MSG* msg = reinterpret_cast<MSG*>(message);
@@ -254,7 +256,6 @@ bool industrialVision::nativeEvent(const QByteArray& eventType, void* message, l
 	}
 	return QMainWindow::nativeEvent(eventType, message, result);
 }
-
 
 void industrialVision::sendImgToVisualContinue(QString data)
 { 
@@ -445,7 +446,7 @@ void industrialVision::getXMLPATH(QString xmlPath)
 	else {
 		if (!m_processingThread->getmodelAndRealSclar())
 		{
-			AppendText("XML模板图与当前相机展示的图片比例不一致,无法匹配" + xmlPath, Gray);
+			AppendText("XML 模板图与当前相机展示的图片比例不一致,无法匹配" + xmlPath, Gray);
 			return;
 		}
 		AppendText("加载xml模板失败" + xmlPath, Red);
@@ -787,9 +788,23 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 						 patternAreaREAL_size_rect.setHeight(m_height - patternAreaREAL_size_rect.y());
 					 }
 				}
-					else if (currentShape->m_type == Shape::Polygon)
+					else if (currentPattern_OBJ == Shape::Polygon)
 					{
-						//321
+						
+						patternAreaREAL_size_polygon.clear();
+						Area* m_area_item = new Area;
+						//给patternImageName赋值用于读取特征图
+						pattern_Path = m_area_item->getFileName(labelElem.firstChildElement("Area")).trimmed();
+						SAFE_DELETE(m_area_item);
+
+						MyGraphicsPolygonItem* currItem = (MyGraphicsPolygonItem*)currentShape->getItem();
+						double ratio = double(m_width) / double(currentShape->m_currSize.width());
+
+						QPolygonF prev = currItem->polygon();
+						for (int i = 0; i < prev.count(); i++) {
+							auto point = prev.at(i);
+							patternAreaREAL_size_polygon << QPointF(point * ratio);
+						}
 					}
 			}
 				else if (typeName.contains("输出点")) {
@@ -853,15 +868,25 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 	   return false;
 		}
 		//发送给peocessingthread线程 路径,匹配模板中心点坐标,范围图中心点坐标
+	m_processingThread->setShapeType(1);
+
 		emit singal_sendPatternImage(pattern_Path, patternAreaREAL_size_rect,srcQRect, centerPoint, patternRectCenterPoint);
 		return true;
 	}else if (currentPattern_OBJ == Shape::Ellipse)
 	{
 		//123
+		m_processingThread->setShapeType(0);
+
 		emit singal_sendPatternImageWithMaskEllipse(pattern_Path, patternAreaREAL_size_rect, srcQRect, centerPoint, patternRectCenterPoint);
 		return true;
-
 	}
+	else if (currentPattern_OBJ == Shape::Polygon)
+   {
+	   
+	   m_processingThread->setShapeType(0);
+	   emit singal_sendPatternImageWithMaskPolygon(pattern_Path, patternAreaREAL_size_polygon, srcQRect, centerPoint, patternRectCenterPoint);
+	   return true;
+   }
 
    return false;
 }
@@ -1361,6 +1386,9 @@ void industrialVision::slot_displayPixmap(QPixmap newPixmap, int index)
 	}
 	if (index == 0)
 	{
+		//ui.openGLWidget->set
+		qreal dpr = devicePixelRatioF();
+		//ui.openGLWidget->paintEvent();
 		ui.openGLWidget->setPixmap(newPixmap, "");   //使用OpenGLWidget显示
 	}
 }

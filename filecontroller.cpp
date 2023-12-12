@@ -545,6 +545,7 @@ void FileController::onExecPattern(LabelController* labelController)
 					}
 					else if (currType == Shape::Polygon)
 					{
+						patternAreaREAL_size_polygon.clear();
 						MyGraphicsPolygonItem* currItem = (MyGraphicsPolygonItem*)shape->getItem();
 						double ratio = double(cuurImageWidth) / double(shape->m_currSize.width());
 
@@ -621,7 +622,7 @@ void FileController::onExecPattern(LabelController* labelController)
 		}
 		points.pop_back();
 		// 创建一个与图像相同大小的黑色掩码
-		cv::Mat mask = cv::Mat::zeros(srcImgMat.size(), srcImgMat.type());
+		cv::Mat mask = cv::Mat::zeros(MatSrcImage.size(), MatSrcImage.type());
 
 
 		// 将点坐标转换为vector<vector<cv::Point>>形式以符合cv::fillPoly的要求
@@ -631,7 +632,7 @@ void FileController::onExecPattern(LabelController* labelController)
 
 		// 使用掩码提取多边形区域
 		cv::Mat result;
-		cv::bitwise_and(srcImgMat, mask, result);
+		cv::bitwise_and(MatSrcImage, mask, result);
 		// 查找包含多边形的最小矩形 边界框
 		cv::Rect boundingRect = cv::boundingRect(points);
 
