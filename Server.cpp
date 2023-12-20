@@ -137,7 +137,7 @@ QString Server::recvMsg(QString receiveMessage)
 	//定时器停止
 	timer.stop();
 	timer.deleteLater();
-	//重置flag值
+	//重置flag值 
 	finall_Total_Result.flag = false;
 	if (finall_Total_Result.pattern_flag){
 		char s[10];

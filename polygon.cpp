@@ -29,12 +29,6 @@ void Polygon::mouseMove(QGraphicsSceneMouseEvent* event)
 }
 
 
-
-
-
-
-
-
 void Polygon::mouseRelease(QGraphicsSceneMouseEvent* event)
 {
 	auto x = event->scenePos().x();
@@ -67,24 +61,10 @@ void Polygon::mouseRelease(QGraphicsSceneMouseEvent* event)
 
 
 
-
-
-
-
-
-
-
 bool Polygon::quitDrawing(QGraphicsSceneMouseEvent* event)
 {
 	return m_quit;
 }
-
-
-
-
-
-
-
 
 void Polygon::resizeEvent(QSize newSize)
 {
@@ -113,21 +93,10 @@ void Polygon::resizeEvent(QSize newSize)
 }
 
 
-
-
-
-
-
-
-
 QGraphicsItem* Polygon::getItem() const
 {
 	return polygonItem;
 }
-
-
-
-
 
 
 

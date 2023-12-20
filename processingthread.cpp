@@ -84,7 +84,6 @@ void ProcessingThread::run()
 					
 					}
 					else {
-				
 						Point_2 = slot_processMatchPictureWithSource(tempMap(areaMatRect));
 						pattern_Flag = false;
 						int total_time = timedebuge.elapsed();
@@ -184,7 +183,7 @@ int ProcessingThread::GetTopLayer(cv::Mat* matTempl, int iMinDstLength)
 }
 
 
-void ProcessingThread::slot_recievePatternImage(QString pattern_Path,QRectF pattern_Rect,QRectF areaRect, QPoint centerPoint, QPoint patternRectCenterPoint)
+void ProcessingThread::slot_recievePatternImage(QString pattern_Path,QRectF pattern_Rect,QRectF areaRect, QPoint centerPoint, QPoint patternRectCenterPoint )
 {
 	areaMatRect.x = areaRect.x();
 	areaMatRect.y = areaRect.y();
@@ -242,6 +241,7 @@ void ProcessingThread::slot_recievePatternImage(QString pattern_Path,QRectF patt
 		templData->vecTemplMean[i] = templMean;
 		templData->vecTemplNorm[i] = templNorm;
 	}
+	
 	//设置输出点坐标
 	centerPointInProcess.setX(centerPoint.x());
 	centerPointInProcess.setY(centerPoint.y()); 
@@ -1103,7 +1103,7 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithSource( cv::Mat source
 	sourceImageMat.copyTo(src);
 	patternImageMat.copyTo(model);
 	maskImageMat.copyTo(mask);
-	//对模板图像和待检测图像分别进行图像金字塔下采样  6层
+	//对模板图像和待检测图像分别进行图像金字塔下采样  3层
 	for (int i = 0; i < 3; i++)
 	{
 		pyrDown(src, src, Size(src.cols / 2, src.rows / 2));
@@ -1167,9 +1167,21 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithSource( cv::Mat source
 
 		drawCenterPoint.x = itemn.X;
 		drawCenterPoint.y = itemn.Y;
+		lastResult.setX(itemn.X);
+		lastResult.setY(itemn.Y);
+		//有输出点
+		if ((!(centerPointInProcess.x() == 0 && centerPointInProcess.y() == 0)))
+		{
 
-		lastResult.setX(itemn.X - (m_width / 2));  //向右为x正方向
-		lastResult.setY((m_height / 2) - itemn.Y);//向上为y正方向
+			QPoint centerPointx = calculateOffsetB(patternRectCenterPointInProcess, centerPointInProcess, initialDistance, initialDirection, QPoint(drawCenterPoint.x, drawCenterPoint.y));
+			lastResult.setX(centerPointx.x());
+			lastResult.setY(centerPointx.y());
+			drawCenterPoint.x = centerPointx.x();
+			drawCenterPoint.y = centerPointx.y();
+		}
+
+		lastResult.setX(lastResult.x() - (m_width / 2));  //向右为x正方向
+		lastResult.setY((m_height / 2) - lastResult.y());//向上为y正方向
 
 		
 		finall_Total_Result.ptCenter = cv::Point2d(lastResult.x(), lastResult.y());
@@ -1313,6 +1325,17 @@ void ProcessingThread::slot_recievePatternImageWithMask(QString pattern_Path, QR
 	cv::Rect patternAreaRealSize(pattern_Rect.x(), pattern_Rect.y(), pattern_Rect.width(), pattern_Rect.height());
 
 	patternMatEllipseMask = mask(patternAreaRealSize);	
+
+	//设置输出点坐标
+	centerPointInProcess.setX(centerPoint.x());
+	centerPointInProcess.setY(centerPoint.y());
+
+	patternRectCenterPointInProcess.setX(patternRectCenterPoint.x());
+	patternRectCenterPointInProcess.setY(patternRectCenterPoint.y());
+
+	initialDistance = calculateInitialDistance(patternRectCenterPoint, centerPoint);    // Initial distance between A and B
+	initialDirection = calculateInitialDirection(patternRectCenterPoint, centerPoint);  // Initial direction angle in degrees
+
 }
 
 void ProcessingThread::slot_recievePatternImageWithPolygonMask(QString pattern_Path, QPolygonF pattern_Rect, QRectF areaRect, QPoint centerPoint, QPoint patternRectCenterPoint)
@@ -1371,8 +1394,23 @@ void ProcessingThread::slot_recievePatternImageWithPolygonMask(QString pattern_P
 	//模板图,mask图
 	cv::threshold(croppedResult, mask, threshold_value, 255, cv::THRESH_BINARY);
 
+	//mask图
 	patternMatEllipseMask = mask;
+	//模板图
 	patternMatEllipse = croppedResult;
+
+
+
+	//设置输出点坐标
+	centerPointInProcess.setX(centerPoint.x());
+	centerPointInProcess.setY(centerPoint.y());
+
+	patternRectCenterPointInProcess.setX(patternRectCenterPoint.x());
+	patternRectCenterPointInProcess.setY(patternRectCenterPoint.y());
+
+	initialDistance = calculateInitialDistance(patternRectCenterPoint, centerPoint);    // Initial distance between A and B
+	initialDirection = calculateInitialDirection(patternRectCenterPoint, centerPoint);  // Initial direction angle in degrees
+
 
 }
 

@@ -832,13 +832,29 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 							centerPoint = getCenterPointFromCircle(QpointList);
 							centerPoint.setX(((double)centerPoint.x() / small_Picture.width()) * m_width);
 							centerPoint.setY(((double)centerPoint.y() / small_Picture.height()) * m_height);
-						//	patternRectCenterPoint.setX(patternAreaREAL_size.x() + (patternAreaREAL_size.width() / 2));
-							//patternRectCenterPoint.setY(patternAreaREAL_size.y() + (patternAreaREAL_size.height() / 2));
+							if (currentPattern_OBJ == Shape::Ellipse||currentPattern_OBJ == Shape::Rect )
+							{
+								patternRectCenterPoint.setX(patternAreaREAL_size_rect.x() + (patternAreaREAL_size_rect.width() / 2));
+								patternRectCenterPoint.setY(patternAreaREAL_size_rect.y() + (patternAreaREAL_size_rect.height() / 2));
+							}else if (currentPattern_OBJ == Shape::Polygon)
+							{
+								// 将QPolygonF中的点坐标转换为vector<cv::Point>
+								std::vector<cv::Point> points;
+								for (const QPointF& point : patternAreaREAL_size_polygon) {
+									points.emplace_back(static_cast<int>(point.x()), static_cast<int>(point.y()));
+								}
+								points.pop_back();
+
+								cv::Rect boundingRect = cv::boundingRect(points);
+								patternRectCenterPoint.setX(boundingRect.x + (boundingRect.width / 2));
+								patternRectCenterPoint.setY(boundingRect.y + (boundingRect.height / 2));
+							}
+
 						}
+					}
 				}
 			}
         }
-    }
 
     if (pattern_Path.isEmpty())
     {
