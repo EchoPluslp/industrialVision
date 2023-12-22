@@ -143,7 +143,7 @@ public:
 	};
 	Mode currMode = NoMode;
 signals:
-	void getImageFromCamera();
+	void getImageFromCamera(QString signType);
 	void sendXMLPath(QString xmlPath);
 };
 

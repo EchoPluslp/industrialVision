@@ -23,6 +23,30 @@ QPoint MyGraphicsView::returnMouseInView()
 	return graphicPos;
 }
 
+void MyGraphicsView::drawBackground(QPainter* painter, const QRectF& rect)
+{
+	//»æÖÆ»Ò°×ÆåÅÌÍ¼Ïñ±³¾°
+	int wid = this->geometry().width();
+	int hei = this->geometry().height();
+	QPointF m_ptCenter = this->mapToScene(wid / 2, hei / 2);
+	QPixmap pix(wid, hei);
+	QPainter pter(&pix);
+	QColor clr_white(Qt::white);
+	QColor clr_gray(240, 240, 240, 240);
+	int spacing = 15;
+	QColor useColor;
+	for (int i = 0; i <= floor(wid / spacing); i++)
+	{
+		for (int j = 0; j <= floor(hei / spacing); j++)
+		{
+			useColor = ((i + j) % 2 == 0 ? clr_white : clr_gray);
+			pter.fillRect(i * spacing, j * spacing, spacing, spacing, useColor);
+		}
+	}
+	painter->drawImage(rect, pix.toImage());
+
+}
+
 //¸æÖªShapeºÍPaintSceneËõ·Å
 void MyGraphicsView::resizeEvent(QResizeEvent* event)
 {

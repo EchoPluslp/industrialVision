@@ -21,6 +21,8 @@ public:
 	//void mousePressEvent(QMouseEvent* event);
 	//void mouseMoveEvent(QMouseEvent* event);
 	//void mouseReleaseEvent(QMouseEvent* event);
+	void drawBackground(QPainter* painter, const QRectF& rect);
+
 protected:
 	void resizeEvent(QResizeEvent* event) override;
 	void wheelEvent(QWheelEvent* event) override;

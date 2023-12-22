@@ -57,7 +57,6 @@ industrialVision::industrialVision(QWidget *parent)
 	
 	connect(&TransmitSignals::GetInstance(), &TransmitSignals::sendToIndustrString, this, &industrialVision::addTextBrower);
 
-
 	connect(this, &industrialVision::sendResultToServer, &TransmitSignals::GetInstance(), &TransmitSignals::send_pattern_result);
     
 	/////////////////////
@@ -281,7 +280,8 @@ void industrialVision::receive_ServerCreateInfo(QString flag)
 void industrialVision::click_editVision()
 {
     connect(&createModelItem, &createModel::getImageFromCamera, this, &industrialVision::getImageOneFrame,Qt::UniqueConnection);
-    connect(this, &industrialVision::cameraTovisualTemplate,&createModelItem, &createModel::sendImgToFileController, Qt::UniqueConnection);
+
+	connect(this, &industrialVision::cameraTovisualTemplate,&createModelItem, &createModel::sendImgToFileController, Qt::UniqueConnection);
 
     connect(&createModelItem, &createModel::sendXMLPath , this, &industrialVision::getXMLPATH, Qt::UniqueConnection);
 
@@ -297,14 +297,21 @@ void industrialVision::click_editVision()
     AppendText("打开视觉模板界面",Green);
 }
 
-void industrialVision::getImageOneFrame() {
+void industrialVision::getImageOneFrame(QString imageType) {
 	// 创建一个定时器
 	QTimer timer;
 	timer.setSingleShot(true); // 设置为单次触发
 
 	// 连接定时器的timeout信号到一个槽函数，该槽函数在定时器超时时触发
 	QObject::connect(&timer, &QTimer::timeout, [&]() {
+		if (imageType == "patternMatch")
+		{
 		emit cameraTovisualTemplate( QImage(), QString());
+		}
+		else {
+			emit cameraTovisualTemplateShape(QImage());
+
+		}
 		});
 
 	timer.start(1000); // 启动定时器，设置超时时间为1秒
@@ -342,7 +349,14 @@ void industrialVision::getImageOneFrame() {
 
     string path = str + "/" + imagePath;
 	QString ModelPath = QString(QString::fromLocal8Bit(path.c_str()));
-     emit cameraTovisualTemplate(myImageToModel, ModelPath);
+	 if (imageType == "patternMatch")
+	 {
+		 emit cameraTovisualTemplate(myImageToModel, ModelPath);
+	 }
+	 else {
+		 emit cameraTovisualTemplateShape(myImageToModel);
+
+	 }
 }
 
 void industrialVision::createOncePattern()
@@ -1415,6 +1429,18 @@ void industrialVision::slot_get_patternResult(QPointF resultPoint,int matchTime)
 	resultPointF.setY(resultPoint.y());
     matchTime_total = matchTime;
 	createOncePattern();
+}
+
+void industrialVision::click_shapeMatch()
+{
+
+	connect(this, &industrialVision::cameraTovisualTemplateShape, &shapeMainWindow, &MainWindow::sendImgToControllerShape, Qt::UniqueConnection);
+	
+	connect(&shapeMainWindow, &MainWindow::getImageFromCamera, this, &industrialVision::getImageOneFrame, Qt::UniqueConnection);
+
+	shapeMainWindow.show();
+	AppendText("打开形状模板界面", Green);
+
 }
 
 //属性设置

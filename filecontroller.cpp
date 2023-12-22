@@ -410,7 +410,7 @@ QString FileController::getImageNameFromXML(QDomElement elem) {
 	return "";
 }
 
-void FileController::getImageFromCamera(QImage image)
+void FileController::getImageFromCameraInFile(QImage image)
 {
 
 	bool addedSucceeded = false;
@@ -426,7 +426,7 @@ void FileController::getImageFromCamera(QImage image)
 	}
 }
 
-void FileController::getImageFromCamera(QImage image,QString modePath)
+void FileController::getImageFromCameraInFile(QImage image,QString modePath)
 {
 	bool addedSucceeded = false;
 	QString fileName = modePath;

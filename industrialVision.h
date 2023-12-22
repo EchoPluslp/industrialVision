@@ -32,7 +32,7 @@
 #include "processingthread.h"
 #include "passwordSet.h"
 #include "SharedData.h"
-
+#include "mainwindow.h"
 using namespace cv;
 using namespace std;
 
@@ -75,6 +75,8 @@ private:
     int matchTime_total;
     QPointF resultPointF;
     createModel createModelItem;
+	MainWindow shapeMainWindow;
+
     smallMainWindow smallMainWindow;
     cv::Rect srcRect;
 	QRectF srcQRect;
@@ -220,12 +222,12 @@ private slots:
     void click_editVision();
     void sendImgToVisualContinue(QString data);
     void click_createServer();
-    void getImageOneFrame();
+    void getImageOneFrame(QString matchType);
     void createOncePattern();
     void openShiShiPiPei();
 	void openshizixian();
 	void receive_ServerCreateInfo(QString flag);
-
+    void click_shapeMatch();
      void setModelXMLFile();
      void rotatePicture();
      void addTextBrower(QString text,QString flag);
@@ -248,6 +250,8 @@ private slots:
 signals:
     void sendQimageToVisualTemplate(QImage data);
     void cameraTovisualTemplate(QImage img,QString path);
+	void cameraTovisualTemplateShape(QImage image);
+
     void sendResultToServer(QPoint point);
     void SLOTAppendText(const QString& text,QString flag);
     void singal_sendPatternImage(QString patternImage_Path,QRectF patternRect,QRectF qrect,QPoint centerPoint,QPoint patternRectCenterPoint);

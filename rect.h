@@ -3,7 +3,8 @@
 
 #include "shape.h"
 #include <QGraphicsRectItem>
-#include "mygraphicsitems.h"
+#include "mygraphicsitems.h"           
+
 class Rect : public Shape
 {
 public:
@@ -24,16 +25,11 @@ public:
 		if (rectItem)
 			delete  rectItem;
 	}
-
-
-
 	virtual void mousePress(QGraphicsSceneMouseEvent* event);
 	virtual void mouseMove(QGraphicsSceneMouseEvent* event);
 	virtual void mouseRelease(QGraphicsSceneMouseEvent* event);
 	virtual bool quitDrawing(QGraphicsSceneMouseEvent* event);
 	virtual void resizeEvent(QSize newSize);
-
-
 
 	virtual QGraphicsItem* getItem() const;
 	virtual QGraphicsItem* copyItem() const;

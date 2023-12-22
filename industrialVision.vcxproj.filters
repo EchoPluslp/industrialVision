@@ -62,6 +62,15 @@
     <Filter Include="Header Files\Controllers">
       <UniqueIdentifier>{d69e0ba2-7c0d-49df-8152-157b59694820}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\shapeMatch">
+      <UniqueIdentifier>{438a65dc-86ea-4007-a5f7-77712c93f8ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\shapeMatch">
+      <UniqueIdentifier>{9e97f561-48ab-4943-b268-017cb10e0c2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Form Files\shapeMatch">
+      <UniqueIdentifier>{2676b0b7-51c8-40e6-8874-414ffdb3b4b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -205,6 +214,36 @@
     <ClCompile Include="logoPath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="mainwindow.cpp">
+      <Filter>Source Files\shapeMatch</Filter>
+    </ClCompile>
+    <ClCompile Include="bee_calibercircle.cpp">
+      <Filter>Source Files\shapeMatch</Filter>
+    </ClCompile>
+    <ClCompile Include="bee_caliberline.cpp">
+      <Filter>Source Files\shapeMatch</Filter>
+    </ClCompile>
+    <ClCompile Include="bee_circle.cpp">
+      <Filter>Source Files\shapeMatch</Filter>
+    </ClCompile>
+    <ClCompile Include="bee_concencircle.cpp">
+      <Filter>Source Files\shapeMatch</Filter>
+    </ClCompile>
+    <ClCompile Include="bee_polygon.cpp">
+      <Filter>Source Files\shapeMatch</Filter>
+    </ClCompile>
+    <ClCompile Include="bee_rect.cpp">
+      <Filter>Source Files\shapeMatch</Filter>
+    </ClCompile>
+    <ClCompile Include="bee_ringexpansion.cpp">
+      <Filter>Source Files\shapeMatch</Filter>
+    </ClCompile>
+    <ClCompile Include="mycorneritem.cpp">
+      <Filter>Source Files\shapeMatch</Filter>
+    </ClCompile>
+    <ClCompile Include="myqgraphicsview.cpp">
+      <Filter>Source Files\shapeMatch</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="listwidget.h">
@@ -300,6 +339,9 @@
     <QtMoc Include="logoPath.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="mainwindow.h">
+      <Filter>Header Files\shapeMatch</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="login.ui">
@@ -334,6 +376,9 @@
     </QtUic>
     <QtUic Include="logoPath.ui">
       <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="mainwindow.ui">
+      <Filter>Form Files\shapeMatch</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>
@@ -407,6 +452,33 @@
     </ClInclude>
     <ClInclude Include="SharedData.h">
       <Filter>Header Files\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="bee_calibercircle.h">
+      <Filter>Header Files\shapeMatch</Filter>
+    </ClInclude>
+    <ClInclude Include="bee_caliberline.h">
+      <Filter>Header Files\shapeMatch</Filter>
+    </ClInclude>
+    <ClInclude Include="bee_circle.h">
+      <Filter>Header Files\shapeMatch</Filter>
+    </ClInclude>
+    <ClInclude Include="bee_concencircle.h">
+      <Filter>Header Files\shapeMatch</Filter>
+    </ClInclude>
+    <ClInclude Include="bee_polygon.h">
+      <Filter>Header Files\shapeMatch</Filter>
+    </ClInclude>
+    <ClInclude Include="bee_rect.h">
+      <Filter>Header Files\shapeMatch</Filter>
+    </ClInclude>
+    <ClInclude Include="bee_ringexpansion.h">
+      <Filter>Header Files\shapeMatch</Filter>
+    </ClInclude>
+    <ClInclude Include="mycorneritem.h">
+      <Filter>Header Files\shapeMatch</Filter>
+    </ClInclude>
+    <ClInclude Include="myqgraphicsview.h">
+      <Filter>Header Files\shapeMatch</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

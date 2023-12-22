@@ -707,7 +707,7 @@ void createModel::onMagnifyTriggered()
 //从相机获得图片
 void createModel::onGetImageTriggered()
 {
-    emit getImageFromCamera();
+    emit getImageFromCamera("patternMatch");
 	setWindowTitle(windowTitleItem);
 }
 
@@ -718,8 +718,8 @@ void createModel::sendImgToFileController(QImage image,QString modePath)
 		QMessageBox::warning(nullptr, tr("Path"),
 			tr("相机状态异常,未获取到图片"));
         return;
-    }
-	fileController->getImageFromCamera(image);
+    } 
+	fileController->getImageFromCameraInFile(image);
 
    // fileController->getImageFromCamera(image,modePath);
 }

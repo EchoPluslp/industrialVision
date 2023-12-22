@@ -81,10 +81,10 @@ public slots:
 	void importFromFile(LabelController* labelController);
 
 	//从相机获得图片
-	void getImageFromCamera(QImage image);
+	void getImageFromCameraInFile(QImage image);
 
 	//从相机获得图片
-	void getImageFromCamera(QImage image,QString modePath);
+	void getImageFromCameraInFile(QImage image,QString modePath);
 
 	//根据图片名加载图片
 	bool getImageFromCameraFromImport(QString imageName);

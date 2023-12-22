@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1580</width>
-    <height>1034</height>
+    <width>1496</width>
+    <height>1139</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -149,6 +149,52 @@ border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;
                </property>
                <property name="text">
                 <string>视觉模板</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_shapematch">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>24</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">/* 证券 */
+
+QPushButton::hover 
+{
+	background-color: #1450C7;
+}
+position: absolute;
+left: 1px;
+top: 67px;
+width: 190px;
+height: 61px;
+opacity: 1;
+	
+/* 背景/4 页签选中色 */
+background: #285790;
+	
+color: rgb(255, 255, 255);
+box-sizing: border-box;
+border: 1px solid ;
+border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;
+	</string>
+               </property>
+               <property name="text">
+                <string>形状模板</string>
                </property>
               </widget>
              </item>
@@ -297,7 +343,7 @@ border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
-                 <width>7</width>
+                 <width>13</width>
                  <height>20</height>
                 </size>
                </property>
@@ -1227,7 +1273,7 @@ background: #172437;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1580</width>
+     <width>1496</width>
      <height>32</height>
     </rect>
    </property>
@@ -1293,7 +1339,7 @@ background: #172437;
    <slot>click_manualOperation()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>608</x>
+     <x>806</x>
      <y>115</y>
     </hint>
     <hint type="destinationlabel">
@@ -1309,7 +1355,7 @@ background: #172437;
    <slot>click_stopOperation()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1004</x>
+     <x>1202</x>
      <y>115</y>
     </hint>
     <hint type="destinationlabel">
@@ -1335,33 +1381,17 @@ background: #172437;
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_connect</sender>
-   <signal>clicked()</signal>
-   <receiver>industrialVision</receiver>
-   <slot>click_createServer()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>806</x>
-     <y>115</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>287</x>
-     <y>739</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>set_camera_Parameter_button</sender>
    <signal>clicked()</signal>
    <receiver>industrialVision</receiver>
    <slot>OnBnClickedSetParameterButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>858</x>
-     <y>859</y>
+     <x>812</x>
+     <y>964</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1564</x>
+     <x>1495</x>
      <y>864</y>
     </hint>
    </hints>
@@ -1373,12 +1403,44 @@ background: #172437;
    <slot>OnBnClickedGetParameterButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>437</x>
-     <y>859</y>
+     <x>414</x>
+     <y>964</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1565</x>
+     <x>1495</x>
      <y>827</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_connect</sender>
+   <signal>clicked()</signal>
+   <receiver>industrialVision</receiver>
+   <slot>click_createServer()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1004</x>
+     <y>115</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>287</x>
+     <y>739</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_shapematch</sender>
+   <signal>clicked()</signal>
+   <receiver>industrialVision</receiver>
+   <slot>click_shapeMatch()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>505</x>
+     <y>85</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>610</x>
+     <y>129</y>
     </hint>
    </hints>
   </connection>
@@ -1393,5 +1455,6 @@ background: #172437;
   <slot>OnBnClickedSetParameterButton()</slot>
   <slot>smallwindow_button_click()</slot>
   <slot>openShiShiPiPei()</slot>
+  <slot>click_shapeMatch()</slot>
  </slots>
 </ui>

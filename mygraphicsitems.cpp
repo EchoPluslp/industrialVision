@@ -2,7 +2,8 @@
 
 MyGraphicsRectItem::MyGraphicsRectItem(QGraphicsItem* parent)
 {
-
+	setAcceptHoverEvents(true);
+	//this->setCursor(Qt::ArrowCursor);//…Ë÷√π‚±Í
 }
 
 void MyGraphicsRectItem::setScenePos(QPointF pos)
