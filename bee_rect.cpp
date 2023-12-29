@@ -254,14 +254,47 @@ void bee_rect::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         }
         else if(m_StateFlag == MOV_RECT_OR)
         {
-            //todo 拖动更新 更新pt[]坐标
-            QPointF x = event->pos();
-            //相差
-            QPointF point = (event->pos() - m_startPos);
-            setRectSize(m_rect);
+			// 计算鼠标的偏移量
+			QPointF offset = event->pos() - m_startPos;
+
+			// 更新矩形的四个顶点坐标
+		  // 更新矩形的所有顶点坐标
+            //记录原始的长宽
+            qreal width = abs(m_rect.width());
+			qreal height = abs(m_rect.height());
+            if (width < 40 || height < 40)
+            {
+                return;
+            }
+			for (int i = 0; i < 4; ++i)
+            {
+				pt[i] += offset;
+				// 边界检查，确保顶点在范围内
+				pt[i].rx() = qBound(0.0, pt[i].x(), pixmap_width);
+				pt[i].ry() = qBound(0.0, pt[i].y(), pixmap_height);
+            }
+			
+			// 更新 m_rect
+			m_rect.setTopLeft(pt[0]);
+			m_rect.setTopRight(pt[1]);
+			m_rect.setBottomLeft(pt[3]);
+			m_rect.setBottomRight(pt[2]);
+			// 设置旋转中心
+			rotate_center = m_rect.center();
+
+			// 更新矩形
+			setRectSize(m_rect);
+
+			// 更新起始位置
+			m_startPos = event->pos();
+            ////todo 拖动更新 更新pt[]坐标
+            //QPointF x = event->pos();
+            ////相差
+            //QPointF point = (event->pos() - m_startPos);
+            //setRectSize(m_rect);
        
 
-            scene()->update();
+            //scene()->update();
         }
         else if(m_StateFlag == MOV_OAT0)
         {

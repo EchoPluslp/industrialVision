@@ -40,6 +40,8 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
+	//add ¹¦ÄÜ
+	void InitializeMeasureTrackbar();
     ~MainWindow();
 
 private slots:
@@ -75,6 +77,7 @@ public  slots:
 
     void sendImgToControllerShape(QImage image);
 
+    void updateLabelValue(int value);
 protected:
    virtual void keyPressEvent(QKeyEvent *event);
 

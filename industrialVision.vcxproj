@@ -109,11 +109,13 @@
     <ClCompile Include="bee_ringexpansion.cpp" />
     <ClCompile Include="camerathread.cpp" />
     <ClCompile Include="circlepen.cpp" />
+    <ClCompile Include="common.h" />
     <ClCompile Include="connectItemInfo.cpp" />
     <ClCompile Include="connectServer.cpp" />
     <ClCompile Include="createModel.cpp" />
     <ClCompile Include="curve.cpp" />
     <ClCompile Include="drawfinisheddialog.cpp" />
+    <ClCompile Include="edge.cpp" />
     <ClCompile Include="ellipse.cpp" />
     <ClCompile Include="filecontroller.cpp" />
     <ClCompile Include="filelistdockwidget.cpp" />
@@ -134,6 +136,7 @@
     <ClCompile Include="menubar.cpp" />
     <ClCompile Include="MvCamera.cpp" />
     <ClCompile Include="myactions.cpp" />
+    <ClCompile Include="myCCaliperGUI.cpp" />
     <ClCompile Include="mycommand.cpp" />
     <ClCompile Include="mycorneritem.cpp" />
     <ClCompile Include="myglwidget.cpp" />
@@ -187,6 +190,7 @@
     <ClInclude Include="bee_polygon.h" />
     <ClInclude Include="bee_rect.h" />
     <ClInclude Include="bee_ringexpansion.h" />
+    <ClInclude Include="edge.h" />
     <ClInclude Include="globalvar.h" />
     <QtMoc Include="myglwidget.h" />
     <QtMoc Include="logoSet.h" />
@@ -194,6 +198,7 @@
     <QtMoc Include="mainwindow.h" />
     <ClInclude Include="Mstruct.h" />
     <QtMoc Include="passwordSet.h" />
+    <ClInclude Include="myCCaliperGUI.h" />
     <ClInclude Include="mycorneritem.h" />
     <ClInclude Include="myqgraphicsview.h" />
     <ClInclude Include="point.h" />

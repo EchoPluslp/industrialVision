@@ -244,6 +244,15 @@
     <ClCompile Include="myqgraphicsview.cpp">
       <Filter>Source Files\shapeMatch</Filter>
     </ClCompile>
+    <ClCompile Include="common.h">
+      <Filter>Header Files\shapeMatch</Filter>
+    </ClCompile>
+    <ClCompile Include="myCCaliperGUI.cpp">
+      <Filter>Source Files\shapeMatch</Filter>
+    </ClCompile>
+    <ClCompile Include="edge.cpp">
+      <Filter>Source Files\shapeMatch</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="listwidget.h">
@@ -478,6 +487,12 @@
       <Filter>Header Files\shapeMatch</Filter>
     </ClInclude>
     <ClInclude Include="myqgraphicsview.h">
+      <Filter>Header Files\shapeMatch</Filter>
+    </ClInclude>
+    <ClInclude Include="myCCaliperGUI.h">
+      <Filter>Header Files\shapeMatch</Filter>
+    </ClInclude>
+    <ClInclude Include="edge.h">
       <Filter>Header Files\shapeMatch</Filter>
     </ClInclude>
   </ItemGroup>

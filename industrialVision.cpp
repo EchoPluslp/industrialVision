@@ -328,7 +328,7 @@ void industrialVision::getImageOneFrame(QString imageType) {
 	cv::Mat tempMat;
 	 m_imageVector_1.at(0).copyTo(tempMat);
 	myImageToModel = Mat2QImage(tempMat);
-		int wid = myImageToModel.width();
+	int wid = myImageToModel.width();
 	int height = myImageToModel.height();
 
  /// /////////////////////

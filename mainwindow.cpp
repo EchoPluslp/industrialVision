@@ -8,7 +8,9 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     ,state_flag_maindow(CHOOSE_NULL)
 {
+
     ui->setupUi(this);
+	InitializeMeasureTrackbar();
 
     this->ImageItem = nullptr;
 
@@ -23,7 +25,24 @@ MainWindow::MainWindow(QWidget *parent)
       ui->toolBar->setIconSize(QSize(60,60));
       ui->toolBar->setFloatable(false); // 设置工具栏不可浮动
       ui->toolBar->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+}
 
+void MainWindow::InitializeMeasureTrackbar()
+{
+    //qt 滑动条初始化
+	//   //宽度
+    ui->slider_nMeasureLength->setMaximum(500);
+	ui->slider_nMeasureLength->setMinimum(1);
+    ui->slider_nMeasureLength->setTickPosition(QSlider::TicksRight);
+
+    //卡尺数
+    ui->slider_nMeasureNums->setValue(10);
+    ui->slider_nMeasureNums->setMaximum(99);
+	ui->slider_nMeasureNums->setMinimum(3);
+	ui->slider_nMeasureNums->setTickPosition(QSlider::TicksLeft);
+
+    //宽度 
+    //ui->splider_nMeasureHeight
 }
 
 MainWindow::~MainWindow()
@@ -31,6 +50,14 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+void MainWindow::updateLabelValue(int value)
+{
+	QString text = QString::number(value); // 将整数值转换为字符串
+   // 更新标签的文本
+    ui->value_nMeasureLength->setText(text);
+
+}
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
@@ -130,6 +157,8 @@ void MainWindow::on_action_rect_triggered()
         this->qgraphicsScene->addItem(my_rect);
         ui->graphicsView->setScene(this->qgraphicsScene);
         qDebug() << "rect";
+        //将现在的图片大小传给去
+        
    // }
 }
 
@@ -210,13 +239,18 @@ void MainWindow::on_action_caliberline_triggered()
 
 void MainWindow::on_action_calibercircle_triggered()
 {
-
         state_flag_maindow = CALIBERCIRCLE;
         my_calibercircle = new bee_calibercircle();
         my_calibercircle->setpixmapwidth(ImageItem->pixmap().width()*ImageItem->scale());
         my_calibercircle->setpixmapheight(ImageItem->pixmap().height()*ImageItem->scale());
+		Mat frame = QImageToCvMat(ImageItem->pixmap().toImage(), true);
+
+        my_calibercircle->setpixmapImage(frame);
+
         this->qgraphicsScene->addItem(my_calibercircle);
         ui->graphicsView->setScene(this->qgraphicsScene);
+		connect(ui->slider_nMeasureLength, &QSlider::valueChanged, my_calibercircle, &bee_calibercircle::slotSliderValueChanged_MeasureLength);
+		connect(ui->slider_nMeasureNums, &QSlider::valueChanged, my_calibercircle, &bee_calibercircle::slotSliderValueChanged_MeasureNums);
 
 }
 
