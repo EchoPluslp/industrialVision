@@ -43,9 +43,14 @@ public:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
+    void fitcircle();
     public slots:
       void  slotSliderValueChanged_MeasureLength(int value);
       void  slotSliderValueChanged_MeasureNums(int value);
+      void slotSliderValueChanged_nSetThreshold(int value);
+	  void slotSliderValueChanged_nSigma(int value);
+      void  slotSliderValueChanged_nSampleDirection(int value);
+      void slotSliderValueChanged_nTranslation(int value);
 private:
     qreal pixmap_width;
     qreal pixmap_height;
@@ -63,6 +68,8 @@ private:
     bool if_handleslist_create = false;
    // qreal width; //矩形宽度
     //qreal height; //矩形高度
+
+    // 圆环半径
     qreal r;
 	//投影方向
 	int nSampleDirection = 0;

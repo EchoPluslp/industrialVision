@@ -48,7 +48,7 @@ void CEdgePoint::getWarpImageMat()
 	Mat M = (Mat_<double>(2, 3) << 1, 0, x - m_dLength * 0.5, 0, 1, y - m_dHeight * 0.5);
 	cv::warpAffine(RoiMat, m_mInputMat, M, Size2d(m_dLength, m_dHeight), WARP_INVERSE_MAP | INTER_CUBIC);
 
-
+	Mat temp = 	m_mInputMat;
 }
 
 void CEdgePoint::imagePreGussianBlur()

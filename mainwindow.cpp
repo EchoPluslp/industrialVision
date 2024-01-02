@@ -41,6 +41,27 @@ void MainWindow::InitializeMeasureTrackbar()
 	ui->slider_nMeasureNums->setMinimum(3);
 	ui->slider_nMeasureNums->setTickPosition(QSlider::TicksLeft);
 
+    //阈值
+    ui->horizontalSlider_nSetThreshold->setValue(30);
+    ui->horizontalSlider_nSetThreshold->setMaximum(255);
+    ui->horizontalSlider_nSetThreshold->setMinimum(0);
+
+	//长宽
+	ui->horizontalSlider_nSigma->setValue(1);
+	ui->horizontalSlider_nSigma->setMaximum(99);
+	ui->horizontalSlider_nSigma->setMinimum(1);
+
+	//投影方向
+	ui->horizontalSlider_nSampleDirection->setValue(0);
+	ui->horizontalSlider_nSampleDirection->setMaximum(1);
+	ui->horizontalSlider_nSampleDirection->setMinimum(0);
+	//边缘极性z
+	ui->horizontalSlider_nTranslation->setValue(0);
+	ui->horizontalSlider_nTranslation->setMaximum(1);
+	ui->horizontalSlider_nTranslation->setMinimum(0);
+
+
+
     //宽度 
     //ui->splider_nMeasureHeight
 }
@@ -57,6 +78,11 @@ void MainWindow::updateLabelValue(int value)
    // 更新标签的文本
     ui->value_nMeasureLength->setText(text);
 
+}
+
+void MainWindow::fitcircle()
+{
+    my_calibercircle->fitcircle();
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
@@ -244,6 +270,7 @@ void MainWindow::on_action_calibercircle_triggered()
         my_calibercircle->setpixmapwidth(ImageItem->pixmap().width()*ImageItem->scale());
         my_calibercircle->setpixmapheight(ImageItem->pixmap().height()*ImageItem->scale());
 		Mat frame = QImageToCvMat(ImageItem->pixmap().toImage(), true);
+		cvtColor(frame, frame, COLOR_BGR2GRAY);  //例如8位彩色图像转成灰度图像
 
         my_calibercircle->setpixmapImage(frame);
 
@@ -251,7 +278,12 @@ void MainWindow::on_action_calibercircle_triggered()
         ui->graphicsView->setScene(this->qgraphicsScene);
 		connect(ui->slider_nMeasureLength, &QSlider::valueChanged, my_calibercircle, &bee_calibercircle::slotSliderValueChanged_MeasureLength);
 		connect(ui->slider_nMeasureNums, &QSlider::valueChanged, my_calibercircle, &bee_calibercircle::slotSliderValueChanged_MeasureNums);
+		connect(ui->horizontalSlider_nSetThreshold, &QSlider::valueChanged, my_calibercircle, &bee_calibercircle::slotSliderValueChanged_nSetThreshold);
+		connect(ui->horizontalSlider_nSigma, &QSlider::valueChanged, my_calibercircle, &bee_calibercircle::slotSliderValueChanged_nSigma);
+		connect(ui->horizontalSlider_nSampleDirection, &QSlider::valueChanged, my_calibercircle, &bee_calibercircle::slotSliderValueChanged_nSampleDirection);
+		connect(ui->horizontalSlider_nTranslation, &QSlider::valueChanged, my_calibercircle, &bee_calibercircle::slotSliderValueChanged_nTranslation);
 
+        
 }
 
 void MainWindow::on_action_zoomin_triggered()

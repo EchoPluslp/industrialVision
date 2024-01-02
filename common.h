@@ -1,4 +1,4 @@
-#include<opencv2/opencv.hpp>
+ï»¿#include<opencv2/opencv.hpp>
 #include<vector>
 #include <QImage>
 using namespace cv;
@@ -156,7 +156,7 @@ static void getCircleFromEquPointSets(
 
 }
 
-//½«QImage×ª»¯ÎªMat
+//å°†QImageè½¬åŒ–ä¸ºMat
 static cv::Mat QImageToCvMat(const QImage& inImage, bool inCloneImageData = true)
 {
 	switch (inImage.format())
@@ -175,29 +175,29 @@ static cv::Mat QImageToCvMat(const QImage& inImage, bool inCloneImageData = true
 	}
 
 	//// 8-bit, 3 channel
-	//case QImage::Format_RGB32:
-	//case QImage::Format_RGB888:
-	//{
-	//	if (!inCloneImageData)
-	//	{
-	//		//qWarning() << "CVS::QImageToCvMat() - Conversion requires cloning because we use a temporary QImage";
-	//	}
+	case QImage::Format_RGB32:
+	case QImage::Format_RGB888:
+	{
+		if (!inCloneImageData)
+		{
+			//qWarning() << "CVS::QImageToCvMat() - Conversion requires cloning because we use a temporary QImage";
+		}
 
-	//	QImage   swapped = inImage;
+		QImage   swapped = inImage;
 
-	//	if (inImage.format() == QImage::Format_RGB32)
-	//	{
-	//		swapped = swapped.convertToFormat(QImage::Format_RGB888);
-	//	}
+		if (inImage.format() == QImage::Format_RGB32)
+		{
+			swapped = swapped.convertToFormat(QImage::Format_RGB888);
+		}
 
-	//	swapped = swapped.rgbSwapped();
+		swapped = swapped.rgbSwapped();
 
-	//	return cv::Mat(swapped.height(), swapped.width(),
-	//		CV_8UC3,
-	//		const_cast<uchar*>(swapped.bits()),
-	//		static_cast<size_t>(swapped.bytesPerLine())
-	//	).clone();
-	//}
+		return cv::Mat(swapped.height(), swapped.width(),
+			CV_8UC3,
+			const_cast<uchar*>(swapped.bits()),
+			static_cast<size_t>(swapped.bytesPerLine())
+		).clone();
+	}
 
 	// 8-bit, 1 channel
 	case QImage::Format_Indexed8:

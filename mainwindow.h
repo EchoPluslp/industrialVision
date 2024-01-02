@@ -78,6 +78,8 @@ public  slots:
     void sendImgToControllerShape(QImage image);
 
     void updateLabelValue(int value);
+
+    void fitcircle();
 protected:
    virtual void keyPressEvent(QKeyEvent *event);
 

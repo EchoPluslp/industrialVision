@@ -199,7 +199,7 @@ void CCaliperCircleGUI::circleFitOpt(Point2d& pdCenter, double& dRadius, int nFi
 	//截图圆心到 卡尺最外面的点
 	Mat RoiMat = Mat::zeros(m_mInputMat.size(), m_mInputMat.type());
 	Mat mask = Mat::zeros(m_mInputMat.size(), CV_8U);
-	circle(mask, m_pdCenter, m_dRadius + m_dMeasureLength * 0.5 + 10, Scalar(255), -1);
+	//circle(mask, m_pdCenter, m_dRadius + m_dMeasureLength * 0.5 + 10, Scalar(255), -1);
 	m_mInputMat.copyTo(RoiMat, mask);
 	m_edgePointSetsVec.clear();
 	m_edgeGradVec.clear();

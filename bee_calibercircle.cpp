@@ -102,8 +102,6 @@ void bee_calibercircle::setcircleize()
 
 void bee_calibercircle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-
-
     if(!if_create)
     {
         QPen mPen(Qt::magenta);//绘制箭头
@@ -209,13 +207,14 @@ void bee_calibercircle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
         circleInstanceGui.createCircleKaChi(srcImage, cv::Point2d(circle_center.x(), circle_center.y()), r, nMeasureLength, nMeasureHeight, nSigma,
 			nThreshold, nTranslation, nMeasureNums, nSampleDirection);
-
     }else if(m_StateFlag == MOV_CPOINT)//移动圆环半径
     {
         
         r = getdistance(circle_center,event->pos());
         setcircleize();
         scene()->update();
+		circleInstanceGui.AdjustCaliper(srcImage, Point2d(-4, -4), r, nMeasureLength, nMeasureHeight,
+			1, nThreshold, nTranslation, nMeasureNums, nSampleDirection);
     }else if(m_StateFlag == MOV_CC) //中心区域
     {
         //移动中心
@@ -225,16 +224,21 @@ void bee_calibercircle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         moveBy(point.x(), point.y());
         setcircleize();
         scene()->update();
+        //移动圆形卡尺圆心
+		circleInstanceGui.AdjustCaliper(srcImage, Point2d(event->pos().x(), event->pos().y()), nRadius, nMeasureLength, nMeasureHeight,
+			1, nThreshold, nTranslation, nMeasureNums, nSampleDirection);
         
     }else if(m_StateFlag == MOV_RPOINT)//移动卡尺的长宽
     {
         QPointF PT = event->pos();
         QPointF CE = first_center;
+        //宽度
         nMeasureHeight = std::abs(PT.x() - CE.x())*2;
+        //高度
         nMeasureLength = std::abs(PT.y() -CE.y())*2;
         setcircleize();
         scene()->update();
-        //修改移动卡尺参数
+        //修改移动卡尺的长宽参数
 		circleInstanceGui.AdjustCaliper(srcImage, Point2d(-3, -3), nRadius, nMeasureLength, nMeasureHeight,
 			1, nThreshold, nTranslation, nMeasureNums, nSampleDirection);
 		circleInstanceGui.AdjustCaliper(srcImage, Point2d(-2, -2), nRadius, nMeasureLength, nMeasureHeight,
@@ -304,6 +308,30 @@ void bee_calibercircle::hoverLeaveEvent(QGraphicsSceneHoverEvent * event)
     QGraphicsItem::hoverLeaveEvent(event);
 }
 
+void bee_calibercircle::fitcircle()
+{
+    Point2d pdCenter(0, 0);
+    double dRadius = 0;
+    //执行匹配
+    circleInstanceGui.circleFitOpt(pdCenter, dRadius, 0);
+    dstImage.copyTo(srcImage);
+    ///123
+    circleInstanceGui.edgePointSetsShow(srcImage, 10, GREED);
+
+    //circle(srcImage, pdCenter, dRadius, GREED);
+   // drawMyCross(srcImage, pdCenter, 90, 5, GREED);
+   // imshow(WindowHandle, srcImage);
+    cout << "Circle info: " << pdCenter << ", Radius: " << dRadius << endl;
+
+    vector<Point2d>vpdEdgePoints;
+    vector<double>vdEdgePointsGradient;
+    circleInstanceGui.getEdgeSetsInfo(vpdEdgePoints, vdEdgePointsGradient);
+    for (int i = 0; i < vpdEdgePoints.size(); i++)
+    {
+        cout << "Edge Point[" << i << "]: " << vpdEdgePoints[i] << ", gradient: " << vdEdgePointsGradient[i] << endl;
+    }
+}
+
 
 
 void  bee_calibercircle::slotSliderValueChanged_MeasureNums(int value) {
@@ -314,6 +342,14 @@ void  bee_calibercircle::slotSliderValueChanged_MeasureNums(int value) {
 	 dstImage.copyTo(srcImage);
 	 circleInstanceGui.AdjustCaliper(srcImage, Point2d(-1, -1), nRadius, nMeasureLength, nMeasureHeight,
 		 1, nThreshold, nTranslation, nMeasureNums, nSampleDirection);
+}
+
+void bee_calibercircle::slotSliderValueChanged_nSetThreshold(int value)
+{
+    int nThreshold = value;
+
+	circleInstanceGui.AdjustCaliper(srcImage, Point2d(-5, -5), nRadius, nMeasureLength, nMeasureHeight,
+		1, nThreshold, nTranslation, nMeasureNums, nSampleDirection);
 }
 
 void  bee_calibercircle::slotSliderValueChanged_MeasureLength(int value) {

@@ -610,11 +610,6 @@ void createModel::onCurveModeTriggered() {
     paintScene->setCurrentShape(Shape::Figure::Curve);
 }
 
-
-
-
-
-
 void createModel::onSquarePenModeTriggered() {
     paintScene->setCurrentShape(Shape::Figure::SquarePen);
 }

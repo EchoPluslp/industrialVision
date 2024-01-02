@@ -141,10 +141,10 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_5"/>
+              <widget class="QLineEdit" name="value_nSetThreshold"/>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_5">
+              <widget class="QSlider" name="horizontalSlider_nSetThreshold">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -162,10 +162,10 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_6"/>
+              <widget class="QLineEdit" name="value_nSigma"/>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_6">
+              <widget class="QSlider" name="horizontalSlider_nSigma">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -183,10 +183,10 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_7"/>
+              <widget class="QLineEdit" name="value_nTranslation"/>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_7">
+              <widget class="QSlider" name="horizontalSlider_nTranslation_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -204,10 +204,10 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_8"/>
+              <widget class="QLineEdit" name="value_nTranslation_2"/>
              </item>
              <item>
-              <widget class="QSlider" name="horizontalSlider_8">
+              <widget class="QSlider" name="horizontalSlider_nTranslation">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -227,7 +227,7 @@
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_9">
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="pushButton_fitcircle">
            <property name="text">
             <string>拟合</string>
            </property>
@@ -483,5 +483,25 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButton_fitcircle</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>fitcircle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>98</x>
+     <y>957</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>143</x>
+     <y>898</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>fitcircle()</slot>
+ </slots>
 </ui>
