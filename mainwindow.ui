@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1659</width>
-    <height>1027</height>
+    <width>1725</width>
+    <height>1038</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -26,194 +26,256 @@
    <property name="mouseTracking">
     <bool>true</bool>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="1,4">
-    <item>
-     <layout class="QVBoxLayout" name="verticalLayout_2" stretch="9,1">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,1,0">
       <item>
        <widget class="QGroupBox" name="groupBox">
-        <property name="title">
-         <string>算法参数</string>
+        <property name="font">
+         <font>
+          <family>幼圆</family>
+          <pointsize>14</pointsize>
+         </font>
         </property>
-        <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="0">
-          <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="title">
+         <string>圆匹配算法参数</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,8">
-             <item>
-              <widget class="QLabel" name="label">
-               <property name="text">
-                <string>高度:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="value_nMeasureLength">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="readOnly">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSlider" name="slider_nMeasureLength">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QLabel" name="label_4">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>幼圆</family>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>卡尺数量:</string>
+             </property>
+             <property name="openExternalLinks">
+              <bool>false</bool>
+             </property>
+            </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,1,8">
-             <item>
-              <widget class="QLabel" name="label_2">
-               <property name="text">
-                <string>宽度:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="value_nMeasureHeight"/>
-             </item>
-             <item>
-              <widget class="QSlider" name="splider_nMeasureHeight">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QSpinBox" name="spinbox_nMeasureNums">
+             <property name="font">
+              <font>
+               <family>幼圆</family>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <property name="minimum">
+              <number>2</number>
+             </property>
+             <property name="value">
+              <number>5</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="QLabel" name="label_7">
+             <property name="text">
+              <string>投影方向:</string>
+             </property>
+            </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,1,8">
-             <item>
-              <widget class="QLabel" name="label_3">
-               <property name="text">
-                <string>圆半径:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="lineEdit_3"/>
-             </item>
-             <item>
-              <widget class="QSlider" name="horizontalSlider_3">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QSpinBox" name="spinBox_nSampleDirection">
+             <property name="maximum">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLabel" name="label_6">
+             <property name="text">
+              <string>sigma:</string>
+             </property>
+            </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,1,8">
-             <item>
-              <widget class="QLabel" name="label_4">
-               <property name="text">
-                <string>卡尺数量:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="value_nMeasureNums"/>
-             </item>
-             <item>
-              <widget class="QSlider" name="slider_nMeasureNums">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QSpinBox" name="spinBox_nsigma"/>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QLabel" name="label_5">
+             <property name="text">
+              <string>边缘阈值</string>
+             </property>
+            </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,1,8">
-             <item>
-              <widget class="QLabel" name="label_5">
-               <property name="text">
-                <string>阈值:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="value_nSetThreshold"/>
-             </item>
-             <item>
-              <widget class="QSlider" name="horizontalSlider_nSetThreshold">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QSpinBox" name="spinBox_nThreshold">
+             <property name="maximum">
+              <number>255</number>
+             </property>
+             <property name="value">
+              <number>5</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QLabel" name="label_8">
+             <property name="text">
+              <string>边缘极性:</string>
+             </property>
+            </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,1,8">
+            <widget class="QComboBox" name="comboBox_nTranslation">
              <item>
-              <widget class="QLabel" name="label_6">
-               <property name="text">
-                <string>sigma:</string>
-               </property>
-              </widget>
+              <property name="text">
+               <string>明到暗</string>
+              </property>
              </item>
              <item>
-              <widget class="QLineEdit" name="value_nSigma"/>
+              <property name="text">
+               <string>暗到明</string>
+              </property>
              </item>
-             <item>
-              <widget class="QSlider" name="horizontalSlider_nSigma">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_3">
+        <property name="font">
+         <font>
+          <family>幼圆</family>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="title">
+         <string>线匹配参数</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QLabel" name="label_9">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>卡尺数量:</string>
+             </property>
+            </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="1,1,8">
-             <item>
-              <widget class="QLabel" name="label_7">
-               <property name="text">
-                <string>投影方向:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="value_nTranslation"/>
-             </item>
-             <item>
-              <widget class="QSlider" name="horizontalSlider_nTranslation_2">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QSpinBox" name="spinBox_nMeasureNums_line">
+             <property name="minimum">
+              <number>2</number>
+             </property>
+             <property name="value">
+              <number>5</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <item>
+            <widget class="QLabel" name="label_10">
+             <property name="font">
+              <font>
+               <family>幼圆</family>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>边缘阈值:</string>
+             </property>
+            </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="1,1,8">
+            <widget class="QSpinBox" name="spinBox_nSetThreshold_line">
+             <property name="font">
+              <font>
+               <family>幼圆</family>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <property name="maximum">
+              <number>255</number>
+             </property>
+             <property name="value">
+              <number>5</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_8">
+           <item>
+            <widget class="QLabel" name="label_11">
+             <property name="font">
+              <font>
+               <family>幼圆</family>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>边缘极性:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="comboBox_edge_polarity">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>幼圆</family>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
              <item>
-              <widget class="QLabel" name="label_8">
-               <property name="text">
-                <string>边缘极性:</string>
-               </property>
-              </widget>
+              <property name="text">
+               <string>明到暗</string>
+              </property>
              </item>
              <item>
-              <widget class="QLineEdit" name="value_nTranslation_2"/>
+              <property name="text">
+               <string>暗到明</string>
+              </property>
              </item>
-             <item>
-              <widget class="QSlider" name="horizontalSlider_nTranslation">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            </widget>
            </item>
           </layout>
          </item>
@@ -222,6 +284,12 @@
       </item>
       <item>
        <widget class="QGroupBox" name="groupBox_2">
+        <property name="font">
+         <font>
+          <family>幼圆</family>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
         <property name="title">
          <string>执行</string>
         </property>
@@ -230,6 +298,13 @@
           <widget class="QPushButton" name="pushButton_fitcircle">
            <property name="text">
             <string>拟合</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_line">
+           <property name="text">
+            <string>线拟合</string>
            </property>
           </widget>
          </item>
@@ -245,26 +320,36 @@
       </item>
      </layout>
     </item>
-    <item>
-     <widget class="myqgraphicsview" name="graphicsView">
-      <property name="mouseTracking">
-       <bool>true</bool>
+    <item row="0" column="1">
+     <widget class="QGroupBox" name="groupBox_4">
+      <property name="font">
+       <font>
+        <family>幼圆</family>
+        <pointsize>14</pointsize>
+       </font>
       </property>
+      <property name="title">
+       <string>图像区域</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="myqgraphicsview" name="graphicsView">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </item>
    </layout>
-  </widget>
-  <widget class="QStatusBar" name="statusbar">
-   <property name="mouseTracking">
-    <bool>true</bool>
-   </property>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1659</width>
+     <width>1725</width>
      <height>22</height>
     </rect>
    </property>
@@ -491,8 +576,8 @@
    <slot>fitcircle()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>98</x>
-     <y>957</y>
+     <x>118</x>
+     <y>945</y>
     </hint>
     <hint type="destinationlabel">
      <x>143</x>
@@ -500,8 +585,25 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_line</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>fitline()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>189</x>
+     <y>937</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>292</x>
+     <y>816</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>fitcircle()</slot>
+  <slot>fitline()</slot>
  </slots>
 </ui>

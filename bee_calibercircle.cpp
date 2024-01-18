@@ -3,8 +3,8 @@
 bee_calibercircle::bee_calibercircle(QGraphicsItem *parent):
     m_StateFlag(DEFAULT_FLAG_OCIRC)
 {
-    r=0;
-    circle_center = QPointF(0,0);
+    //nRadius =100;
+    //circle_center = QPointF(0,0);
     setAcceptHoverEvents(true);
     setCursor(Qt::ArrowCursor);
 }
@@ -33,7 +33,7 @@ QRectF bee_calibercircle::boundingRect() const
     if(!if_create)
         return QRectF(0, 0, pixmap_width, pixmap_height);
     else
-        return QRectF(circle_center.x()-r- nMeasureLength -3,circle_center.y()-r- nMeasureLength -3,2*(r+ nMeasureLength +3),2*(r+ nMeasureLength +3));
+        return QRectF(circle_center.x()- nRadius - nMeasureLength -3,circle_center.y()- nRadius - nMeasureLength -3,2*(nRadius + nMeasureLength +3),2*(nRadius + nMeasureLength +3));
 }
 
 QPainterPath bee_calibercircle::shape() const
@@ -49,14 +49,14 @@ QPainterPath bee_calibercircle::shape() const
         QPainterPath m_path2;
         QPainterPath m_path3;
 
-        m_path.addEllipse(circle_center.x() -r,circle_center.y()-r,2*r,2*r);
+        m_path.addEllipse(circle_center.x() - nRadius,circle_center.y()- nRadius,2* nRadius,2* nRadius);
         qreal angle_dis = 360/ nMeasureNums;
         qreal angle = -90;
         QVector<QPointF> vpt;
         QPointF pp[4];
         for(int i=0;i< nMeasureNums;i++)
         {
-            QPointF center = QPointF(circle_center.x()+r*cos(angle/180*M_PI),circle_center.y()+r*sin(angle/180*M_PI));
+            QPointF center = QPointF(circle_center.x()+ nRadius *cos(angle/180*M_PI),circle_center.y()+ nRadius *sin(angle/180*M_PI));
             pp[0] = QPointF(center.x()- nMeasureHeight /2,center.y()- nMeasureLength /2); //LT
             pp[1] = QPointF(center.x()+ nMeasureHeight /2,center.y()- nMeasureLength /2); //RT
             pp[2] = QPointF(center.x()+ nMeasureHeight /2,center.y()+ nMeasureLength /2); //RB
@@ -86,11 +86,11 @@ QPainterPath bee_calibercircle::shape() const
 void bee_calibercircle::setcircleize()
 {
     m_HandlesList_circle[0]->move(circle_center);
-    m_HandlesList_circle[1]->move(QPointF(circle_center.x()+r,circle_center.y()));
-    m_HandlesList_circle[2]->move(QPointF(circle_center.x(),circle_center.y()+r));
-    m_HandlesList_circle[3]->move(QPointF(circle_center.x()-r,circle_center.y()));
+    m_HandlesList_circle[1]->move(QPointF(circle_center.x()+ nRadius,circle_center.y()));
+    m_HandlesList_circle[2]->move(QPointF(circle_center.x(),circle_center.y()+ nRadius));
+    m_HandlesList_circle[3]->move(QPointF(circle_center.x()- nRadius,circle_center.y()));
 
-    first_center = QPointF(circle_center.x(),circle_center.y()-r);
+    first_center = QPointF(circle_center.x(),circle_center.y()- nRadius);
     pt[0] = QPointF(first_center.x()- nMeasureHeight /2,first_center.y()- nMeasureLength /2); //LT
     pt[1] = QPointF(first_center.x()+ nMeasureHeight /2,first_center.y()- nMeasureLength /2); //RT
     pt[2] = QPointF(first_center.x()+ nMeasureHeight /2,first_center.y()+ nMeasureLength /2); //RB
@@ -107,11 +107,11 @@ void bee_calibercircle::paint(QPainter *painter, const QStyleOptionGraphicsItem 
         QPen mPen(Qt::magenta);//绘制箭头
         mPen.setWidth(0);
         painter->setPen(mPen);
-        painter->drawEllipse(circle_center,r,r);
+        painter->drawEllipse(circle_center, nRadius, nRadius);
     }
     else
     {
-        QPen mPen(Qt::magenta);
+        QPen mPen(Qt::magenta);  
         if(if_hover)
             mPen.setColor(Qt::magenta);
         mPen.setWidth(0);
@@ -121,7 +121,7 @@ void bee_calibercircle::paint(QPainter *painter, const QStyleOptionGraphicsItem 
         QVector<QPointF> vpt;
         for(int i=0;i< nMeasureNums;i++)
         {
-            QPointF center = QPointF(circle_center.x()+r*cos(angle/180*M_PI),circle_center.y()+r*sin(angle/180*M_PI));
+            QPointF center = QPointF(circle_center.x()+ nRadius *cos(angle/180*M_PI),circle_center.y()+ nRadius *sin(angle/180*M_PI));
 //            QPointF center = QPointF(circle_center.x(),circle_center.y()-r);
             QPointF pp[4];
             pp[0] = QPointF(center.x()- nMeasureHeight /2,center.y()- nMeasureLength /2); //LT
@@ -157,7 +157,7 @@ void bee_calibercircle::paint(QPainter *painter, const QStyleOptionGraphicsItem 
         painter->drawLine(end_1,p_12);
         painter->drawLine(p_21,end_2);
         painter->drawLine(end_2,p_22);
-        painter->drawEllipse(circle_center,r,r);
+        painter->drawEllipse(circle_center, nRadius, nRadius);
 //        painter->drawEllipse(circle_center.x()-r,circle_center.y()-r,2*r,2*r);
     }
     scene()->update();
@@ -170,15 +170,17 @@ void bee_calibercircle::mousePressEvent(QGraphicsSceneMouseEvent *event)
     {
         if(!if_create)
         {
-            circle_center = event->pos();
+            circle_center = event->scenePos();
             create_move=true;
         }
         else
         {
-            m_startPos= event->pos();
+            m_startPos= event->scenePos();
+		//	QPointF center2 = event->scenePos();
+
             for(int i=1;i<4;i++) //移动圆环半径
             {
-                if(m_HandlesList_circle[i]->contains(event->pos()))
+                if(m_HandlesList_circle[i]->contains(event->scenePos()))
                 {
                     m_StateFlag = MOV_CPOINT;
                     return;
@@ -186,12 +188,13 @@ void bee_calibercircle::mousePressEvent(QGraphicsSceneMouseEvent *event)
             }
             for(int i=0;i<4;i++) //移动卡尺 
             {
-                if(m_HandlesList_refct[i]->contains(event->pos()))
+                if(m_HandlesList_refct[i]->contains(event->scenePos()))
                 {
                     m_StateFlag = MOV_RPOINT;
                     return;
                 }
             }
+            QRectF xfes = this->boundingRect();
             if(this->boundingRect().contains(m_startPos) && m_StateFlag == DEFAULT_FLAG_OCIRC)
                 m_StateFlag = MOV_CC;
         }
@@ -203,34 +206,47 @@ void bee_calibercircle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     if(create_move)
     {
-        r = getdistance(circle_center,event->pos());
-
-        circleInstanceGui.createCircleKaChi(srcImage, cv::Point2d(circle_center.x(), circle_center.y()), r, nMeasureLength, nMeasureHeight, nSigma,
-			nThreshold, nTranslation, nMeasureNums, nSampleDirection);
+        nRadius = getdistance(circle_center,event->scenePos());
+       
     }else if(m_StateFlag == MOV_CPOINT)//移动圆环半径
     {
         
-        r = getdistance(circle_center,event->pos());
+        nRadius = getdistance(circle_center,event->scenePos());
         setcircleize();
         scene()->update();
-		circleInstanceGui.AdjustCaliper(srcImage, Point2d(-4, -4), r, nMeasureLength, nMeasureHeight,
+		dstImage.copyTo(srcImage);
+		circleInstanceGui.AdjustCaliper(srcImage, Point2d(-4, -4), nRadius, nMeasureLength, nMeasureHeight,
 			1, nThreshold, nTranslation, nMeasureNums, nSampleDirection);
     }else if(m_StateFlag == MOV_CC) //中心区域
     {
         //移动中心
         //修改m_中心坐标
+		
+        int pointxx = event->scenePos().x();
+		int pointyyy = event->scenePos().y();
 
-        QPointF point = (event->pos() - m_startPos);
-        moveBy(point.x(), point.y());
+        QPoint pQPointF = event->scenePos().toPoint();
+        //移动的变量
+        QPointF pointF = event->scenePos() - circle_center;
+        QPoint newPoint  = pointF.toPoint();
+        //鼠标位置x,y,原中心x,y
+        emit signal_emitstatusValue(pointxx, pointyyy, circle_center.x(), circle_center.y());
+		circle_center += QPointF(newPoint.x(), newPoint.y());
+		//圆心坐标
+	   /* if (!create_move)
+		{
+			circle_center = event->scenePos();
+		}*/
+
         setcircleize();
         scene()->update();
         //移动圆形卡尺圆心
-		circleInstanceGui.AdjustCaliper(srcImage, Point2d(event->pos().x(), event->pos().y()), nRadius, nMeasureLength, nMeasureHeight,
-			1, nThreshold, nTranslation, nMeasureNums, nSampleDirection);
-        
-    }else if(m_StateFlag == MOV_RPOINT)//移动卡尺的长宽
+		dstImage.copyTo(srcImage);
+		circleInstanceGui.AdjustCaliper(srcImage, Point2d(circle_center.x(), circle_center.y()), nRadius, nMeasureLength, nMeasureHeight,
+			1, nThreshold, nTranslation, nMeasureNums, nSampleDirection,1);
+      }else if(m_StateFlag == MOV_RPOINT)//移动卡尺的长宽
     {
-        QPointF PT = event->pos();
+        QPointF PT = event->scenePos();
         QPointF CE = first_center;
         //宽度
         nMeasureHeight = std::abs(PT.x() - CE.x())*2;
@@ -239,9 +255,13 @@ void bee_calibercircle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         setcircleize();
         scene()->update();
         //修改移动卡尺的长宽参数
+		dstImage.copyTo(srcImage);
+
 		circleInstanceGui.AdjustCaliper(srcImage, Point2d(-3, -3), nRadius, nMeasureLength, nMeasureHeight,
 			1, nThreshold, nTranslation, nMeasureNums, nSampleDirection);
-		circleInstanceGui.AdjustCaliper(srcImage, Point2d(-2, -2), nRadius, nMeasureLength, nMeasureHeight,
+		dstImage.copyTo(srcImage);
+
+        circleInstanceGui.AdjustCaliper(srcImage, Point2d(-2, -2), nRadius, nMeasureLength, nMeasureHeight,
 			1, nThreshold, nTranslation, nMeasureNums, nSampleDirection);
     }
 }
@@ -250,17 +270,17 @@ void bee_calibercircle::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if(create_move)
     {
-        if(r<2)
+        if(nRadius <2)
             return;
         if_create = true;
         create_move = false;
-        r = getdistance(circle_center,event->pos());
-        nMeasureHeight = r/4;
-        nMeasureLength = r/4;
+        nRadius = getdistance(circle_center,event->scenePos());
+        nMeasureHeight = nRadius /4;
+        nMeasureLength = nRadius /4;
         if(!if_handleslist_create)
         {
 
-            first_center = QPointF(circle_center.x()+r,circle_center.y()-r);
+            first_center = QPointF(circle_center.x()+ nRadius,circle_center.y()- nRadius);
             pt[0] = QPointF(first_center.x()- nMeasureHeight /2,first_center.y()- nMeasureLength /2); //LT
             pt[1] = QPointF(first_center.x()+ nMeasureHeight /2,first_center.y()- nMeasureLength /2); //RT
             pt[2] = QPointF(first_center.x()+ nMeasureHeight /2,first_center.y()+ nMeasureLength /2); //RB
@@ -268,7 +288,7 @@ void bee_calibercircle::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 
             const int num1 = 4;
-            QPointF point1[num1] = {circle_center, QPointF(circle_center.x()+r,circle_center.y()),QPointF(circle_center.x(),circle_center.y()+r),QPointF(circle_center.x()-r,circle_center.y())};
+            QPointF point1[num1] = {circle_center, QPointF(circle_center.x()+ nRadius,circle_center.y()),QPointF(circle_center.x(),circle_center.y()+ nRadius),QPointF(circle_center.x()- nRadius,circle_center.y())};
             CornerDirction dir1[num1] = { None ,Left,Bottom,Right};
             for(int i =0;i<num1;i++)
             {
@@ -284,6 +304,11 @@ void bee_calibercircle::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
                 m_HandlesList_refct.push_back(corner);
             }
             setcircleize();
+			dstImage.copyTo(srcImage);
+
+			circleInstanceGui.createCircleKaChi(srcImage, cv::Point2d(circle_center.x(), circle_center.y()), nRadius, nMeasureLength, nMeasureHeight, nSigma,
+				nThreshold, nTranslation, nMeasureNums, nSampleDirection);
+
             if_handleslist_create = true;
         }
         else
@@ -313,14 +338,14 @@ void bee_calibercircle::fitcircle()
     Point2d pdCenter(0, 0);
     double dRadius = 0;
     //执行匹配
-    circleInstanceGui.circleFitOpt(pdCenter, dRadius, 0);
+    circleInstanceGui.circleFitOpt(pdCenter, dRadius, 1);
     dstImage.copyTo(srcImage);
-    ///123
-    circleInstanceGui.edgePointSetsShow(srcImage, 10, GREED);
+    circleInstanceGui.edgePointSetsShow(srcImage, 10, Scalar(0, 255, 0));
 
-    //circle(srcImage, pdCenter, dRadius, GREED);
+    circle(srcImage, pdCenter, dRadius, Scalar(0, 255, 0));
+    Mat xx = srcImage;
    // drawMyCross(srcImage, pdCenter, 90, 5, GREED);
-   // imshow(WindowHandle, srcImage);
+    imshow("demo", srcImage);
     cout << "Circle info: " << pdCenter << ", Radius: " << dRadius << endl;
 
     vector<Point2d>vpdEdgePoints;
@@ -346,7 +371,35 @@ void  bee_calibercircle::slotSliderValueChanged_MeasureNums(int value) {
 
 void bee_calibercircle::slotSliderValueChanged_nSetThreshold(int value)
 {
-    int nThreshold = value;
+     nThreshold = value;
+	 dstImage.copyTo(srcImage);
+
+	circleInstanceGui.AdjustCaliper(srcImage, Point2d(-8, -8), nRadius, nMeasureLength, nMeasureHeight,
+		1, nThreshold, nTranslation, nMeasureNums, nSampleDirection);
+}
+
+void bee_calibercircle::slotSliderValueChanged_nSigma(int value)
+{
+    nSigma = value;
+	dstImage.copyTo(srcImage);
+
+	circleInstanceGui.AdjustCaliper(srcImage, Point2d(-7, -7), nRadius, nMeasureLength, nMeasureHeight,
+		nSigma, nThreshold, nTranslation, nMeasureNums, nSampleDirection);
+}
+
+void bee_calibercircle::slotSliderValueChanged_nSampleDirection(int value)
+{
+    nSampleDirection = value;
+	dstImage.copyTo(srcImage);
+
+	circleInstanceGui.AdjustCaliper(srcImage, Point2d(-6, -6), nRadius, nMeasureLength, nMeasureHeight,
+		1, nThreshold, nTranslation, nMeasureNums, nSampleDirection);
+}
+
+void bee_calibercircle::slotSliderValueChanged_nTranslation(int value)
+{
+    nTranslation = value;
+	dstImage.copyTo(srcImage);
 
 	circleInstanceGui.AdjustCaliper(srcImage, Point2d(-5, -5), nRadius, nMeasureLength, nMeasureHeight,
 		1, nThreshold, nTranslation, nMeasureNums, nSampleDirection);
@@ -354,6 +407,8 @@ void bee_calibercircle::slotSliderValueChanged_nSetThreshold(int value)
 
 void  bee_calibercircle::slotSliderValueChanged_MeasureLength(int value) {
 	//dstImage.copyTo(srcImage);
+	dstImage.copyTo(srcImage);
+
 	circleInstanceGui.AdjustCaliper(srcImage, Point2d(-2, -2), nRadius, nMeasureLength, nMeasureHeight,
 		1, nThreshold, nTranslation, nMeasureNums, nSampleDirection);
 }

@@ -253,6 +253,9 @@
     <ClCompile Include="edge.cpp">
       <Filter>Source Files\shapeMatch</Filter>
     </ClCompile>
+    <ClCompile Include="controlline.cpp">
+      <Filter>Source Files\shapeMatch</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="listwidget.h">
@@ -349,6 +352,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="mainwindow.h">
+      <Filter>Header Files\shapeMatch</Filter>
+    </QtMoc>
+    <QtMoc Include="bee_calibercircle.h">
+      <Filter>Header Files\shapeMatch</Filter>
+    </QtMoc>
+    <QtMoc Include="bee_caliberline.h">
       <Filter>Header Files\shapeMatch</Filter>
     </QtMoc>
   </ItemGroup>
@@ -462,12 +471,6 @@
     <ClInclude Include="SharedData.h">
       <Filter>Header Files\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="bee_calibercircle.h">
-      <Filter>Header Files\shapeMatch</Filter>
-    </ClInclude>
-    <ClInclude Include="bee_caliberline.h">
-      <Filter>Header Files\shapeMatch</Filter>
-    </ClInclude>
     <ClInclude Include="bee_circle.h">
       <Filter>Header Files\shapeMatch</Filter>
     </ClInclude>
@@ -493,6 +496,9 @@
       <Filter>Header Files\shapeMatch</Filter>
     </ClInclude>
     <ClInclude Include="edge.h">
+      <Filter>Header Files\shapeMatch</Filter>
+    </ClInclude>
+    <ClInclude Include="controlline.h">
       <Filter>Header Files\shapeMatch</Filter>
     </ClInclude>
   </ItemGroup>

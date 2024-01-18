@@ -12,6 +12,9 @@
 #include <QPolygon>
 #include <QList>
 #include "mycorneritem.h"
+#include <opencv2/opencv.hpp>
+#include "myCCaliperGUI.h"
+
 enum STATE_FLAG_ONELINE{
     DEFAULT_FLAG_OL=0,
 
@@ -22,12 +25,22 @@ enum STATE_FLAG_ONELINE{
 
 };
 
+
+
 class bee_caliberline:public QObject,public QGraphicsItem
 {
+    Q_OBJECT
 public:
     bee_caliberline(QGraphicsItem *parent = nullptr);
+    ~bee_caliberline()
+    {
+		if (m_plineCaliperGUI)
+		{
+			delete m_plineCaliperGUI;
+		}
+    }
     QRectF boundingRect() const;
-    QPainterPath shape() const;
+    QPainterPath shape() const; 
     void setlinsize();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -35,9 +48,34 @@ public:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     void setpixmapwidth(qreal width){pixmap_width = width;}
     void setpixmapheight(qreal height){pixmap_height = height;}
+	void setpixmapImage(cv::Mat cvimage) { dstImage = cvimage; }
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
+	qreal getwidth() { return width; }
+	qreal getheight() { return height; }
+	qreal getlength() { return length; }
+	QPointF getbeginpoint() {
+        return pt_begin;
+    }
+	QPointF getendpoint() { return pt_end; }
+
+	void currentIndex(int index) { currentIndexs = index; };
+    //设置卡尺数
+    void setnMeasureNums(int value) { nMeasureNums = value; };
+	//设置阈值
+	void setnthresholdValue(int value) { nthresholdValue = value; };
+	//设置投影方向
+	void setnSampleDirection(int value) { nSampleDirection = value; };
+public slots:
+    void slotSliderValueChanged_MeasureNums_line(int value);
+    void slotSliderValueChanged_SetThreshold_line(int value);
+    void slotSliderValueChanged_SetSampleDirection_line(int value);
+signals:
+	//卡尺个数
+	   //阈值
+	   //边缘极性
+    void sign_currentLine_Param(int nMeasureNums, int nthresholdValue,int nSampleDirection,int currentIndexs);
 private:
     qreal pixmap_width;
     qreal pixmap_height;
@@ -60,9 +98,24 @@ private:
     QPointF first_center_bottom; // pp[2] 与 pp[3]终点
     qreal width; //矩形宽度
     qreal height; //矩形高度
+	qreal length;
     qreal k; //直线斜率
-    int n;  //矩形个数
+    QPointF m_lastPos;
+    cv::Mat dstImage;
+    int currentIndexs;
+public:
+	//卡尺个数
+	int nMeasureNums = 5;  
+    //阈值
+    int nthresholdValue = 30;
+    //边缘方向
+    int nSampleDirection = 1;
 
+
+	CLineCaliperGUI* m_plineCaliperGUI;
+
+    //拟合直线
+   void fitline();
 };
 
 #endif // BEE_CALIBERLINE_H

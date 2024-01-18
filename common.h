@@ -13,6 +13,9 @@ using namespace std;
 #define Cyan    Scalar(255,255,0)
 #define Yellow  Scalar(0,255,255)  
 
+//提供外部调用接口，所有参数封装为结构体
+
+
 static void drawMyArrow(Mat& inputMat,
 	Point2d p1,
 	Point2d p2,

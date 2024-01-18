@@ -31,7 +31,6 @@ QPainterPath bee_circle::shape() const
         m_path.addEllipse(QRectF(center_circle.x()-r-3, center_circle.y()-r-3,2*r+6,2*r+6));
         return m_path;
     }
-
 }
 
 void bee_circle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

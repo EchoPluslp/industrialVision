@@ -14,7 +14,6 @@
 #include "mycorneritem.h"
 #include<QtMath>
 #include <opencv2/opencv.hpp>
-#include "common.h"
 #include "myCCaliperGUI.h"
 
 enum STATE_FLAG_ONECCIRCLE{
@@ -27,6 +26,8 @@ enum STATE_FLAG_ONECCIRCLE{
 
 class bee_calibercircle:public QObject,public QGraphicsItem
 {
+    Q_OBJECT
+
 public:
     bee_calibercircle(QGraphicsItem *parent = nullptr);
     QRectF boundingRect() const;
@@ -38,12 +39,13 @@ public:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     void setpixmapwidth(qreal width){pixmap_width = width;}
     void setpixmapheight(qreal height){pixmap_height = height;}
-	void setpixmapImage(cv::Mat cvimage) { srcImage = cvimage; }
+	void setpixmapImage(cv::Mat cvimage) { dstImage = cvimage; }
 
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
     void fitcircle();
+
     public slots:
       void  slotSliderValueChanged_MeasureLength(int value);
       void  slotSliderValueChanged_MeasureNums(int value);
@@ -51,6 +53,9 @@ public:
 	  void slotSliderValueChanged_nSigma(int value);
       void  slotSliderValueChanged_nSampleDirection(int value);
       void slotSliderValueChanged_nTranslation(int value);
+
+signals:
+   void signal_emitstatusValue(int x,int y,int x2,int y2);
 private:
     qreal pixmap_width;
     qreal pixmap_height;
@@ -69,12 +74,10 @@ private:
    // qreal width; //矩形宽度
     //qreal height; //矩形高度
 
-    // 圆环半径
-    qreal r;
 	//投影方向
 	int nSampleDirection = 0;
 	//卡尺数
-	int nMeasureNums = 10;
+	int nMeasureNums = 5;
 	//宽度
 	int nMeasureHeight = 10;
 	//高度

@@ -112,6 +112,7 @@
     <ClCompile Include="common.h" />
     <ClCompile Include="connectItemInfo.cpp" />
     <ClCompile Include="connectServer.cpp" />
+    <ClCompile Include="controlline.cpp" />
     <ClCompile Include="createModel.cpp" />
     <ClCompile Include="curve.cpp" />
     <ClCompile Include="drawfinisheddialog.cpp" />
@@ -183,13 +184,14 @@
     <ClInclude Include="algorithmLibrary.h" />
     <QtMoc Include="CameraThread.h" />
     <QtMoc Include="graphicsview.h" />
-    <ClInclude Include="bee_calibercircle.h" />
-    <ClInclude Include="bee_caliberline.h" />
+    <QtMoc Include="bee_calibercircle.h" />
+    <QtMoc Include="bee_caliberline.h" />
     <ClInclude Include="bee_circle.h" />
     <ClInclude Include="bee_concencircle.h" />
     <ClInclude Include="bee_polygon.h" />
     <ClInclude Include="bee_rect.h" />
     <ClInclude Include="bee_ringexpansion.h" />
+    <ClInclude Include="controlline.h" />
     <ClInclude Include="edge.h" />
     <ClInclude Include="globalvar.h" />
     <QtMoc Include="myglwidget.h" />

@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QtWidgets>
-
+#include "common.h"
 #include "myqgraphicsview.h"
 #include "bee_rect.h"
 #include "bee_circle.h"
@@ -16,6 +16,7 @@
 #include "bee_calibercircle.h"
 #include "bee_ringexpansion.h"
 #include <QMouseEvent>
+#include "controlline.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -77,9 +78,17 @@ public  slots:
 
     void sendImgToControllerShape(QImage image);
 
-    void updateLabelValue(int value);
-
     void fitcircle();
+
+    void fitline();
+
+    void slot_ShowLine_Param(int nMeasureNums, int nthresholdValue, int nSampleDirection,int currentindex_line);
+
+    void slot_index_nMeasureNums(int value);
+
+    void slot_index_nSetThreshold(int value);
+
+    void slot_index_SampleDirection(int value);
 protected:
    virtual void keyPressEvent(QKeyEvent *event);
 
@@ -91,13 +100,22 @@ private:
     bee_circle *my_circle;
     bee_polygon *my_polygon;
     bee_concencircle *my_concencircle;
-    bee_caliberline *my_caliberline;
+    //bee_caliberline *my_caliberline;
+    QList<bee_caliberline*> my_caliberline_List;
     bee_calibercircle *my_calibercircle;
     bee_ringexpansion *my_ringexpansion;
     QGraphicsScene *qgraphicsScene;
     STATE_FLAG_MAINWINDOW state_flag_maindow;
     QGraphicsPixmapItem *ImageItem;
 
+	CLineCaliperGUI* m_plineCaliperGUI;
+
+
+    QList<CControlLine*> CControlLine_List;
     QString fileName;
+    int nSigma = 1;
+    int currentIndexs_line = 0;
+	CControlLine* lineitem;
+
 };
 #endif // MAINWINDOW_H
