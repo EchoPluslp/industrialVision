@@ -33,6 +33,7 @@
 #include "passwordSet.h"
 #include "SharedData.h"
 #include "mainwindow.h"
+#include "ncc_modelmatch.h"
 using namespace cv;
 using namespace std;
 

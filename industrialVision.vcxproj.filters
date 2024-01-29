@@ -74,6 +74,12 @@
     <Filter Include="Form Files\modelMatch">
       <UniqueIdentifier>{6d8dee31-976e-4908-8ecb-4b2754f66527}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\modelMatch">
+      <UniqueIdentifier>{99ceb159-2534-4887-8045-760df0d03415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\modelMatch">
+      <UniqueIdentifier>{25f6fc74-1bfe-4bbc-9cff-b6d72e7fee34}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -259,6 +265,9 @@
     <ClCompile Include="controlline.cpp">
       <Filter>Source Files\shapeMatch</Filter>
     </ClCompile>
+    <ClCompile Include="ncc_modelmatch.cpp">
+      <Filter>Source Files\modelMatch</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="listwidget.h">
@@ -362,6 +371,9 @@
     </QtMoc>
     <QtMoc Include="bee_caliberline.h">
       <Filter>Header Files\shapeMatch</Filter>
+    </QtMoc>
+    <QtMoc Include="ncc_modelmatch.h">
+      <Filter>Header Files\modelMatch</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

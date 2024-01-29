@@ -281,25 +281,35 @@ void industrialVision::receive_ServerCreateInfo(QString flag)
 	AppendText("服务端已经开启或者开启失败", Red);
 }
 
+//void industrialVision::click_editVision()
+//{
+//    connect(&createModelItem, &createModel::getImageFromCamera, this, &industrialVision::getImageOneFrame,Qt::UniqueConnection);
+//
+//	connect(this, &industrialVision::cameraTovisualTemplate,&createModelItem, &createModel::sendImgToFileController, Qt::UniqueConnection);
+//
+//    connect(&createModelItem, &createModel::sendXMLPath , this, &industrialVision::getXMLPATH, Qt::UniqueConnection);
+//
+//	connect(createModelItem.fileController2D, &FileController::sendImageToPattern, m_processingThread, &ProcessingThread::slot_processMatchPicture, Qt::UniqueConnection);
+//	
+//	connect(createModelItem.fileController2D, &FileController::sendImageToPatternWithMask, m_processingThread, &ProcessingThread::slot_processMatchPictureWithMask, Qt::UniqueConnection);
+//
+//	connect(m_processingThread, &ProcessingThread::QPointSendtoFileControl,createModelItem.fileController2D, &FileController::slot_receiveDrawPoint, Qt::UniqueConnection);
+//
+//
+//    createModelItem.show();
+//    //更新xml文件
+//    AppendText("打开视觉模板界面",Green);
+//}
+
+//新的模板匹配~,将形状匹配和模板匹配融合起来
 void industrialVision::click_editVision()
 {
-    connect(&createModelItem, &createModel::getImageFromCamera, this, &industrialVision::getImageOneFrame,Qt::UniqueConnection);
-
-	connect(this, &industrialVision::cameraTovisualTemplate,&createModelItem, &createModel::sendImgToFileController, Qt::UniqueConnection);
-
-    connect(&createModelItem, &createModel::sendXMLPath , this, &industrialVision::getXMLPATH, Qt::UniqueConnection);
-
-	connect(createModelItem.fileController2D, &FileController::sendImageToPattern, m_processingThread, &ProcessingThread::slot_processMatchPicture, Qt::UniqueConnection);
-	
-	connect(createModelItem.fileController2D, &FileController::sendImageToPatternWithMask, m_processingThread, &ProcessingThread::slot_processMatchPictureWithMask, Qt::UniqueConnection);
-
-	connect(m_processingThread, &ProcessingThread::QPointSendtoFileControl,createModelItem.fileController2D, &FileController::slot_receiveDrawPoint, Qt::UniqueConnection);
-
 
     createModelItem.show();
     //更新xml文件
     AppendText("打开视觉模板界面",Green);
 }
+
 
 void industrialVision::getImageOneFrame(QString imageType) {
 	// 创建一个定时器
@@ -1029,7 +1039,7 @@ void industrialVision::setButtonClickLimits(bool flag)
 	//ui.pushButton->setEnabled(flag);
 	ui.pushButton_stopOperation->setEnabled(flag);
 }
-
+// 
 //通用方法 返回弹窗
 void industrialVision::ShowErrorMsg(QString csMessage, int nErrorNum)
 {

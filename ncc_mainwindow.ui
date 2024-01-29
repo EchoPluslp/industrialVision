@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>ncc_MainWindow</class>
+ <widget class="QMainWindow" name="ncc_MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1920</width>
-    <height>1080</height>
+    <width>1133</width>
+    <height>667</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -40,8 +40,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1920</width>
-     <height>22</height>
+     <width>1133</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -92,8 +92,8 @@
   </widget>
   <action name="action_choosepicture">
    <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/res/Icon/choosepicture.png</normaloff>:/res/Icon/choosepicture.png</iconset>
+    <iconset>
+     <normaloff>Icon/choosepicture.png</normaloff>Icon/choosepicture.png</iconset>
    </property>
    <property name="text">
     <string>加载图像</string>
@@ -104,8 +104,8 @@
   </action>
   <action name="action_rect">
    <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/res/Icon/rect.png</normaloff>:/res/Icon/rect.png</iconset>
+    <iconset>
+     <normaloff>Icon/rect.png</normaloff>Icon/rect.png</iconset>
    </property>
    <property name="text">
     <string>矩形</string>
@@ -116,8 +116,8 @@
   </action>
   <action name="action_rotaterect">
    <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/res/Icon/rotaterect.png</normaloff>:/res/Icon/rotaterect.png</iconset>
+    <iconset>
+     <normaloff>Icon/rotaterect.png</normaloff>Icon/rotaterect.png</iconset>
    </property>
    <property name="text">
     <string>旋转矩形</string>
@@ -128,8 +128,8 @@
   </action>
   <action name="action_polygon">
    <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/res/Icon/polygon.png</normaloff>:/res/Icon/polygon.png</iconset>
+    <iconset>
+     <normaloff>Icon/polygon.png</normaloff>Icon/polygon.png</iconset>
    </property>
    <property name="text">
     <string>多边形</string>
@@ -140,8 +140,8 @@
   </action>
   <action name="action_circle">
    <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/res/Icon/circle.png</normaloff>:/res/Icon/circle.png</iconset>
+    <iconset>
+     <normaloff>Icon/circle.png</normaloff>Icon/circle.png</iconset>
    </property>
    <property name="text">
     <string>圆</string>
@@ -152,8 +152,8 @@
   </action>
   <action name="action_concircle">
    <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/res/Icon/concircle.png</normaloff>:/res/Icon/concircle.png</iconset>
+    <iconset>
+     <normaloff>Icon/concircle.png</normaloff>Icon/concircle.png</iconset>
    </property>
    <property name="text">
     <string>同心圆</string>
@@ -164,8 +164,8 @@
   </action>
   <action name="action_ringexpansion">
    <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/res/Icon/ringexpension.png</normaloff>:/res/Icon/ringexpension.png</iconset>
+    <iconset>
+     <normaloff>Icon/ringexpension.png</normaloff>Icon/ringexpension.png</iconset>
    </property>
    <property name="text">
     <string>圆环展开</string>
@@ -176,8 +176,8 @@
   </action>
   <action name="action_caliberline">
    <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/res/Icon/caliber.png</normaloff>:/res/Icon/caliber.png</iconset>
+    <iconset>
+     <normaloff>Icon/caliber.png</normaloff>Icon/caliber.png</iconset>
    </property>
    <property name="text">
     <string>卡尺</string>
@@ -188,8 +188,8 @@
   </action>
   <action name="action_calibercircle">
    <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/res/Icon/caliber_circle.png</normaloff>:/res/Icon/caliber_circle.png</iconset>
+    <iconset>
+     <normaloff>Icon/caliber_circle.png</normaloff>Icon/caliber_circle.png</iconset>
    </property>
    <property name="text">
     <string>圆卡尺</string>
@@ -203,8 +203,8 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/res/Icon/zoomin.png</normaloff>:/res/Icon/zoomin.png</iconset>
+    <iconset>
+     <normaloff>Icon/zoomin.png</normaloff>Icon/zoomin.png</iconset>
    </property>
    <property name="text">
     <string>图像放大</string>
@@ -215,8 +215,8 @@
   </action>
   <action name="action_zoomout">
    <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/res/Icon/zoomout.png</normaloff>:/res/Icon/zoomout.png</iconset>
+    <iconset>
+     <normaloff>Icon/zoomout.png</normaloff>Icon/zoomout.png</iconset>
    </property>
    <property name="text">
     <string>图像缩小 </string>
@@ -227,8 +227,8 @@
   </action>
   <action name="action_fitwin">
    <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/res/Icon/fitwin.png</normaloff>:/res/Icon/fitwin.png</iconset>
+    <iconset>
+     <normaloff>Icon/1_to_1.png</normaloff>Icon/1_to_1.png</iconset>
    </property>
    <property name="text">
     <string>自适应窗口</string>
@@ -236,8 +236,8 @@
   </action>
   <action name="action_1_to_1">
    <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/res/Icon/1_to_1.png</normaloff>:/res/Icon/1_to_1.png</iconset>
+    <iconset>
+     <normaloff>Icon/fitwin.png</normaloff>Icon/fitwin.png</iconset>
    </property>
    <property name="text">
     <string>图像实际尺寸</string>
@@ -251,8 +251,6 @@
    <header>myqgraphicsview.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="resource.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

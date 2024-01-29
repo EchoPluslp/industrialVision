@@ -144,6 +144,7 @@
     <ClCompile Include="mygraphicsitems.cpp" />
     <ClCompile Include="mygraphicsview.cpp" />
     <ClCompile Include="myqgraphicsview.cpp" />
+    <ClCompile Include="ncc_modelmatch.cpp" />
     <ClCompile Include="paintscene.cpp" />
     <ClCompile Include="paramsitem.cpp" />
     <ClCompile Include="passwordSet.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="myCCaliperGUI.h" />
     <ClInclude Include="mycorneritem.h" />
     <ClInclude Include="myqgraphicsview.h" />
+    <QtMoc Include="ncc_modelmatch.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="rect.h" />
     <QtMoc Include="Server.h" />
