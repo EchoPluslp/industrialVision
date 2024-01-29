@@ -226,6 +226,9 @@
                <pointsize>14</pointsize>
               </font>
              </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
              <property name="maximum">
               <number>255</number>
              </property>
@@ -297,7 +300,7 @@
          <item>
           <widget class="QPushButton" name="pushButton_fitcircle">
            <property name="text">
-            <string>拟合</string>
+            <string>圆拟合</string>
            </property>
           </widget>
          </item>
@@ -309,7 +312,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="pushButton_save_currentInfo">
            <property name="text">
             <string>保存</string>
            </property>
@@ -406,6 +409,7 @@
    <addaction name="action_calibercircle"/>
    <addaction name="separator"/>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <action name="action_choosepicture">
    <property name="icon">
     <iconset>
@@ -576,8 +580,8 @@
    <slot>fitcircle()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>118</x>
-     <y>945</y>
+     <x>94</x>
+     <y>1017</y>
     </hint>
     <hint type="destinationlabel">
      <x>143</x>
@@ -592,8 +596,8 @@
    <slot>fitline()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>189</x>
-     <y>937</y>
+     <x>175</x>
+     <y>1017</y>
     </hint>
     <hint type="destinationlabel">
      <x>292</x>
@@ -601,9 +605,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_save_currentInfo</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveInfo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>233</x>
+     <y>997</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>270</x>
+     <y>856</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>fitcircle()</slot>
   <slot>fitline()</slot>
+  <slot>saveInfo()</slot>
  </slots>
 </ui>

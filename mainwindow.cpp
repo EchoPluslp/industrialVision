@@ -28,9 +28,71 @@ MainWindow::MainWindow(QWidget *parent)
       ui->toolBar->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 }
 
+
 void MainWindow::InitializeMeasureTrackbar()
 {    
 
+}
+
+void MainWindow::findIntersection(cv::Point p_1, cv::Point p_2, cv::Point p_3, cv::Point p_4, cv::Point2f& intersection)
+{
+	// 确保两条直线不平行
+	//if (line1.m == line2.m) {
+	//	qDebug() << "平行无交点.";
+	//	return;
+	//}
+
+	// line1's cpmponent
+	double X1 = p_2.x - p_1.x;//b1
+	double Y1 = p_2.y - p_1.y;//a1
+	// line2's cpmponent
+	double X2 = p_4.x - p_3.x;//b2
+	double Y2 = p_4.y - p_3.y;//a2
+	// distance of 1,2
+	double X21 = p_3.x - p_1.x;
+	double Y21 = p_3.y - p_1.y;
+	// determinant
+	double D = Y1 * X2 - Y2 * X1;// a1b2-a2b1
+	// 
+	if (D == 0) return ;
+	// cross point
+	intersection.x = (X1 * X2 * Y21 + Y1 * X2 * p_1.x - Y2 * X1 * p_3.x) / D;
+	// on screen y is down increased ! 
+	intersection.y = -(Y1 * Y2 * X21 + X1 * Y2 * p_1.y - X2 * Y1 * p_3.y) / D;
+	// segments intersect.
+	if ((abs(intersection.x - p_1.x - X1 / 2) <= abs(X1 / 2)) &&
+		(abs(intersection.y - p_1.y - Y1 / 2) <= abs(Y1 / 2)) &&
+		(abs(intersection.x - p_3.x - X2 / 2) <= abs(X2 / 2)) &&
+		(abs(intersection.y - p_3.y - Y2 / 2) <= abs(Y2 / 2)))
+	{
+		int x = 10;
+	}
+	return ;
+}
+
+double MainWindow::findangle(cv::Point p_1, cv::Point p_2, cv::Point p_3, cv::Point p_4)
+{
+
+	// 计算两条线的向量
+	cv::Point vec1 = p_1 - p_2;
+	cv::Point vec2 = p_3 - p_4;
+
+	// 计算向量的模
+	double magnitude1 = cv::norm(vec1);
+	double magnitude2 = cv::norm(vec2);
+
+	// 计算向量的点积
+	double dotProduct = vec1.x * vec2.x + vec1.y * vec2.y;
+
+	// 计算余弦值
+	double cosTheta = dotProduct / (magnitude1 * magnitude2);
+
+	// 使用反余弦函数计算夹角（弧度）
+	double angleRad = std::acos(std::max(-1.0, std::min(1.0, cosTheta)));
+
+	// 将弧度转换为度数
+	double angleDeg = angleRad * 180 / CV_PI;
+	return angleDeg;
 }
 
 MainWindow::~MainWindow()
@@ -41,13 +103,21 @@ MainWindow::~MainWindow()
 
 void MainWindow::fitcircle()
 {
-	for (int i = CControlLine_List.size() - 1;i >= 0 ;i--)
+	/*for (int i = CControlLine_List.size() - 1;i >= 0 ;i--)
 	{
 		
 		qgraphicsScene->removeItem(CControlLine_List.at(i));
 		qgraphicsScene->update();
-	}
-    //my_calibercircle->fitcircle();
+	}*/
+	//把点返回
+	Point2d pdCenter(0, 0);
+	double dRadius = 0;
+
+	my_calibercircle->fitcircle(pdCenter, dRadius);
+	lineitem = new CControlLine();
+	lineitem->addcircles(pdCenter, dRadius);
+	qgraphicsScene->addItem(lineitem);
+	qgraphicsScene->update();
 }
 
 cv::Rect get_IOU(cv::Rect rect1, cv::Rect rect2)
@@ -194,7 +264,6 @@ void MainWindow::fitline()
 
 	if (srcImage.empty())
 	{
-		qDebug() << "Fail to load the image";
 		return;
 	}
 	QRectF bounding = my_caliberline->mapToItem(ImageItem, my_caliberline->boundingRect()).boundingRect();
@@ -208,22 +277,44 @@ void MainWindow::fitline()
 	Mat src = srcImage(roi).clone();
 	cv::Point pt_begin_cv2 = pt_begin_cv - roi.tl();
 	cv::Point pt_end_cv2 = pt_end_cv - roi.tl();
-	// todo 针对每个line[ 处理]
+
+	int getheight =  my_caliberline->getheight()* scale;
+	int width =  my_caliberline->getwidth()* scale;
+
 	m_plineCaliperGUI->createLineKaChi(src, pt_begin_cv2, pt_end_cv2,
 		my_caliberline->getheight() * scale,
 		my_caliberline->getwidth() * scale,
 		nSigma, my_caliberline->nthresholdValue,
 		my_caliberline->nSampleDirection,
 		my_caliberline->nMeasureNums);
+	//匹配时设置当前的保存信息参数
+	{
+		my_caliberline->setSaveStartPoint(pt_begin_cv2);
+		my_caliberline->setEndStartPoint(pt_end_cv2);
+		my_caliberline->setRoi(roi);
+	}
 
 	Point2d pdLineStart(0, 0), pdLineEnd(0, 0);
 	double dAngle = 0;
 	m_plineCaliperGUI->lineEdgePointSetsFit(pdLineStart, pdLineEnd, dAngle);
 
+	cv::Point startPoint(pdLineStart.x + roi.tl().x,
+		pdLineStart.y + roi.tl().y);
+	cv::Point endPoint(pdLineEnd.x + roi.tl().x,
+		pdLineEnd.y + roi.tl().y);
+	cv::Mat tempCoun = srcImage.clone();
+	cv::circle(tempCoun, startPoint, 9, Scalar(0, 255, 0) , cv::FILLED);
+	cv::circle(tempCoun, endPoint, 9, Scalar(0, 255, 0), cv::FILLED);
+
+
+	//匹配失败：
+	// start和end = -1  或者他们相等
+	
 	//完成匹配,画出点
 	lineitem = new CControlLine();
 	//将item加入list中,方便删除
 	CControlLine_List.append(lineitem);
+	//转换到像素坐标
 
 	QPointF linestart = lineitem->mapFromItem(ImageItem,
 		QPointF(pdLineStart.x + roi.tl().x,
@@ -232,12 +323,23 @@ void MainWindow::fitline()
 		QPointF(pdLineEnd.x + roi.tl().x,
 			pdLineEnd.y + roi.tl().y));
 	qDebug() << linestart << lineend;
+	qDebug() << pt_begin << pt_end;
+
 	QPointF pt_begin_line = lineitem->mapFromItem(ImageItem, pt_begin);
 	QPointF pt_end_line = lineitem->mapFromItem(ImageItem, pt_end);
+	//匹配时设置当前的保存信息参数
+	{
+		my_caliberline->setLineStartPoint(Point(pt_begin_line.x(), pt_begin_line.y()));
+		my_caliberline->setLineEndPoint(Point(pt_end_line.x(), pt_end_line.y()));
+	}
 
-	QList<QPointF> result = get_intersection(linestart, lineend, pt_begin_line, pt_end_line);
+	vector<cv::Point2f> result = m_plineCaliperGUI->get_intersection(cv::Point2f(linestart.x(), linestart.y()), cv::Point2f(lineend.x(), lineend.y()), cv::Point2f(pt_begin_line.x(), pt_begin_line.y()), cv::Point2f(pt_end_line.x(), pt_end_line.y()));
 
-	lineitem->setline(result[0], result[1]);
+	lineitem->setline(QPointF(result[0].x, result[0].y), QPointF(result[1].x, result[1].y));
+
+	resultLinePoint.append(cv::Point(result[0].x, result[0].y));
+
+	resultLinePoint.append(cv::Point(result[1].x, result[1].y));
 
 	vector<Point2d> edgepoints = m_plineCaliperGUI->getEdgePoints();
 	vector<Point2d> edgeexpectpoints = m_plineCaliperGUI->getExcepetEdgePoints();  //边缘点的信息
@@ -253,8 +355,9 @@ void MainWindow::fitline()
 		QPointF pt = lineitem->mapFromItem(ImageItem,
 			QPointF(edgeexpectpoints[j].x + roi.tl().x,
 				edgeexpectpoints[j].y + roi.tl().y));
-		lineitem->addedgeexpectpoints(pt);
+		//lineitem->addedgeexpectpoints(pt);
 	}
+
 	qgraphicsScene->addItem(lineitem);
 	qgraphicsScene->update();
 
@@ -266,9 +369,36 @@ void MainWindow::fitline()
 		arg(ImageItem->pixmap().height()).
 		arg(center.x()).arg(center.y()).
 		arg(angle);
-
 	}
+	//两条线,计算夹角
+	if (resultLinePoint.size() == 4)
+	{
+//	//计算夹角。        
+		double angleDeg = m_plineCaliperGUI->findangle(resultLinePoint.at(0), resultLinePoint.at(1), resultLinePoint.at(2),
+			resultLinePoint.at(3));
+	//--------------------------计算交点
+	Line Line_1 = m_plineCaliperGUI->calculateLine(resultLinePoint.at(0), resultLinePoint.at(1));
+	Line Line_2 = m_plineCaliperGUI->calculateLine(resultLinePoint.at(2), resultLinePoint.at(3));
+
+	cv::Point2f Intersection(-1, -1);
+	m_plineCaliperGUI->findIntersection(resultLinePoint.at(0), resultLinePoint.at(1), resultLinePoint.at(2), resultLinePoint.at(3), Intersection);
+	//输出结果
+	QString str = tr(" =(%1,%2),直线交点=(%3,%4),角度=%5").
+		arg(ImageItem->pixmap().width()).
+		arg(ImageItem->pixmap().height()).
+		arg(Intersection.x).arg(Intersection.y).
+		arg(angleDeg);
+
+	lineitem->addedgeexpectpoints(QPointF(Intersection.x, Intersection.y));
+
+
+	ui->statusBar->showMessage(str);
+	}
+	//可使用
+	resultLinePoint.clear();
+	
 }
+
 
 void MainWindow::slot_ShowLine_Param(int nMeasureNums, int nthresholdValue, int nSampleDirection,int currentIndexs)
 {
@@ -293,6 +423,88 @@ void MainWindow::slot_index_SampleDirection(int value)
 {
 	my_caliberline_List.at(currentIndexs_line)->setnSampleDirection(value);
 
+}
+
+//保存按钮
+void MainWindow::saveInfo()
+{
+	if (my_calibercircle_List.size()!=0 && my_caliberline_List.size()!=0)
+	{
+		//QMessageBox::critical(this, "错误信息", "线和圆不能兼并");
+		return;
+	}
+
+	//另存为
+	QString path = QFileDialog::getSaveFileName(nullptr,
+		tr("Open File"),
+		"",
+		tr("ini Files(*.ini)"));
+
+
+	QSettings* settings = new QSettings(path, QSettings::IniFormat);
+
+	
+	for (int i = 0; i < my_caliberline_List.size(); i++)
+	{
+	bee_caliberline* my_Item = my_caliberline_List.at(i);
+
+	//保存线的信息
+	QString group("shapeMatch_line_");
+	group.append(QString::number(i + 1));
+
+	settings->beginGroup(group);
+	settings->setValue("pt_begin_cv2.x", QString::number(my_Item->pt_begin_cv2.x));
+	settings->setValue("pt_begin_cv2.y", QString::number(my_Item->pt_begin_cv2.y));
+	settings->setValue("pt_end_cv2.x", QString::number(my_Item->pt_end_cv2.x));
+	settings->setValue("pt_end_cv2.y", QString::number(my_Item->pt_end_cv2.y));
+	settings->setValue("height", QString::number(my_Item->getheight()));
+	settings->setValue("width", QString::number(my_Item->getwidth()));
+	settings->setValue("nthresholdValue", QString::number(my_Item->nthresholdValue));
+	settings->setValue("nSampleDirection", QString::number(my_Item->nSampleDirection));
+	settings->setValue("nMeasureNums", QString::number(my_Item->nMeasureNums));
+	settings->setValue("roi.x", QString::number(my_Item->roi.x));
+	settings->setValue("roi.y", QString::number(my_Item->roi.y));
+	settings->setValue("roi.width", QString::number(my_Item->roi.width));
+	settings->setValue("roi.height", QString::number(my_Item->roi.height));
+	settings->setValue("pt_begin_line.x", QString::number(my_Item->pt_begin_line.x));
+	settings->setValue("pt_begin_line.y", QString::number(my_Item->pt_begin_line.y));
+	settings->setValue("pt_end_line.x", QString::number(my_Item->pt_end_line.x));
+	settings->setValue("pt_end_line.y", QString::number(my_Item->pt_end_line.y));
+	settings->endGroup();
+	//delete my_Item;
+	}
+	//保存圆的信息
+	for (int i = 0; i < my_calibercircle_List.size(); i++) {
+		bee_calibercircle* my_Item = my_calibercircle_List.at(i);
+		QString group("shapeMatch_circle_");
+		group.append(QString::number(i));
+		settings->beginGroup(group);
+		settings->setValue("pdCenter.x", QString::number(my_Item->circle_center.x()));
+		settings->setValue("pdCenter.y", QString::number(my_Item->circle_center.y()));
+		settings->setValue("nRadius", QString::number(my_Item->nRadius));
+		settings->setValue("dMeasureLength", QString::number(my_Item->nMeasureLength));
+		settings->setValue("dMeasureHeight", QString::number(my_Item->nMeasureHeight));
+		settings->setValue("dSigma", QString::number(my_Item->nSigma));
+		settings->setValue("nThreshold", QString::number(my_Item->nThreshold));
+		settings->setValue("nTranslation", QString::number(my_Item->nTranslation));
+		settings->setValue("nMesureNums", QString::number(my_Item->nMeasureNums));
+		settings->setValue("nSampleDirection", QString::number(my_Item->nSampleDirection));
+		settings->setValue("nCircleSize", QString::number(my_Item->pixmap_width/150));
+		settings->setValue("roi.x", QString::number(my_Item->boundingRect().x()));
+		settings->setValue("roi.y", QString::number(my_Item->boundingRect().y()));
+		settings->setValue("roi.width", QString::number(my_Item->boundingRect().width()));
+		settings->setValue("roi.height", QString::number(my_Item->boundingRect().height()));
+
+		settings->endGroup();
+	}
+	delete settings;
+}
+
+
+
+void MainWindow::fitline_with_signal(QPixmap image)
+{
+	
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
@@ -411,7 +623,7 @@ void MainWindow::on_action_rotaterect_triggered()
 }
 
 void MainWindow::on_action_polygon_triggered()
-{
+{      
 
         state_flag_maindow = CHOOSE_POLYGON;
         my_polygon = new bee_polygon();
@@ -437,14 +649,12 @@ void MainWindow::on_action_circle_triggered()
 
 void MainWindow::on_action_concircle_triggered()
 {
-
         state_flag_maindow = CHOOSE_CONCENCIRCLE;
         my_concencircle = new bee_concencircle();
         my_concencircle->setpixmapwidth(ImageItem->pixmap().width()*ImageItem->scale());
         my_concencircle->setpixmapheight(ImageItem->pixmap().height()*ImageItem->scale());
         this->qgraphicsScene->addItem(my_concencircle);
         ui->graphicsView->setScene(this->qgraphicsScene);
-
 }
 
 void MainWindow::on_action_ringexpansion_triggered()
@@ -456,23 +666,24 @@ void MainWindow::on_action_ringexpansion_triggered()
         my_ringexpansion->setpixmapheight(ImageItem->pixmap().height()*ImageItem->scale());
         this->qgraphicsScene->addItem(my_ringexpansion);
         ui->graphicsView->setScene(this->qgraphicsScene);
-
 }
 
 void MainWindow::on_action_caliberline_triggered()
 {
-
         state_flag_maindow = CALIBERLINE;
 		bee_caliberline* my_caliberline = new bee_caliberline();
         my_caliberline->setpixmapwidth(ImageItem->pixmap().width()*ImageItem->scale());
         my_caliberline->setpixmapheight(ImageItem->pixmap().height()*ImageItem->scale());
+
         this->qgraphicsScene->addItem(my_caliberline);
         ui->graphicsView->setScene(this->qgraphicsScene);
+
         Mat frame = QImageToCvMat(ImageItem->pixmap().toImage(), true);
 		cvtColor(frame, frame, COLOR_BGR2GRAY);
         my_caliberline->setpixmapImage(frame);
 
 		my_caliberline_List.append(my_caliberline);
+
 		my_caliberline->currentIndex(my_caliberline_List.size()-1);
 		connect(my_caliberline, &bee_caliberline::sign_currentLine_Param, this, &MainWindow::slot_ShowLine_Param);
 
@@ -482,7 +693,6 @@ void MainWindow::on_action_caliberline_triggered()
 		connect(ui->spinBox_nSetThreshold_line, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainWindow::slot_index_nSetThreshold);
 		//边缘方向
 		connect(ui->comboBox_edge_polarity, QOverload<int>::of(&QComboBox::currentIndexChanged) , this, &MainWindow::slot_index_SampleDirection);
-
 }
 
 void MainWindow::on_action_calibercircle_triggered()
@@ -491,30 +701,30 @@ void MainWindow::on_action_calibercircle_triggered()
         my_calibercircle = new bee_calibercircle();
         my_calibercircle->setpixmapwidth(ImageItem->pixmap().width()*ImageItem->scale());
         my_calibercircle->setpixmapheight(ImageItem->pixmap().height()*ImageItem->scale());
+
 		Mat frame = QImageToCvMat(ImageItem->pixmap().toImage(), true);
 		cvtColor(frame, frame, COLOR_BGR2GRAY); 
         my_calibercircle->setpixmapImage(frame);
+
         this->qgraphicsScene->addItem(my_calibercircle);
         ui->graphicsView->setScene(this->qgraphicsScene);
+
+		//目前就只支持一个圆的信息保存
+		my_calibercircle_List.append(my_calibercircle);
 
         //卡尺数
 		connect(ui->spinbox_nMeasureNums, QOverload<int>::of(&QSpinBox::valueChanged), my_calibercircle, &bee_calibercircle::slotSliderValueChanged_MeasureNums);
 
         //边缘方向
-  //      connect(ui->horizontalSlider_nSampleDirection, &QSlider::valueChanged, my_calibercircle, &bee_calibercircle::slotSliderValueChanged_nSampleDirection);
 		connect(ui->spinBox_nSampleDirection, QOverload<int>::of(&QSpinBox::valueChanged), my_calibercircle, &bee_calibercircle::slotSliderValueChanged_nSampleDirection);
 
           //sigma
-//      connect(ui->horizontalSlider_nSigma, &QSlider::valueChanged, my_calibercircle, &bee_calibercircle::slotSliderValueChanged_nSigma);
 		connect(ui->spinBox_nsigma, QOverload<int>::of(&QSpinBox::valueChanged), my_calibercircle, &bee_calibercircle::slotSliderValueChanged_nSigma);
 
-        //阈值
-//      connect(ui->horizontalSlider_nTranslation, &QSlider::valueChanged, my_calibercircle, &bee_calibercircle::slotSliderValueChanged_nSetThreshold);
+        //阈值                  
 		connect(ui->spinBox_nThreshold, QOverload<int>::of(&QSpinBox::valueChanged), my_calibercircle, &bee_calibercircle::slotSliderValueChanged_nSetThreshold);
-
-// 
-     //极性 
-  //      connect(ui->horizontalSlider_nSetThreshold, &QSlider::valueChanged, my_calibercircle, &bee_calibercircle::slotSliderValueChanged_nTranslation);
+ 
+		//极性 
         connect(ui->comboBox_nTranslation, QOverload<int>::of(&QComboBox::currentIndexChanged), my_calibercircle, &bee_calibercircle::slotSliderValueChanged_nTranslation);
 }
 

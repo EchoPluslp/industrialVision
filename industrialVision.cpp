@@ -51,14 +51,18 @@ industrialVision::industrialVision(QWidget *parent)
 	connect(this, &industrialVision::send_Grade, m_processingThread, &ProcessingThread::set_Grade, Qt::QueuedConnection);
 
 	connect(this, &industrialVision::openSourceArea, m_processingThread, &ProcessingThread::slot_setSourceArea, Qt::QueuedConnection);
-
 	
+	connect(this, &industrialVision::sendInfo_shapeMatch_Value, m_processingThread, &ProcessingThread::get_Info_From_industrial, Qt::QueuedConnection);
+
+	connect(this, &industrialVision::sendInfo_shapeMatch_CIRCLE, m_processingThread, &ProcessingThread::get_Info_From_industrial_circle, Qt::QueuedConnection);
+
 	connect(&TransmitSignals::GetInstance(), &TransmitSignals::create_once_pattern, m_processingThread, &ProcessingThread::slot_processThread_Pattren);
 	
 	connect(&TransmitSignals::GetInstance(), &TransmitSignals::sendToIndustrString, this, &industrialVision::addTextBrower);
 
 	connect(this, &industrialVision::sendResultToServer, &TransmitSignals::GetInstance(), &TransmitSignals::send_pattern_result);
     
+
 	/////////////////////
 	//auto action_shizixian = new QAction();
 	//action_shizixian->setText("十字线");
@@ -407,8 +411,7 @@ void industrialVision::addTextBrower(QString text,QString flag)
 		ui.textBrowser_record->setTextColor(Qt::green);
     }
     else if(flag == Red) {
-		ui.textBrowser_record->setTextColor(Qt::red);
-
+		ui.textBrowser_record->setTextColor(Qt::red);	                                             
 	}
 	else {
 		ui.textBrowser_record->setTextColor(Qt::gray);
@@ -450,6 +453,7 @@ void industrialVision::addTextBrower(QString text,QString flag)
 	file.write(text.toUtf8()+"\r\n");
 	file.close();
 }
+
 void industrialVision::getXMLPATH(QString xmlPath)
 {
     AppendText("读取xml路径:"+ xmlPath,Green);
@@ -629,28 +633,39 @@ void industrialVision::openshizixian()
 void industrialVision::setModelXMLFile()
 {
         QString path = QFileDialog::getOpenFileName(nullptr, tr("Open File"), ".",
-            tr("XML Files(*.xml)"));
+           nullptr);
     if (!path.isEmpty()) {
-       /* QFile file(path);
-        if (!file.open(QFile::ReadOnly))
-            return;*/
-		m_xmlpath = path;
-		if (getPatternInfoFromXML(m_xmlpath)) {
-			AppendText("加载xml模板成功" + m_xmlpath, Green);
+		QFileInfo fileInfo(path);
+
+		if (fileInfo.suffix().toLower() == "xml") {
+			// 文件后缀名包含"xml"
+			m_xmlpath = path;
+			if (getPatternInfoFromXML(m_xmlpath)) {
+				AppendText("加载xml模板成功" + m_xmlpath, Green);
+			}
+			else {
+				if (!m_processingThread->getmodelAndRealSclar()) {
+					AppendText("XML模板图与当前相机展示的图片比例不一致,无法匹配" + m_xmlpath, Gray);
+					return;
+				}
+				AppendText("加载xml模板失败" + m_xmlpath, Red);
+
+			}
+		}
+		else if (fileInfo.suffix().toLower() == "ini"){
+			// 文件后缀名包含ini并发送数据
+			read_info_from_ini(path);
 		}
 		else {
-			if(!m_processingThread->getmodelAndRealSclar()){
-			AppendText("XML模板图与当前相机展示的图片比例不一致,无法匹配" + m_xmlpath, Gray);
-			return;
-			}
-			AppendText("加载xml模板失败" + m_xmlpath, Red);
-
+			QMessageBox::warning(nullptr, tr("Path"),
+				tr("模板错误."));
 		}
     }
     else {
         QMessageBox::warning(nullptr, tr("Path"),
             tr("未选择xml模板."));
     }
+	//导入txt文件
 }
 
 void industrialVision::rotatePicture()
@@ -1437,7 +1452,7 @@ void industrialVision::click_shapeMatch()
 	connect(this, &industrialVision::cameraTovisualTemplateShape, &shapeMainWindow, &MainWindow::sendImgToControllerShape, Qt::UniqueConnection);
 	
 	connect(&shapeMainWindow, &MainWindow::getImageFromCamera, this, &industrialVision::getImageOneFrame, Qt::UniqueConnection);
-
+	
 	shapeMainWindow.show();
 	AppendText("打开形状模板界面", Green);
 
@@ -1537,6 +1552,84 @@ void industrialVision::reinitialize() {
 	setWindowTitle("V-Gp System V1.0");
 	//重新加载设置界
 	//重新设置标题
+}
+
+void industrialVision::read_info_from_ini(QString path)
+{
+	//从path中读取ini信息
+	//读取上次关闭时的状态
+	QString settingPath = path;
+	QSettings settings(settingPath, QSettings::IniFormat);
+	// 获取所有分组
+	QStringList groups = settings.childGroups();
+	// 输出所有分组的名称
+	// 遍历分组
+	foreach(const QString & groupName, groups) {
+		// 进入特定分组
+		settings.beginGroup(groupName);
+		//判断是圆或者直线
+		if (groupName.contains("line"))
+		{
+		// 获取分组内的数据
+		double pt_begin_cv2X = settings.value("pt_begin_cv2.x",0).toDouble();
+		double pt_begin_cv2Y = settings.value("pt_begin_cv2.y",0).toDouble();
+
+		double pt_end_cv2X = settings.value("pt_end_cv2.x", 0).toDouble();
+		double pt_end_cv2Y = settings.value("pt_end_cv2.y", 0).toDouble();
+
+		double height = settings.value("height", 0).toDouble();
+		double width = settings.value("width", 0).toDouble();
+
+		int nthresholdValue = settings.value("nthresholdValue", 0).toInt();
+		int nSampleDirection = settings.value("nSampleDirection", 0).toInt();
+		int nMeasureNums = settings.value("nMeasureNums", 0).toInt();
+
+		double roiX = settings.value("roi.x", 0).toDouble();
+		double roiY = settings.value("roi.y", 0).toDouble();
+		double roiWidth = settings.value("roi.width", 0).toDouble();
+		double roiHeight = settings.value("roi.height", 0).toDouble();
+
+		double pt_start_lineX   = settings.value("pt_begin_line.x", 0).toDouble();
+		double pt_start_lineY = settings.value("pt_begin_line.y", 0).toDouble();
+
+		double pt_end_lineX = settings.value("pt_end_line.x", 0).toDouble();
+		double pt_end_lineY = settings.value("pt_end_line.y", 0).toDouble();
+
+		emit sendInfo_shapeMatch_Value(QPointF(pt_begin_cv2X, pt_begin_cv2Y), QPointF(pt_end_cv2X, pt_end_cv2Y), height, width,
+			nthresholdValue, nSampleDirection, nMeasureNums, QRect(roiX, roiY, roiWidth, roiHeight),QPointF(pt_start_lineX, pt_start_lineY),
+			QPointF(pt_end_lineX, pt_end_lineY));
+		// 退出分组
+	}else if (groupName.contains("circle"))
+	{
+		double pdCenterX = settings.value("pdCenter.x", 0).toDouble();
+		double pdCenterY = settings.value("pdCenter.y", 0).toDouble();
+		double nRadius = settings.value("nRadius", 0).toDouble();
+
+		
+		double dMeasureLength = settings.value("dMeasureLength", 0).toDouble();
+		double dMeasureHeight = settings.value("dMeasureHeight", 0).toDouble();
+
+		int dSigma = settings.value("dSigma", 0).toInt();
+		int nThreshold = settings.value("nThreshold", 0).toInt();
+		int nTranslation = settings.value("nTranslation", 0).toInt();
+		int nMesureNums = settings.value("nMesureNums", 0).toInt();
+		int nCircleSize = settings.value("nCircleSize", 0).toInt();
+		int nSampleDirection = settings.value("nSampleDirection", 0).toInt();
+
+		double roiX = settings.value("roi.x", 0).toDouble();
+		double roiY = settings.value("roi.y", 0).toDouble();
+		double roiWidth = settings.value("roi.width", 0).toDouble();
+		double roiHeight = settings.value("roi.height", 0).toDouble();
+
+
+		emit sendInfo_shapeMatch_CIRCLE(QPointF(pdCenterX, pdCenterY), nRadius, dMeasureLength, dMeasureHeight,
+			dSigma, nThreshold, nTranslation, nMesureNums, nCircleSize, nSampleDirection, QRectF(roiX, roiY, roiWidth, roiHeight));
+		}
+	settings.endGroup();
+
+	}
+	//设置为ini模式
+	m_processingThread->setShape_match(true);
 }
 
 void industrialVision::resetParameters()

@@ -237,7 +237,6 @@ vector<CEdgePointRes> CEdgePoint::getEdgePoint(Mat inputMat,
 }
 
 //œﬂ∆•≈‰±ﬂ‘µ
-
 CLineEdgePoint::CLineEdgePoint()
 {
 	m_pdCenter = Point2d(0, 0);

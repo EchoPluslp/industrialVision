@@ -13,6 +13,8 @@ ProcessingThread::ProcessingThread(QObject* parent)
 	: QThread{ parent }
 {
 	this->initThread();
+	m_plineCaliperGUI = new CLineCaliperGUI();
+	circleInstanceGui = new CCaliperCircleGUI();
 }
 
 ProcessingThread::~ProcessingThread()
@@ -55,8 +57,190 @@ void ProcessingThread::run()
 				Mat tempMap = m_imageVector_1.at(0);
 				QPixmap newPixmap_1 = cvMatToPixmap(tempMap);
 
-				//执行匹配
-				if (pattern_Flag && modelAndRealSclar)
+				//执行形状匹配
+				if (pattern_Flag && shape_match)
+				{
+					QTime timedebuge;//声明一个时钟对象
+					timedebuge.start();//开始计时
+
+					//代表一条线
+					if (shapeMatch_Patten.size()==1)
+					{
+						PatternInfo item = shapeMatch_Patten.at(0);
+
+					//将当前Qpixmap 发送给匹配代码
+					Mat src = tempMap(item.roi).clone();
+
+					m_plineCaliperGUI->createLineKaChi(src, item.pt_begin_cv2,item.pt_end_cv2,item.height,
+						item.width,1,item.nthresholdValuel,item.nSampleDirection,item.nMeasureNums);
+
+					Point2d pdLineStart(0, 0), pdLineEnd(0, 0);
+					double dAngle = 0;
+					m_plineCaliperGUI->lineEdgePointSetsFit(pdLineStart, pdLineEnd, dAngle);
+					pdLineStart.x = item.roi.tl().x + pdLineStart.x;
+					pdLineStart.y = item.roi.tl().y + pdLineStart.y;
+					pdLineEnd.x = item.roi.tl().x + pdLineEnd.x;
+					pdLineEnd.y = item.roi.tl().y + pdLineEnd.y;
+
+					//计算交叉点
+					vector<cv::Point2f> result = m_plineCaliperGUI->get_intersection(pdLineStart, pdLineEnd, item.pt_start_line, item.pt_end_line);
+			              
+					//获取中心点
+					cv::Point center_Point = (result[0] + result[1]) / 2;
+					//设置中心点
+					lastResult.setX(center_Point.x- (m_width / 2));  //向右为x正方向
+					lastResult.setY((m_height / 2) - center_Point.y);//向上为y正方向
+
+					finall_Total_Result.ptCenter = cv::Point2d(lastResult.x(), lastResult.y());
+					finall_Total_Result.dMatchedAngle = dAngle;
+					finall_Total_Result.pattern_flag = true;
+					finall_Total_Result.flag = true;
+
+					pattern_Flag = false;
+					int total_time = timedebuge.elapsed();
+					resultPointF.setX(lastResult.x());
+					resultPointF.setY(lastResult.y());
+
+
+					//发送给前端 
+					emit signal_patternResult(resultPointF, total_time);                       
+					//给temp画线
+					QPainter painter(&newPixmap_1);
+					QPen pen;
+					pen.setStyle(Qt::SolidLine);            //定义画笔的风格，直线、虚线等
+					pen.setWidth(2);                        //定义画笔的大小
+					pen.setBrush(Qt::green);
+					painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+
+					painter.setPen(pen);
+					painter.drawLine(QPoint(result[0].x, result[0].y),
+						QPoint(result[1].x, result[1].y));
+					}
+					else if (shapeMatch_Patten.size() == 2)
+					{
+						vector<cv::Point2f> Two_Line_Result;
+						//找到两条直线,并获得交点和角度
+						for (int i =0;i< shapeMatch_Patten.size();i++)
+						{
+							PatternInfo item = shapeMatch_Patten.at(i);
+
+							//将当前Qpixmap 发送给匹配代码
+							Mat src = tempMap(item.roi).clone();
+
+							m_plineCaliperGUI->createLineKaChi(src, item.pt_begin_cv2, item.pt_end_cv2, item.height,
+								item.width, 1, item.nthresholdValuel, item.nSampleDirection, item.nMeasureNums);
+
+							Point2d pdLineStart(0, 0), pdLineEnd(0, 0);
+							double dAngle = 0;
+							m_plineCaliperGUI->lineEdgePointSetsFit(pdLineStart, pdLineEnd, dAngle);
+							pdLineStart.x = item.roi.tl().x + pdLineStart.x;
+							pdLineStart.y = item.roi.tl().y + pdLineStart.y;
+							pdLineEnd.x = item.roi.tl().x + pdLineEnd.x;
+							pdLineEnd.y = item.roi.tl().y + pdLineEnd.y;
+
+							//计算得到最终线段的begin和end
+							vector<cv::Point2f> result = m_plineCaliperGUI->get_intersection(pdLineStart, pdLineEnd, item.pt_start_line, item.pt_end_line);
+							for (auto num : result) {
+								Two_Line_Result.push_back(num);
+							}
+						}
+						//判断是否满足条件
+						if (Two_Line_Result.size()!=4)
+						{
+							//计算错误,没有满足条件
+							return;
+						}
+
+						//	//计算夹角。        
+						double angleDeg = m_plineCaliperGUI->findangle(Two_Line_Result.at(0), Two_Line_Result.at(1), Two_Line_Result.at(2),Two_Line_Result.at(3));
+						//--------------------------计算交点
+						Line Line_1 = m_plineCaliperGUI->calculateLine(Two_Line_Result.at(0), Two_Line_Result.at(1));
+						Line Line_2 = m_plineCaliperGUI->calculateLine(Two_Line_Result.at(2), Two_Line_Result.at(3));
+
+						cv::Point2f Intersection(-1, -1);
+						m_plineCaliperGUI->findIntersection(Two_Line_Result.at(0), Two_Line_Result.at(1), Two_Line_Result.at(2), Two_Line_Result.at(3), Intersection);
+						
+						//设置中心点
+						lastResult.setX(Intersection.x - (m_width / 2));  //向右为x正方向
+						lastResult.setY((m_height / 2) - Intersection.y);//向上为y正方向
+
+						finall_Total_Result.ptCenter = cv::Point2d(lastResult.x(), lastResult.y());
+						finall_Total_Result.dMatchedAngle = angleDeg;
+						finall_Total_Result.pattern_flag = true;
+						finall_Total_Result.flag = true;
+
+						pattern_Flag = false;
+						int total_time = timedebuge.elapsed();
+						resultPointF.setX(lastResult.x());
+						resultPointF.setY(lastResult.y());
+
+
+						//发送给前端 
+						emit signal_patternResult(resultPointF, total_time);
+
+						//给temp画线
+						QPainter painter(&newPixmap_1);
+						QPen pen;
+						pen.setStyle(Qt::SolidLine);            //定义画笔的风格，直线、虚线等
+						pen.setWidth(2);                        //定义画笔的大小
+						pen.setBrush(Qt::green);
+						painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+						painter.setPen(pen);
+						painter.drawLine(QPoint(Two_Line_Result[0].x, Two_Line_Result[0].y),
+							QPoint(Two_Line_Result[1].x, Two_Line_Result[1].y));
+						painter.drawLine(QPoint(Two_Line_Result[2].x, Two_Line_Result[2].y),
+							QPoint(Two_Line_Result[3].x, Two_Line_Result[3].y));
+					}                         
+					else if (shapeMatch_Patten_Circle.size() == 1) {
+					//找圆
+					PatternInfo_circle item = shapeMatch_Patten_Circle.at(0);
+
+					//创建圆的卡尺位置
+					circleInstanceGui->createCircleKaChi(tempMap, item.pdCenter, item.nRadius,
+						item.dMeasureLength,item.dMeasureHeight,item.dSigma,item.nThreshold,
+						item.nTranslation,item.nMesureNums,item.nSampleDirection);
+					
+					Point2d pdCenter(0, 0);
+					double dRadius = 0;
+					//fit新的圆      
+					circleInstanceGui->circleFitOpt(pdCenter, dRadius, 1);
+
+					QPainter painter(&newPixmap_1);
+					QPen pen;
+					pen.setStyle(Qt::SolidLine);            //
+					pen.setWidth(2);    
+					painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+					//
+					pen.setBrush(Qt::green);
+					painter.setPen(pen);
+					painter.drawEllipse(pdCenter.x - dRadius, pdCenter.y - dRadius,2*dRadius,2*dRadius);
+					painter.drawPoint(pdCenter.x, pdCenter.y );
+
+					//设置中心点
+					lastResult.setX(pdCenter.x - (m_width / 2));  //向右为x正方向
+					lastResult.setY((m_height / 2) - pdCenter.y);//向上为y正方向
+
+
+					finall_Total_Result.ptCenter = cv::Point2d(lastResult.x(), lastResult.y());
+					finall_Total_Result.dMatchedAngle = 0;
+					finall_Total_Result.pattern_flag = true;
+					finall_Total_Result.flag = true;
+
+			
+
+					pattern_Flag = false;
+					int total_time = timedebuge.elapsed();
+					resultPointF.setX(lastResult.x());
+					resultPointF.setY(lastResult.y());
+
+
+					//发送给前端 
+					emit signal_patternResult(resultPointF, total_time);
+
+					}
+				}
+				//判断模板匹配
+				else if (pattern_Flag && modelAndRealSclar)
 				{
 					QTime timedebuge;//声明一个时钟对象
 					timedebuge.start();//开始计时
@@ -103,13 +287,12 @@ void ProcessingThread::run()
 						painter.setPen(pen);
 						painter.drawEllipse(QPointF(drawCenterPoint.x, drawCenterPoint.y), 50, 50);
 					}
-
 				}
-
 				//可以执行匹配,但是比例不对的情况,也就说不同比例时,触发了匹配,匹配错误
 				if (pattern_Flag && modelAndRealSclar == false) {
 					patternNG();
 				}
+
 				pattern_Flag = false;
 				//判断是否需要展示范围图
 				if (area_Flag)
@@ -123,6 +306,33 @@ void ProcessingThread::run()
 					painter.drawRect(areaMatRect.x, areaMatRect.y, areaMatRect.width, areaMatRect.height);
 					
 				}
+				else if (shape_match) {
+					QPen pen;
+					pen.setStyle(Qt::SolidLine);            //定义画笔的风格，直线、虚线等
+					pen.setWidth(10);                        //定义画笔的大小
+					pen.setBrush(Qt::red);
+					QPainter painter(&newPixmap_1);
+					painter.setPen(pen);
+					for (int i = 0; i < shapeMatch_Patten.size();i++)
+					{
+						PatternInfo item = shapeMatch_Patten.at(i);
+						painter.drawRect(item.roi.x, item.roi.y, item.roi.width, item.roi.height);
+					}
+					for (int i = 0; i < shapeMatch_Patten_Circle.size(); i++)
+					{
+						PatternInfo_circle item = shapeMatch_Patten_Circle.at(i);
+						//painter.drawRect(item.roi.x(), item.roi.y(), item.roi.width(), item.roi.height());
+						painter.drawEllipse(item.pdCenter.x - (item.nRadius+item.dMeasureLength/2),
+											item.pdCenter.y - (item.nRadius + item.dMeasureLength / 2),
+							2 * (item.nRadius + item.dMeasureLength / 2), 2 * (item.nRadius + item.dMeasureLength / 2));
+						painter.drawEllipse(item.pdCenter.x - (item.nRadius - item.dMeasureLength / 2),
+							item.pdCenter.y - (item.nRadius - item.dMeasureLength / 2),
+							2 * (item.nRadius - item.dMeasureLength / 2), 2 * (item.nRadius - item.dMeasureLength / 2));
+					}
+					
+				}
+
+
 				//将处理好的图像发现到主界面
 				emit signal_newPixmap(newPixmap_1, 0);
 				m_width = newPixmap_1.width();
@@ -130,6 +340,7 @@ void ProcessingThread::run()
 				//使用完后清空容器
 				m_imageVector_1.clear();
 			}
+			//清空保险
 			if (m_imageVector_1.size() > 1) {
 				m_imageVector_1.clear();
 			}
@@ -1413,6 +1624,27 @@ void ProcessingThread::slot_recievePatternImageWithPolygonMask(QString pattern_P
 
 
 }
+
+void ProcessingThread::get_Info_From_industrial(QPointF pt_begin_cv2, QPointF pt_end_cv2, qreal height, qreal width, qreal nthresholdValue, qreal nSampleDirection, qreal nMeasureNums, QRect roi,
+	QPointF  pt_start_line, QPointF pt_end_line)
+{
+	PatternInfo shapeMatch(cv::Point(pt_begin_cv2.x(), pt_begin_cv2.y()),
+		cv::Point(pt_end_cv2.x(), pt_end_cv2.y()), height, width, nthresholdValue,
+		nSampleDirection, nMeasureNums, cv::Rect(roi.x(), roi.y(), roi.width(), roi.height()),
+		cv::Point(pt_start_line.x(), pt_start_line.y()), cv::Point(pt_end_line.x(), pt_end_line.y()));
+	shapeMatch_Patten.append(shapeMatch);
+}
+//获取圆匹配参数
+void ProcessingThread::get_Info_From_industrial_circle(QPointF centerP, qreal nRadius, qreal dMeasureLength, qreal dMeasureHeight,
+	qreal dSigma, qreal nThreshold, qreal nTranslation, qreal nMesureNums, qreal nCircleSize,
+	qreal nSampleDirection,QRectF roi)
+{
+	PatternInfo_circle PatternInfo_item(cv::Point2d(centerP.x(), centerP.y()),  nRadius, dMeasureLength, dMeasureHeight,
+		dSigma,  nThreshold,  nTranslation,  nMesureNums,  nCircleSize, nSampleDirection,roi);
+	shapeMatch_Patten_Circle.append(PatternInfo_item);
+}
+
+
 
 double ProcessingThread::calculateInitialDistance(QPoint A, QPoint B)
 {

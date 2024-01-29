@@ -16,6 +16,20 @@
 #include <opencv2/opencv.hpp>
 #include "myCCaliperGUI.h"
 
+struct LINE_SAVE_INFO
+{
+	cv::Rect roi;
+	cv::Point pt_begin_cv2;
+    cv::Point pt_end_cv2;
+	double height;
+    double width;
+	int nsigma;
+    int thresholdValue;
+    int sampleDirection;
+    int measureNums;
+};
+
+
 enum STATE_FLAG_ONECCIRCLE{
     DEFAULT_FLAG_OCIRC=0,
     MOV_CC,
@@ -44,7 +58,7 @@ public:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
-    void fitcircle();
+    void fitcircle(Point2d& pdCenter, double& dRadius);
 
     public slots:
       void  slotSliderValueChanged_MeasureLength(int value);
@@ -56,7 +70,7 @@ public:
 
 signals:
    void signal_emitstatusValue(int x,int y,int x2,int y2);
-private:
+public:
     qreal pixmap_width;
     qreal pixmap_height;
     QList<mycorneritem*> m_HandlesList_circle;  //圆端点
@@ -82,6 +96,8 @@ private:
 	int nMeasureHeight = 10;
 	//高度
 	int nMeasureLength = 100;
+    //
+    int m_nCircleSize;
 	//sigma
 	int nSigma = 1;
 	//阈值
@@ -92,7 +108,7 @@ private:
 	//拟合
 	int nFitCircle = 0;
 	//圆半径
-	int nRadius = 250;
+	int nRadius = 0;
 
 	cv::Mat srcImage;
 	Mat dstImage;

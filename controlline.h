@@ -14,6 +14,7 @@
 #include <QList>
 #include <QDebug>
 #include <QtMath>
+#include <opencv2/opencv.hpp>
 
 
 class CControlLine :public QObject, public QGraphicsItem
@@ -25,7 +26,8 @@ public:
 	void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
 	void addedgepoints(QPointF pt);
 	void addedgeexpectpoints(QPointF pt);
-	void setline(QPointF pt1, QPointF pt2) { linestart = pt1; lineend = pt2; }
+	void setline(QPointF pt1, QPointF pt2) { linestart = pt1; lineend = pt2; }\
+	void addcircles(cv::Point2d& pdCenter, double& dRadius);
 	~CControlLine()
 	{
 		qDebug() << "~one_line";
@@ -38,6 +40,11 @@ private:
 	bool draw_edge = false;
 	QList<QPointF> edgeexpectpoints;
 	bool draw_expect = false;
+
+	QPointF circle_Center;
+	qreal circle_Radius;
+	bool draw_circle = false;
+
 };
 
 #endif

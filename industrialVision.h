@@ -193,6 +193,8 @@ public:
      void setCURRENT_ROLE(QString currentROle);
      //重新初始化
      void reinitialize();
+
+     void read_info_from_ini(QString path);
 	 protected:
 		 void closeEvent(QCloseEvent* event) override {
 			 // 创建 QMessageBox 对话框
@@ -263,7 +265,13 @@ signals:
     void singal_sendPatternImageWithMaskEllipse(QString patternImage_Path, QRectF patternRect, QRectF qrect, QPoint centerPoint, QPoint patternRectCenterPoint);
 	void singal_sendPatternImageWithMaskPolygon(QString patternImage_Path, QPolygonF patternPolygon, QRectF qrect, QPoint centerPoint, QPoint patternRectCenterPoint);
 
-    
+	void sendInfo_shapeMatch_Value(QPointF pt_begin_cv2, QPointF pt_end_cv2, qreal height,
+        qreal width, qreal nthresholdValue, qreal nSampleDirection, qreal nMeasureNums, QRect roi,
+        QPointF pt_begin_line,QPointF pt_end_line);
+  
+    void sendInfo_shapeMatch_CIRCLE(QPointF centerP,qreal nRadius,qreal dMeasureLength, qreal dMeasureHeight,
+       qreal dSigma,qreal nThreshold,qreal nTranslation,qreal nMesureNums,qreal nCircleSize,
+        qreal nSampleDirection, QRectF roi);
 };
 
 #endif

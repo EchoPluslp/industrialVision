@@ -142,7 +142,7 @@ void bee_caliberline::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 		}
 		else
 		{
-			QPen mPen(Qt::blue);
+			QPen mPen(Qt::red);
 			if (if_hover)
 			{
 				mPen.setColor(Qt::green);
@@ -392,11 +392,6 @@ void bee_caliberline::slotSliderValueChanged_SetThreshold_line(int value)
 void bee_caliberline::slotSliderValueChanged_SetSampleDirection_line(int value) {
     //边缘方向
     nSampleDirection = value;
-}
-
-void bee_caliberline::fitline()
-{
-
 }
 
 

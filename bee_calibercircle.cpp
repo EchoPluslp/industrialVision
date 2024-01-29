@@ -284,7 +284,7 @@ void bee_calibercircle::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             pt[0] = QPointF(first_center.x()- nMeasureHeight /2,first_center.y()- nMeasureLength /2); //LT
             pt[1] = QPointF(first_center.x()+ nMeasureHeight /2,first_center.y()- nMeasureLength /2); //RT
             pt[2] = QPointF(first_center.x()+ nMeasureHeight /2,first_center.y()+ nMeasureLength /2); //RB
-            pt[3] = QPointF(first_center.x()- nMeasureHeight   /2,first_center.y()+ nMeasureLength /2); //LB
+            pt[3] = QPointF(first_center.x()- nMeasureHeight  /2,first_center.y()+ nMeasureLength /2); //LB
 
 
             const int num1 = 4;
@@ -333,19 +333,13 @@ void bee_calibercircle::hoverLeaveEvent(QGraphicsSceneHoverEvent * event)
     QGraphicsItem::hoverLeaveEvent(event);
 }
 
-void bee_calibercircle::fitcircle()
+void bee_calibercircle::fitcircle(Point2d& pdCenter, double& dRadius)
 {
-    Point2d pdCenter(0, 0);
-    double dRadius = 0;
+
     //执行匹配
-    circleInstanceGui.circleFitOpt(pdCenter, dRadius, 1);
+ 	circleInstanceGui.circleFitOpt(pdCenter, dRadius, 1);
     dstImage.copyTo(srcImage);
     circleInstanceGui.edgePointSetsShow(srcImage, 10, Scalar(0, 255, 0));
-
-    circle(srcImage, pdCenter, dRadius, Scalar(0, 255, 0));
-    Mat xx = srcImage;
-   // drawMyCross(srcImage, pdCenter, 90, 5, GREED);
-    imshow("demo", srcImage);
     cout << "Circle info: " << pdCenter << ", Radius: " << dRadius << endl;
 
     vector<Point2d>vpdEdgePoints;
@@ -355,7 +349,8 @@ void bee_calibercircle::fitcircle()
     {
         cout << "Edge Point[" << i << "]: " << vpdEdgePoints[i] << ", gradient: " << vdEdgePointsGradient[i] << endl;
     }
-}
+	scene()->update();
+ }
 
 
 
@@ -406,7 +401,6 @@ void bee_calibercircle::slotSliderValueChanged_nTranslation(int value)
 }
 
 void  bee_calibercircle::slotSliderValueChanged_MeasureLength(int value) {
-	//dstImage.copyTo(srcImage);
 	dstImage.copyTo(srcImage);
 
 	circleInstanceGui.AdjustCaliper(srcImage, Point2d(-2, -2), nRadius, nMeasureLength, nMeasureHeight,

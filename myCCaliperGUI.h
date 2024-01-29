@@ -98,7 +98,15 @@ public:
 
 
 
+
 //线匹配
+
+// 定义直线结构体
+struct Line {
+	double m; // 斜率
+	double b; // 截距
+};
+
 class CLineCaliperGUI
 {
 protected:
@@ -195,7 +203,15 @@ public:
 
 	vector<Point2d> getEdgePoints();
 	vector<Point2d> getExcepetEdgePoints();
+	vector<cv::Point2f> get_intersection(cv::Point2f pt1, cv::Point2f pt2, cv::Point2f begin, cv::Point2f end);
 
+	//找到夹角
+	double findangle(cv::Point p_1, cv::Point p_2, cv::Point p_3, cv::Point p_4);
+
+	//找到交点
+	void findIntersection(cv::Point p_1, cv::Point p_2, cv::Point p_3, cv::Point p_4, cv::Point2f& intersection);
+	
+	Line calculateLine(const cv::Point& p1, const cv::Point& p2);
 
 };
 

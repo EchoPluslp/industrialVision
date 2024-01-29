@@ -16,6 +16,78 @@
 #include <stdio.h>
 #include <QReadWriteLock>
 #include<QPainter>
+#include "myCCaliperGUI.h"
+
+struct PatternInfo
+{
+	cv::Point  pt_begin_cv2;
+	cv::Point pt_end_cv2;
+	int height;
+	int width;
+	int nthresholdValuel;
+	int nSampleDirection;
+	int nMeasureNums;
+	cv::Rect roi;
+	cv::Point pt_start_line;
+	cv::Point pt_end_line;
+	PatternInfo(cv::Point pt_begin_cv2,
+		cv::Point pt_end_cv2,
+		int height,
+		int width,
+		int nthresholdValuel,
+		int nSampleDirection,
+		int nMeasureNums,
+		cv::Rect roi, cv::Point pt_start_line, cv::Point pt_end_line) {
+		this->pt_begin_cv2 = pt_begin_cv2;
+		this->pt_end_cv2 = pt_end_cv2;
+		this->height = height;
+		this->width = width;
+		this->nthresholdValuel = nthresholdValuel;
+		this->nSampleDirection = nSampleDirection;
+		this->nMeasureNums = nMeasureNums;
+		this->roi = roi;
+		this->pt_start_line = pt_start_line;
+		this->pt_end_line = pt_end_line;
+	}
+};
+
+struct PatternInfo_circle
+{
+	cv::Point  pdCenter;
+	int nRadius;
+	int dMeasureLength;
+	int dMeasureHeight;
+	int dSigma;
+	int nThreshold;
+	int nTranslation;
+	int nMesureNums;
+	int nCircleSize;
+	int nSampleDirection;
+	QRectF roi;
+
+	PatternInfo_circle(cv::Point pdCenter_item, int nRadius_item, int dMeasureLength_item,
+	int dMeasureHeight_item,
+	int dSigma_item,
+	int nThreshold_item,
+	int nTranslation_item,
+	int nMesureNums_item,
+	int nCircleSize_item,
+	int nSampleDirection_item , QRectF roi_item){
+
+		this->pdCenter = pdCenter_item;
+		this->nRadius = nRadius_item;
+		this->dMeasureLength = dMeasureLength_item;
+		this->dMeasureHeight = dMeasureHeight_item;
+		this->dSigma = dSigma_item;
+		this->nThreshold = nThreshold_item;
+		this->nTranslation = nTranslation_item;
+		this->nMesureNums = nMesureNums_item;
+		this->nCircleSize = nCircleSize_item;
+		this->nSampleDirection = nSampleDirection_item;
+		this->roi = roi_item;
+	}
+};
+
 #define M_PI       3.14159265358979323846   // pi
 
 extern s_SingleTargetMatch finall_Total_Result;
@@ -90,6 +162,9 @@ public:
 	QPoint calculateOffsetB(QPoint A, QPoint B, double initialDistance, double initialDirection, QPoint A_offset);
 
 	void setShapeType(int value);
+	void setShape_match(bool flag) {
+		shape_match = flag; modelAndRealSclar = false;
+	};
 signals: 
 	void signal_newPixmap(QPixmap newPixmap, int id);
 	void signal_patternResult(QPointF qpointf,int dateTime);
@@ -104,12 +179,19 @@ public slots:
 	void slot_setSourceArea(bool flag);
 	void slot_recievePatternImageWithMask(QString pattern_Path, QRectF pattern_Rect, QRectF areaRect, QPoint centerPoint, QPoint patternRectCenterPoint);
 	void slot_recievePatternImageWithPolygonMask(QString pattern_Path, QPolygonF pattern_Rect, QRectF areaRect, QPoint centerPoint, QPoint patternRectCenterPoint);
+	void get_Info_From_industrial(QPointF pt_begin_cv2, QPointF pt_end_cv2, qreal height, qreal width, qreal nthresholdValue, qreal nSampleDirection, qreal nMeasureNums, QRect roi,
+		QPointF pt_start_line, QPointF pt_end_line);
 
+	void get_Info_From_industrial_circle(QPointF centerP, qreal nRadius, qreal dMeasureLength, qreal dMeasureHeight,
+		qreal dSigma, qreal nThreshold, qreal nTranslation, qreal nMesureNums, qreal nCircleSize,
+		qreal nSampleDirection , QRectF roi);
 private:
 	cv::Point2d drawCenterPoint;
 	bool startFlag = false;
 	//判断模板图和实时图是否比例一致
 	bool modelAndRealSclar = false;
+	//是否形状匹配
+	bool shape_match = false;
 
 	int shape_type;
 	int m_threadId;
@@ -143,5 +225,13 @@ private:
 	int                     m_width;
 	int                     m_height;
 	 s_SingleTargetMatch sstm;
+
+	 CLineCaliperGUI* m_plineCaliperGUI;
+	 CCaliperCircleGUI* circleInstanceGui;
+	 QList< PatternInfo> shapeMatch_Patten;
+
+	 QList< PatternInfo_circle> shapeMatch_Patten_Circle;
+
+
 };
 #endif // PROCESSINGTHREAD_H

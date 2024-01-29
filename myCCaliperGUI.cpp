@@ -555,7 +555,6 @@ bool CLineCaliperGUI::IsPointInCircle(Point2d pdCenter, Point2d pdPoint)
 	return  getPoint2PointLength(pdCenter, pdPoint) <= m_nCircleSize;
 }
 
-
 void CLineCaliperGUI::drawMyCross(Mat& inputMat, Point2d p, double dAngle, double dSize, Scalar color, int nThickness)
 {
 	if (inputMat.empty())
@@ -568,7 +567,6 @@ void CLineCaliperGUI::drawMyCross(Mat& inputMat, Point2d p, double dAngle, doubl
 	line(inputMat, rectPoints[0], rectPoints[2], color, nThickness, LINE_AA);
 	line(inputMat, rectPoints[1], rectPoints[3], color, nThickness, LINE_AA);
 }
-
 
 void CLineCaliperGUI::drawMyArrow(Mat& inputMat, Point2d p1, Point2d p2, int dSize, Scalar color, int nThickness)
 {
@@ -633,7 +631,6 @@ void CLineCaliperGUI::createLineKaChi(Mat& InputMat,
 	drawMyArrow(InputMat, m_pdSampleLineStart, m_pdSampleLineEnd, (int)m_nCircleSize * 5, Cyan, 1);
 	circle(InputMat, m_pdSampleLineEnd, m_nCircleSize, Yellow, 1, 16);
 
-
 	getLineEquPointSets(m_pdStart, m_pdEnd, nMesureNums + 1, m_lineEdgeEquPointSetsVec);
 	RotatedRect rRect;
 	Point2d p1, p2;
@@ -662,7 +659,6 @@ void CLineCaliperGUI::getLineEquPointSets(Point2d pdStart, Point2d pdEnd, int nE
 		vpdEquinoxPoints.push_back(Point2d(pdStart.x + dx, pdStart.y + dy));
 	}
 }
-
 
 void CLineCaliperGUI::getLineLastPoint(Point2d pdCenter, double dAngle, double dLength, Point2d& pdStart, Point2d& pdEnd)
 {
@@ -925,3 +921,121 @@ vector<Point2d> CLineCaliperGUI::getExcepetEdgePoints()
 {
 	return m_errortLineEdgePointSets;
 }
+
+double CLineCaliperGUI::findangle(cv::Point p_1, cv::Point p_2, cv::Point p_3, cv::Point p_4)
+{
+	
+		// 计算两条线的向量
+		cv::Point vec1 = p_1 - p_2;
+		cv::Point vec2 = p_3 - p_4;
+
+		// 计算向量的模
+		double magnitude1 = cv::norm(vec1);
+		double magnitude2 = cv::norm(vec2);
+
+		// 计算向量的点积
+		double dotProduct = vec1.x * vec2.x + vec1.y * vec2.y;
+
+		// 计算余弦值
+		double cosTheta = dotProduct / (magnitude1 * magnitude2);
+
+		// 使用反余弦函数计算夹角（弧度）
+		double angleRad = std::acos(std::max(-1.0, std::min(1.0, cosTheta)));
+
+		// 将弧度转换为度数
+		double angleDeg = angleRad * 180 / CV_PI;
+		return angleDeg;
+
+}
+
+vector<cv::Point2f> CLineCaliperGUI::get_intersection(cv::Point2f pt1, cv::Point2f pt2, cv::Point2f begin, cv::Point2f end)
+{
+	qreal k1;
+	qreal b1;
+	qreal k2;
+	qreal b2;
+	qreal k3;
+	qreal b3;
+
+	qreal x1;
+	qreal y1;
+	qreal x2;
+	qreal y2;
+	if ((pt1.x - pt2.x) != 0)
+	{
+		k1 = (pt1.y - pt2.y)/ (pt1.x - pt2.x);
+		b1 = -k1 * pt1.x + pt1.y;
+		k2 = -1 / k1;
+		k3 = -1 / k1;
+		b2 = -k2 * begin.x + begin.y;
+		b3 = -k3 * end.x + end.y;
+
+		x1 = (b2 - b1) / (k1 - k2);
+		y1 = k1 * x1 + b1;
+		x2 = (b3 - b1) / (k1 - k3);
+		y2 = k1 * x2 + b1;
+	}
+	else if (pt1.y != pt2.y)
+	{
+		x1 = x2 = pt1.x; 
+		y1 = begin.y;
+		y2 = end.y;
+	}
+	else
+	{
+		x1 = x2 = y1 = y2 = 0;
+	}
+
+	vector<cv::Point2f> result;
+	result.push_back(cv::Point(x1, y1));
+	result.push_back(cv::Point(x2, y2));
+
+	return result;
+}
+
+
+void CLineCaliperGUI::findIntersection(cv::Point p_1, cv::Point p_2, cv::Point p_3, cv::Point p_4, cv::Point2f& intersection)
+{
+	// 确保两条直线不平行
+	//if (line1.m == line2.m) {
+	//	qDebug() << "平行无交点.";
+	//	return;
+	//}
+
+	// line1's cpmponent
+	double X1 = p_2.x - p_1.x;//b1
+	double Y1 = p_2.y - p_1.y;//a1
+	// line2's cpmponent
+	double X2 = p_4.x - p_3.x;//b2
+	double Y2 = p_4.y - p_3.y;//a2
+	// distance of 1,2
+	double X21 = p_3.x - p_1.x;
+	double Y21 = p_3.y - p_1.y;
+	// determinant
+	double D = Y1 * X2 - Y2 * X1;// a1b2-a2b1
+	// 
+	if (D == 0) return;
+	// cross point
+	intersection.x = (X1 * X2 * Y21 + Y1 * X2 * p_1.x - Y2 * X1 * p_3.x) / D;
+	// on screen y is down increased ! 
+	intersection.y = -(Y1 * Y2 * X21 + X1 * Y2 * p_1.y - X2 * Y1 * p_3.y) / D;
+	// segments intersect.
+	if ((abs(intersection.x - p_1.x - X1 / 2) <= abs(X1 / 2)) &&
+		(abs(intersection.y - p_1.y - Y1 / 2) <= abs(Y1 / 2)) &&
+		(abs(intersection.x - p_3.x - X2 / 2) <= abs(X2 / 2)) &&
+		(abs(intersection.y - p_3.y - Y2 / 2) <= abs(Y2 / 2)))
+	{
+		int x = 10;
+	}
+	return;
+}
+
+// 计算直线的斜率和截距
+Line CLineCaliperGUI::calculateLine(const cv::Point& p1, const cv::Point& p2)
+{
+	Line line;
+	line.m = (p2.y - p1.y) / (p2.x - p1.x);
+	line.b = p1.y - line.m * p1.x;
+	return line;
+}
+

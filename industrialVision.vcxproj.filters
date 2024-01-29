@@ -71,6 +71,9 @@
     <Filter Include="Form Files\shapeMatch">
       <UniqueIdentifier>{2676b0b7-51c8-40e6-8874-414ffdb3b4b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Form Files\modelMatch">
+      <UniqueIdentifier>{6d8dee31-976e-4908-8ecb-4b2754f66527}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -397,6 +400,9 @@
     </QtUic>
     <QtUic Include="mainwindow.ui">
       <Filter>Form Files\shapeMatch</Filter>
+    </QtUic>
+    <QtUic Include="ncc_mainwindow.ui">
+      <Filter>Form Files\modelMatch</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>

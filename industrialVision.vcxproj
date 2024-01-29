@@ -170,6 +170,7 @@
     <QtUic Include="logoPath.ui" />
     <QtUic Include="logoSet.ui" />
     <QtUic Include="mainwindow.ui" />
+    <QtUic Include="ncc_mainwindow.ui" />
     <QtUic Include="passwordSet.ui" />
     <QtUic Include="smallMainWindow.ui" />
     <QtUic Include="statusbar.ui" />

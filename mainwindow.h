@@ -22,7 +22,6 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-
 enum STATE_FLAG_MAINWINDOW{
     CHOOSE_NULL,
     CHOOSE_PICTURE,
@@ -35,17 +34,24 @@ enum STATE_FLAG_MAINWINDOW{
     RINGEXPANSION
 };
 
+
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
     MainWindow(QWidget *parent = nullptr);
-	//add 功能
+
+	// 计算直线的斜率和截距
+    Line calculateLine(const cv::Point& p1, const cv::Point& p2);
 	void InitializeMeasureTrackbar();
+    void findIntersection(cv::Point p_1, cv::Point p_2, cv::Point p_3, cv::Point p_4,cv::Point2f& intersection);
+    double findangle(cv::Point p_1, cv::Point p_2,cv::Point p_3,cv::Point p_4);
+
     ~MainWindow();
 
-private slots:
+public  slots:
     void on_action_choosepicture_triggered();
 
     void on_action_rect_triggered();
@@ -74,8 +80,6 @@ private slots:
 
     void on_action_1_to_1_triggered();
 
-public  slots:
-
     void sendImgToControllerShape(QImage image);
 
     void fitcircle();
@@ -89,6 +93,11 @@ public  slots:
     void slot_index_nSetThreshold(int value);
 
     void slot_index_SampleDirection(int value);
+
+    void saveInfo();
+ 
+	void fitline_with_signal(QPixmap image);
+
 protected:
    virtual void keyPressEvent(QKeyEvent *event);
 
@@ -102,7 +111,9 @@ private:
     bee_concencircle *my_concencircle;
     //bee_caliberline *my_caliberline;
     QList<bee_caliberline*> my_caliberline_List;
-    bee_calibercircle *my_calibercircle;
+	QList<bee_calibercircle*> my_calibercircle_List;
+
+    bee_calibercircle *my_calibercircle                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ;
     bee_ringexpansion *my_ringexpansion;
     QGraphicsScene *qgraphicsScene;
     STATE_FLAG_MAINWINDOW state_flag_maindow;
@@ -116,6 +127,6 @@ private:
     int nSigma = 1;
     int currentIndexs_line = 0;
 	CControlLine* lineitem;
-
+    QList<cv::Point> resultLinePoint;
 };
 #endif // MAINWINDOW_H
