@@ -23,8 +23,9 @@ enum STATE_FLAG_ONEPOINT {
 
 class bee_point :public QObject, public QGraphicsItem
 {
+	Q_OBJECT
 public:
-	bee_point(QGraphicsItem* parent = nullptr);
+	bee_point(QGraphicsItem* parent = nullptr,int count = 0);
 
 	QRectF  boundingRect() const;
 	QPainterPath shape() const;
@@ -72,8 +73,9 @@ public:
 	mycorneritem* corner;
 	bool m_bpress = false;
 	QPointF movepoint;
-
-
+	int index_value;
+signals:
+	void create_RECT(int type, int index);
 };
 
 #endif // BEE_POINT_H

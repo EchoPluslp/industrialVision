@@ -79,6 +79,8 @@ public slots:
 	void slot_receiveDrawPoint(QPoint resultPoint, int totalModelTime);
 
 	void createRECT(int type, int index);
+
+	
 signals:
 	void getImageFromCamera(QString str);
 	void sendImageToPattern(QImage sourceImage, QImage patternImage);
@@ -109,7 +111,10 @@ public:
 
 	//特征区域矩形框
 	bee_rect* ncc_patten_rect_info = nullptr;
-	int index_rect = 0;
+	int index_pattern = 0;
+//	QList<QGraphicsItem*>* pattern_rect_List;
+
+
 	//多边形区域框
 	bee_polygon* source_polygon_info = nullptr;
 	int index_polygon = 0;
@@ -117,5 +122,7 @@ public:
 	bee_point* source_point_info = nullptr;
 	int index_point;
 
+	//遍历已选操作,保存时获得相应操作
+	int getListItem(QString name);
 };
 #endif // MAINWINDOW_H

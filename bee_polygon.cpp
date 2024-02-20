@@ -1,12 +1,13 @@
 #include "bee_polygon.h"
 
-bee_polygon::bee_polygon(QGraphicsItem *parent):m_StateFlag(DEFAULT_FLAG_OP)
+bee_polygon::bee_polygon(QGraphicsItem *parent,int count):m_StateFlag(DEFAULT_FLAG_OP)
 {
     num = 0;
     num_move = 0;
     if_hover = false;
     pixmap_width = 1;
     pixmap_height = 1;
+    index_count = count;
     setAcceptHoverEvents(true);
     setCursor(Qt::ArrowCursor);
 }
@@ -54,7 +55,7 @@ void bee_polygon::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 {
     if(!if_create && num>=1)
     {
-        QPen mPen(Qt::magenta);
+        QPen mPen(QColor(26, 250, 41));
         mPen.setWidth(0);
         painter->setPen(mPen);
         for(int i=1; i< num;i++)
@@ -66,13 +67,13 @@ void bee_polygon::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     }
     if(if_create)
     {
-        QPen mPen(Qt::magenta);
+		QPen mPen(QColor(26, 250, 41));
         if(if_hover)
-            mPen.setColor(Qt::magenta);
+            mPen.setColor(QColor(26, 250, 41));
         mPen.setWidth(0);
         painter->setPen(mPen);
 
-		QBrush brush(QColor(255, 0, 0), Qt::Dense7Pattern); //»­Ë¢
+		QBrush brush(QColor(255, 0, 0), Qt::NoBrush); //»­Ë¢
 		painter->setBrush(brush);
 
         painter->drawPolygon(m_poly);
@@ -165,6 +166,7 @@ void bee_polygon::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
             pp.push_back(m_firstPos);
             m_poly = QPolygonF(pp);
             if_create = true;
+			emit create_RECT(3, index_count);
 
         }
         else

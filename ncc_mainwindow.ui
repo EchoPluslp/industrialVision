@@ -14,7 +14,7 @@
    <bool>true</bool>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>形状匹配</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="mouseTracking">
@@ -32,15 +32,31 @@
      <widget class="QGroupBox" name="groupBox">
       <property name="font">
        <font>
-        <pointsize>15</pointsize>
+        <pointsize>24</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
        </font>
       </property>
       <property name="title">
        <string>已选操作</string>
       </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+      <property name="checkable">
+       <bool>false</bool>
+      </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QListWidget" name="listWidget"/>
+        <widget class="QListWidget" name="listWidget">
+         <property name="font">
+          <font>
+           <pointsize>21</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -105,13 +121,13 @@
    <addaction name="separator"/>
    <addaction name="action_circle"/>
    <addaction name="separator"/>
-   <addaction name="action_concircle"/>
+   <addaction name="action_calibercircle"/>
    <addaction name="separator"/>
    <addaction name="action_ringexpansion"/>
    <addaction name="separator"/>
    <addaction name="action_caliberline"/>
    <addaction name="separator"/>
-   <addaction name="action_calibercircle"/>
+   <addaction name="action_concircle"/>
   </widget>
   <action name="action_choosepicture">
    <property name="icon">
@@ -173,16 +189,16 @@
     <string>圆形特征区域</string>
    </property>
   </action>
-  <action name="action_concircle">
+  <action name="action_calibercircle">
    <property name="icon">
     <iconset>
-     <normaloff>Icon/ncc_delete.png</normaloff>Icon/ncc_delete.png</iconset>
+     <normaloff>Icon/ncc_point.png</normaloff>Icon/ncc_point.png</iconset>
    </property>
    <property name="text">
-    <string>删除</string>
+    <string>输出点</string>
    </property>
    <property name="toolTip">
-    <string>删除</string>
+    <string>输出点</string>
    </property>
   </action>
   <action name="action_ringexpansion">
@@ -209,16 +225,16 @@
     <string>效果预览</string>
    </property>
   </action>
-  <action name="action_calibercircle">
+  <action name="action_concircle">
    <property name="icon">
     <iconset>
-     <normaloff>Icon/ncc_point.png</normaloff>Icon/ncc_point.png</iconset>
+     <normaloff>Icon/ncc_delete.png</normaloff>Icon/ncc_delete.png</iconset>
    </property>
    <property name="text">
-    <string>输出点</string>
+    <string>删除</string>
    </property>
    <property name="toolTip">
-    <string>输出点</string>
+    <string>删除</string>
    </property>
   </action>
   <action name="action_zoomin">

@@ -120,7 +120,7 @@ void bee_rect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 {
     Q_UNUSED(option)
     Q_UNUSED(widget)
-    QPen mPen = QPen(Qt::magenta);
+    QPen mPen = QPen(QColor(26,250,41));
     if(if_hover)
     {
         mPen.setColor(Qt::magenta);
@@ -132,16 +132,24 @@ void bee_rect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
     if(if_create)
     {
-        //是模板区域
+        //是特征区域
         if(if_ncc_modelShape){
-			QBrush brush(QColor(255, 0, 0), Qt::Dense7Pattern); //画刷
+			QBrush brush(QColor(255, 0, 0), Qt::NoBrush); //画刷
+            //特征区域
+			mPen.setColor(QColor(216,30,6));
 
-			painter->setBrush(brush);
+			//painter->setBrush(brush);
+			painter->setPen(mPen);
+
         }
         else {
-            //不是模板区域
-			QBrush brush(QColor(0, 255, 0), Qt::Dense7Pattern); //画刷
-			painter->setBrush(brush);
+            //是模板区域
+			QBrush brush(QColor(0, 255, 0), Qt::NoBrush); //画刷
+			mPen.setColor(QColor(84, 101, 207));
+
+			//painter->setBrush(brush);
+			painter->setPen(mPen);
+
         }
 
         painter->drawPolygon(m_poly);
@@ -392,10 +400,10 @@ void bee_rect::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         //特征区域区域,
         if (if_ncc_modelShape)
         {
-			//emit create_RECT(2, current_roi_index);
+			emit create_RECT(2, current_roi_index);
         }
         else {
-           // emit create_RECT(1, current_roi_index);
+            emit create_RECT(1, current_roi_index);
         }
         create_move = false;
         m_rect.setTopLeft(pt[0]);

@@ -1,13 +1,14 @@
 #include "bee_circle.h"
 #include <QtMath>
 
-bee_circle::bee_circle(QGraphicsItem *parent):
+bee_circle::bee_circle(QGraphicsItem *parent,int count):
     m_StateFlag(DEFAULT_FLAG_OC)
 {
     setAcceptHoverEvents(true);
     setCursor(Qt::ArrowCursor);
     center_circle = QPointF(0,0);
     r = 0;
+     index_value = count;
 }
 
 QRectF bee_circle::boundingRect() const
@@ -37,13 +38,13 @@ void bee_circle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 {
     Q_UNUSED(option);     //这个宏是用来把不用到的参数注掉的功能
     Q_UNUSED(widget);
-    QPen mPen = QPen(Qt::magenta);
+    QPen mPen = QPen(QColor(212,35,122));
     if(if_hover)
     {
-        mPen.setColor(Qt::magenta);
+        mPen.setColor(QColor(212, 35, 122));
     }
     mPen.setWidth(0);
-	QBrush brush(QColor(255, 0, 0), Qt::Dense7Pattern); //画刷
+	QBrush brush(QColor(255, 0, 0), Qt::NoBrush); //画刷
 	painter->setBrush(brush);
 
     painter->setPen(mPen);
@@ -166,6 +167,8 @@ void bee_circle::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     {
         if_create = true;
         create_move = false;
+		emit create_RECT(4, index_value);
+
     }
     setCursor(Qt::ArrowCursor);
     m_StateFlag = DEFAULT_FLAG_OC;

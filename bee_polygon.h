@@ -22,8 +22,9 @@ enum STATE_FLAG_ONEPOLYGON{
 
 class bee_polygon:public QObject,public QGraphicsItem
 {
+    Q_OBJECT
 public:
-    bee_polygon(QGraphicsItem *parent = nullptr);
+    bee_polygon(QGraphicsItem *parent = nullptr,int count = 0);
 
 	QRectF  boundingRect() const;
 	QPainterPath shape() const;
@@ -57,7 +58,10 @@ public:
     mycorneritem* corner;
     bool m_bpress = false;
     QPointF movepoint;
-
+    //index下标
+    int index_count;
+signals:
+	void create_RECT(int type, int index);
 };
 
 #endif // BEE_POLYGON_H

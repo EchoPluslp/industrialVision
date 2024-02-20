@@ -1,5 +1,5 @@
 #include "bee_point.h"
-bee_point::bee_point(QGraphicsItem* parent) :
+bee_point::bee_point(QGraphicsItem* parent,int count) :
 	m_StateFlag(DEFAULT_FLAG_OP_POINT)
 {
 	num = 0;
@@ -9,6 +9,7 @@ bee_point::bee_point(QGraphicsItem* parent) :
 	pixmap_height = 1;
 	setAcceptHoverEvents(true);
 	setCursor(Qt::ArrowCursor);
+	index_value = count;
 }
 
 QRectF bee_point::boundingRect() const
@@ -98,7 +99,7 @@ void bee_point::mousePressEvent(QGraphicsSceneMouseEvent* event)
 			pp.push_back(m_firstPos);*/
 			m_poly = QPolygonF(pp);
 			if_create = true;
-
+			emit create_RECT(5, index_value);
 		}
 		else
 		{

@@ -29,6 +29,8 @@ NCCMainWindow::NCCMainWindow(QWidget* parent)
 	ui->toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 	
 	source_rect_List = new QList<QGraphicsItem*>();
+	//pattern_rect_List = new QList<QGraphicsItem*>();
+
 
 	ui->action_choosepicture->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
 	ui->action_zoomin->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
@@ -115,36 +117,53 @@ void NCCMainWindow::keyPressEvent(QKeyEvent* event)
 
 }
 
+//返回指定name的index
+int NCCMainWindow::getListItem(QString name)
+{
+	if (source_rect_List->size()==0)
+	{
+		return -1;
+	}
+	for (int i = 0;i< ui->listWidget->count();i++)
+	{
+		QListWidgetItem* item = ui->listWidget->item(i);
+		if (item->text().contains(name))
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
 
 //发送获得图片请求数据
 void NCCMainWindow::on_action_choosepicture_triggered()
 {
-	fileName = QFileDialog::getOpenFileName(this, QStringLiteral("选择图片"), "F:", QStringLiteral("图片文件(*png *jpg *bmp)"));
-	if (fileName == nullptr)
-	{
-		return;
-	}
-	qgraphicsScene->clear();
-	QImage image = QImage(fileName);
-	qgraphicsScene->setSceneRect(0, 0, image.width(), image.height());
+	//fileName = QFileDialog::getOpenFileName(this, QStringLiteral("选择图片"), "F:", QStringLiteral("图片文件(*png *jpg *bmp)"));
+	//if (fileName == nullptr)
+	//{
+	//	return;
+	//}
+	//qgraphicsScene->clear();
+	//QImage image = QImage(fileName);
+	//qgraphicsScene->setSceneRect(0, 0, image.width(), image.height());
 
-	ImageItem = qgraphicsScene->addPixmap(QPixmap::fromImage(image));
+	//ImageItem = qgraphicsScene->addPixmap(QPixmap::fromImage(image));
 
-	qgraphicsScene->update();
-	QRectF bounds = qgraphicsScene->itemsBoundingRect();
-	bounds.setWidth(bounds.width());
-	bounds.setHeight(bounds.height());
-	ui->graphicsView->fitInView(bounds, Qt::KeepAspectRatio);
-	state_flag_maindow = CHOOSE_PICTURE;
+	//qgraphicsScene->update();
+	//QRectF bounds = qgraphicsScene->itemsBoundingRect();
+	//bounds.setWidth(bounds.width());
+	//bounds.setHeight(bounds.height());
+	//ui->graphicsView->fitInView(bounds, Qt::KeepAspectRatio);
+	//state_flag_maindow = CHOOSE_PICTURE;
 
-	//emit getImageFromCamera("patternMatch");
+	emit getImageFromCamera("patternMatch");
 }
 
 //搜索区域
 void NCCMainWindow::on_action_rect_triggered()
 {
-	index_source++;
-
+	index_source = source_rect_List->size()+1;
 	state_flag_maindow = CHOOSE_SOURCE_RECT;
 	 source_rect_info = new bee_rect(nullptr, false,false, index_source);
 	source_rect_info->setpixmapwidth(ImageItem->pixmap().width() * ImageItem->scale());
@@ -155,79 +174,98 @@ void NCCMainWindow::on_action_rect_triggered()
 	ui->graphicsView->setScene(this->qgraphicsScene);
 	//保存当前index,并添加到list中
 	source_rect_info->current_roi_index = index_source;
-	source_rect_List->append(source_rect_info);
 
-//	connect(source_rect_info, &bee_rect::create_RECT, this, &NCCMainWindow::createRECT);
+	connect(source_rect_info, &bee_rect::create_RECT, this, &NCCMainWindow::createRECT);
 
 }
 
 //特征区域设置 ,矩形
 void NCCMainWindow::on_action_rotaterect_triggered()
 {
+	index_pattern = source_rect_List->size() + 1;
 	state_flag_maindow = CHOOSE_RECT;
-	ncc_patten_rect_info =  new bee_rect(nullptr, false, true);
+	ncc_patten_rect_info =  new bee_rect(nullptr, false, true, index_pattern);
 	ncc_patten_rect_info->setpixmapwidth(ImageItem->pixmap().width() * ImageItem->scale());
 	ncc_patten_rect_info->setpixmapheight(ImageItem->pixmap().height() * ImageItem->scale());
 	ncc_patten_rect_info->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
-
-	//给当前rect设置id
-	//roi_index++;
+	//ncc_patten_rect_info->if_ncc_modelShape = true;
+	//给当前rec t设置id
 	this->qgraphicsScene->addItem(ncc_patten_rect_info);
 	ui->graphicsView->setScene(this->qgraphicsScene);
-	//roi_List->append(ncc_patten_rect_info);
-	//connect(ncc_patten_rect_info, &bee_rect::create_RECT, this, &NCCMainWindow::createRECT);
 
 	//保存当前index,并添加到list中
-	ncc_patten_rect_info->current_roi_index = index_source;
-	//source_rect_List->append(source_rect_info);
+	ncc_patten_rect_info->current_roi_index = index_pattern;
+	connect(ncc_patten_rect_info, &bee_rect::create_RECT, this, &NCCMainWindow::createRECT);
+
 }
 
 //多边形
 void NCCMainWindow::on_action_polygon_triggered()
 {
+	int polygon_pattern = source_rect_List->size() + 1;
 
 	state_flag_maindow = CHOOSE_POLYGON;
-	source_polygon_info = new bee_polygon();
+	source_polygon_info = new bee_polygon(nullptr, polygon_pattern);
 	source_polygon_info->setpixmapwidth(ImageItem->pixmap().width() * ImageItem->scale());
 	source_polygon_info->setpixmapheight(ImageItem->pixmap().height() * ImageItem->scale());
 	this->qgraphicsScene->addItem(source_polygon_info);
 	ui->graphicsView->setScene(this->qgraphicsScene);
+
+	connect(source_polygon_info, &bee_polygon::create_RECT, this, &NCCMainWindow::createRECT);
 
 }
 
 
 void NCCMainWindow::on_action_circle_triggered()
 {
+	int circle_pattern = source_rect_List->size() + 1;
+
 	state_flag_maindow = CHOOSE_CIRCLE;
-	source_circle_info = new bee_circle();
+	source_circle_info = new bee_circle(nullptr, circle_pattern);
 	source_circle_info->setpixmapwidth(ImageItem->pixmap().width() * ImageItem->scale()); //设置图片的长宽为绘制时的区域长宽
 	source_circle_info->setpixmapheight(ImageItem->pixmap().height() * ImageItem->scale());
 	this->qgraphicsScene->addItem(source_circle_info);
 	ui->graphicsView->setScene(this->qgraphicsScene);
+
+	connect(source_circle_info, &bee_circle::create_RECT, this, &NCCMainWindow::createRECT);
+
 }
 
-//清空界面点击事件
+//删除按钮点击事件
 void NCCMainWindow::on_action_concircle_triggered()
 {
-	qgraphicsScene->removeItem(source_rect_info);
-	qgraphicsScene->removeItem(ncc_patten_rect_info);
-	qgraphicsScene->removeItem(source_polygon_info);
-	qgraphicsScene->removeItem(source_circle_info);
+	int listRow = ui->listWidget->currentRow();
+	if (listRow<0)
+	{
+		//未选择删除按钮
+		return;
+	}
+	QListWidgetItem* currentItem = ui->listWidget->currentItem();
+	int currentRow = ui->listWidget->currentRow();
 
-	
-	//搜索区域
-	source_rect_info = nullptr;
-	//特征区域,矩形
-	ncc_patten_rect_info = nullptr;
-	//特征区域多边形
-	source_polygon_info = nullptr;
-	//清空圆区域
-	source_circle_info = nullptr;
+	ui->listWidget->takeItem(currentRow);
+	qgraphicsScene->removeItem(source_rect_List->at(currentRow));
+	source_rect_List->removeAt(currentRow);
+
+	//qgraphicsScene->removeItem(source_rect_info);
+	//qgraphicsScene->removeItem(ncc_patten_rect_info);
+	//qgraphicsScene->removeItem(source_polygon_info);
+	//qgraphicsScene->removeItem(source_circle_info);
+
+	//
+	////搜索区域
+	//source_rect_info = nullptr;
+	////特征区域,矩形
+	//ncc_patten_rect_info = nullptr;
+	////特征区域多边形
+	//source_polygon_info = nullptr;
+	////清空圆区域
+	//source_circle_info = nullptr;
 
 	qgraphicsScene->update();
 
 }
-
+    
 //void NCCMainWindow::on_action_ringexpansion_triggered() {
 //
 //}
@@ -237,15 +275,18 @@ void NCCMainWindow::on_action_ringexpansion_triggered()
 {
 	int item = 0;
 	//判断当前特征区域的标志
-	if (ncc_patten_rect_info == nullptr && source_polygon_info == nullptr)
+	int pattern_index = getListItem("特征区域");
+	if (pattern_index ==0)
 	{
 		//没有设置特征区域
 		return;
 	}
-	if (ncc_patten_rect_info!=nullptr)
+	int pattern_rect_index = getListItem("矩形");
+	int pattern_polygon_index = getListItem("多边形");
+	if (pattern_rect_index != -1)
 	{
 		item = 1;
-	}else if (source_polygon_info != nullptr)
+	}else if (pattern_polygon_index != -1)
 	{
 		item = 2;
 	}
@@ -263,44 +304,53 @@ void NCCMainWindow::on_action_ringexpansion_triggered()
 	settings->setValue("source_width", ImageItem->pixmap().width());
 	settings->setValue("source_height", ImageItem->pixmap().height());
 
-
-	if (source_rect_info == nullptr)
+	int source_rect_index = getListItem("搜索区域");
+	bee_rect* source_rect_info_item;
+	if (source_rect_index == -1)
 	{
-		source_rect_info = new bee_rect();
-		source_rect_info->m_rect.setX(0);
-		source_rect_info->m_rect.setY(0);
-		source_rect_info->m_rect.setWidth(ImageItem->pixmap().width() * ImageItem->scale());
-		source_rect_info->m_rect.setHeight(ImageItem->pixmap().height() * ImageItem->scale());
+		source_rect_info_item = new bee_rect();
+		source_rect_info_item->m_rect.setX(0);
+		source_rect_info_item->m_rect.setY(0);
+		source_rect_info_item->m_rect.setWidth(ImageItem->pixmap().width() * ImageItem->scale());
+		source_rect_info_item->m_rect.setHeight(ImageItem->pixmap().height() * ImageItem->scale());
+	}
+	else {
+		source_rect_info_item = (bee_rect*)source_rect_List->at(source_rect_index);
 	}
 
 	//保存范围图信息
-	settings->setValue("source_rect_info.x", QString::number(source_rect_info->m_rect.x()));
-	settings->setValue("source_rect_info.y", QString::number(source_rect_info->m_rect.y()));
-	settings->setValue("source_rect_info.width", QString::number(source_rect_info->m_rect.width()));
-	settings->setValue("source_rect_info.height", QString::number(source_rect_info->m_rect.height()));
+	settings->setValue("source_rect_info.x", QString::number(source_rect_info_item->m_rect.x()));
+	settings->setValue("source_rect_info.y", QString::number(source_rect_info_item->m_rect.y()));
+	settings->setValue("source_rect_info.width", QString::number(source_rect_info_item->m_rect.width()));
+	settings->setValue("source_rect_info.height", QString::number(source_rect_info_item->m_rect.height()));
 	settings->setValue("source_rect_image_info", QString(fileName));
 
 	//保存特征图信息
-	if (ncc_patten_rect_info != nullptr)
+	if (pattern_rect_index != -1)
 	{
-		if (ncc_patten_rect_info->if_create)
+		bee_rect* ncc_patten_rect_info_item = (bee_rect*)source_rect_List->at(pattern_rect_index);
+
+		if (ncc_patten_rect_info_item->if_create)
 		{
 		
-		settings->setValue("pattern_rect_info.x", QString::number(ncc_patten_rect_info->m_rect.x()));
-		settings->setValue("pattern_rect_info.y", QString::number(ncc_patten_rect_info->m_rect.y()));
-		settings->setValue("pattern_rect_info.width", QString::number(ncc_patten_rect_info->m_rect.width()));
-		settings->setValue("pattern_rect_info.height", QString::number(ncc_patten_rect_info->m_rect.height()));
+		settings->setValue("pattern_rect_info.x", QString::number(ncc_patten_rect_info_item->m_rect.x()));
+		settings->setValue("pattern_rect_info.y", QString::number(ncc_patten_rect_info_item->m_rect.y()));
+		settings->setValue("pattern_rect_info.width", QString::number(ncc_patten_rect_info_item->m_rect.width()));
+		settings->setValue("pattern_rect_info.height", QString::number(ncc_patten_rect_info_item->m_rect.height()));
 		}
 	}
+
 	//保存多边形的特征信息
-	if (source_polygon_info != nullptr)
+	if (pattern_polygon_index != -1)
 	{
-		if (source_polygon_info->if_create)
+		bee_polygon* ncc_patten_polygon_info_item = (bee_polygon*)source_rect_List->at(pattern_polygon_index);
+
+		if (ncc_patten_polygon_info_item->if_create)
 		{
-		int num = source_polygon_info->num;
+		int num = ncc_patten_polygon_info_item->num;
 		settings->setValue("pattern_polygon_num", QString::number(num));
 
-		QVector<QPointF> pp_item = source_polygon_info->pp;
+		QVector<QPointF> pp_item = ncc_patten_polygon_info_item->pp;
 		for (int i = 0; i < num; i++)
 		{
 			QString itemX("pattern_polygon_count_X_");
@@ -315,11 +365,15 @@ void NCCMainWindow::on_action_ringexpansion_triggered()
 		 }
 	}
 	//保存输出点
-	if (source_point_info != nullptr)
+	int source_point_index = getListItem("输出点");
+
+	if (source_point_index != -1)
 	{
-	if (source_point_info->if_create)
+		bee_point* ncc_patten_point_info_item = (bee_point*)source_rect_List->at(source_point_index);
+
+	if (ncc_patten_point_info_item->if_create)
 	{
-		QList<mycorneritem*> my_caliberlineItem = source_point_info->m_HandlesList;
+		QList<mycorneritem*> my_caliberlineItem = ncc_patten_point_info_item->m_HandlesList;
 		mycorneritem*  pointCount = my_caliberlineItem.at(0);
 		double x = pointCount->m_point.x();
 		double y = pointCount->m_point.y();
@@ -417,14 +471,18 @@ void NCCMainWindow::on_action_caliberline_triggered()
 //输出点
 void NCCMainWindow::on_action_calibercircle_triggered()
 {
+	int point_pattern = source_rect_List->size() + 1;
+
 
 	state_flag_maindow = CALIBERCIRCLE;
-	source_point_info = new bee_point();
+	source_point_info = new bee_point(nullptr, point_pattern);
 	source_point_info->setpixmapwidth(ImageItem->pixmap().width() * ImageItem->scale());
 	source_point_info->setpixmapheight(ImageItem->pixmap().height() * ImageItem->scale());
 	
 	this->qgraphicsScene->addItem(source_point_info);
 	ui->graphicsView->setScene(this->qgraphicsScene);
+
+	connect(source_point_info, &bee_point::create_RECT, this, &NCCMainWindow::createRECT);
 
 }
 
@@ -498,7 +556,32 @@ void NCCMainWindow::createRECT(int type, int index)
 	if (type==1)
 	{
 		QString itemValue = "搜索区域-";
-		itemValue.append(index);
+		itemValue.append(QString::number(index));
 		ui->listWidget->addItem(itemValue);
+		source_rect_List->append(source_rect_info);
+	}
+	else if(type == 2) {
+		QString itemValue = "特征区域-矩形-";
+		itemValue.append(QString::number(index));
+		ui->listWidget->addItem(itemValue);
+		source_rect_List->append(ncc_patten_rect_info);
+	}
+	else if (type == 3) {
+		QString itemValue = "特征区域-多边形-";
+		itemValue.append(QString::number(index));
+		ui->listWidget->addItem(itemValue);
+		source_rect_List->append(source_polygon_info);
+	}
+	else if (type == 4) {
+		QString itemValue = "特征区域-圆形-";
+		itemValue.append(QString::number(index));
+		ui->listWidget->addItem(itemValue);
+		source_rect_List->append(source_circle_info);
+	}
+	else if (type == 5) {
+		QString itemValue = "输出点-";
+		itemValue.append(QString::number(index));
+		ui->listWidget->addItem(itemValue);
+		source_rect_List->append(source_point_info);
 	}
 }

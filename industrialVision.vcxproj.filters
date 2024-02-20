@@ -381,6 +381,15 @@
     <QtMoc Include="bee_rect.h">
       <Filter>Header Files\shapeMatch</Filter>
     </QtMoc>
+    <QtMoc Include="bee_polygon.h">
+      <Filter>Header Files\shapeMatch</Filter>
+    </QtMoc>
+    <QtMoc Include="bee_circle.h">
+      <Filter>Header Files\shapeMatch</Filter>
+    </QtMoc>
+    <QtMoc Include="bee_point.h">
+      <Filter>Header Files\shapeMatch</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="login.ui">
@@ -495,13 +504,7 @@
     <ClInclude Include="SharedData.h">
       <Filter>Header Files\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="bee_circle.h">
-      <Filter>Header Files\shapeMatch</Filter>
-    </ClInclude>
     <ClInclude Include="bee_concencircle.h">
-      <Filter>Header Files\shapeMatch</Filter>
-    </ClInclude>
-    <ClInclude Include="bee_polygon.h">
       <Filter>Header Files\shapeMatch</Filter>
     </ClInclude>
     <ClInclude Include="bee_ringexpansion.h">
@@ -520,9 +523,6 @@
       <Filter>Header Files\shapeMatch</Filter>
     </ClInclude>
     <ClInclude Include="controlline.h">
-      <Filter>Header Files\shapeMatch</Filter>
-    </ClInclude>
-    <ClInclude Include="bee_point.h">
       <Filter>Header Files\shapeMatch</Filter>
     </ClInclude>
   </ItemGroup>

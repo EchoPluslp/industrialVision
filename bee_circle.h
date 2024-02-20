@@ -23,8 +23,9 @@ enum STATE_FLAG_ONECIRCLE{
 
 class bee_circle:public QObject,public QGraphicsItem
 {
+    Q_OBJECT
 public:
-    bee_circle(QGraphicsItem *parent = nullptr);
+    bee_circle(QGraphicsItem *parent = nullptr,int count = 0);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
@@ -51,7 +52,9 @@ private:
     bool if_handleslist_create = false;
     bool create_move;
     QRectF  first_rect; //可调控矩形
-
+    int index_value;
+signals:
+	void create_RECT(int type, int index);
 };
 
 #endif // BEE_CIRCLE_H

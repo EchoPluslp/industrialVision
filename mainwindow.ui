@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1141</width>
-    <height>862</height>
+    <width>1201</width>
+    <height>925</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,7 +20,7 @@
    <bool>true</bool>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>形状匹配</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="mouseTracking">
@@ -28,14 +28,19 @@
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,1,0">
+     <layout class="QVBoxLayout" name="verticalLayout_4" stretch="2,2,1">
       <item>
        <widget class="QGroupBox" name="groupBox">
         <property name="font">
          <font>
-          <family>幼圆</family>
-          <pointsize>14</pointsize>
+          <family>Microsoft YaHei</family>
+          <pointsize>12</pointsize>
          </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QGroupBox { 
+     border: 3px solid gray; 
+ } </string>
         </property>
         <property name="title">
          <string>圆匹配算法参数</string>
@@ -53,8 +58,10 @@
              </property>
              <property name="font">
               <font>
-               <family>幼圆</family>
+               <family>Microsoft JhengHei</family>
                <pointsize>14</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
               </font>
              </property>
              <property name="text">
@@ -69,8 +76,10 @@
             <widget class="QSpinBox" name="spinbox_nMeasureNums">
              <property name="font">
               <font>
-               <family>幼圆</family>
+               <family>Microsoft YaHei</family>
                <pointsize>14</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="minimum">
@@ -87,6 +96,12 @@
           <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
             <widget class="QLabel" name="label_7">
+             <property name="font">
+              <font>
+               <family>Microsoft YaHei</family>
+               <pointsize>18</pointsize>
+              </font>
+             </property>
              <property name="text">
               <string>投影方向:</string>
              </property>
@@ -94,6 +109,12 @@
            </item>
            <item>
             <widget class="QSpinBox" name="spinBox_nSampleDirection">
+             <property name="font">
+              <font>
+               <family>Microsoft YaHei</family>
+               <pointsize>18</pointsize>
+              </font>
+             </property>
              <property name="maximum">
               <number>1</number>
              </property>
@@ -105,13 +126,26 @@
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
             <widget class="QLabel" name="label_6">
+             <property name="font">
+              <font>
+               <family>Microsoft YaHei</family>
+               <pointsize>17</pointsize>
+              </font>
+             </property>
              <property name="text">
               <string>sigma:</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="spinBox_nsigma"/>
+            <widget class="QSpinBox" name="spinBox_nsigma">
+             <property name="font">
+              <font>
+               <family>Microsoft YaHei</family>
+               <pointsize>18</pointsize>
+              </font>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>
@@ -119,6 +153,12 @@
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
             <widget class="QLabel" name="label_5">
+             <property name="font">
+              <font>
+               <family>Microsoft YaHei</family>
+               <pointsize>18</pointsize>
+              </font>
+             </property>
              <property name="text">
               <string>边缘阈值</string>
              </property>
@@ -126,6 +166,12 @@
            </item>
            <item>
             <widget class="QSpinBox" name="spinBox_nThreshold">
+             <property name="font">
+              <font>
+               <family>Microsoft YaHei</family>
+               <pointsize>18</pointsize>
+              </font>
+             </property>
              <property name="maximum">
               <number>255</number>
              </property>
@@ -140,6 +186,12 @@
           <layout class="QHBoxLayout" name="horizontalLayout_5">
            <item>
             <widget class="QLabel" name="label_8">
+             <property name="font">
+              <font>
+               <family>Microsoft YaHei</family>
+               <pointsize>18</pointsize>
+              </font>
+             </property>
              <property name="text">
               <string>边缘极性:</string>
              </property>
@@ -147,6 +199,12 @@
            </item>
            <item>
             <widget class="QComboBox" name="comboBox_nTranslation">
+             <property name="font">
+              <font>
+               <family>Microsoft YaHei</family>
+               <pointsize>18</pointsize>
+              </font>
+             </property>
              <item>
               <property name="text">
                <string>明到暗</string>
@@ -168,9 +226,16 @@
        <widget class="QGroupBox" name="groupBox_3">
         <property name="font">
          <font>
-          <family>幼圆</family>
-          <pointsize>14</pointsize>
+          <family>Microsoft JhengHei</family>
+          <pointsize>18</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QGroupBox { 
+     border: 3px solid gray; 
+ } </string>
         </property>
         <property name="title">
          <string>线匹配参数</string>
@@ -185,6 +250,14 @@
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Microsoft YaHei</family>
+               <pointsize>18</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
              </property>
              <property name="text">
               <string>卡尺数量:</string>
@@ -209,8 +282,10 @@
             <widget class="QLabel" name="label_10">
              <property name="font">
               <font>
-               <family>幼圆</family>
-               <pointsize>14</pointsize>
+               <family>Microsoft YaHei</family>
+               <pointsize>18</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="text">
@@ -222,8 +297,10 @@
             <widget class="QSpinBox" name="spinBox_nSetThreshold_line">
              <property name="font">
               <font>
-               <family>幼圆</family>
-               <pointsize>14</pointsize>
+               <family>Microsoft YaHei</family>
+               <pointsize>18</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="minimum">
@@ -247,6 +324,8 @@
               <font>
                <family>幼圆</family>
                <pointsize>14</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
               </font>
              </property>
              <property name="text">
@@ -264,8 +343,10 @@
              </property>
              <property name="font">
               <font>
-               <family>幼圆</family>
-               <pointsize>14</pointsize>
+               <family>Microsoft YaHei</family>
+               <pointsize>18</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <item>
@@ -289,9 +370,16 @@
        <widget class="QGroupBox" name="groupBox_2">
         <property name="font">
          <font>
-          <family>幼圆</family>
-          <pointsize>14</pointsize>
+          <family>Microsoft YaHei</family>
+          <pointsize>13</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QGroupBox { 
+     border: 3px solid gray; 
+ } </string>
         </property>
         <property name="title">
          <string>执行</string>
@@ -299,6 +387,14 @@
         <layout class="QHBoxLayout" name="horizontalLayout_9">
          <item>
           <widget class="QPushButton" name="pushButton_fitcircle">
+           <property name="font">
+            <font>
+             <family>Microsoft YaHei</family>
+             <pointsize>18</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
            <property name="text">
             <string>圆拟合</string>
            </property>
@@ -306,6 +402,14 @@
          </item>
          <item>
           <widget class="QPushButton" name="pushButton_line">
+           <property name="font">
+            <font>
+             <family>Microsoft YaHei</family>
+             <pointsize>19</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
            <property name="text">
             <string>线拟合</string>
            </property>
@@ -313,6 +417,14 @@
          </item>
          <item>
           <widget class="QPushButton" name="pushButton_save_currentInfo">
+           <property name="font">
+            <font>
+             <family>Microsoft YaHei</family>
+             <pointsize>18</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
            <property name="text">
             <string>保存</string>
            </property>
@@ -352,7 +464,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1141</width>
+     <width>1201</width>
      <height>22</height>
     </rect>
    </property>

@@ -189,10 +189,10 @@
     <QtMoc Include="graphicsview.h" />
     <QtMoc Include="bee_calibercircle.h" />
     <QtMoc Include="bee_caliberline.h" />
-    <ClInclude Include="bee_circle.h" />
+    <QtMoc Include="bee_circle.h" />
     <ClInclude Include="bee_concencircle.h" />
-    <ClInclude Include="bee_point.h" />
-    <ClInclude Include="bee_polygon.h" />
+    <QtMoc Include="bee_point.h" />
+    <QtMoc Include="bee_polygon.h" />
     <QtMoc Include="bee_rect.h" />
     <ClInclude Include="bee_ringexpansion.h" />
     <ClInclude Include="controlline.h" />

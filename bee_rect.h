@@ -74,8 +74,8 @@ public:
 public:
 	bool if_ncc_modelShape = false; //是否为特征区域
     int current_roi_index = 0;
-	//signals:
-	//  void create_RECT(int type,int index);
+	signals:
+	  void create_RECT(int type,int index);
 };
 
 #endif // BEE_RECT_H
