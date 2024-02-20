@@ -79,6 +79,8 @@ private:
 	MainWindow shapeMainWindow;
 
     smallMainWindow smallMainWindow;
+
+    NCCMainWindow nccmatchWindow;
     cv::Rect srcRect;
 	QRectF srcQRect;
 
@@ -195,7 +197,7 @@ public:
      //重新初始化
      void reinitialize();
 
-     void read_info_from_ini(QString path);
+     bool read_info_from_ini(QString path);
 	 protected:
 		 void closeEvent(QCloseEvent* event) override {
 			 // 创建 QMessageBox 对话框

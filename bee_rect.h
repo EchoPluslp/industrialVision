@@ -28,8 +28,9 @@ enum STATE_FLAG_ONERECT
 
 class bee_rect:public QAbstractGraphicsShapeItem
 {
+    
 public:
-    bee_rect(QGraphicsItem *parent = nullptr, bool flag=false);
+    bee_rect(QGraphicsItem *parent = nullptr, bool flag=false, bool ncc_flag = false,int index = 0);
     void setRectSize(QRectF mrect,bool bResetRotateCenter = true);
     QPointF getRotatePoint(QPointF ptCenter, QPointF ptIn, qreal angle);//获取旋转后的点
     QRectF  boundingRect() const;
@@ -48,7 +49,7 @@ public:
 
 
 
-private:
+public:
     qreal pixmap_width;
     qreal pixmap_height;
     QPointF m_startPos;
@@ -67,6 +68,14 @@ private:
     bool if_create = false;
     bool if_handleslist_create = false;
     bool create_move = false;
+    
+
+    //////////////////////////////////////////////////////////////////////////
+public:
+	bool if_ncc_modelShape = false; //是否为特征区域
+    int current_roi_index = 0;
+	//signals:
+	//  void create_RECT(int type,int index);
 };
 
 #endif // BEE_RECT_H

@@ -43,6 +43,9 @@ void bee_circle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
         mPen.setColor(Qt::magenta);
     }
     mPen.setWidth(0);
+	QBrush brush(QColor(255, 0, 0), Qt::Dense7Pattern); //画刷
+	painter->setBrush(brush);
+
     painter->setPen(mPen);
 
     boundingrect = QRectF(center_circle.x()-r,center_circle.y()-r,2*r,2*r);
@@ -82,7 +85,7 @@ void bee_circle::mousePressEvent(QGraphicsSceneMouseEvent *event)
                 if(rect.contains(m_startPos))
                 {
                     m_StateFlag = MOV_CIRCLE;
-
+                     
                 }
 
             }

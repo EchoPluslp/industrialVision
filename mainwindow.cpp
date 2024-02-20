@@ -26,6 +26,23 @@ MainWindow::MainWindow(QWidget *parent)
       ui->toolBar->setIconSize(QSize(60,60));
       ui->toolBar->setFloatable(false); // 设置工具栏不可浮动
       ui->toolBar->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+	  ui->toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+	  ui->action_choosepicture->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
+	  ui->action_zoomin->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
+	  ui->action_zoomout->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
+	  ui->action_1_to_1->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
+	  ui->action_fitwin->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
+	  ui->action_rect->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
+	  ui->action_rotaterect->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
+	  ui->action_circle->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
+	  ui->action_concircle->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
+	  ui->action_ringexpansion->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
+	  ui->action_caliberline->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
+	  ui->action_calibercircle->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
+	  ui->action_polygon->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
+
+
 }
 
 
@@ -442,7 +459,15 @@ void MainWindow::saveInfo()
 
 
 	QSettings* settings = new QSettings(path, QSettings::IniFormat);
+	QString group("shape_info");
+	settings->beginGroup(group);
+	settings->setValue("shape_info_item", 1);
+	settings->setValue("source_width", ImageItem->pixmap().width());
+	settings->setValue("source_height", ImageItem->pixmap().height());
+	settings->setValue("shape_info_item", 1);
 
+	
+	settings->endGroup();
 	
 	for (int i = 0; i < my_caliberline_List.size(); i++)
 	{

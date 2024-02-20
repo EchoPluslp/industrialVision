@@ -582,7 +582,7 @@ void FileController::onExecPattern(LabelController* labelController)
 		if (patternAreaREAL_size_rect.x() >= 0 && patternAreaREAL_size_rect.y() >= 0 && patternAreaREAL_size_rect.width() > 0 && patternAreaREAL_size_rect.height() > 0) {
 			cv::Rect patternAreaRealSize(patternAreaREAL_size_rect.x(), patternAreaREAL_size_rect.y(), patternAreaREAL_size_rect.width(), patternAreaREAL_size_rect.height());
 			cv::Mat patternImg = MatSrcImage(patternAreaRealSize);
-
+			
 			emit sendImageToPattern(Mat2QImage(patternImg), Mat2QImage(srcImgMat));
 		}
 	}

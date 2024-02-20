@@ -8,6 +8,7 @@
 #include <QPixmap>
 #include <QDateTime>
 #include <QMutex>
+#include <QApplication>
 #include "globalvar.h"
 #include "Mstruct.h"
 #include <string>
@@ -178,7 +179,9 @@ public slots:
 	ResultPoint slot_processMatchPictureWithMask(QImage patternImage, QImage sourceImage, QImage maskImage);
 	void slot_setSourceArea(bool flag);
 	void slot_recievePatternImageWithMask(QString pattern_Path, QRectF pattern_Rect, QRectF areaRect, QPoint centerPoint, QPoint patternRectCenterPoint);
+
 	void slot_recievePatternImageWithPolygonMask(QString pattern_Path, QPolygonF pattern_Rect, QRectF areaRect, QPoint centerPoint, QPoint patternRectCenterPoint);
+
 	void get_Info_From_industrial(QPointF pt_begin_cv2, QPointF pt_end_cv2, qreal height, qreal width, qreal nthresholdValue, qreal nSampleDirection, qreal nMeasureNums, QRect roi,
 		QPointF pt_start_line, QPointF pt_end_line);
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1133</width>
-    <height>667</height>
+    <width>1443</width>
+    <height>1091</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -20,12 +20,29 @@
    <property name="mouseTracking">
     <bool>true</bool>
    </property>
-   <layout class="QGridLayout" name="gridLayout" columnstretch="2">
-    <item row="1" column="0">
+   <layout class="QGridLayout" name="gridLayout" columnstretch="5,1" columnminimumwidth="0,0">
+    <item row="0" column="0">
      <widget class="myqgraphicsview" name="graphicsView">
       <property name="mouseTracking">
        <bool>true</bool>
       </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QGroupBox" name="groupBox">
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="title">
+       <string>已选操作</string>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QListWidget" name="listWidget"/>
+       </item>
+      </layout>
      </widget>
     </item>
    </layout>
@@ -40,12 +57,18 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1133</width>
+     <width>1443</width>
      <height>21</height>
     </rect>
    </property>
   </widget>
   <widget class="QToolBar" name="toolBar">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <property name="mouseTracking">
     <bool>true</bool>
    </property>
@@ -53,13 +76,13 @@
     <string>toolBar</string>
    </property>
    <property name="orientation">
-    <enum>Qt::Vertical</enum>
+    <enum>Qt::Horizontal</enum>
    </property>
    <property name="floatable">
     <bool>true</bool>
    </property>
    <attribute name="toolBarArea">
-    <enum>LeftToolBarArea</enum>
+    <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
@@ -108,10 +131,10 @@
      <normaloff>Icon/rect.png</normaloff>Icon/rect.png</iconset>
    </property>
    <property name="text">
-    <string>矩形</string>
+    <string>搜索区域</string>
    </property>
    <property name="toolTip">
-    <string>矩形</string>
+    <string>搜索区域</string>
    </property>
   </action>
   <action name="action_rotaterect">
@@ -120,10 +143,10 @@
      <normaloff>Icon/rotaterect.png</normaloff>Icon/rotaterect.png</iconset>
    </property>
    <property name="text">
-    <string>旋转矩形</string>
+    <string>特征区域</string>
    </property>
    <property name="toolTip">
-    <string>旋转矩形</string>
+    <string>特征区域</string>
    </property>
   </action>
   <action name="action_polygon">
@@ -132,10 +155,10 @@
      <normaloff>Icon/polygon.png</normaloff>Icon/polygon.png</iconset>
    </property>
    <property name="text">
-    <string>多边形</string>
+    <string>多边形特征区域</string>
    </property>
    <property name="toolTip">
-    <string>多边形</string>
+    <string>多边形特征区域</string>
    </property>
   </action>
   <action name="action_circle">
@@ -144,10 +167,10 @@
      <normaloff>Icon/circle.png</normaloff>Icon/circle.png</iconset>
    </property>
    <property name="text">
-    <string>圆</string>
+    <string>圆形特征区域</string>
    </property>
    <property name="toolTip">
-    <string>圆</string>
+    <string>圆形特征区域</string>
    </property>
   </action>
   <action name="action_concircle">
@@ -156,10 +179,10 @@
      <normaloff>Icon/concircle.png</normaloff>Icon/concircle.png</iconset>
    </property>
    <property name="text">
-    <string>同心圆</string>
+    <string>删除</string>
    </property>
    <property name="toolTip">
-    <string>同心圆</string>
+    <string>删除</string>
    </property>
   </action>
   <action name="action_ringexpansion">
@@ -168,10 +191,10 @@
      <normaloff>Icon/ringexpension.png</normaloff>Icon/ringexpension.png</iconset>
    </property>
    <property name="text">
-    <string>圆环展开</string>
+    <string>保存当前数据</string>
    </property>
    <property name="toolTip">
-    <string>圆环展开</string>
+    <string>保存当前数据</string>
    </property>
   </action>
   <action name="action_caliberline">
@@ -180,10 +203,10 @@
      <normaloff>Icon/caliber.png</normaloff>Icon/caliber.png</iconset>
    </property>
    <property name="text">
-    <string>卡尺</string>
+    <string>效果预览</string>
    </property>
    <property name="toolTip">
-    <string>直线卡尺</string>
+    <string>效果预览</string>
    </property>
   </action>
   <action name="action_calibercircle">
@@ -192,10 +215,10 @@
      <normaloff>Icon/caliber_circle.png</normaloff>Icon/caliber_circle.png</iconset>
    </property>
    <property name="text">
-    <string>圆卡尺</string>
+    <string>输出点</string>
    </property>
    <property name="toolTip">
-    <string>圆卡尺</string>
+    <string>输出点</string>
    </property>
   </action>
   <action name="action_zoomin">

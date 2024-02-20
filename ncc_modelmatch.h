@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef NCCMAINWINDOW_H
+#define NCCMAINWINDOW_H
 
 #include <QMainWindow>
 #include <QFileDialog>
@@ -10,29 +10,20 @@
 #include "bee_circle.h"
 #include "bee_concencircle.h"
 #include "bee_polygon.h"
+#include "bee_point.h"
 //#include <opencv2/opencv.hpp>
 #include <iostream>
 #include "bee_caliberline.h"
 #include "bee_calibercircle.h"
 #include "bee_ringexpansion.h"
 #include <QMouseEvent>
+#include <QTextCodec>
+#pragma execution_character_set("UTF-8")
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ncc_MainWindow; }
 QT_END_NAMESPACE
-
-
-enum STATE_FLAG_MAINWINDOW {
-	CHOOSE_NULL,
-	CHOOSE_PICTURE,
-	CHOOSE_RECT,
-	CHOOSE_CIRCLE,
-	CHOOSE_CONCENCIRCLE,
-	CHOOSE_POLYGON,
-	CALIBERLINE,
-	CALIBERCIRCLE,
-	RINGEXPANSION
-};
 
 class NCCMainWindow : public QMainWindow
 {
@@ -41,8 +32,20 @@ class NCCMainWindow : public QMainWindow
 public:
 	NCCMainWindow(QWidget* parent = nullptr);
 	~NCCMainWindow();
+	enum STATE_FLAG_MAINWINDOW {
+		CHOOSE_NULL,
+		CHOOSE_PICTURE,
+		CHOOSE_RECT,
+		CHOOSE_SOURCE_RECT,
+		CHOOSE_CIRCLE,
+		CHOOSE_CONCENCIRCLE,
+		CHOOSE_POLYGON,
+		CALIBERLINE,
+		CALIBERCIRCLE,
+		RINGEXPANSION
+	};
 
-private slots:
+public slots:
 	void on_action_choosepicture_triggered();
 
 	void on_action_rect_triggered();
@@ -55,6 +58,7 @@ private slots:
 
 	void on_action_concircle_triggered();
 
+	//保存当前数据
 	void on_action_ringexpansion_triggered();
 
 
@@ -71,22 +75,47 @@ private slots:
 
 	void on_action_1_to_1_triggered();
 
+	void sendImgToControllerShape(QImage image,QString ModelPath);
+	void slot_receiveDrawPoint(QPoint resultPoint, int totalModelTime);
+
+	void createRECT(int type, int index);
+signals:
+	void getImageFromCamera(QString str);
+	void sendImageToPattern(QImage sourceImage, QImage patternImage);
+	void sendINIPath(QString iniPath);
 protected:
 	virtual void keyPressEvent(QKeyEvent* event);
 
-private:
+public:
 	Ui::ncc_MainWindow* ui;
-	bee_rect* my_rect;
-	bee_circle* my_circle;
-	bee_polygon* my_polygon;
+	bee_circle* source_circle_info;
 	bee_concencircle* my_concencircle;
 	bee_caliberline* my_caliberline;
 	bee_calibercircle* my_calibercircle;
 	bee_ringexpansion* my_ringexpansion;
 	QGraphicsScene* qgraphicsScene;
-	STATE_FLAG_MAINWINDOW state_flag_maindow;
+	NCCMainWindow::STATE_FLAG_MAINWINDOW state_flag_maindow;
 	QGraphicsPixmapItem* ImageItem;
 
 	QString fileName;
+
+	//roi框的id。
+
+	//roi列表
+	//搜索区域矩形框
+	bee_rect* source_rect_info = nullptr;
+	int index_source = 0;
+	QList<QGraphicsItem*>* source_rect_List;
+
+	//特征区域矩形框
+	bee_rect* ncc_patten_rect_info = nullptr;
+	int index_rect = 0;
+	//多边形区域框
+	bee_polygon* source_polygon_info = nullptr;
+	int index_polygon = 0;
+	//输出点
+	bee_point* source_point_info = nullptr;
+	int index_point;
+
 };
 #endif // MAINWINDOW_H

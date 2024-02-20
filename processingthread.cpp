@@ -47,7 +47,6 @@ bool ProcessingThread::getmodelAndRealSclar()
 {
 	return  modelAndRealSclar;
 }
-
 void ProcessingThread::run()
 {
 	while (startFlag)
@@ -401,14 +400,11 @@ void ProcessingThread::slot_recievePatternImage(QString pattern_Path,QRectF patt
 	areaMatRect.width = areaRect.width();
 	areaMatRect.height = areaRect.height();
 
+	QString appleModel = QApplication::applicationDirPath() + "/model/";
+	QString dirpath = appleModel + pattern_Path;
 
-	String pattern_STD_Path = pattern_Path.toLocal8Bit().constData();
-	size_t pos = pattern_STD_Path.find("="); // 找到等号的位置
-	if (pos != string::npos) { // 如果找到了等号
-		pattern_STD_Path.erase(pos, 1); // 删除等号字符
-	}
-
-	 Mat ReadImagestd =  imread(pattern_STD_Path, CV_8UC1);
+	std::string readImage = dirpath.toLocal8Bit();
+	 Mat ReadImagestd =  imread(readImage, CV_8UC1);
 	 
 	 if (ReadImagestd.empty())
 	 {
@@ -1231,8 +1227,25 @@ void ProcessingThread::set_Grade(QString grade)
 //模板匹配界面窗口运行
 void ProcessingThread::slot_processMatchPicture(QImage patternImage, QImage sourceImage)
 {
-	cv::Mat patternImageMat = ImageToMat(patternImage);
-	cv::Mat sourceImageMat = ImageToMat(sourceImage);
+
+	patternImage = patternImage.convertToFormat(QImage::Format_RGB888);
+	sourceImage = sourceImage.convertToFormat(QImage::Format_RGB888);
+
+	cv::Mat patternImageMat = Mat(patternImage.height(),
+		patternImage.width(),
+		CV_8UC(3),
+		patternImage.bits(),
+		patternImage.bytesPerLine());
+//ImageToMat(patternImage);
+		cv::cvtColor(patternImageMat, patternImageMat, COLOR_BGR2GRAY);
+
+	cv::Mat sourceImageMat = Mat(sourceImage.height(),
+		sourceImage.width(),
+		CV_8UC(3),
+		sourceImage.bits(),
+		sourceImage.bytesPerLine());
+		//ImageToMat(sourceImage);
+	cv::cvtColor(sourceImageMat, sourceImageMat, COLOR_BGR2GRAY);
 
 	m_TemplData_model.clear();
 	int iTopLayer = GetTopLayer(&patternImageMat, (int)sqrt((double)256));
@@ -1557,14 +1570,13 @@ void ProcessingThread::slot_recievePatternImageWithPolygonMask(QString pattern_P
 	areaMatRect.height = areaRect.height();
 
 
-	String pattern_STD_Path = pattern_Path.toLocal8Bit().constData();
-	size_t pos = pattern_STD_Path.find("="); // 找到等号的位置
-	if (pos != string::npos) { // 如果找到了等号
-		pattern_STD_Path.erase(pos, 1); // 删除等号字符
-	}
+	QString appleModel = QApplication::applicationDirPath() + "/model/";
+	QString dirpath = appleModel + pattern_Path;
 
+	std::string readImage = dirpath.toLocal8Bit();
+	
 	//原图
-	Mat ReadImagestd = imread(pattern_STD_Path, CV_8UC1);
+	Mat ReadImagestd = imread(readImage, CV_8UC1);
 	if (ReadImagestd.empty())
 	{
 		emit signal_modelPictureReadFlag();

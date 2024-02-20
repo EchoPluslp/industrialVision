@@ -285,7 +285,7 @@ void industrialVision::receive_ServerCreateInfo(QString flag)
 //{
 //    connect(&createModelItem, &createModel::getImageFromCamera, this, &industrialVision::getImageOneFrame,Qt::UniqueConnection);
 //
-//	connect(this, &industrialVision::cameraTovisualTemplate,&createModelItem, &createModel::sendImgToFileController, Qt::UniqueConnection);
+	//connect(this, &industrialVision::cameraTovisualTemplate,&createModelItem, &createModel::sendImgToFileController, Qt::UniqueConnection);
 //
 //    connect(&createModelItem, &createModel::sendXMLPath , this, &industrialVision::getXMLPATH, Qt::UniqueConnection);
 //
@@ -304,8 +304,18 @@ void industrialVision::receive_ServerCreateInfo(QString flag)
 //新的模板匹配~,将形状匹配和模板匹配融合起来
 void industrialVision::click_editVision()
 {
+	connect(this, &industrialVision::cameraTovisualTemplate, &nccmatchWindow, &NCCMainWindow::sendImgToControllerShape, Qt::UniqueConnection);
 
-    createModelItem.show();
+	connect(&nccmatchWindow, &NCCMainWindow::getImageFromCamera, this, &industrialVision::getImageOneFrame, Qt::UniqueConnection);
+	
+	connect(&nccmatchWindow, &NCCMainWindow::sendImageToPattern, m_processingThread, &ProcessingThread::slot_processMatchPicture, Qt::UniqueConnection);
+
+	connect(m_processingThread, &ProcessingThread::QPointSendtoFileControl,&nccmatchWindow, &NCCMainWindow::slot_receiveDrawPoint, Qt::UniqueConnection);
+
+	//发送ini路径给主界面
+    connect(&nccmatchWindow, &NCCMainWindow::sendINIPath , this, &industrialVision::getXMLPATH, Qt::UniqueConnection);
+
+	nccmatchWindow.show();
     //更新xml文件
     AppendText("打开视觉模板界面",Green);
 }
@@ -468,7 +478,7 @@ void industrialVision::getXMLPATH(QString xmlPath)
 {
     AppendText("读取xml路径:"+ xmlPath,Green);
     m_xmlpath = xmlPath;
-	if(getPatternInfoFromXML(m_xmlpath)){
+	if (read_info_from_ini(m_xmlpath)) {
 	AppendText("加载xml模板成功" + xmlPath, Green);
 	}
 	else {
@@ -643,28 +653,20 @@ void industrialVision::openshizixian()
 void industrialVision::setModelXMLFile()
 {
         QString path = QFileDialog::getOpenFileName(nullptr, tr("Open File"), ".",
-           nullptr);
+			tr("配置文件(*ini)"));
     if (!path.isEmpty()) {
 		QFileInfo fileInfo(path);
-
-		if (fileInfo.suffix().toLower() == "xml") {
-			// 文件后缀名包含"xml"
-			m_xmlpath = path;
-			if (getPatternInfoFromXML(m_xmlpath)) {
-				AppendText("加载xml模板成功" + m_xmlpath, Green);
+			 if (fileInfo.suffix().toLower() == "ini"){
+			// 文件后缀名包含ini并发送数据
+			if (!read_info_from_ini(path))
+			{
+				QMessageBox::warning(nullptr, tr("Path"),
+					tr("INI模板图与当前相机展示的图片比例不一致,无法匹配"));
 			}
 			else {
-				if (!m_processingThread->getmodelAndRealSclar()) {
-					AppendText("XML模板图与当前相机展示的图片比例不一致,无法匹配" + m_xmlpath, Gray);
-					return;
-				}
-				AppendText("加载xml模板失败" + m_xmlpath, Red);
-
+				QMessageBox::warning(nullptr, tr("Path"),
+					tr("INI模板图导入成功"));
 			}
-		}
-		else if (fileInfo.suffix().toLower() == "ini"){
-			// 文件后缀名包含ini并发送数据
-			read_info_from_ini(path);
 		}
 		else {
 			QMessageBox::warning(nullptr, tr("Path"),
@@ -673,9 +675,8 @@ void industrialVision::setModelXMLFile()
     }
     else {
         QMessageBox::warning(nullptr, tr("Path"),
-            tr("未选择xml模板."));
+            tr("未选择INI模板."));
     }
-	//导入txt文件
 }
 
 void industrialVision::rotatePicture()
@@ -1503,9 +1504,9 @@ void industrialVision::getRotateValue(int x)
 		m_height = temp;
 	
 	if(!m_xmlpath.isEmpty()){
-	if (!getPatternInfoFromXML(m_xmlpath)) {
+	if (!read_info_from_ini(m_xmlpath)) {
 		if (!m_processingThread->getmodelAndRealSclar()) {
-			AppendText("XML模板图与当前相机展示的图片比例不一致,无法匹配" + m_xmlpath, Gray);
+			AppendText("INI模板图与当前相机展示的图片比例不一致,无法匹配" + m_xmlpath, Gray);
 			return;
 		}
 	}
@@ -1564,15 +1565,52 @@ void industrialVision::reinitialize() {
 	//重新设置标题
 }
 
-void industrialVision::read_info_from_ini(QString path)
+bool industrialVision::read_info_from_ini(QString path)
 {
+	bool is_shapeMatch = true;
 	//从path中读取ini信息
 	//读取上次关闭时的状态
 	QString settingPath = path;
 	QSettings settings(settingPath, QSettings::IniFormat);
 	// 获取所有分组
 	QStringList groups = settings.childGroups();
-	// 输出所有分组的名称
+	int source_width = 0;
+	int source_height = 0;
+	foreach(const QString & groupName, groups) {
+		settings.beginGroup(groupName);
+
+		//如果没有则不设置默认值
+		source_width = settings.value("source_width").toInt();
+		source_height = settings.value("source_height").toInt();
+		settings.endGroup();
+	}
+	//settings.beginGroup(groups)
+
+	if (!compareAspectRatio(QSize(source_width, source_height)))
+	{
+		//代表不一致
+		m_processingThread->setmodelAndRealSclar(false);
+		return false;
+	}
+	//当前图像的比例和模板图片的比例一致	
+	m_processingThread->setmodelAndRealSclar(true);
+
+	//重新把各项参数置空
+	resetParameters();
+
+	//判断当前文档是什么类型的文档。
+	foreach(const QString & groupName, groups) {
+		if (groupName.contains("shape")){
+			is_shapeMatch = true;
+		}
+		else if (groupName.contains("pattern")){
+			is_shapeMatch = false;
+		}
+	}
+
+	//卡尺匹配数据
+	if (is_shapeMatch)
+	{
 	// 遍历分组
 	foreach(const QString & groupName, groups) {
 		// 进入特定分组
@@ -1604,10 +1642,14 @@ void industrialVision::read_info_from_ini(QString path)
 
 		double pt_end_lineX = settings.value("pt_end_line.x", 0).toDouble();
 		double pt_end_lineY = settings.value("pt_end_line.y", 0).toDouble();
+		settings.endGroup();
 
 		emit sendInfo_shapeMatch_Value(QPointF(pt_begin_cv2X, pt_begin_cv2Y), QPointF(pt_end_cv2X, pt_end_cv2Y), height, width,
 			nthresholdValue, nSampleDirection, nMeasureNums, QRect(roiX, roiY, roiWidth, roiHeight),QPointF(pt_start_lineX, pt_start_lineY),
 			QPointF(pt_end_lineX, pt_end_lineY));
+		m_xmlpath = path;
+
+		return true;
 		// 退出分组
 	}else if (groupName.contains("circle"))
 	{
@@ -1634,12 +1676,124 @@ void industrialVision::read_info_from_ini(QString path)
 
 		emit sendInfo_shapeMatch_CIRCLE(QPointF(pdCenterX, pdCenterY), nRadius, dMeasureLength, dMeasureHeight,
 			dSigma, nThreshold, nTranslation, nMesureNums, nCircleSize, nSampleDirection, QRectF(roiX, roiY, roiWidth, roiHeight));
+		settings.endGroup();
+		m_xmlpath = path;
+
+		return true;
+
 		}
 	settings.endGroup();
 
 	}
 	//设置为ini模式
 	m_processingThread->setShape_match(true);
+	}
+
+	else {//读取模板匹配的数据
+		int currentItem = 0;
+		settings.beginGroup("pattern_info");
+		if (settings.value("pattern_info_item", 0).toInt() == 1)
+		{//是矩形
+			currentItem = 1;
+		}else if (settings.value("pattern_info_item", 0).toInt() == 2)
+		{
+			//是多边形
+			currentItem = 2;
+		}
+		double source_rect_infoX = settings.value("source_rect_info.x", 0).toDouble();
+		double source_rect_infoY = settings.value("source_rect_info.y", 0).toDouble();
+		double source_rect_infoWIDTH = settings.value("source_rect_info.width", 0).toDouble();
+		double source_rect_infoHeight = settings.value("source_rect_info.height", 0).toDouble();
+	
+		//范围框
+		srcQRect.setX(source_rect_infoX);
+		srcQRect.setY(source_rect_infoY);
+		srcQRect.setWidth(source_rect_infoWIDTH);
+		srcQRect.setHeight(source_rect_infoHeight);
+		
+		//判断输出点
+		double pattern_rect_infoX = settings.value("pattern_Output_Point_Count", 0).toDouble();
+		QPoint pattern_rect_outPut(0, 0);
+		QPoint patternRectCenterPoint(0, 0);
+
+		if (pattern_rect_infoX == 1)
+		{
+			//有输出点
+			double outputx = settings.value("pattern_Output_Point_X", 0).toDouble();
+			double outputy = settings.value("pattern_Output_Point_Y", 0).toDouble();
+
+			pattern_rect_outPut.setX(outputx);
+			pattern_rect_outPut.setY(outputy);
+		}
+
+		if (currentItem == 1){//特征区域是矩形框
+
+		//特征区域
+		QString pattern_image_path = settings.value("source_rect_image_info", 0).toString();
+
+		double pattern_rect_infoX = settings.value("pattern_rect_info.x", 0).toDouble();
+		double pattern_rect_infoY = settings.value("pattern_rect_info.y", 0).toDouble();
+		double pattern_rect_infoWidth = settings.value("pattern_rect_info.width", 0).toDouble();
+		double pattern_rect_infoHeight = settings.value("pattern_rect_info.height", 0).toDouble();
+
+		patternRectCenterPoint.setX(pattern_rect_infoX + pattern_rect_infoWidth / 2);
+		patternRectCenterPoint.setY(pattern_rect_infoY + pattern_rect_infoHeight / 2);
+
+		m_processingThread->setShapeType(1);
+		//拼接要给的信息
+				settings.endGroup();  
+				emit singal_sendPatternImage(pattern_image_path,QRectF(pattern_rect_infoX, pattern_rect_infoY,
+					pattern_rect_infoWidth, pattern_rect_infoHeight),
+					srcQRect,
+					pattern_rect_outPut, patternRectCenterPoint);
+
+				m_xmlpath = path;
+
+				return true;
+
+		}
+	else if (currentItem == 2)
+		{
+			QString pattern_image_path = settings.value("source_rect_image_info", 0).toString();
+			//设置shape,矩形没有mask掩膜,0有,1没有
+			m_processingThread->setShapeType(0);
+			QPolygonF  patternAreaREAL_size_polygon;
+			int numCount = settings.value("pattern_polygon_num", 0).toInt();
+
+			for (int i  = 0;i< numCount;i++)
+			{
+				QString polygonX("pattern_polygon_count_X_");
+				polygonX.append(QString::number(i));
+				
+				QString polygonY("pattern_polygon_count_Y_");
+				polygonY.append(QString::number(i));
+
+				double pattern_polygon_countX = settings.value(polygonX, 0).toDouble();
+				double pattern_polygon_countY = settings.value(polygonY, 0).toDouble();
+
+				
+				patternAreaREAL_size_polygon << QPointF(pattern_polygon_countX, pattern_polygon_countY);
+			}
+
+			// 将QPolygonF中的点坐标转换为vector<cv::Point>
+			std::vector<cv::Point> points;
+			for (const QPointF& point : patternAreaREAL_size_polygon) {
+				points.emplace_back(static_cast<int>(point.x()), static_cast<int>(point.y()));
+			}
+
+			cv::Rect boundingRect = cv::boundingRect(points);
+			patternRectCenterPoint.setX(boundingRect.x + (boundingRect.width / 2));
+			patternRectCenterPoint.setY(boundingRect.y + (boundingRect.height / 2));
+
+			emit singal_sendPatternImageWithMaskPolygon(pattern_image_path, patternAreaREAL_size_polygon, srcQRect,
+				pattern_rect_outPut, patternRectCenterPoint);
+
+			m_xmlpath = path;
+
+			return true;
+		}
+	}
+	return false;
 }
 
 void industrialVision::resetParameters()

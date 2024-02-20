@@ -25,23 +25,23 @@ class bee_polygon:public QObject,public QGraphicsItem
 public:
     bee_polygon(QGraphicsItem *parent = nullptr);
 
-    QRectF  boundingRect() const;
-    QPainterPath shape() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
-    void setPolygonsize();
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-    void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
-    QPolygonF getpoly();
-    void setpixmapwidth(qreal width){pixmap_width = width;}
-    void setpixmapheight(qreal height){pixmap_height = height;}
+	QRectF  boundingRect() const;
+	QPainterPath shape() const;
+	void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
+	void mousePressEvent(QGraphicsSceneMouseEvent* event);
+	void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
+	void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
+	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event);
+	void setPolygonsize();
+	void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
+	void hoverMoveEvent(QGraphicsSceneHoverEvent* event);
+	void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
+	QPolygonF getpoly();
+	void setpixmapwidth(qreal width) { pixmap_width = width; }
+	void setpixmapheight(qreal height) { pixmap_height = height; }
 
 
-private:
+public:
     QPolygonF m_poly;
     qreal pixmap_width;
     qreal pixmap_height;

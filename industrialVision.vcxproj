@@ -104,6 +104,7 @@
     <ClCompile Include="bee_caliberline.cpp" />
     <ClCompile Include="bee_circle.cpp" />
     <ClCompile Include="bee_concencircle.cpp" />
+    <ClCompile Include="bee_point.cpp" />
     <ClCompile Include="bee_polygon.cpp" />
     <ClCompile Include="bee_rect.cpp" />
     <ClCompile Include="bee_ringexpansion.cpp" />
@@ -190,6 +191,7 @@
     <QtMoc Include="bee_caliberline.h" />
     <ClInclude Include="bee_circle.h" />
     <ClInclude Include="bee_concencircle.h" />
+    <ClInclude Include="bee_point.h" />
     <ClInclude Include="bee_polygon.h" />
     <ClInclude Include="bee_rect.h" />
     <ClInclude Include="bee_ringexpansion.h" />

@@ -6,14 +6,18 @@
 #include <QCoreApplication>
 #include <QtMath>
 
-bee_rect::bee_rect(QGraphicsItem *parent, bool flag):
+bee_rect::bee_rect(QGraphicsItem *parent, bool flag,bool modelshape,
+    int index):
     rotate_angle(0),
     m_StateFlag(DEFAULT_FLAG_OR)
 {
+    
     setAcceptHoverEvents(true);
     setCursor(Qt::ArrowCursor);
     if_rotate = flag;
     m_rect = QRectF(0,0,0,0);
+    if_ncc_modelShape = modelshape;
+    this->current_roi_index = index;
 }
 
 void bee_rect::setRectSize(QRectF mrect, bool bResetRotateCenter)
@@ -128,6 +132,18 @@ void bee_rect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
     if(if_create)
     {
+        //是模板区域
+        if(if_ncc_modelShape){
+			QBrush brush(QColor(255, 0, 0), Qt::Dense7Pattern); //画刷
+
+			painter->setBrush(brush);
+        }
+        else {
+            //不是模板区域
+			QBrush brush(QColor(0, 255, 0), Qt::Dense7Pattern); //画刷
+			painter->setBrush(brush);
+        }
+
         painter->drawPolygon(m_poly);
         QPointF begin = (pp[0]+pp[1])/2;
         qreal x ;
@@ -140,12 +156,12 @@ void bee_rect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
         QPointF end = QPointF(x,y);
 
-
         qreal k = (end.y()-begin.y())/(end.x()-begin.x());
         qreal angle;
         angle = atan(k);
         qreal ExtRefArrowDegrees = M_PI/6; //绘制箭头
 
+ 
     }
     else
     {
@@ -373,12 +389,21 @@ void bee_rect::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     if(create_move&&if_handleslist_create)
     {
         if_create = true;
+        //特征区域区域,
+        if (if_ncc_modelShape)
+        {
+			//emit create_RECT(2, current_roi_index);
+        }
+        else {
+           // emit create_RECT(1, current_roi_index);
+        }
         create_move = false;
         m_rect.setTopLeft(pt[0]);
         m_rect.setTopRight(pt[1]);
         m_rect.setBottomLeft(pt[3]);
         m_rect.setBottomRight(pt[2]);
         setRectSize(m_rect);
+        //释放emit
     }
 
     setCursor(Qt::ArrowCursor);

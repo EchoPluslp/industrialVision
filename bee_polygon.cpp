@@ -1,8 +1,6 @@
 #include "bee_polygon.h"
 
-bee_polygon::bee_polygon(QGraphicsItem *parent)
-    :
-    m_StateFlag(DEFAULT_FLAG_OP)
+bee_polygon::bee_polygon(QGraphicsItem *parent):m_StateFlag(DEFAULT_FLAG_OP)
 {
     num = 0;
     num_move = 0;
@@ -73,6 +71,10 @@ void bee_polygon::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
             mPen.setColor(Qt::magenta);
         mPen.setWidth(0);
         painter->setPen(mPen);
+
+		QBrush brush(QColor(255, 0, 0), Qt::Dense7Pattern); //»­Ë¢
+		painter->setBrush(brush);
+
         painter->drawPolygon(m_poly);
     }
 }

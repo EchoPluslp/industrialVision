@@ -716,7 +716,7 @@ void createModel::sendImgToFileController(QImage image,QString modePath)
     } 
 	fileController->getImageFromCameraInFile(image);
 
-   // fileController->getImageFromCamera(image,modePath);
+ //   fileController->getImageFromCamera(image,modePath);
 }
 
 void createModel::onExecPatternAction()
