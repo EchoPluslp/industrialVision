@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1725</width>
-    <height>1038</height>
+    <width>1141</width>
+    <height>862</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -352,7 +352,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1725</width>
+     <width>1141</width>
      <height>22</height>
     </rect>
    </property>
@@ -393,15 +393,11 @@
    <addaction name="action_fitwin"/>
    <addaction name="separator"/>
    <addaction name="action_rect"/>
-   <addaction name="separator"/>
    <addaction name="action_rotaterect"/>
-   <addaction name="separator"/>
    <addaction name="action_polygon"/>
    <addaction name="separator"/>
    <addaction name="action_circle"/>
-   <addaction name="separator"/>
    <addaction name="action_concircle"/>
-   <addaction name="separator"/>
    <addaction name="action_ringexpansion"/>
    <addaction name="separator"/>
    <addaction name="action_caliberline"/>
@@ -433,6 +429,9 @@
    <property name="toolTip">
     <string>矩形</string>
    </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="action_rotaterect">
    <property name="icon">
@@ -444,6 +443,9 @@
    </property>
    <property name="toolTip">
     <string>旋转矩形</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
    </property>
   </action>
   <action name="action_polygon">
@@ -457,6 +459,9 @@
    <property name="toolTip">
     <string>多边形</string>
    </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="action_circle">
    <property name="icon">
@@ -468,6 +473,9 @@
    </property>
    <property name="toolTip">
     <string>圆</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
    </property>
   </action>
   <action name="action_concircle">
@@ -481,6 +489,9 @@
    <property name="toolTip">
     <string>同心圆</string>
    </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="action_ringexpansion">
    <property name="icon">
@@ -492,6 +503,9 @@
    </property>
    <property name="toolTip">
     <string>圆环展开</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
    </property>
   </action>
   <action name="action_caliberline">

@@ -165,7 +165,7 @@ void NCCMainWindow::on_action_rect_triggered()
 void NCCMainWindow::on_action_rotaterect_triggered()
 {
 	state_flag_maindow = CHOOSE_RECT;
-	bee_rect* ncc_patten_rect_info =  new bee_rect(nullptr, false, true);
+	ncc_patten_rect_info =  new bee_rect(nullptr, false, true);
 	ncc_patten_rect_info->setpixmapwidth(ImageItem->pixmap().width() * ImageItem->scale());
 	ncc_patten_rect_info->setpixmapheight(ImageItem->pixmap().height() * ImageItem->scale());
 	ncc_patten_rect_info->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
@@ -209,20 +209,20 @@ void NCCMainWindow::on_action_circle_triggered()
 //清空界面点击事件
 void NCCMainWindow::on_action_concircle_triggered()
 {
-	//qgraphicsScene->removeItem(source_rect_info);
-	//qgraphicsScene->removeItem(ncc_patten_rect_info);
-	//qgraphicsScene->removeItem(source_polygon_info);
-	//qgraphicsScene->removeItem(source_circle_info);
+	qgraphicsScene->removeItem(source_rect_info);
+	qgraphicsScene->removeItem(ncc_patten_rect_info);
+	qgraphicsScene->removeItem(source_polygon_info);
+	qgraphicsScene->removeItem(source_circle_info);
 
 	
-	////搜索区域
-	//source_rect_info = nullptr;
-	////特征区域,矩形
-	//ncc_patten_rect_info = nullptr;
-	////特征区域多边形
-	//source_polygon_info = nullptr;
-	////清空圆区域
-	//source_circle_info = nullptr;
+	//搜索区域
+	source_rect_info = nullptr;
+	//特征区域,矩形
+	ncc_patten_rect_info = nullptr;
+	//特征区域多边形
+	source_polygon_info = nullptr;
+	//清空圆区域
+	source_circle_info = nullptr;
 
 	qgraphicsScene->update();
 
@@ -359,64 +359,60 @@ void NCCMainWindow::on_action_ringexpansion_triggered()
 
 
 //效果预览按钮
-void NCCMainWindow::on_action_caliberline_triggered() {
+void NCCMainWindow::on_action_caliberline_triggered()
+{
+	int really_imageItem_width = ImageItem->pixmap().width() * ImageItem->scale() -1;
+	int really_imageItem_height = ImageItem->pixmap().height() * ImageItem->scale() -1;
+	double source_x = 0;
+	double source_y = 0;
+	double source_width = really_imageItem_width;
+	double source_height;
+	//获取两个画好的roi区域,用于匹配
+	if (source_rect_info != nullptr)
+	{
+		 source_x = source_rect_info->m_rect.x() == 0 ? 0 : source_rect_info->m_rect.x();
+		 source_y = source_rect_info->m_rect.y() == 0 ? 0 : source_rect_info->m_rect.y();
+		 source_width = source_rect_info->m_rect.width() == 0 ? really_imageItem_width : source_rect_info->m_rect.width();
+		 source_height = source_rect_info->m_rect.height() == 0 ? really_imageItem_height : source_rect_info->m_rect.height();
+	}
+	//判断source 是否超过图片的范围
+	if (source_x + source_width > really_imageItem_width)
+	{
+		source_width = really_imageItem_width - source_x;
+	}
+	if (source_y + source_height > really_imageItem_height)
+	{
+		source_height = really_imageItem_height - source_y;
+	}
+
+	if (ncc_patten_rect_info==nullptr)
+	{
+		return;
+	}
+	//获取特征区域
+	double ncc_pattern_x = ncc_patten_rect_info->m_rect.x() == 0 ? 0 : ncc_patten_rect_info->m_rect.x();
+	double ncc_pattern_y = ncc_patten_rect_info->m_rect.y() == 0 ? 0 : ncc_patten_rect_info->m_rect.y();
+	double ncc_pattern_width = ncc_patten_rect_info->m_rect.width() == 0 ? really_imageItem_width : ncc_patten_rect_info->m_rect.width();
+	double ncc_pattern_height = ncc_patten_rect_info->m_rect.height() == 0 ? really_imageItem_height : ncc_patten_rect_info->m_rect.height();
+
+	//判断ncc pattern 是否超过图片的范围
+	if (ncc_pattern_x + ncc_pattern_width > really_imageItem_width)
+	{
+		ncc_pattern_width = really_imageItem_width - ncc_pattern_x;
+	}
+	if (ncc_pattern_y + ncc_pattern_height > really_imageItem_height)
+	{
+		ncc_pattern_height = really_imageItem_height - ncc_pattern_y;
+	}
+
+	//得到坐标获取对应的Qimage
+	QImage source_Item = ImageItem->pixmap().copy(QRect(source_x, source_y, source_width, source_height)).toImage();
+	QImage  ncc_pattern_Item = ImageItem->pixmap().copy(QRect(ncc_pattern_x, ncc_pattern_y, ncc_pattern_width, ncc_pattern_height)).toImage();
+
+	//发送给processThread 线程 用于匹配
+	emit sendImageToPattern(ncc_pattern_Item, source_Item);
 
 }
-//
-//void NCCMainWindow::on_action_caliberline_triggered()
-//{
-//	int really_imageItem_width = ImageItem->pixmap().width() * ImageItem->scale() -1;
-//	int really_imageItem_height = ImageItem->pixmap().height() * ImageItem->scale() -1;
-//	double source_x = 0;
-//	double source_y = 0;
-//	double source_width = really_imageItem_width;
-//	double source_height;
-//	//获取两个画好的roi区域,用于匹配
-//	if (source_rect_info != nullptr)
-//	{
-//		 source_x = source_rect_info->m_rect.x() == 0 ? 0 : source_rect_info->m_rect.x();
-//		 source_y = source_rect_info->m_rect.y() == 0 ? 0 : source_rect_info->m_rect.y();
-//		 source_width = source_rect_info->m_rect.width() == 0 ? really_imageItem_width : source_rect_info->m_rect.width();
-//		 source_height = source_rect_info->m_rect.height() == 0 ? really_imageItem_height : source_rect_info->m_rect.height();
-//	}
-//	//判断source 是否超过图片的范围
-//	if (source_x + source_width > really_imageItem_width)
-//	{
-//		source_width = really_imageItem_width - source_x;
-//	}
-//	if (source_y + source_height > really_imageItem_height)
-//	{
-//		source_height = really_imageItem_height - source_y;
-//	}
-//
-//	if (ncc_patten_rect_info==nullptr)
-//	{
-//		return;
-//	}
-//	//获取特征区域
-//	double ncc_pattern_x = ncc_patten_rect_info->m_rect.x() == 0 ? 0 : ncc_patten_rect_info->m_rect.x();
-//	double ncc_pattern_y = ncc_patten_rect_info->m_rect.y() == 0 ? 0 : ncc_patten_rect_info->m_rect.y();
-//	double ncc_pattern_width = ncc_patten_rect_info->m_rect.width() == 0 ? really_imageItem_width : ncc_patten_rect_info->m_rect.width();
-//	double ncc_pattern_height = ncc_patten_rect_info->m_rect.height() == 0 ? really_imageItem_height : ncc_patten_rect_info->m_rect.height();
-//
-//	//判断ncc pattern 是否超过图片的范围
-//	if (ncc_pattern_x + ncc_pattern_width > really_imageItem_width)
-//	{
-//		ncc_pattern_width = really_imageItem_width - ncc_pattern_x;
-//	}
-//	if (ncc_pattern_y + ncc_pattern_height > really_imageItem_height)
-//	{
-//		ncc_pattern_height = really_imageItem_height - ncc_pattern_y;
-//	}
-//
-//	//得到坐标获取对应的Qimage
-//	QImage source_Item = ImageItem->pixmap().copy(QRect(source_x, source_y, source_width, source_height)).toImage();
-//	QImage  ncc_pattern_Item = ImageItem->pixmap().copy(QRect(ncc_pattern_x, ncc_pattern_y, ncc_pattern_width, ncc_pattern_height)).toImage();
-//
-//	//发送给processThread 线程 用于匹配
-//	emit sendImageToPattern(ncc_pattern_Item, source_Item);
-//
-//}
 
 //输出点
 void NCCMainWindow::on_action_calibercircle_triggered()
@@ -471,35 +467,31 @@ void NCCMainWindow::sendImgToControllerShape(QImage image,QString ModelPath)
 	state_flag_maindow = CHOOSE_PICTURE;
 }
 
+//
 void NCCMainWindow::slot_receiveDrawPoint(QPoint resultPoint, int totalModelTime)
 {
+	QPixmap image = ImageItem->pixmap();
+	QPainter painter(&image);
+	int sourceX = 0;
+	int sourceY = 0;
+	if (source_rect_info!=nullptr)
+	{
+		sourceX = source_rect_info->m_rect.x();
+		sourceY = source_rect_info->m_rect.y();
+	}
+	int x = resultPoint.x() + sourceX;
+	int y = resultPoint.y() + sourceY;
+	painter.setPen(QPen(Qt::green, 10));
 
+	painter.drawPoint(x,y);//在image中(0,0)为左上角，宽20、高20的矩形内画圆
+	QString str = tr("size=(%1,%2),centerPoint(%3,%4),totaltime(%5)").
+		arg(ImageItem->pixmap().width()).
+		arg(ImageItem->pixmap().height()).
+		arg(x).arg(y).arg(totalModelTime);
+	ui->statusbar->showMessage(str);
+
+	qgraphicsScene->update();
 }
-//
-//void NCCMainWindow::slot_receiveDrawPoint(QPoint resultPoint, int totalModelTime)
-//{
-//	QPixmap image = ImageItem->pixmap();
-//	QPainter painter(&image);
-//	int sourceX = 0;
-//	int sourceY = 0;
-//	if (source_rect_info!=nullptr)
-//	{
-//		sourceX = source_rect_info->m_rect.x();
-//		sourceY = source_rect_info->m_rect.y();
-//	}
-//	int x = resultPoint.x() + sourceX;
-//	int y = resultPoint.y() + sourceY;
-//	painter.setPen(QPen(Qt::green, 10));
-//
-//	painter.drawPoint(x,y);//在image中(0,0)为左上角，宽20、高20的矩形内画圆
-//	QString str = tr("size=(%1,%2),centerPoint(%3,%4),totaltime(%5)").
-//		arg(ImageItem->pixmap().width()).
-//		arg(ImageItem->pixmap().height()).
-//		arg(x).arg(y).arg(totalModelTime);
-//	ui->statusbar->showMessage(str);
-//
-//	qgraphicsScene->update();
-//}
 
 void NCCMainWindow::createRECT(int type, int index)
 {

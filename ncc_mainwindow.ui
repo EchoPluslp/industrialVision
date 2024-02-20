@@ -58,7 +58,7 @@
      <x>0</x>
      <y>0</y>
      <width>1443</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -140,7 +140,7 @@
   <action name="action_rotaterect">
    <property name="icon">
     <iconset>
-     <normaloff>Icon/rotaterect.png</normaloff>Icon/rotaterect.png</iconset>
+     <normaloff>Icon/ncc_rect.png</normaloff>Icon/ncc_rect.png</iconset>
    </property>
    <property name="text">
     <string>特征区域</string>
@@ -176,7 +176,7 @@
   <action name="action_concircle">
    <property name="icon">
     <iconset>
-     <normaloff>Icon/concircle.png</normaloff>Icon/concircle.png</iconset>
+     <normaloff>Icon/ncc_delete.png</normaloff>Icon/ncc_delete.png</iconset>
    </property>
    <property name="text">
     <string>删除</string>
@@ -188,7 +188,7 @@
   <action name="action_ringexpansion">
    <property name="icon">
     <iconset>
-     <normaloff>Icon/ringexpension.png</normaloff>Icon/ringexpension.png</iconset>
+     <normaloff>Icon/ncc_save.png</normaloff>Icon/ncc_save.png</iconset>
    </property>
    <property name="text">
     <string>保存当前数据</string>
@@ -200,7 +200,7 @@
   <action name="action_caliberline">
    <property name="icon">
     <iconset>
-     <normaloff>Icon/caliber.png</normaloff>Icon/caliber.png</iconset>
+     <normaloff>Icon/ncc_show.png</normaloff>Icon/ncc_show.png</iconset>
    </property>
    <property name="text">
     <string>效果预览</string>
@@ -212,7 +212,7 @@
   <action name="action_calibercircle">
    <property name="icon">
     <iconset>
-     <normaloff>Icon/caliber_circle.png</normaloff>Icon/caliber_circle.png</iconset>
+     <normaloff>Icon/ncc_point.png</normaloff>Icon/ncc_point.png</iconset>
    </property>
    <property name="text">
     <string>输出点</string>

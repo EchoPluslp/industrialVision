@@ -193,7 +193,7 @@
     <ClInclude Include="bee_concencircle.h" />
     <ClInclude Include="bee_point.h" />
     <ClInclude Include="bee_polygon.h" />
-    <ClInclude Include="bee_rect.h" />
+    <QtMoc Include="bee_rect.h" />
     <ClInclude Include="bee_ringexpansion.h" />
     <ClInclude Include="controlline.h" />
     <ClInclude Include="edge.h" />

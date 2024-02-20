@@ -26,9 +26,9 @@ enum STATE_FLAG_ONERECT
     ROTATE_OR//标记当前为旋转状态
 };
 
-class bee_rect:public QAbstractGraphicsShapeItem
+class bee_rect: public QObject,public QAbstractGraphicsShapeItem
 {
-    
+    Q_OBJECT
 public:
     bee_rect(QGraphicsItem *parent = nullptr, bool flag=false, bool ncc_flag = false,int index = 0);
     void setRectSize(QRectF mrect,bool bResetRotateCenter = true);

@@ -378,6 +378,9 @@
     <QtMoc Include="ncc_modelmatch.h">
       <Filter>Header Files\modelMatch</Filter>
     </QtMoc>
+    <QtMoc Include="bee_rect.h">
+      <Filter>Header Files\shapeMatch</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="login.ui">
@@ -520,9 +523,6 @@
       <Filter>Header Files\shapeMatch</Filter>
     </ClInclude>
     <ClInclude Include="bee_point.h">
-      <Filter>Header Files\shapeMatch</Filter>
-    </ClInclude>
-    <ClInclude Include="bee_rect.h">
       <Filter>Header Files\shapeMatch</Filter>
     </ClInclude>
   </ItemGroup>
