@@ -67,13 +67,16 @@ void bee_polygon::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     }
     if(if_create)
     {
-		QPen mPen(QColor(26, 250, 41));
+        QColor itemcolor(26, 250, 41);
+        itemcolor.setAlpha(98);
+		QPen mPen(itemcolor);
+        
         if(if_hover)
-            mPen.setColor(QColor(26, 250, 41));
+            mPen.setColor(itemcolor);
         mPen.setWidth(0);
         painter->setPen(mPen);
 
-		QBrush brush(QColor(255, 0, 0), Qt::NoBrush); //»­Ë¢
+		QBrush brush(itemcolor, Qt::SolidPattern); //»­Ë¢
 		painter->setBrush(brush);
 
         painter->drawPolygon(m_poly);

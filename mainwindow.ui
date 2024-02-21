@@ -22,13 +22,17 @@
   <property name="windowTitle">
    <string>形状匹配</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>Icon/fitwin.png</normaloff>Icon/fitwin.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <property name="mouseTracking">
     <bool>true</bool>
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout_4" stretch="2,2,1">
+     <layout class="QVBoxLayout" name="verticalLayout_4" stretch="3,2,1">
       <item>
        <widget class="QGroupBox" name="groupBox">
         <property name="font">
@@ -60,10 +64,10 @@
              </property>
              <property name="font">
               <font>
-               <family>Microsoft JhengHei</family>
-               <pointsize>14</pointsize>
-               <weight>75</weight>
-               <bold>true</bold>
+               <family>Microsoft YaHei</family>
+               <pointsize>18</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="text">
@@ -268,6 +272,14 @@
            </item>
            <item>
             <widget class="QSpinBox" name="spinBox_nMeasureNums_line">
+             <property name="font">
+              <font>
+               <family>Microsoft YaHei</family>
+               <pointsize>18</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
              <property name="minimum">
               <number>2</number>
              </property>
@@ -324,10 +336,10 @@
             <widget class="QLabel" name="label_11">
              <property name="font">
               <font>
-               <family>幼圆</family>
-               <pointsize>14</pointsize>
-               <weight>75</weight>
-               <bold>true</bold>
+               <family>Microsoft YaHei</family>
+               <pointsize>18</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="text">
@@ -441,8 +453,8 @@
      <widget class="QGroupBox" name="groupBox_4">
       <property name="font">
        <font>
-        <family>幼圆</family>
-        <pointsize>14</pointsize>
+        <family>Microsoft YaHei</family>
+        <pointsize>18</pointsize>
        </font>
       </property>
       <property name="title">
@@ -467,7 +479,7 @@
      <x>0</x>
      <y>0</y>
      <width>1201</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -610,16 +622,16 @@
   <action name="action_ringexpansion">
    <property name="icon">
     <iconset>
-     <normaloff>Icon/ringexpension.png</normaloff>Icon/ringexpension.png</iconset>
+     <normaloff>Icon/clear.png</normaloff>Icon/clear.png</iconset>
    </property>
    <property name="text">
-    <string>圆环展开</string>
+    <string>清空结果</string>
    </property>
    <property name="toolTip">
-    <string>圆环展开</string>
+    <string>清空结果</string>
    </property>
    <property name="visible">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
   </action>
   <action name="action_caliberline">
@@ -628,10 +640,13 @@
      <normaloff>Icon/caliber.png</normaloff>Icon/caliber.png</iconset>
    </property>
    <property name="text">
-    <string>卡尺</string>
+    <string>  线匹配  </string>
+   </property>
+   <property name="iconText">
+    <string>  线匹配  </string>
    </property>
    <property name="toolTip">
-    <string>直线卡尺</string>
+    <string>  线匹配  </string>
    </property>
   </action>
   <action name="action_calibercircle">
@@ -640,10 +655,13 @@
      <normaloff>Icon/caliber_circle.png</normaloff>Icon/caliber_circle.png</iconset>
    </property>
    <property name="text">
-    <string>圆卡尺</string>
+    <string>  圆匹配  </string>
+   </property>
+   <property name="iconText">
+    <string>  圆匹配  </string>
    </property>
    <property name="toolTip">
-    <string>圆卡尺</string>
+    <string>  圆匹配  </string>
    </property>
   </action>
   <action name="action_zoomin">

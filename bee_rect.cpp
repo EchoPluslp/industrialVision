@@ -134,20 +134,28 @@ void bee_rect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     {
         //是特征区域
         if(if_ncc_modelShape){
-			QBrush brush(QColor(255, 0, 0), Qt::NoBrush); //画刷
+            QColor coloritem(216, 30, 6);
+			coloritem.setAlpha(98);
+
+			QBrush brush(coloritem); //画刷
+		//	color.setAlpha(95);
+
             //特征区域
 			mPen.setColor(QColor(216,30,6));
 
-			//painter->setBrush(brush);
+			painter->setBrush(brush);
 			painter->setPen(mPen);
 
         }
         else {
             //是模板区域
-			QBrush brush(QColor(0, 255, 0), Qt::NoBrush); //画刷
+			QColor coloritem(84, 101, 207);
+			coloritem.setAlpha(98);
+
+			QBrush brush(coloritem); //画刷
 			mPen.setColor(QColor(84, 101, 207));
 
-			//painter->setBrush(brush);
+			painter->setBrush(brush);
 			painter->setPen(mPen);
 
         }

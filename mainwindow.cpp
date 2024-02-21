@@ -134,6 +134,8 @@ void MainWindow::fitcircle()
 	lineitem = new CControlLine();
 	lineitem->addcircles(pdCenter, dRadius);
 	qgraphicsScene->addItem(lineitem);
+	CControlLine_List.append(lineitem);
+
 	qgraphicsScene->update();
 }
 
@@ -534,61 +536,61 @@ void MainWindow::fitline_with_signal(QPixmap image)
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    if(event->key() == Qt::Key_Delete)
-    {
-        switch(state_flag_maindow)
-        {
-        case CHOOSE_RECT:
-        { 
-            qgraphicsScene->removeItem(my_rect);
-            delete my_rect;
-            state_flag_maindow = CHOOSE_PICTURE;
+    //if(event->key() == Qt::Key_Delete)
+    //{
+    //    switch(state_flag_maindow)
+    //    {
+    //    case CHOOSE_RECT:
+    //    { 
+    //        qgraphicsScene->removeItem(my_rect);
+    //        delete my_rect;
+    //        state_flag_maindow = CHOOSE_PICTURE;
 
-            break;
-        }
-        case CHOOSE_CIRCLE:
-        {
-            qgraphicsScene->removeItem(my_circle);
-            delete my_circle;
-            state_flag_maindow = CHOOSE_PICTURE;
-            break;
-        }
-        case CHOOSE_CONCENCIRCLE:
-        {
-            qgraphicsScene->removeItem(my_concencircle);
-            delete my_concencircle;
-            state_flag_maindow = CHOOSE_PICTURE;
-            break;
-        }case CHOOSE_POLYGON:
-        {
-            qgraphicsScene->removeItem(my_polygon);
-            delete my_polygon;
-            state_flag_maindow = CHOOSE_PICTURE;
-            break;
-        }
-        case CALIBERLINE:
-        {
-           // qgraphicsScene->removeItem(my_caliberline);
-           // delete my_caliberline;
-            state_flag_maindow = CHOOSE_PICTURE;
-            break;
-        }
-        case CALIBERCIRCLE:
-        {
-            qgraphicsScene->removeItem(my_calibercircle);
-            delete my_calibercircle;
-            state_flag_maindow = CHOOSE_PICTURE;
-            break;
-        }
-        case RINGEXPANSION:
-        {
-            qgraphicsScene->removeItem(my_ringexpansion);
-            delete my_ringexpansion;
-            state_flag_maindow = CHOOSE_PICTURE;
-            break;
-        }
-        }
-    }
+    //        break;
+    //    }
+    //    case CHOOSE_CIRCLE:
+    //    {
+    //        qgraphicsScene->removeItem(my_circle);
+    //        delete my_circle;
+    //        state_flag_maindow = CHOOSE_PICTURE;
+    //        break;
+    //    }
+    //    case CHOOSE_CONCENCIRCLE:
+    //    {
+    //        qgraphicsScene->removeItem(my_concencircle);
+    //        delete my_concencircle;
+    //        state_flag_maindow = CHOOSE_PICTURE;
+    //        break;
+    //    }case CHOOSE_POLYGON:
+    //    {
+    //        qgraphicsScene->removeItem(my_polygon);
+    //        delete my_polygon;
+    //        state_flag_maindow = CHOOSE_PICTURE;
+    //        break;
+    //    }
+    //    case CALIBERLINE:
+    //    {
+    //       // qgraphicsScene->removeItem(my_caliberline);
+    //       // delete my_caliberline;
+    //        state_flag_maindow = CHOOSE_PICTURE;
+    //        break;
+    //    }
+    //    case CALIBERCIRCLE:
+    //    {
+    //        qgraphicsScene->removeItem(my_calibercircle);
+    //        delete my_calibercircle;
+    //        state_flag_maindow = CHOOSE_PICTURE;
+    //        break;
+    //    }
+    //    case RINGEXPANSION:
+    //    {
+    //        qgraphicsScene->removeItem(my_ringexpansion);
+    //        delete my_ringexpansion;
+    //        state_flag_maindow = CHOOSE_PICTURE;
+    //        break;
+    //    }
+    //    }
+    //}
 
     qgraphicsScene->update();
 
@@ -684,17 +686,36 @@ void MainWindow::on_action_concircle_triggered()
 
 void MainWindow::on_action_ringexpansion_triggered()
 {
-
-        state_flag_maindow = RINGEXPANSION;
-        my_ringexpansion = new bee_ringexpansion();
-        my_ringexpansion->setpixmapwidth(ImageItem->pixmap().width()*ImageItem->scale());
-        my_ringexpansion->setpixmapheight(ImageItem->pixmap().height()*ImageItem->scale());
-        this->qgraphicsScene->addItem(my_ringexpansion);
-        ui->graphicsView->setScene(this->qgraphicsScene);
+	if (CControlLine_List.size()==0)
+	{
+		return;
+	}
+	for (int i = 0;i< CControlLine_List.size();i++)
+	{
+		CControlLine*  item = CControlLine_List.at(i);
+		qgraphicsScene->removeItem(item);
+		delete item;
+		item = nullptr;
+	}
+	/* state_flag_maindow = RINGEXPANSION;
+	 my_ringexpansion = new bee_ringexpansion();
+	 my_ringexpansion->setpixmapwidth(ImageItem->pixmap().width()*ImageItem->scale());
+	 my_ringexpansion->setpixmapheight(ImageItem->pixmap().height()*ImageItem->scale());
+	 this->qgraphicsScene->addItem(my_ringexpansion);
+	 ui->graphicsView->setScene(this->qgraphicsScene);*/
 }
 
 void MainWindow::on_action_caliberline_triggered()
 {
+	if (ImageItem == nullptr)
+	{
+		return;
+	}
+	QPixmap x = ImageItem->pixmap();
+	if (x.isNull())
+	{
+		return;
+	}
         state_flag_maindow = CALIBERLINE;
 		bee_caliberline* my_caliberline = new bee_caliberline();
         my_caliberline->setpixmapwidth(ImageItem->pixmap().width()*ImageItem->scale());
@@ -722,6 +743,15 @@ void MainWindow::on_action_caliberline_triggered()
 
 void MainWindow::on_action_calibercircle_triggered()
 {
+	if (ImageItem == nullptr)
+	{
+		return;
+	}
+	QPixmap x = ImageItem->pixmap();
+	if (x.isNull())
+	{
+		return;
+	}
         state_flag_maindow = CALIBERCIRCLE;
         my_calibercircle = new bee_calibercircle();
         my_calibercircle->setpixmapwidth(ImageItem->pixmap().width()*ImageItem->scale());

@@ -135,6 +135,28 @@ int NCCMainWindow::getListItem(QString name)
 	return -1;
 }
 
+cv::Mat NCCMainWindow::QImageToMat(QImage& qimage)
+{
+	cv::Mat mat;
+	switch (qimage.format())
+	{
+	case QImage::Format_ARGB32:
+	case QImage::Format_RGB32:
+	case QImage::Format_ARGB32_Premultiplied:
+		mat = cv::Mat(qimage.height(), qimage.width(), CV_8UC4, (void*)qimage.constBits(), qimage.bytesPerLine());
+		break;
+	case QImage::Format_RGB888:
+		mat = cv::Mat(qimage.height(), qimage.width(), CV_8UC3, (void*)qimage.constBits(), qimage.bytesPerLine());
+		//cv::cvtColor(mat, mat, CV_BGR2RGB);
+		break;
+	case QImage::Format_Indexed8:
+		mat = cv::Mat(qimage.height(), qimage.width(), CV_8UC1, (void*)qimage.constBits(), qimage.bytesPerLine());
+		break;
+	}
+	return mat;
+	
+	}
+
 
 //发送获得图片请求数据
 void NCCMainWindow::on_action_choosepicture_triggered()
@@ -283,12 +305,17 @@ void NCCMainWindow::on_action_ringexpansion_triggered()
 	}
 	int pattern_rect_index = getListItem("矩形");
 	int pattern_polygon_index = getListItem("多边形");
+	int pattern_circle_index = getListItem("圆型");
+
 	if (pattern_rect_index != -1)
 	{
 		item = 1;
 	}else if (pattern_polygon_index != -1)
 	{
 		item = 2;
+	}else if (pattern_circle_index!=-1)
+	{
+		item = 3;
 	}
 		//另存为
 		QString path = QFileDialog::getSaveFileName(nullptr,
@@ -296,6 +323,10 @@ void NCCMainWindow::on_action_ringexpansion_triggered()
 			"",
 			tr("ini Files(*.ini)"));
 
+		if (path.isEmpty())
+		{
+			return;
+		}
 	QSettings* settings = new QSettings(path, QSettings::IniFormat);
 
 	QString groupinfo("pattern_info");
@@ -338,10 +369,8 @@ void NCCMainWindow::on_action_ringexpansion_triggered()
 		settings->setValue("pattern_rect_info.width", QString::number(ncc_patten_rect_info_item->m_rect.width()));
 		settings->setValue("pattern_rect_info.height", QString::number(ncc_patten_rect_info_item->m_rect.height()));
 		}
-	}
-
-	//保存多边形的特征信息
-	if (pattern_polygon_index != -1)
+	}	//保存多边形的特征信息
+	else if (pattern_polygon_index != -1)
 	{
 		bee_polygon* ncc_patten_polygon_info_item = (bee_polygon*)source_rect_List->at(pattern_polygon_index);
 
@@ -363,6 +392,9 @@ void NCCMainWindow::on_action_ringexpansion_triggered()
 			settings->setValue(itemY, QString::number(pp_item.at(i).y()));
 			}
 		 }
+	}else if (pattern_circle_index!=-1)
+	{
+
 	}
 	//保存输出点
 	int source_point_index = getListItem("输出点");
@@ -421,13 +453,29 @@ void NCCMainWindow::on_action_caliberline_triggered()
 	double source_y = 0;
 	double source_width = really_imageItem_width;
 	double source_height;
-	//获取两个画好的roi区域,用于匹配
-	if (source_rect_info != nullptr)
+	int pattern_index = getListItem("特征区域");
+	if (pattern_index == -1)
 	{
-		 source_x = source_rect_info->m_rect.x() == 0 ? 0 : source_rect_info->m_rect.x();
-		 source_y = source_rect_info->m_rect.y() == 0 ? 0 : source_rect_info->m_rect.y();
-		 source_width = source_rect_info->m_rect.width() == 0 ? really_imageItem_width : source_rect_info->m_rect.width();
-		 source_height = source_rect_info->m_rect.height() == 0 ? really_imageItem_height : source_rect_info->m_rect.height();
+		//没有设置特征区域
+		return;
+	}
+	//获得搜索区域
+		int source_rect_index = getListItem("搜索区域");
+		bee_rect* source_rect_info_item;
+	if (source_rect_index == -1)
+	{
+		//没有选择搜索区域,默认全图
+		source_x = 0;
+		source_y = 0;
+		source_width = really_imageItem_width;
+		source_height = really_imageItem_height;
+	}else{
+		source_rect_info_item = (bee_rect*)source_rect_List->at(source_rect_index);
+
+		 source_x = source_rect_info_item->m_rect.x() == 0 ? 0 : source_rect_info_item->m_rect.x();
+		 source_y = source_rect_info_item->m_rect.y() == 0 ? 0 : source_rect_info_item->m_rect.y();
+		 source_width = source_rect_info_item->m_rect.width() == 0 ? really_imageItem_width : source_rect_info_item->m_rect.width();
+		 source_height = source_rect_info_item->m_rect.height() == 0 ? really_imageItem_height : source_rect_info_item->m_rect.height();
 	}
 	//判断source 是否超过图片的范围
 	if (source_x + source_width > really_imageItem_width)
@@ -439,32 +487,35 @@ void NCCMainWindow::on_action_caliberline_triggered()
 		source_height = really_imageItem_height - source_y;
 	}
 
-	if (ncc_patten_rect_info==nullptr)
+	//获取特征区域
+	int pattern_index_rect = getListItem("矩形");
+	if (pattern_index_rect != -1)
 	{
+		bee_rect*  pattern_rect_info_item = (bee_rect*)source_rect_List->at(pattern_index_rect);
+
+		double ncc_pattern_x = pattern_rect_info_item->m_rect.x() == 0 ? 0 : pattern_rect_info_item->m_rect.x();
+		double ncc_pattern_y = pattern_rect_info_item->m_rect.y() == 0 ? 0 : pattern_rect_info_item->m_rect.y();
+		double ncc_pattern_width = pattern_rect_info_item->m_rect.width() == 0 ? really_imageItem_width : pattern_rect_info_item->m_rect.width();
+		double ncc_pattern_height = pattern_rect_info_item->m_rect.height() == 0 ? really_imageItem_height : pattern_rect_info_item->m_rect.height();
+		//判断ncc pattern 是否超过图片的范围
+		if (ncc_pattern_x + ncc_pattern_width > really_imageItem_width)
+		{
+			ncc_pattern_width = really_imageItem_width - ncc_pattern_x;
+		}
+		if (ncc_pattern_y + ncc_pattern_height > really_imageItem_height)
+		{
+			ncc_pattern_height = really_imageItem_height - ncc_pattern_y;
+		}
+
+		//得到坐标获取对应的Qimage
+		QImage source_Item = ImageItem->pixmap().copy(QRect(source_x, source_y, source_width, source_height)).toImage();
+		QImage  ncc_pattern_Item = ImageItem->pixmap().copy(QRect(ncc_pattern_x, ncc_pattern_y, ncc_pattern_width, ncc_pattern_height)).toImage();
+
+		//发送给processThread 线程 用于匹配
+		emit sendImageToPattern(ncc_pattern_Item, source_Item);
 		return;
 	}
-	//获取特征区域
-	double ncc_pattern_x = ncc_patten_rect_info->m_rect.x() == 0 ? 0 : ncc_patten_rect_info->m_rect.x();
-	double ncc_pattern_y = ncc_patten_rect_info->m_rect.y() == 0 ? 0 : ncc_patten_rect_info->m_rect.y();
-	double ncc_pattern_width = ncc_patten_rect_info->m_rect.width() == 0 ? really_imageItem_width : ncc_patten_rect_info->m_rect.width();
-	double ncc_pattern_height = ncc_patten_rect_info->m_rect.height() == 0 ? really_imageItem_height : ncc_patten_rect_info->m_rect.height();
 
-	//判断ncc pattern 是否超过图片的范围
-	if (ncc_pattern_x + ncc_pattern_width > really_imageItem_width)
-	{
-		ncc_pattern_width = really_imageItem_width - ncc_pattern_x;
-	}
-	if (ncc_pattern_y + ncc_pattern_height > really_imageItem_height)
-	{
-		ncc_pattern_height = really_imageItem_height - ncc_pattern_y;
-	}
-
-	//得到坐标获取对应的Qimage
-	QImage source_Item = ImageItem->pixmap().copy(QRect(source_x, source_y, source_width, source_height)).toImage();
-	QImage  ncc_pattern_Item = ImageItem->pixmap().copy(QRect(ncc_pattern_x, ncc_pattern_y, ncc_pattern_width, ncc_pattern_height)).toImage();
-
-	//发送给processThread 线程 用于匹配
-	emit sendImageToPattern(ncc_pattern_Item, source_Item);
 
 }
 
@@ -529,7 +580,6 @@ void NCCMainWindow::sendImgToControllerShape(QImage image,QString ModelPath)
 void NCCMainWindow::slot_receiveDrawPoint(QPoint resultPoint, int totalModelTime)
 {
 	QPixmap image = ImageItem->pixmap();
-	QPainter painter(&image);
 	int sourceX = 0;
 	int sourceY = 0;
 	if (source_rect_info!=nullptr)
@@ -539,9 +589,13 @@ void NCCMainWindow::slot_receiveDrawPoint(QPoint resultPoint, int totalModelTime
 	}
 	int x = resultPoint.x() + sourceX;
 	int y = resultPoint.y() + sourceY;
-	painter.setPen(QPen(Qt::green, 10));
+	Mat matImag = QImageToMat(image.toImage());
+	Mat showImage = matImag.clone();
+	cv::circle(showImage, cv::Point(x,y), 2, cv::Scalar(0, 255, 0), -1);
+	cv::resize(showImage, showImage, Size(showImage.cols / 2, showImage.rows / 2), 0, 0);
 
-	painter.drawPoint(x,y);//在image中(0,0)为左上角，宽20、高20的矩形内画圆
+	cv::imshow("testResult", showImage);
+
 	QString str = tr("size=(%1,%2),centerPoint(%3,%4),totaltime(%5)").
 		arg(ImageItem->pixmap().width()).
 		arg(ImageItem->pixmap().height()).

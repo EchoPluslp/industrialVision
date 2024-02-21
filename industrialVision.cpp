@@ -520,6 +520,11 @@ void industrialVision::restoreWindow()
 	for (int i = 0; i < actions.size(); i++)
 	{
 		QAction* actionItem = actions.at(i);
+		if (actionItem->text() == "退出实时显示")
+		{
+			actionItem->setText("实时显示");
+			continue;
+		}
 		actionItem->setVisible(small_window_flag);
 	}
     ui.textEdit_2->setVisible(small_window_flag);
@@ -1410,7 +1415,8 @@ void industrialVision::smallwindow_button_click()
 	{
 		QAction* actionItem = actions.at(i);
 		if (actionItem->text() == "实时显示")
-		{
+		{                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+			actionItem->setText("退出实时显示");
             continue;
 		}
         actionItem->setVisible(small_window_flag);

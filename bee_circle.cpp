@@ -38,13 +38,15 @@ void bee_circle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 {
     Q_UNUSED(option);     //这个宏是用来把不用到的参数注掉的功能
     Q_UNUSED(widget);
-    QPen mPen = QPen(QColor(212,35,122));
+    QColor itemColor(212, 35, 122);
+    itemColor.setAlpha(98);
+    QPen mPen = QPen(itemColor);
     if(if_hover)
     {
-        mPen.setColor(QColor(212, 35, 122));
+        mPen.setColor(itemColor);
     }
     mPen.setWidth(0);
-	QBrush brush(QColor(255, 0, 0), Qt::NoBrush); //画刷
+	QBrush brush(itemColor, Qt::SolidPattern); //画刷
 	painter->setBrush(brush);
 
     painter->setPen(mPen);

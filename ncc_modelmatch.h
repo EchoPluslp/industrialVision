@@ -101,7 +101,6 @@ public:
 
 	QString fileName;
 
-	//roi框的id。
 
 	//roi列表
 	//搜索区域矩形框
@@ -124,5 +123,12 @@ public:
 
 	//遍历已选操作,保存时获得相应操作
 	int getListItem(QString name);
+	cv::Mat QImageToMat(QImage& image); //QImage转Mat
+	//{
+
+	//	Mat mat = cv::Mat(image.height(), image.width(), CV_8UC1, (void*)image.constBits(), image.bytesPerLine());
+
+	//	return mat;
+	//}
 };
 #endif // MAINWINDOW_H
