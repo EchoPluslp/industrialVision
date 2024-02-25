@@ -59,6 +59,7 @@ public:
         return pt_begin;
     }
 	QPointF getendpoint() { return pt_end; }
+	bool if_create = false;
 
 	void currentIndex(int index) { currentIndexs = index; };
     //设置卡尺数
@@ -86,12 +87,12 @@ signals:
 	   //阈值
 	   //边缘极性
     void sign_currentLine_Param(int nMeasureNums, int nthresholdValue,int nSampleDirection,int currentIndexs);
+
 private:
     qreal pixmap_width;
     qreal pixmap_height;
     QList<mycorneritem*> m_HandlesList_line;  //直线端点
     QList<mycorneritem*> m_HandlesList_refct; //可调控矩形端点
-    bool if_create = false;
     bool if_create_move = false;
     bool if_handleslist_create = false;
     QRectF  first_rect; //可调控矩形

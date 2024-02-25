@@ -12,6 +12,7 @@
 #include <QGraphicsSceneHoverEvent>
 #include <QRect>
 #include <QPainter>
+#include<QGraphicsView>
 #include <QPolygon>
 #include <QList>
 #include "mycorneritem.h"
@@ -67,6 +68,8 @@ public:
 	int num_move;//移动点的下标
 	QList<mycorneritem*> m_HandlesList;
 	STATE_FLAG_ONEPOINT m_StateFlag;
+
+	QCursor m_RotateCursor;  //旋转图标
 
 	QPointF m_firstPos;//多边形起点
 	QPointF m_startPos;

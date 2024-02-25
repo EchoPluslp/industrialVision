@@ -34,7 +34,7 @@ enum CornerDirction    //鼠标经过时的形状
     Left,
     Rotation,           //旋转
 };
-constexpr int CORNER_SIZE = 4;
+constexpr int CORNER_SIZE = 5;
 
 class mycorneritem:public QAbstractGraphicsShapeItem
 {

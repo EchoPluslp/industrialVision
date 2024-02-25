@@ -14,7 +14,11 @@
    <bool>true</bool>
   </property>
   <property name="windowTitle">
-   <string>形状匹配</string>
+   <string>模板匹配</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>Icon/ncc_show.png</normaloff>Icon/ncc_show.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="mouseTracking">

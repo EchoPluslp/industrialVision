@@ -6,11 +6,11 @@ mycorneritem::mycorneritem(QGraphicsItem * parent, QPointF point, CornerDirction
     ,m_Dir(dir)
 {
     setAcceptHoverEvents(true);
-    QPixmap pixRotate = QPixmap("/Icon/rotate.png");
+    QPixmap pixRotate = QPixmap("./Icon/point.png");
     m_RotateCursor = QCursor(pixRotate);
     m_scaleFactor = 1;
     m_bSelect = false;
-    m_brush = QBrush(Qt::white);
+    m_brush = QBrush(Qt::red);
 }
 
 void mycorneritem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -24,7 +24,7 @@ void mycorneritem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     pen.setStyle(Qt::SolidLine);
     painter->setPen(pen);
     painter->setBrush(m_brush);
-    painter->setRenderHint(QPainter::Antialiasing, false);  //不开反走样
+    painter->setRenderHint(QPainter::Antialiasing, true);  //不开反走样
     painter->drawEllipse(m_point, CORNER_SIZE/ m_scaleFactor, CORNER_SIZE/ m_scaleFactor);
     painter->restore();
 }
@@ -108,14 +108,14 @@ void mycorneritem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
 void mycorneritem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
 {
-    /*if (event->button() == Qt::LeftButton)
+    if (event->button() == Qt::LeftButton)
     {
         m_ptMove = event->scenePos();
         QPointF pt = mapFromScene(m_ptMove) - mapFromScene(m_ptPress);
         m_ptPress = event->scenePos();
         cornerTranslate(pt);
     }
-    QGraphicsItem::mouseReleaseEvent(event);*/
+    QGraphicsItem::mouseReleaseEvent(event);
 }
 
 void mycorneritem::hoverEnterEvent(QGraphicsSceneHoverEvent * event)
@@ -185,7 +185,7 @@ void mycorneritem::hoverMoveEvent(QGraphicsSceneHoverEvent * event)
 void mycorneritem::hoverLeaveEvent(QGraphicsSceneHoverEvent * event)
 {
     m_bSelect = false;
-    m_brush = QBrush(Qt::white);
+    m_brush = QBrush(Qt::red);
     update();
     QGraphicsItem::hoverLeaveEvent(event);
 }

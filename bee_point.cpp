@@ -8,7 +8,10 @@ bee_point::bee_point(QGraphicsItem* parent,int count) :
 	pixmap_width = 1;
 	pixmap_height = 1;
 	setAcceptHoverEvents(true);
-	setCursor(Qt::ArrowCursor);
+	//setCursor(Qt::ArrowCursor);
+	QPixmap pixRotate = QPixmap("./Icon/rotate.png");
+	m_RotateCursor = QCursor(pixRotate);
+
 	index_value = count;
 }
 
@@ -91,7 +94,7 @@ void bee_point::mousePressEvent(QGraphicsSceneMouseEvent* event)
 			movepoint = event->pos();
 			pp.push_back(event->pos());
 			num++;
-			corner = new mycorneritem(this, pp[num - 1], None);
+			corner = new mycorneritem(this, pp[num - 1], Rotation);
 			m_HandlesList.push_back(corner);
 			m_bpress = true;
 			//{
@@ -138,7 +141,7 @@ void bee_point::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 		{
 			pp[num_move] = event->pos();
 		}
-		else if (m_StateFlag == MOV_POLYGON_OP_POINT)
+		else if (m_StateFlag == MOV_POINT_OP_POINT)
 		{
 			QPointF dis = event->pos() - m_startPos;
 			moveBy(dis.x(), dis.y());
@@ -191,12 +194,12 @@ void bee_point::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 	scene()->update();
 }
 
-
 //todo Êä³öµã
 void bee_point::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
 	if_hover = true;
-	scene()->update();
+//	scene()->update();
+	this->update();
 	QGraphicsItem::hoverEnterEvent(event);
 }
 
@@ -207,6 +210,11 @@ void bee_point::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
 		movepoint = event->pos();
 		scene()->update();
 	}
+	//if (if_hover)
+	//{
+	//	QGraphicsView* view = this->scene()->views().at(0);
+	//	view->setCursor(Qt::SizeAllCursor);
+	//}
 }
 
 void bee_point::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
@@ -215,6 +223,7 @@ void bee_point::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 	scene()->update();
 	QGraphicsItem::hoverLeaveEvent(event);
 }
+
 QPolygonF bee_point::getpoly()
 {
 	return m_poly;

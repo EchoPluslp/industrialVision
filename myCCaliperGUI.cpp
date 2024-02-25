@@ -1020,13 +1020,13 @@ void CLineCaliperGUI::findIntersection(cv::Point p_1, cv::Point p_2, cv::Point p
 	// on screen y is down increased ! 
 	intersection.y = -(Y1 * Y2 * X21 + X1 * Y2 * p_1.y - X2 * Y1 * p_3.y) / D;
 	// segments intersect.
-	if ((abs(intersection.x - p_1.x - X1 / 2) <= abs(X1 / 2)) &&
-		(abs(intersection.y - p_1.y - Y1 / 2) <= abs(Y1 / 2)) &&
-		(abs(intersection.x - p_3.x - X2 / 2) <= abs(X2 / 2)) &&
-		(abs(intersection.y - p_3.y - Y2 / 2) <= abs(Y2 / 2)))
-	{
-		int x = 10;
-	}
+	//if ((abs(intersection.x - p_1.x - X1 / 2) <= abs(X1 / 2)) &&
+	//	(abs(intersection.y - p_1.y - Y1 / 2) <= abs(Y1 / 2)) &&
+	//	(abs(intersection.x - p_3.x - X2 / 2) <= abs(X2 / 2)) &&
+	//	(abs(intersection.y - p_3.y - Y2 / 2) <= abs(Y2 / 2)))
+	//{
+
+	//}
 	return;
 }
 

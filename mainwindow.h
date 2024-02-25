@@ -49,6 +49,9 @@ public:
     void findIntersection(cv::Point p_1, cv::Point p_2, cv::Point p_3, cv::Point p_4,cv::Point2f& intersection);
     double findangle(cv::Point p_1, cv::Point p_2,cv::Point p_3,cv::Point p_4);
 
+	Point2d pdCenter;
+	double dRadius = 0;
+
     ~MainWindow();
 
 public  slots:
@@ -86,6 +89,7 @@ public  slots:
 
     void fitline();
 
+    void fitAllIndex();
     void slot_ShowLine_Param(int nMeasureNums, int nthresholdValue, int nSampleDirection,int currentindex_line);
 
     void slot_index_nMeasureNums(int value);

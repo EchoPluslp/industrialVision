@@ -28,6 +28,8 @@ public:
 	void addedgeexpectpoints(QPointF pt);
 	void setline(QPointF pt1, QPointF pt2) { linestart = pt1; lineend = pt2; }\
 	void addcircles(cv::Point2d& pdCenter, double& dRadius);
+	QPointF circle_Center;
+
 	~CControlLine()
 	{
 		qDebug() << "~one_line";
@@ -41,7 +43,6 @@ private:
 	QList<QPointF> edgeexpectpoints;
 	bool draw_expect = false;
 
-	QPointF circle_Center;
 	qreal circle_Radius;
 	bool draw_circle = false;
 

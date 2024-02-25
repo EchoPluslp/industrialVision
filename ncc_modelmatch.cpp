@@ -590,17 +590,45 @@ void NCCMainWindow::slot_receiveDrawPoint(QPoint resultPoint, int totalModelTime
 	int x = resultPoint.x() + sourceX;
 	int y = resultPoint.y() + sourceY;
 	Mat matImag = QImageToMat(image.toImage());
-	Mat showImage = matImag.clone();
-	cv::circle(showImage, cv::Point(x,y), 2, cv::Scalar(0, 255, 0), -1);
-	cv::resize(showImage, showImage, Size(showImage.cols / 2, showImage.rows / 2), 0, 0);
 
-	cv::imshow("testResult", showImage);
 
-	QString str = tr("size=(%1,%2),centerPoint(%3,%4),totaltime(%5)").
+	QString str = tr("size(%1,%2),centerPoint(%3,%4),totaltime(%5)").
 		arg(ImageItem->pixmap().width()).
 		arg(ImageItem->pixmap().height()).
 		arg(x).arg(y).arg(totalModelTime);
 	ui->statusbar->showMessage(str);
+
+	Mat showImage = matImag.clone();
+	cv::circle(showImage, cv::Point(x, y), 8, cv::Scalar(0, 255, 0), -1);
+	//设置puttext
+	std::string text = str.toStdString();
+	int font_face = cv::FONT_HERSHEY_COMPLEX;
+	double font_scale = 1;
+	int thickness = 2;
+	int baseline = 0;
+	//获取文本框的长宽
+	cv::Size text_size = cv::getTextSize(text, font_face, font_scale, thickness, &baseline);
+	
+	//文本位置
+	Point origin;
+	origin.x = x- text_size.width / 2;
+	origin.y = y + text_size.height +50 ;
+	
+	//其它参数
+	Scalar color = Scalar(0, 0, 255);//定义颜色
+	int lineType = 8;//定义线段类型
+	bool bottomLoftOrigin = false;//定义左远点
+
+	//绘制文本
+	putText(showImage, text, origin, font_face, font_scale, color, thickness, lineType, bottomLoftOrigin);
+
+
+	
+	cv::resize(showImage, showImage, Size(showImage.cols / 2, showImage.rows / 2), 0, 0);
+
+
+	cv::imshow("TestResult", showImage);
+
 
 	qgraphicsScene->update();
 }

@@ -82,7 +82,7 @@ void MainWindow::findIntersection(cv::Point p_1, cv::Point p_2, cv::Point p_3, c
 		(abs(intersection.x - p_3.x - X2 / 2) <= abs(X2 / 2)) &&
 		(abs(intersection.y - p_3.y - Y2 / 2) <= abs(Y2 / 2)))
 	{
-		int x = 10;
+
 	}
 	return ;
 }
@@ -127,8 +127,7 @@ void MainWindow::fitcircle()
 		qgraphicsScene->update();
 	}*/
 	//把点返回
-	Point2d pdCenter(0, 0);
-	double dRadius = 0;
+
 
 	my_calibercircle->fitcircle(pdCenter, dRadius);
 	lineitem = new CControlLine();
@@ -257,12 +256,15 @@ void MainWindow::fitline()
 	{
 		return;
 	}
+	//每次使用前清空使用
+	resultLinePoint.clear();
+
 	for (int i = 0; i < my_caliberline_List.size();i++) {
 		
 	bee_caliberline* my_caliberline = my_caliberline_List.at(i);
 
 	m_plineCaliperGUI = new CLineCaliperGUI();
-	QPointF teno = my_caliberline->getbeginpoint();
+	//QPointF teno = my_caliberline->getbeginpoint();
 	QPointF pt_begin = my_caliberline->mapToItem(ImageItem, my_caliberline->getbeginpoint());
 	QPointF pt_end = my_caliberline->mapToItem(ImageItem, my_caliberline->getendpoint());
 	qreal length_new = sqrt((pt_begin.x() - pt_end.x()) * (pt_begin.x() - pt_end.x()) +
@@ -412,12 +414,84 @@ void MainWindow::fitline()
 
 
 	ui->statusBar->showMessage(str);
-	}
-	//可使用
-	resultLinePoint.clear();
-	
+	}	
 }
 
+
+void MainWindow::fitAllIndex()
+{
+	//清理不符合条件的卡尺信息
+	for (QList<bee_caliberline*>::iterator it = my_caliberline_List.begin(); it != my_caliberline_List.end();)
+	{
+		if ((*it)->if_create == false)
+		{
+			delete* it; // 删除指针指向的对象
+			it = my_caliberline_List.erase(it); // 从列表中删除元素，并获取下一个元素的迭代器
+		}
+		else
+		{
+			++it; // 继续遍历下一个元素
+		}
+	}
+	for (QList<bee_calibercircle*>::iterator it = my_calibercircle_List.begin(); it != my_calibercircle_List.end();)
+	{
+		if ((*it)->if_create == false)
+		{
+			delete* it; // 删除指针指向的对象
+			it = my_calibercircle_List.erase(it); // 从列表中删除元素，并获取下一个元素的迭代器
+		}
+		else
+		{
+			++it; // 继续遍历下一个元素
+		}
+	}
+	
+	//有效卡尺数量
+	int linecount = my_caliberline_List.size();
+	int circlecount = my_calibercircle_List.size();
+	if (linecount==0&& circlecount==0)
+	{
+		return;
+	}
+	//线卡尺数量为0,调用圆
+	if (linecount == 0 )
+	{
+		fitcircle();
+	}
+	//圆卡尺数量为0,调用线
+	if (circlecount == 0)
+	{
+		fitline();
+	}
+	if (linecount ==1&&circlecount==1)
+	{
+		fitcircle();
+		fitline();
+		//获得圆的圆心
+		Point2d circleCenter = pdCenter;
+		if (circleCenter.x==0&& circleCenter.y==0)
+		{
+			return;
+		}
+		QPointF line_mindPoint;
+		//获得连线的中点
+		if (resultLinePoint.size()==2)
+		{
+		cv::Point	Point_1 = resultLinePoint.at(0);
+		cv::Point	Point_2 = resultLinePoint.at(1);
+
+		line_mindPoint.setX((Point_1.x+ Point_2.x)/2);
+		line_mindPoint.setY((Point_1.y + Point_2.y)/2);
+		}
+		if (line_mindPoint.x()!=0 && line_mindPoint.y()!=0)
+		{
+			cv::Point resulePoint((circleCenter.x+ line_mindPoint.x())/2,
+				(circleCenter.y + line_mindPoint.y()) / 2);
+			lineitem->addedgeexpectpoints(QPointF(resulePoint.x, resulePoint.y));
+
+		}
+	}
+}
 
 void MainWindow::slot_ShowLine_Param(int nMeasureNums, int nthresholdValue, int nSampleDirection,int currentIndexs)
 {
@@ -444,14 +518,38 @@ void MainWindow::slot_index_SampleDirection(int value)
 
 }
 
-//保存按钮
+//保存按钮点击事件
 void MainWindow::saveInfo()
 {
-	if (my_calibercircle_List.size()!=0 && my_caliberline_List.size()!=0)
+	//清理不符合条件的卡尺信息
+	for (QList<bee_caliberline*>::iterator it = my_caliberline_List.begin(); it != my_caliberline_List.end();)
 	{
-		//QMessageBox::critical(this, "错误信息", "线和圆不能兼并");
-		return;
+		if ((*it)->if_create == false)
+		{
+			delete* it; // 删除指针指向的对象
+			it = my_caliberline_List.erase(it); // 从列表中删除元素，并获取下一个元素的迭代器
+		}
+		else
+		{
+			++it; // 继续遍历下一个元素
+		}
 	}
+	for (QList<bee_calibercircle*>::iterator it = my_calibercircle_List.begin(); it != my_calibercircle_List.end();)
+	{
+		if ((*it)->if_create == false)
+		{
+			delete* it; // 删除指针指向的对象
+			it = my_calibercircle_List.erase(it); // 从列表中删除元素，并获取下一个元素的迭代器
+		}
+		else
+		{
+			++it; // 继续遍历下一个元素
+		}
+	}
+
+	//有效卡尺数量
+	int linecount = my_caliberline_List.size();
+	int circlecount = my_calibercircle_List.size();
 
 	//另存为
 	QString path = QFileDialog::getSaveFileName(nullptr,
@@ -459,6 +557,10 @@ void MainWindow::saveInfo()
 		"",
 		tr("ini Files(*.ini)"));
 
+	if (path.isNull())
+	{
+		return;
+	}
 
 	QSettings* settings = new QSettings(path, QSettings::IniFormat);
 	QString group("shape_info");
@@ -697,6 +799,7 @@ void MainWindow::on_action_ringexpansion_triggered()
 		delete item;
 		item = nullptr;
 	}
+	CControlLine_List.clear();
 	/* state_flag_maindow = RINGEXPANSION;
 	 my_ringexpansion = new bee_ringexpansion();
 	 my_ringexpansion->setpixmapwidth(ImageItem->pixmap().width()*ImageItem->scale());

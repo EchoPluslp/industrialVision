@@ -190,7 +190,7 @@ void ProcessingThread::run()
 						painter.drawLine(QPoint(Two_Line_Result[2].x, Two_Line_Result[2].y),
 							QPoint(Two_Line_Result[3].x, Two_Line_Result[3].y));
 					}                         
-					else if (shapeMatch_Patten_Circle.size() == 1) {
+					if (shapeMatch_Patten_Circle.size() == 1) {
 					//找圆
 					PatternInfo_circle item = shapeMatch_Patten_Circle.at(0);
 
@@ -214,11 +214,24 @@ void ProcessingThread::run()
 					painter.setPen(pen);
 					painter.drawEllipse(pdCenter.x - dRadius, pdCenter.y - dRadius,2*dRadius,2*dRadius);
 					painter.drawPoint(pdCenter.x, pdCenter.y );
+					cv::Point2d line_EndPoint;
+					//判断是否有直线
+					if (shapeMatch_Patten.size() == 1)
+					{
+						line_EndPoint.x = lastResult.x();
+						line_EndPoint.y = lastResult.y();
+						//设置中心点,直线中线和圆的圆心连线的交点
+						lastResult.setX(((line_EndPoint.x+ pdCenter.x)/2) - (m_width / 2));  //向右为x正方向
+						lastResult.setY((m_height / 2) -((line_EndPoint.y+pdCenter.y)/2));//向上为y正方向
 
-					//设置中心点
-					lastResult.setX(pdCenter.x - (m_width / 2));  //向右为x正方向
-					lastResult.setY((m_height / 2) - pdCenter.y);//向上为y正方向
+					}
+					else {
+						//设置中心点
+						lastResult.setX(pdCenter.x - (m_width / 2));  //向右为x正方向
+						lastResult.setY((m_height / 2) - pdCenter.y);//向上为y正方向
 
+					}
+					
 
 					finall_Total_Result.ptCenter = cv::Point2d(lastResult.x(), lastResult.y());
 					finall_Total_Result.dMatchedAngle = 0;
@@ -237,6 +250,7 @@ void ProcessingThread::run()
 					emit signal_patternResult(resultPointF, total_time);
 
 					}
+
 				}
 				//判断模板匹配
 				else if (pattern_Flag && modelAndRealSclar)
@@ -346,6 +360,7 @@ void ProcessingThread::run()
 		msleep(20);   //此处缓冲可减少cpu运行率,注意不要慢于相机线程的缓冲
 	}
 }
+
 
 
 //Mat->QImage

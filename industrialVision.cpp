@@ -1657,7 +1657,8 @@ bool industrialVision::read_info_from_ini(QString path)
 
 		return true;
 		// ÍË³ö·Ö×é
-	}else if (groupName.contains("circle"))
+	}
+	if (groupName.contains("circle"))
 	{
 		double pdCenterX = settings.value("pdCenter.x", 0).toDouble();
 		double pdCenterY = settings.value("pdCenter.y", 0).toDouble();

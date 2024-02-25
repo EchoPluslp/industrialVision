@@ -40,7 +40,7 @@ void CControlLine::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
 
 	if (draw_expect)
 	{
-		mPen.setWidth(1);
+		mPen.setWidth(5);
 
 		mPen.setColor(Qt::yellow);
 		QBrush brush(Qt::yellow, Qt::SolidPattern);

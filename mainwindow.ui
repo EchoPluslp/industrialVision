@@ -24,7 +24,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>Icon/fitwin.png</normaloff>Icon/fitwin.png</iconset>
+    <normaloff>Icon/caliber_circle.png</normaloff>Icon/caliber_circle.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="mouseTracking">
@@ -400,32 +400,15 @@
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_9">
          <item>
-          <widget class="QPushButton" name="pushButton_fitcircle">
+          <widget class="QPushButton" name="pushButton">
            <property name="font">
             <font>
              <family>Microsoft YaHei</family>
              <pointsize>18</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
             </font>
            </property>
            <property name="text">
-            <string>圆拟合</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_line">
-           <property name="font">
-            <font>
-             <family>Microsoft YaHei</family>
-             <pointsize>19</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>线拟合</string>
+            <string>拟合</string>
            </property>
           </widget>
          </item>
@@ -720,50 +703,34 @@
  <resources/>
  <connections>
   <connection>
-   <sender>pushButton_fitcircle</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>fitcircle()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>94</x>
-     <y>1017</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>143</x>
-     <y>898</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_line</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>fitline()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>175</x>
-     <y>1017</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>292</x>
-     <y>816</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>pushButton_save_currentInfo</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>saveInfo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>233</x>
-     <y>997</y>
+     <x>204</x>
+     <y>846</y>
     </hint>
     <hint type="destinationlabel">
      <x>270</x>
      <y>856</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>fitAllIndex()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>84</x>
+     <y>822</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>10</x>
+     <y>756</y>
     </hint>
    </hints>
   </connection>
@@ -772,5 +739,6 @@
   <slot>fitcircle()</slot>
   <slot>fitline()</slot>
   <slot>saveInfo()</slot>
+  <slot>fitAllIndex()</slot>
  </slots>
 </ui>
