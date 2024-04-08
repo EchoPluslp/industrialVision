@@ -33,7 +33,7 @@ industrialVision::industrialVision(QWidget *parent)
 
 	//处理线程对象实例化
 	m_processingThread = new ProcessingThread();
-
+	 
 	connect(m_processingThread, &ProcessingThread::signal_newPixmap, this, &industrialVision::slot_displayPixmap, Qt::BlockingQueuedConnection);
 	
 	connect(m_processingThread, &ProcessingThread::signal_modelPictureReadFlag, this, &industrialVision::slot_modelPictureReadFlag, Qt::BlockingQueuedConnection);
