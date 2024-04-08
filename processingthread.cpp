@@ -52,14 +52,14 @@ void ProcessingThread::run()
 	while (startFlag)
 	{
 			if (m_imageVector_1.size() == 1)
-			{
-				Mat tempMap = m_imageVector_1.at(0);
+			{                                                                        
+				Mat                           tempMap = m_imageVector_1.at(0);
 				QPixmap newPixmap_1 = cvMatToPixmap(tempMap);
-
+				
 				//执行形状匹配
 				if (pattern_Flag && shape_match)
-				{
-					QTime timedebuge;//声明一个时钟对象
+				{                                                                                                                                                                                                                                                                                                                            
+					QTime timedebuge;       //声明一个时钟对象
 					timedebuge.start();//开始计时
 
 					//代表一条线

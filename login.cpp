@@ -5,9 +5,7 @@ login::login(QWidget* parent) :
 {
     ui->setupUi(this);
     ui->password->setEchoMode(QLineEdit::EchoMode::Password);
-	ui->dabeijing->setPixmap(QPixmap("Image/login/dabeijing.png"));
-	ui->label->setPixmap(QPixmap("Image/login/user-fill.png"));
-	ui->label_2->setPixmap(QPixmap("Image/login/lock-fill.png"));	
+	ui->dabeijing->setPixmap(QPixmap("Image/login/dabeijing2.png"));
 
 	//  //读取上次关闭时的状态
 	QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
@@ -16,8 +14,8 @@ login::login(QWidget* parent) :
 	QString logoPath = settings->value("logopath", "Image/login/logo.png").toString();
 	QString textPath= settings->value("textpath", "Image/login/text.png").toString();
 
-	ui->label_logo->setPixmap(QPixmap(logoPath));
-	ui->label_text->setPixmap(QPixmap(textPath));
+//	ui->label_logo->setPixmap(QPixmap(logoPath));
+	//ui->label_text->setPixmap(QPixmap(textPath));
 	setWindowTitle("登录界面");
 	setWindowFlags(Qt::WindowStaysOnTopHint);
 

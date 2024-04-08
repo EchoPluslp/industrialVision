@@ -603,8 +603,8 @@ void NCCMainWindow::slot_receiveDrawPoint(QPoint resultPoint, int totalModelTime
 	//设置puttext
 	std::string text = str.toStdString();
 	int font_face = cv::FONT_HERSHEY_COMPLEX;
-	double font_scale = 1;
-	int thickness = 2;
+	double font_scale = 2;
+	int thickness = 4;
 	int baseline = 0;
 	//获取文本框的长宽
 	cv::Size text_size = cv::getTextSize(text, font_face, font_scale, thickness, &baseline);
@@ -626,6 +626,7 @@ void NCCMainWindow::slot_receiveDrawPoint(QPoint resultPoint, int totalModelTime
 	
 	cv::resize(showImage, showImage, Size(showImage.cols / 2, showImage.rows / 2), 0, 0);
 
+	cv::imwrite("TestResult.BMP", showImage);
 
 	cv::imshow("TestResult", showImage);
 

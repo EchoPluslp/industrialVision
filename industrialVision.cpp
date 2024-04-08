@@ -19,10 +19,11 @@ industrialVision::industrialVision(QWidget *parent)
 	//设置文字字体
 	setFont(myFont);
 
-	ui.menuBar->setStyleSheet("QMenu::item{padding:5px 15px;margin:1px 2px;color:#222222;font - size:40px;}");
+	ui.menuBar->setStyleSheet("QMenu::item{padding:5px 15px;margin:1px 2px;color:#1450C7;font - size:40px;}");
 	ui.lcdNumber->setDigitCount(8);
 	ui.lcdNumber->setSegmentStyle(QLCDNumber::Flat);
 	ui.lcdNumber->display(TimeRecord->toString("hh:mm:ss"));
+	ui.lcdNumber->display("00:02:32");
 
 	//相机对象
 	m_pcMyCamera = new CMvCamera;
@@ -141,10 +142,10 @@ industrialVision::industrialVision(QWidget *parent)
 	ui.pushButton_manualOperation->setEnabled(false);
 
     //设置背景色 
-	ui.menuBar->setStyleSheet("color: rgb(255, 255, 255); background-color: rgba(26, 45, 77, 1);");
+	ui.menuBar->setStyleSheet("color: rgb(255, 255, 255); background-color: rgba(199, 145, 95, 1);");
 	setButtonClickLimits(false);
 	//白色填充左上角图标
-    setWindowTitle("V-Gp System V1.0");
+    setWindowTitle("");
 	setWindowIcon(QIcon("icon.ico"));
      AppendText("系统启动成功",Green);
 }
@@ -1199,8 +1200,8 @@ int industrialVision::GetWidth()
 	}
 	const_m_width = stIntValue.nCurValue;
 	m_width = stIntValue.nCurValue;
-	ui.width_edit->clear();
-	ui.width_edit->setText(QString::number(m_width, 'f', 0));
+	//ui.width_edit->clear();
+	//ui.width_edit->setText(QString::number(m_width, 'f', 0));
 	return MV_OK;
 }
 
@@ -1215,8 +1216,8 @@ int industrialVision::GetHeight()
 	}
 	const_m_width = stIntValue.nCurValue;
 	m_height = stIntValue.nCurValue;
-	ui.height_edit->clear();
-	ui.height_edit->setText(QString::number(m_height, 'f', 0));
+	//ui.height_edit->clear();
+	//ui.height_edit->setText(QString::number(m_height, 'f', 0));
 	return MV_OK;
 }
 
@@ -1490,7 +1491,7 @@ void industrialVision::helpInfo()
 void industrialVision::updateTime()
 {
 	*TimeRecord = TimeRecord->addSecs(1);
-	ui.lcdNumber->display(TimeRecord->toString("hh:mm:ss"));
+	//ui.lcdNumber->display(TimeRecord->toString("hh:mm:ss"));
 }
 
 void industrialVision::slot_modelPictureReadFlag()
@@ -1601,7 +1602,7 @@ bool industrialVision::read_info_from_ini(QString path)
 	//当前图像的比例和模板图片的比例一致	
 	m_processingThread->setmodelAndRealSclar(true);
 
-	//重新把各项参数置空
+	//重新把 各项参数置空
 	resetParameters();
 
 	//判断当前文档是什么类型的文档。
@@ -1617,6 +1618,8 @@ bool industrialVision::read_info_from_ini(QString path)
 	//卡尺匹配数据
 	if (is_shapeMatch)
 	{
+		//设置为ini模式
+		m_processingThread->setShape_match(true);
 	// 遍历分组
 	foreach(const QString & groupName, groups) {
 		// 进入特定分组
@@ -1655,7 +1658,7 @@ bool industrialVision::read_info_from_ini(QString path)
 			QPointF(pt_end_lineX, pt_end_lineY));
 		m_xmlpath = path;
 
-		return true;
+		//return true;
 		// 退出分组
 	}
 	if (groupName.contains("circle"))
@@ -1686,14 +1689,13 @@ bool industrialVision::read_info_from_ini(QString path)
 		settings.endGroup();
 		m_xmlpath = path;
 
-		return true;
+		//return true;
 
 		}
 	settings.endGroup();
 
 	}
-	//设置为ini模式
-	m_processingThread->setShape_match(true);
+
 	}
 
 	else {//读取模板匹配的数据
