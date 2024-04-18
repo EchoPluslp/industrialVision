@@ -1,6 +1,6 @@
 #ifndef MYACTIONS_H
 #define MYACTIONS_H
-#pragma execution_character_set("utf-8")
+//#pragma execution_character_set("utf-8")
 
 #include <QAction>
 //定义所有Action的文字、图标

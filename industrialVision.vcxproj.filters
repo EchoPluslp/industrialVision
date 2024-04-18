@@ -414,9 +414,4 @@
       <Filter>Header Files\Tools</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <QtTranslation Include="industrialvision_en.ts">
-      <Filter>Translation Files</Filter>
-    </QtTranslation>
-  </ItemGroup>
 </Project>

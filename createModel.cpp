@@ -9,7 +9,7 @@ createModel::createModel(QWidget* parent) :
 {
     ui->setupUi(this);
 
-    setWindowTitle("模板设置");
+    setWindowTitle(tr("模板设置"));
     windowTitleItem = windowTitle();
     QWidget* c = this->takeCentralWidget();
     if (c) delete c;
@@ -168,9 +168,9 @@ createModel::createModel(QWidget* parent) :
     // set up and connect menu bar
     menuBar = new MenuBar(this);
     QMenu* menus[3];
-    menus[0] = new QMenu("文件", menuBar);
-    menus[1] = new QMenu("工具", menuBar);
-    menus[2] = new QMenu("帮助", menuBar);
+    menus[0] = new QMenu(tr("文件"), menuBar);
+    menus[1] = new QMenu(tr("工具"), menuBar);
+    menus[2] = new QMenu(tr("帮助"), menuBar);
     // menus[3] = new QMenu("&Help", menuBar);
     //修改地址
     for (int i = 0; i < 3; i++) {
@@ -249,7 +249,7 @@ createModel::createModel(QWidget* parent) :
 	aBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 	//aBtn->setDefaultAction(ui->actSelPopMenu);
 	aBtn->setMenu(menuSelection);
-	aBtn->setText("特征区域");
+	aBtn->setText(tr("特征区域"));
 	aBtn->setIcon(QIcon("./Image/Icon/square_pen_mode"));
 	toolBar->addWidget(aBtn);
 	toolBar->addSeparator();
@@ -569,7 +569,7 @@ void createModel::onSaveAsTriggered() {
 void createModel::onCloseFileTriggered() {
     //判断是否关闭
 	QMessageBox::StandardButton reply;
-	reply = QMessageBox::question(this, "确认关闭", "确定要关闭文件吗?", QMessageBox::Yes | QMessageBox::No);
+	reply = QMessageBox::question(this, tr("确认关闭"), tr("确定要关闭文件吗?"), QMessageBox::Yes | QMessageBox::No);
 
 	if (reply == QMessageBox::Yes) {
 		// 用户选择了"是"
