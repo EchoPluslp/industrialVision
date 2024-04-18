@@ -1,4 +1,4 @@
-#include "filecontroller.h"
+ï»¿#include "filecontroller.h"
 
 cv::Point FileController::MatchPicture(cv::Mat templateImage, cv::Mat srcImage, bool threSholdFlag)
 {
@@ -9,7 +9,7 @@ cv::Point FileController::MatchPicture(cv::Mat templateImage, cv::Mat srcImage, 
 
 	if (result_cols < 0 || result_rows < 0)
 	{
-		//ShowErrorMsg(TEXT("Ä£°åÍ¼´óĞ¡³¬¹ıÔ­Í¼´óĞ¡"), 0);
+		//ShowErrorMsg(TEXT("æ¨¡æ¿å›¾å¤§å°è¶…è¿‡åŸå›¾å¤§å°"), 0);
 		return srcImage;
 	}
 
@@ -24,7 +24,7 @@ cv::Point FileController::MatchPicture(cv::Mat templateImage, cv::Mat srcImage, 
 	cv::Point matchLoc;
 	minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, cv::Mat());
 
-	//È¡´óÖµ(ÊÓÆ¥Åä·½·¨¶ø¶¨)
+	//å–å¤§å€¼(è§†åŒ¹é…æ–¹æ³•è€Œå®š)
 	//    matchLoc = minLoc;
 	matchLoc = maxLoc;
 
@@ -35,7 +35,7 @@ cv::Point FileController::MatchPicture(cv::Mat templateImage, cv::Mat srcImage, 
 	}*/
 
 	if (maxVal >= threShold) {
-		//»æÖÆ×îÆ¥ÅäµÄÇøÓò
+		//ç»˜åˆ¶æœ€åŒ¹é…çš„åŒºåŸŸ
 		return matchLoc;
 	}
 	else {
@@ -48,13 +48,13 @@ cv::Point FileController::MatchPicture(cv::Mat templateImage, cv::Mat srcImage, 
 
 cv::Mat FileController::CalculateNcc(cv::Mat src, cv::Mat temp, cv::Mat& result)
 {
-	int result_w = src.cols - temp.cols + 1;    //½á¹ûÍ¼ÏñµÄ³ß´ç
+	int result_w = src.cols - temp.cols + 1;    //ç»“æœå›¾åƒçš„å°ºå¯¸
 	int result_h = src.rows - temp.rows + 1;
-	result.create(result_h, result_w, CV_32FC1);    //½á¹ûÍ¼ÏñÊÇµ¥Í¨µÀ32Î»¸¡µãĞÍ
+	result.create(result_h, result_w, CV_32FC1);    //ç»“æœå›¾åƒæ˜¯å•é€šé“32ä½æµ®ç‚¹å‹
 
 
-	matchTemplate(src, temp, result, cv::TM_CCOEFF_NORMED); //Ä£°åÆ¥Åä£¬²ÎÊı1´ı¼ì²âµÄÔ­Í¼£¬ ÓûËÑË÷µÄÍ¼Ïñ¡£ËüÓ¦¸ÃÊÇµ¥Í¨µÀ¡¢8-±ÈÌØ»ò32-±ÈÌØ ¸¡µãÊıÍ¼Ïñ£¬tempÊÇÆ¥ÅäĞ¡Í¼²»ÄÜ´óÓÚÊäÈëÍ¼Ïñ£¬²ÎÊı3±È½Ï½á¹ûµÄÓ³ÉäÍ¼Ïñ   CV_TM_CCOEFF_NORMED  £º»¯Ïà¹ØÏµÊıÆ¥Åä·¨£¬×îºÃÆ¥ÅäÎª1£»
-	//normalize(result, result, 0, 1, NORM_MINMAX, -1);//¹éÒ»»¯0µ½1
+	matchTemplate(src, temp, result, cv::TM_CCOEFF_NORMED); //æ¨¡æ¿åŒ¹é…ï¼Œå‚æ•°1å¾…æ£€æµ‹çš„åŸå›¾ï¼Œ æ¬²æœç´¢çš„å›¾åƒã€‚å®ƒåº”è¯¥æ˜¯å•é€šé“ã€8-æ¯”ç‰¹æˆ–32-æ¯”ç‰¹ æµ®ç‚¹æ•°å›¾åƒï¼Œtempæ˜¯åŒ¹é…å°å›¾ä¸èƒ½å¤§äºè¾“å…¥å›¾åƒï¼Œå‚æ•°3æ¯”è¾ƒç»“æœçš„æ˜ å°„å›¾åƒ   CV_TM_CCOEFF_NORMED  ï¼šåŒ–ç›¸å…³ç³»æ•°åŒ¹é…æ³•ï¼Œæœ€å¥½åŒ¹é…ä¸º1ï¼›
+	//normalize(result, result, 0, 1, NORM_MINMAX, -1);//å½’ä¸€åŒ–0åˆ°1
 	return result;
 }
 
@@ -226,9 +226,9 @@ void FileController::saveFile(LabelController* labelController)
 	{
 		return;
 	}
-		//Í¨¹ıµ¼Èë½øÀ´µÄ,Ö»¸Ä±ä»­Í¼µÄ¿ò,²»ÄÜ¸Ä±äÍ¼Æ¬µÄÊôĞÔ
+		//é€šè¿‡å¯¼å…¥è¿›æ¥çš„,åªæ”¹å˜ç”»å›¾çš„æ¡†,ä¸èƒ½æ”¹å˜å›¾ç‰‡çš„å±æ€§
 	if (!importFilepath.isNull()) {
-		//ÒÑ¾­´æÔÚ£¬Ôò¸²¸Ç
+		//å·²ç»å­˜åœ¨ï¼Œåˆ™è¦†ç›–
 		QFile file(importFilepath);
 		if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
 			return;
@@ -244,11 +244,11 @@ void FileController::saveFile(LabelController* labelController)
 		QTextStream out_stream(&file);
 		doc.save(out_stream, 4);
 		file.close();
-		QMessageBox::warning(0, "Í¨Öª", "±£´æ³É¹¦");
+		QMessageBox::warning(0, "é€šçŸ¥", "ä¿å­˜æˆåŠŸ");
 		emit modelFilePATH(importFilepath);
 	}
 	else {
-		//Î´´æÔÚ£¬ÔòĞÂ½¨
+		//æœªå­˜åœ¨ï¼Œåˆ™æ–°å»º
 		QString path = QFileDialog::getSaveFileName(nullptr,
 			tr("Open File"),
 			"",
@@ -276,8 +276,8 @@ void FileController::saveFile(LabelController* labelController)
 		QDir dir(dirpath);
 		if (!dir.exists())
 		{
-			//²»´æÔÚÔò´´½¨
-			dir.mkdir(dirpath); //Ö»´´½¨Ò»¼¶×ÓÄ¿Â¼£¬¼´±ØĞë±£Ö¤ÉÏ¼¶Ä¿Â¼´æÔÚ
+			//ä¸å­˜åœ¨åˆ™åˆ›å»º
+			dir.mkdir(dirpath); //åªåˆ›å»ºä¸€çº§å­ç›®å½•ï¼Œå³å¿…é¡»ä¿è¯ä¸Šçº§ç›®å½•å­˜åœ¨
 		}
 
 		QString fullpath = dirpath + getCurrImageName();
@@ -287,7 +287,7 @@ void FileController::saveFile(LabelController* labelController)
 		cv::imwrite(str, MatSrcImage);
 		emit modelFilePATH(path);
 		file.close();
-		QMessageBox::warning(0, "Í¨Öª", "±£´æ³É¹¦");
+		QMessageBox::warning(0, "é€šçŸ¥", "ä¿å­˜æˆåŠŸ");
 
 	}
 
@@ -305,7 +305,7 @@ void FileController::saveAsFile(LabelController* labelController)
 		return;
 	}
 
-	//Áí´æÎª
+	//å¦å­˜ä¸º
 	QString path = QFileDialog::getSaveFileName(nullptr,
 		tr("Open File"),
 		"",
@@ -333,8 +333,8 @@ void FileController::saveAsFile(LabelController* labelController)
 	QDir dir(dirpath);
 	if (!dir.exists())
 	{
-		//²»´æÔÚÔò´´½¨
-		dir.mkdir(dirpath); //Ö»´´½¨Ò»¼¶×ÓÄ¿Â¼£¬¼´±ØĞë±£Ö¤ÉÏ¼¶Ä¿Â¼´æÔÚ
+		//ä¸å­˜åœ¨åˆ™åˆ›å»º
+		dir.mkdir(dirpath); //åªåˆ›å»ºä¸€çº§å­ç›®å½•ï¼Œå³å¿…é¡»ä¿è¯ä¸Šçº§ç›®å½•å­˜åœ¨
 	}
 
 	QString fullpath = dirpath + getCurrImageName();
@@ -344,7 +344,7 @@ void FileController::saveAsFile(LabelController* labelController)
 	cv::imwrite(str, MatSrcImage);
 	emit modelFilePATH(path);
 	file.close();	
-	QMessageBox::warning(0, "Í¨Öª", "Áí´æÎª³É¹¦");
+	QMessageBox::warning(0, "é€šçŸ¥", "å¦å­˜ä¸ºæˆåŠŸ");
 
 }
 
@@ -367,11 +367,11 @@ void FileController::importFromFile(LabelController* labelController)
 		QDomElement root = doc.documentElement();
 		//labelController->deleteAllLabel();
 
-				//»ñµÃimageName
+				//è·å¾—imageName
 		QString icomString = getImageNameFromXML(root);
 		if (icomString.isEmpty()) {
-			QMessageBox::warning(nullptr, tr("ÊÓ¾õÄ£°å"),
-				tr("ÊÓ¾õÄ£°åÉèÖÃ´íÎó,ÇëÖØĞÂÉèÖÃÄ£°åĞÅÏ¢"));
+			QMessageBox::warning(nullptr, tr("è§†è§‰æ¨¡æ¿"),
+				tr("è§†è§‰æ¨¡æ¿è®¾ç½®é”™è¯¯,è¯·é‡æ–°è®¾ç½®æ¨¡æ¿ä¿¡æ¯"));
 			return;
 		}
 
@@ -387,7 +387,7 @@ void FileController::importFromFile(LabelController* labelController)
 	}
 	else {
 		QMessageBox::warning(nullptr, tr("Path"),
-			tr("Î´Ñ¡ÔñÎÄ¼ş."));
+			tr("æœªé€‰æ‹©æ–‡ä»¶."));
 	}
 }
 
@@ -402,7 +402,7 @@ QString FileController::getImageNameFromXML(QDomElement elem) {
 			if (labelElem.tagName() == "Label") {
 
 				Area* m_area_item = new Area;
-				//¸øpatternImageName¸³ÖµÓÃÓÚ¶ÁÈ¡Ä£°åÍ¼
+				//ç»™patternImageNameèµ‹å€¼ç”¨äºè¯»å–æ¨¡æ¿å›¾
 				return m_area_item->getFileName(labelElem.firstChildElement("Area")).trimmed();
 			}
 		}
@@ -419,7 +419,7 @@ void FileController::getImageFromCamera(QImage image)
 	path.append(fileName);
 	addFile(fileName, path, image);
 	addedSucceeded = true;
-	//Í¨¹ı²É¼¯Í¼Æ¬µÄÊ±ºò,ÖØÖÃµ¼ÈëÂ·¾¶
+	//é€šè¿‡é‡‡é›†å›¾ç‰‡çš„æ—¶å€™,é‡ç½®å¯¼å…¥è·¯å¾„
 	importFilepath.clear();
 	if (addedSucceeded) {
 		emit updateFiles( );
@@ -438,21 +438,21 @@ void FileController::getImageFromCamera(QImage image,QString modePath)
 	}
 }
 
-//Ä£°åÉèÖÃ½çÃæµ¼Èë¹¦ÄÜÉèÖÃ
-//nameÖ¸¶¨µÄÍ¼Æ¬ÎÄ¼şÃû,²»Ò×ĞŞ¸Ä,ÒòÎªÓëlabel°ó¶¨
+//æ¨¡æ¿è®¾ç½®ç•Œé¢å¯¼å…¥åŠŸèƒ½è®¾ç½®
+//nameæŒ‡å®šçš„å›¾ç‰‡æ–‡ä»¶å,ä¸æ˜“ä¿®æ”¹,å› ä¸ºä¸labelç»‘å®š
 bool FileController::getImageFromCameraFromImport(QString imageName)
 {
 	bool addedSucceeded = false;
 
-	//¹¹½¨Í¼Æ¬Ãû×Ö
+	//æ„å»ºå›¾ç‰‡åå­—
 	QStringList stringModelNameAndPath = 	imageName.split("=");
 	 QString fileName = stringModelNameAndPath.at(1);
 	QImage image(stringModelNameAndPath.at(0)+ fileName);
 	int x = image.width();
 	if (x==0)
 	{
-		QMessageBox::warning(nullptr, tr("Í¼Æ¬Òì³£"),
-			"Ä£°åÍ¼Æ¬Òì³£,µ¼ÈëÊ§°Ü");
+		QMessageBox::warning(nullptr, tr("å›¾ç‰‡å¼‚å¸¸"),
+			"æ¨¡æ¿å›¾ç‰‡å¼‚å¸¸,å¯¼å…¥å¤±è´¥");
 		return addedSucceeded;
 	}
 	addFile(fileName, stringModelNameAndPath.at(0), image);
@@ -501,7 +501,7 @@ void FileController::onExecPattern(LabelController* labelController)
 	int cuurImageHeight = cuurImage.height();
 
 	for (Label* label : labelController->getLabelsOfImage(currImageName)) {
-		if (label->getType().contains("ËÑË÷ÇøÓò"))
+		if (label->getType().contains("æœç´¢åŒºåŸŸ"))
 		{
 			if (label) {
 				const Area* area = label->getArea();
@@ -516,14 +516,14 @@ void FileController::onExecPattern(LabelController* labelController)
 				} 
 			}
 		}
-		if (label->getType().contains("ÌØÕ÷ÇøÓò"))
+		if (label->getType().contains("ç‰¹å¾åŒºåŸŸ"))
 		{
 			if (label) {
 				const Area* area = label->getArea();
 				if (area) {
 					Shape* shape = area->getShape(currImageName);
 					currType = shape->getType();
-					//ÅĞ¶ÏÊÇ·ñµ±Ç°Í¼ÏñµÄÀàĞÍ
+					//åˆ¤æ–­æ˜¯å¦å½“å‰å›¾åƒçš„ç±»å‹
 					if (currType == Shape::Rect)
 					{
 						QSize shapeSize = shape->m_currSize;
@@ -559,7 +559,7 @@ void FileController::onExecPattern(LabelController* labelController)
 			}
 		}
 	}
-	//Ã»ÓĞËÑË÷ÇøÓò,ÔòÈ«Í¼
+	//æ²¡æœ‰æœç´¢åŒºåŸŸ,åˆ™å…¨å›¾
 	if (areaChooseREAL_Size.x()==0&& areaChooseREAL_Size.y() == 0 && areaChooseREAL_Size.width() == 0 && areaChooseREAL_Size.height() == 0 )
 	{
 		areaChooseREAL_Size.setWidth(cuurImageWidth);
@@ -575,10 +575,10 @@ void FileController::onExecPattern(LabelController* labelController)
 		if (patternAreaREAL_size_rect.x() == 0 && patternAreaREAL_size_rect.y() == 0 && patternAreaREAL_size_rect.width() == 0 && patternAreaREAL_size_rect.height() == 0)
 		{
 			QMessageBox::warning(nullptr, tr("Warning"),
-				"Ã»ÓĞÌØÕ÷ÇøÓò");
+				"æ²¡æœ‰ç‰¹å¾åŒºåŸŸ");
 			return;
 		}
-		//»ñÈ¡ÇøÓò
+		//è·å–åŒºåŸŸ
 		if (patternAreaREAL_size_rect.x() >= 0 && patternAreaREAL_size_rect.y() >= 0 && patternAreaREAL_size_rect.width() > 0 && patternAreaREAL_size_rect.height() > 0) {
 			cv::Rect patternAreaRealSize(patternAreaREAL_size_rect.x(), patternAreaREAL_size_rect.y(), patternAreaREAL_size_rect.width(), patternAreaREAL_size_rect.height());
 			cv::Mat patternImg = MatSrcImage(patternAreaRealSize);
@@ -591,21 +591,21 @@ void FileController::onExecPattern(LabelController* labelController)
 		if (patternAreaREAL_size_rect.x() == 0 && patternAreaREAL_size_rect.y() == 0 && patternAreaREAL_size_rect.width() == 0 && patternAreaREAL_size_rect.height() == 0)
 		{
 			QMessageBox::warning(nullptr, tr("Warning"),
-				"Ã»ÓĞÌØÕ÷ÇøÓò");
+				"æ²¡æœ‰ç‰¹å¾åŒºåŸŸ");
 			return;
 		}
-		//»ñÈ¡ÇøÓò
+		//è·å–åŒºåŸŸ
 		if (patternAreaREAL_size_rect.x() >= 0 && patternAreaREAL_size_rect.y() >= 0 && patternAreaREAL_size_rect.width() > 0 && patternAreaREAL_size_rect.height() > 0) {
 			cv::Rect patternAreaRealSize(patternAreaREAL_size_rect.x(), patternAreaREAL_size_rect.y(), patternAreaREAL_size_rect.width(), patternAreaREAL_size_rect.height());
 			cv::Mat patternImg = MatSrcImage(patternAreaRealSize);
 
-		// ¶¨ÒåÍÖÔ²²ÎÊı
+		// å®šä¹‰æ¤­åœ†å‚æ•°
 		cv::Point center(patternAreaREAL_size_rect.x() + patternAreaREAL_size_rect.width()/2, patternAreaREAL_size_rect.y()
 		+ patternAreaREAL_size_rect.height() / 2);
 		int width = patternAreaREAL_size_rect.width();
 		int length = patternAreaREAL_size_rect.height();
 
-		// ´´½¨ÍÖÔ²µÄÑÚÂë
+		// åˆ›å»ºæ¤­åœ†çš„æ©ç 
 		cv::Mat mask = cv::Mat::zeros(MatSrcImage.size(), CV_8UC1);
 		cv::ellipse(mask, center, cv::Size(width / 2, length / 2), 0, 0, 360, 255, -1);
 		cv::Mat maskPattern = mask(patternAreaRealSize);
@@ -615,35 +615,35 @@ void FileController::onExecPattern(LabelController* labelController)
 		}
 	}
 	else if (currType == Shape::Polygon) {
-		// ½«QPolygonFÖĞµÄµã×ø±ê×ª»»Îªvector<cv::Point>
+		// å°†QPolygonFä¸­çš„ç‚¹åæ ‡è½¬æ¢ä¸ºvector<cv::Point>
 		std::vector<cv::Point> points;
 		for (const QPointF& point : patternAreaREAL_size_polygon) {
 			points.emplace_back(static_cast<int>(point.x()), static_cast<int>(point.y()));
 		}
 		points.pop_back();
-		// ´´½¨Ò»¸öÓëÍ¼ÏñÏàÍ¬´óĞ¡µÄºÚÉ«ÑÚÂë
+		// åˆ›å»ºä¸€ä¸ªä¸å›¾åƒç›¸åŒå¤§å°çš„é»‘è‰²æ©ç 
 		cv::Mat mask = cv::Mat::zeros(MatSrcImage.size(), MatSrcImage.type());
 
 
-		// ½«µã×ø±ê×ª»»Îªvector<vector<cv::Point>>ĞÎÊ½ÒÔ·ûºÏcv::fillPolyµÄÒªÇó
+		// å°†ç‚¹åæ ‡è½¬æ¢ä¸ºvector<vector<cv::Point>>å½¢å¼ä»¥ç¬¦åˆcv::fillPolyçš„è¦æ±‚
 		std::vector<std::vector<cv::Point>> pts = { points };
-		// ÔÚÑÚÂëÉÏÌî³ä¶à±ßĞÎÇøÓò
+		// åœ¨æ©ç ä¸Šå¡«å……å¤šè¾¹å½¢åŒºåŸŸ
 		cv::fillPoly(mask, pts, cv::Scalar(255, 255, 255));
 
-		// Ê¹ÓÃÑÚÂëÌáÈ¡¶à±ßĞÎÇøÓò
+		// ä½¿ç”¨æ©ç æå–å¤šè¾¹å½¢åŒºåŸŸ
 		cv::Mat result;
 		cv::bitwise_and(MatSrcImage, mask, result);
-		// ²éÕÒ°üº¬¶à±ßĞÎµÄ×îĞ¡¾ØĞÎ ±ß½ç¿ò
+		// æŸ¥æ‰¾åŒ…å«å¤šè¾¹å½¢çš„æœ€å°çŸ©å½¢ è¾¹ç•Œæ¡†
 		cv::Rect boundingRect = cv::boundingRect(points);
 
-		// ²Ã¼ôÍ¼Ïñ£¬È¥µôÅÔ±ßµÄºÚÉ«ÇøÓò
+		// è£å‰ªå›¾åƒï¼Œå»æ‰æ—è¾¹çš„é»‘è‰²åŒºåŸŸ
 		cv::Mat croppedResult = result(boundingRect).clone();
 
 
-		// Ñ¡ÔñÊÊµ±µÄãĞÖµ£¬ÕâÀïÊ¹ÓÃ 128 ×÷ÎªÀı×Ó£¬¿ÉÒÔ¸ù¾İÊµ¼ÊÇé¿öµ÷Õû
+		// é€‰æ‹©é€‚å½“çš„é˜ˆå€¼ï¼Œè¿™é‡Œä½¿ç”¨ 128 ä½œä¸ºä¾‹å­ï¼Œå¯ä»¥æ ¹æ®å®é™…æƒ…å†µè°ƒæ•´
 		int threshold_value = 1;
 
-		// Ó¦ÓÃ¶şÖµ»¯²Ù×÷
+		// åº”ç”¨äºŒå€¼åŒ–æ“ä½œ
 		cv::threshold(croppedResult, mask, threshold_value, 255, cv::THRESH_BINARY);
 
 		emit sendImageToPatternWithMask(Mat2QImage(croppedResult), Mat2QImage(srcImgMat), Mat2QImage(mask));
@@ -653,7 +653,7 @@ void FileController::onExecPattern(LabelController* labelController)
 void FileController::slot_receiveDrawPoint(QPoint resultPoint,int totalModelTime) {
 
 	cv::Mat srcImgClone = srcImgMat.clone();
-	// ÔÚ×óÉÏ·½Ğ´ÏÂtotalModelTimeÎÄ×Ö
+	// åœ¨å·¦ä¸Šæ–¹å†™ä¸‹totalModelTimeæ–‡å­—
 	std::string text = "TotalTime : " + std::to_string(totalModelTime)+"MS";
 
 	cv::putText(srcImgClone, text, cv::Point(80, 100), cv::FONT_HERSHEY_SIMPLEX, 4, cv::Scalar(255, 255, 255),2);
@@ -761,9 +761,9 @@ cv::Mat FileController::QImage2Mat(QImage image)
 	cv::Mat mat;
 	switch (image.format())
 	{
-	case QImage::Format_RGB32:  //Ò»°ãQt¶ÁÈë²ÊÉ«Í¼ºóÎª´Ë¸ñÊ½
+	case QImage::Format_RGB32:  //ä¸€èˆ¬Qtè¯»å…¥å½©è‰²å›¾åä¸ºæ­¤æ ¼å¼
 		mat = cv::Mat(image.height(), image.width(), CV_8UC4, (void*)image.constBits(), image.bytesPerLine());
-		cv::cvtColor(mat, mat, cv::COLOR_BGRA2BGR);   //×ª3Í¨µÀ
+		cv::cvtColor(mat, mat, cv::COLOR_BGRA2BGR);   //è½¬3é€šé“
 		break;
 	case QImage::Format_RGB888:
 		mat = cv::Mat(image.height(), image.width(), CV_8UC3, (void*)image.constBits(), image.bytesPerLine());

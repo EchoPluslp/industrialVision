@@ -1,4 +1,4 @@
-#include "areacontroller.h"
+﻿#include "areacontroller.h"
 #include <QtDebug>
 AreaController::AreaController(QObject* parent) : QObject(parent) {
 	m_currArea = nullptr;

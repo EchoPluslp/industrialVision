@@ -1,8 +1,8 @@
-#include "listwidget.h"
+ï»¿#include "listwidget.h"
 #include "algorithmLibrary.h"
 #include <QMenu>
 
-//ÒÑÑ¡ÔñÁĞ±í
+//å·²é€‰æ‹©åˆ—è¡¨
 UsedListWidget::UsedListWidget(QWidget* parent)
 {
     mainwindow = parent;
@@ -22,7 +22,7 @@ void UsedListWidget::contextMenuEvent(QContextMenuEvent*)
     item = (ListWidgetItem*)this->itemAt(this->mapFromGlobal(QCursor::pos()));
     if (item == NULL) { return; }
     QMenu* menu = new QMenu(this);
-    QAction* delete_action = new QAction("É¾³ı", this);
+    QAction* delete_action = new QAction("åˆ é™¤", this);
     connect(delete_action, &QAction::triggered, this, [item, this] { delete_item(item); });
     menu->addAction(delete_action);
     menu->move(cursor().pos());
@@ -40,7 +40,7 @@ void UsedListWidget::delete_item(ListWidgetItem* item)
 
 void UsedListWidget::show_attr()
 { 
-    //    item = (MyItem *)this->itemAt(this->mapFromGlobal(QCursor::pos()));//ÁíÒ»ÖÖ·½·¨
+    //    item = (MyItem *)this->itemAt(this->mapFromGlobal(QCursor::pos()));//å¦ä¸€ç§æ–¹æ³•
     ListWidgetItem* item = (ListWidgetItem*)this->currentItem();
     int index = item->get_index();
     ParamsItem p;                                                   
@@ -114,7 +114,7 @@ QImage GaryPatternItem::item_process_img(QImage image)
     return img;
 }
 
-//GaryPatternItem»Ò¶ÈÆ¥Åä»ñÈ¡Í¼
+//GaryPatternItemç°åº¦åŒ¹é…è·å–å›¾
 QImage GaryPatternItem::get_item_image(QImage srcImg, int width, int height)
 {
 

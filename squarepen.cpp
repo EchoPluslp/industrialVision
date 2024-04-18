@@ -1,4 +1,4 @@
-#include "squarepen.h"
+﻿#include "squarepen.h"
 
 void SquarePen::mousePress(QGraphicsSceneMouseEvent* event) {
 	int x = int(event->scenePos().x());

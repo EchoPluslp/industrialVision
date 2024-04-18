@@ -1,0 +1,13 @@
+release/main.o
+release/mainwindow.o
+release/mycorneritem.o
+release/myqgraphicsview.o
+release/bee_calibercircle.o
+release/bee_caliberline.o
+release/bee_circle.o
+release/bee_concencircle.o
+release/bee_polygon.o
+release/bee_rect.o
+release/bee_ringexpansion.o
+release/qrc_resource.o
+release/moc_mainwindow.o

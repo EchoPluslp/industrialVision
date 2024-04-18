@@ -1,7 +1,7 @@
-#include "industrialVision.h"
+ï»¿#include "industrialVision.h"
 
 
-// ÔÚÕâÀï¶¨ÒåÈ«¾Ö±äÁ¿
+// åœ¨è¿™é‡Œå®šä¹‰å…¨å±€å˜é‡
  Dimension dimensions;
  std::mutex mtx;
  std::condition_variable Setcv;
@@ -14,9 +14,9 @@ industrialVision::industrialVision(QWidget *parent)
     industrialVision::ui.setupUi(this);
 
 	QFont myFont;
-	//ÉèÖÃÎÄ×Ö´óĞ¡
+	//è®¾ç½®æ–‡å­—å¤§å°
 	//myFont.setPointSize(30);
-	//ÉèÖÃÎÄ×Ö×ÖÌå
+	//è®¾ç½®æ–‡å­—å­—ä½“
 	setFont(myFont);
 
 	ui.menuBar->setStyleSheet("QMenu::item{padding:5px 15px;margin:1px 2px;color:#222222;font - size:40px;}");
@@ -24,13 +24,13 @@ industrialVision::industrialVision(QWidget *parent)
 	ui.lcdNumber->setSegmentStyle(QLCDNumber::Flat);
 	ui.lcdNumber->display(TimeRecord->toString("hh:mm:ss"));
 
-	//Ïà»ú¶ÔÏó
+	//ç›¸æœºå¯¹è±¡
 	m_pcMyCamera = new CMvCamera;
 
-	//Ïà»úÏß³Ì¶ÔÏóÊµÀı»¯
+	//ç›¸æœºçº¿ç¨‹å¯¹è±¡å®ä¾‹åŒ–
 	m_cameraThread = new CameraThread();
 
-	//´¦ÀíÏß³Ì¶ÔÏóÊµÀı»¯
+	//å¤„ç†çº¿ç¨‹å¯¹è±¡å®ä¾‹åŒ–
 	m_processingThread = new ProcessingThread();
 
 	connect(m_processingThread, &ProcessingThread::signal_newPixmap, this, &industrialVision::slot_displayPixmap, Qt::BlockingQueuedConnection);
@@ -62,8 +62,8 @@ industrialVision::industrialVision(QWidget *parent)
     
 	/////////////////////
 	//auto action_shizixian = new QAction();
-	//action_shizixian->setText("Ê®×ÖÏß");
-	//action_shizixian->setFont(QFont(tr("ËÎÌå"), 17, QFont::Bold, false));//ËÎÌå26ºÅ£¬¼Ó´Ö£¬Ğ±Ìå×Ö
+	//action_shizixian->setText("åå­—çº¿");
+	//action_shizixian->setFont(QFont(tr("å®‹ä½“"), 17, QFont::Bold, false));//å®‹ä½“26å·ï¼ŒåŠ ç²—ï¼Œæ–œä½“å­—
 
 	//connect(action_shizixian, &QAction::triggered,
 	//	this, &industrialVision::openShiShiPiPei);
@@ -71,15 +71,15 @@ industrialVision::industrialVision(QWidget *parent)
 
 
 	action_RestoreWindow = new QAction();
-	action_RestoreWindow->setText("ÊµÊ±ÏÔÊ¾");
-	action_RestoreWindow->setFont(QFont(tr("ËÎÌå"), 40, QFont::Bold, false));
+	action_RestoreWindow->setText("å®æ—¶æ˜¾ç¤º");
+	action_RestoreWindow->setFont(QFont(tr("å®‹ä½“"), 40, QFont::Bold, false));
 	ui.menuBar->addAction(action_RestoreWindow);
 	connect(action_RestoreWindow, &QAction::triggered,
 		this, &industrialVision::restoreWindow);
 
 	action_SetModelFile = new QAction();
-	action_SetModelFile->setFont(QFont(tr("ËÎÌå"), 60, QFont::Bold, false));//ËÎÌå26ºÅ£¬¼Ó´Ö£¬Ğ±Ìå×Ö
-    action_SetModelFile->setText("¹¤³Ìµ¼Èë");
+	action_SetModelFile->setFont(QFont(tr("å®‹ä½“"), 60, QFont::Bold, false));//å®‹ä½“26å·ï¼ŒåŠ ç²—ï¼Œæ–œä½“å­—
+    action_SetModelFile->setText("å·¥ç¨‹å¯¼å…¥");
     ui.menuBar->addAction(action_SetModelFile);
     connect(action_SetModelFile, &QAction::triggered,
         this, &industrialVision::setModelXMLFile);
@@ -87,36 +87,36 @@ industrialVision::industrialVision(QWidget *parent)
 
 	 
 	action_SetAttributes = new QAction();
-	action_SetAttributes->setText("Í¼±êÉèÖÃ");
-	action_SetAttributes->setFont(QFont(tr("ËÎÌå"),40, QFont::Bold, false));
+	action_SetAttributes->setText("å›¾æ ‡è®¾ç½®");
+	action_SetAttributes->setFont(QFont(tr("å®‹ä½“"),40, QFont::Bold, false));
 	connect(action_SetAttributes, &QAction::triggered,
 		this, &industrialVision::action_AttributesSet);
 
 	action_password = new QAction();
-	action_password->setText("ÃÜÂëÉèÖÃ");
-	action_password->setFont(QFont(tr("ËÎÌå"), 40, QFont::Bold, false));
+	action_password->setText("å¯†ç è®¾ç½®");
+	action_password->setFont(QFont(tr("å®‹ä½“"), 40, QFont::Bold, false));
 	connect(action_password, &QAction::triggered,
 		this, &industrialVision::actionPasswordAction);
 
 	 action_setLogoPath = new QAction();
-	action_setLogoPath->setText("ÈÕÖ¾ÉèÖÃ");
-	action_setLogoPath->setFont(QFont(tr("ËÎÌå"), 40, QFont::Bold, false));
+	action_setLogoPath->setText("æ—¥å¿—è®¾ç½®");
+	action_setLogoPath->setFont(QFont(tr("å®‹ä½“"), 40, QFont::Bold, false));
 	connect(action_setLogoPath, &QAction::triggered,
 		this, &industrialVision::actionLogAndPathAction);
 
-	SettingMenus = new QMenu("&ÉèÖÃ", ui.menuBar);
+	SettingMenus = new QMenu("&è®¾ç½®", ui.menuBar);
 	ui.menuBar->addMenu(SettingMenus);
 	
 	auto action_userSwitch = new QAction();
-	action_userSwitch->setText("ÓÃ»§ÇĞ»»");
-	action_userSwitch->setFont(QFont(tr("ËÎÌå"), 40, QFont::Bold, false));
+	action_userSwitch->setText("ç”¨æˆ·åˆ‡æ¢");
+	action_userSwitch->setFont(QFont(tr("å®‹ä½“"), 40, QFont::Bold, false));
 	ui.menuBar->addAction(action_userSwitch);
 	connect(action_userSwitch, &QAction::triggered,
 		this, &industrialVision::actionuserSwitch);
 
 	auto action_helpInfo = new QAction();
-    action_helpInfo->setText("°ïÖú");
-    action_helpInfo->setFont(QFont(tr("ËÎÌå"),40, QFont::Bold, false));
+    action_helpInfo->setText("å¸®åŠ©");
+    action_helpInfo->setFont(QFont(tr("å®‹ä½“"),40, QFont::Bold, false));
 	ui.menuBar->addAction(action_helpInfo);
 	connect(action_helpInfo, &QAction::triggered,
 		this, &industrialVision::helpInfo); 
@@ -133,33 +133,33 @@ industrialVision::industrialVision(QWidget *parent)
 	connect(this, &industrialVision::setdefultCamare, ui.openGLWidget, &MyGLWidget::setMouseClickFlag, Qt::QueuedConnection);
 
 	
-    //¿ªÆô·şÎñ¶Ë
+    //å¼€å¯æœåŠ¡ç«¯
 	connectValual.create_server();
 	ui.pushButton_manualOperation->setEnabled(false);
 
-    //ÉèÖÃ±³¾°É« 
+    //è®¾ç½®èƒŒæ™¯è‰² 
 	ui.menuBar->setStyleSheet("color: rgb(255, 255, 255); background-color: rgba(26, 45, 77, 1);");
 	setButtonClickLimits(false);
-	//°×É«Ìî³ä×óÉÏ½ÇÍ¼±ê
+	//ç™½è‰²å¡«å……å·¦ä¸Šè§’å›¾æ ‡
     setWindowTitle("V-Gp System V1.0");
 	setWindowIcon(QIcon("icon.ico"));
-     AppendText("ÏµÍ³Æô¶¯³É¹¦",Green);
+     AppendText("ç³»ç»Ÿå¯åŠ¨æˆåŠŸ",Green);
 }
 
 
  void industrialVision::click_continuousOperation() {
      
-     AppendText("µã»÷Á¬Ğø¹¤×÷°´Å¥",Green);
+     AppendText("ç‚¹å‡»è¿ç»­å·¥ä½œæŒ‰é’®",Green);
 	 if (m_bOpenDevice) {
-		 AppendText("Ïà»úÒÑ¾­Æô¶¯", Red);
-		 QMessageBox::critical(this, "´íÎóĞÅÏ¢", "Ïà»úÒÑ¾­Æô¶¯");
+		 AppendText("ç›¸æœºå·²ç»å¯åŠ¨", Red);
+		 QMessageBox::critical(this, "é”™è¯¯ä¿¡æ¯", "ç›¸æœºå·²ç»å¯åŠ¨");
 		 return;
 	 }
 	 if (!DisplayWindowInitial()){
-		 AppendText("Ïà»ú×´Ì¬Òì³£", Red);
+		 AppendText("ç›¸æœºçŠ¶æ€å¼‚å¸¸", Red);
 		 return;
 	 }
-	 //ÉèÖÃ°´Å¥È¨ÏŞ
+	 //è®¾ç½®æŒ‰é’®æƒé™
 	 setButtonClickLimits(true);
 
 	 if (!m_bOpenDevice)
@@ -169,7 +169,7 @@ industrialVision::industrialVision(QWidget *parent)
 
 		 if (m_pcMyCamera->IsDeviceConnected())
 		 {
-			 m_pcMyCamera->StartGrabbing();   //¿ªÆôÏà»ú²É¼¯
+			 m_pcMyCamera->StartGrabbing();   //å¼€å¯ç›¸æœºé‡‡é›†
 			 if (!m_cameraThread->isRunning())
 			 {
 				 m_cameraThread->setSwitchFlag(true);
@@ -182,11 +182,11 @@ industrialVision::industrialVision(QWidget *parent)
 			 }
 		 }
 		 Setinitializationparameters();
-         //»ñÈ¡Ïà»úĞÍºÅ
-			 // ch:Ã¶¾Ù×ÓÍøÄÚËùÓĞÉè±¸ | en:Enumerate all devices within subnet
+         //è·å–ç›¸æœºå‹å·
+			 // ch:æšä¸¾å­ç½‘å†…æ‰€æœ‰è®¾å¤‡ | en:Enumerate all devices within subnet
 		 int nRet = CMvCamera::EnumDevices(MV_GIGE_DEVICE , &m_stDevList);
 
-		 // ch:½«Öµ¼ÓÈëµ½ĞÅÏ¢ÁĞ±í¿òÖĞ²¢ÏÔÊ¾³öÀ´ | en:Add value to the information list box and display
+		 // ch:å°†å€¼åŠ å…¥åˆ°ä¿¡æ¯åˆ—è¡¨æ¡†ä¸­å¹¶æ˜¾ç¤ºå‡ºæ¥ | en:Add value to the information list box and display
 		 for (unsigned int i = 0; i < m_stDevList.nDeviceNum; i++)
 		 {
 			 MV_CC_DEVICE_INFO* pDeviceInfo = m_stDevList.pDeviceInfo[i];
@@ -222,12 +222,12 @@ industrialVision::industrialVision(QWidget *parent)
 			 }
 			 else
 			 {
-				 AppendText("ÎŞ·¨Ê¶±ğµÄÉè±¸", Red);
-				 QMessageBox::critical(this, "´íÎóĞÅÏ¢", "ÎŞ·¨Ê¶±ğµÄÉè±¸");
+				 AppendText("æ— æ³•è¯†åˆ«çš„è®¾å¤‡", Red);
+				 QMessageBox::critical(this, "é”™è¯¯ä¿¡æ¯", "æ— æ³•è¯†åˆ«çš„è®¾å¤‡");
 			 }
 		 }
 
-		 //¼ÆÊ±Æ÷¿ªÊ¼¼ÆÊ±
+		 //è®¡æ—¶å™¨å¼€å§‹è®¡æ—¶
 		 timer->start(1000);
 		 m_bStartGrabbing = true;
 }
@@ -239,7 +239,7 @@ bool industrialVision::nativeEvent(const QByteArray& eventType, void* message, l
 	{
 	case WM_GETMINMAXINFO:
 	{
-		//½â¾öQTÎŞ±ß¿ò´°Ìå×î´ó»¯ÕÚ¸ÇWindowsÈÎÎñÀ¸ÎÊÌâ
+		//è§£å†³QTæ— è¾¹æ¡†çª—ä½“æœ€å¤§åŒ–é®ç›–Windowsä»»åŠ¡æ é—®é¢˜
 		if (this->isMaximized())
 		{
 			int index = QApplication::desktop()->screenNumber(this);
@@ -272,10 +272,10 @@ void industrialVision::receive_ServerCreateInfo(QString flag)
 {
 	if (flag == "TRUE")
 	{
-		AppendText("·şÎñ¶Ë¿ªÆô³É¹¦", Green);
+		AppendText("æœåŠ¡ç«¯å¼€å¯æˆåŠŸ", Green);
 		return;
 	}
-	AppendText("·şÎñ¶ËÒÑ¾­¿ªÆô»òÕß¿ªÆôÊ§°Ü", Red);
+	AppendText("æœåŠ¡ç«¯å·²ç»å¼€å¯æˆ–è€…å¼€å¯å¤±è´¥", Red);
 }
 
 void industrialVision::click_editVision()
@@ -293,28 +293,28 @@ void industrialVision::click_editVision()
 
 
     createModelItem.show();
-    //¸üĞÂxmlÎÄ¼ş
-    AppendText("´ò¿ªÊÓ¾õÄ£°å½çÃæ",Green);
+    //æ›´æ–°xmlæ–‡ä»¶
+    AppendText("æ‰“å¼€è§†è§‰æ¨¡æ¿ç•Œé¢",Green);
 }
 
 void industrialVision::getImageOneFrame() {
-	// ´´½¨Ò»¸ö¶¨Ê±Æ÷
+	// åˆ›å»ºä¸€ä¸ªå®šæ—¶å™¨
 	QTimer timer;
-	timer.setSingleShot(true); // ÉèÖÃÎªµ¥´Î´¥·¢
+	timer.setSingleShot(true); // è®¾ç½®ä¸ºå•æ¬¡è§¦å‘
 
-	// Á¬½Ó¶¨Ê±Æ÷µÄtimeoutĞÅºÅµ½Ò»¸ö²Ûº¯Êı£¬¸Ã²Ûº¯ÊıÔÚ¶¨Ê±Æ÷³¬Ê±Ê±´¥·¢
+	// è¿æ¥å®šæ—¶å™¨çš„timeoutä¿¡å·åˆ°ä¸€ä¸ªæ§½å‡½æ•°ï¼Œè¯¥æ§½å‡½æ•°åœ¨å®šæ—¶å™¨è¶…æ—¶æ—¶è§¦å‘
 	QObject::connect(&timer, &QTimer::timeout, [&]() {
 		emit cameraTovisualTemplate( QImage(), QString());
 		});
 
-	timer.start(1000); // Æô¶¯¶¨Ê±Æ÷£¬ÉèÖÃ³¬Ê±Ê±¼äÎª1Ãë
+	timer.start(1000); // å¯åŠ¨å®šæ—¶å™¨ï¼Œè®¾ç½®è¶…æ—¶æ—¶é—´ä¸º1ç§’
 
 
 	while (m_imageVector_1.isEmpty())
 	{
-		QCoreApplication::processEvents(); // ÔÊĞíQtÊÂ¼ş´¦Àí
+		QCoreApplication::processEvents(); // å…è®¸Qtäº‹ä»¶å¤„ç†
 	}
-	//¶¨Ê±Æ÷Í£Ö¹
+	//å®šæ—¶å™¨åœæ­¢
 	timer.stop();
 	timer.deleteLater();
 
@@ -349,20 +349,20 @@ void industrialVision::createOncePattern()
 {		
 		  if (resultPointF.x() != -m_width && resultPointF.y() != -m_height)
       {
-          AppendText("¡¾ÌáÊ¾¡¿´¥·¢½ÓÊÜÆ¥ÅäÍê³É,Æ¥Åä³É¹¦",Green);
+          AppendText("ã€æç¤ºã€‘è§¦å‘æ¥å—åŒ¹é…å®Œæˆ,åŒ¹é…æˆåŠŸ",Green);
 		  char xxx[10];
 		  char yyy[10];
 		  sprintf(xxx, "%.1f", finall_Total_Result.ptCenter.x);
 		  sprintf(yyy, "%.1f", finall_Total_Result.ptCenter.y);
 
-          QString  resultFont  = "x:×ø±ê";
+          QString  resultFont  = "x:åæ ‡";
 
           resultFont.append(QString::fromLocal8Bit(xxx));
 		  resultFont.append(",");
-		  resultFont.append("y:×ø±ê");
+		  resultFont.append("y:åæ ‡");
 		  resultFont.append(QString::fromLocal8Bit(yyy));
 		  resultFont.append(".");
-		  resultFont.append("Æ¥ÅäÓÃÊ±:");
+		  resultFont.append("åŒ¹é…ç”¨æ—¶:");
 		  resultFont.append(QString::number(matchTime_total));
 
 		  AppendText(resultFont,Green);
@@ -373,7 +373,7 @@ void industrialVision::createOncePattern()
           ui.texstBrowser_titleStatus->setPixmap(QPixmap("Image/industory/OK.png"));
 	  }
       else {
-          AppendText("¡¾´íÎó¡¿´¥·¢½ÓÊÜÆ¥ÅäÍê³É,Æ¥ÅäÊ§°Ü",Red);
+          AppendText("ã€é”™è¯¯ã€‘è§¦å‘æ¥å—åŒ¹é…å®Œæˆ,åŒ¹é…å¤±è´¥",Red);
           ui.texstBrowser_titleStatus->clear();
 		  total_count++;
 
@@ -420,7 +420,7 @@ void industrialVision::addTextBrower(QString text,QString flag)
 		bool res = dir.mkpath(logDirectory);
 		if (res != true)
 		{
-			ui.textBrowser_record->append("¡¾ÌáÊ¾¡¿logÎÄ¼ş¼Ğ´´½¨Ê§°Ü¡£\r\n");
+			ui.textBrowser_record->append("ã€æç¤ºã€‘logæ–‡ä»¶å¤¹åˆ›å»ºå¤±è´¥ã€‚\r\n");
 			return;
 		}
 	}
@@ -429,8 +429,8 @@ void industrialVision::addTextBrower(QString text,QString flag)
 	QFile file(filename);
 	if (!file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
 	{
-		ui.textBrowser_record->append("¡¾ÌáÊ¾¡¿ÈÕÖ¾ÎÄ¼ş´ò¿ªÊ§°Ü¡£\r\n"+ file.fileName());
-		return;//´ò¿ªÎÄ¼şÊ§°Ü
+		ui.textBrowser_record->append("ã€æç¤ºã€‘æ—¥å¿—æ–‡ä»¶æ‰“å¼€å¤±è´¥ã€‚\r\n"+ file.fileName());
+		return;//æ‰“å¼€æ–‡ä»¶å¤±è´¥
 	}
 	file.write(now.toUtf8()+"\r\n");
 	file.write(text.toUtf8()+"\r\n");
@@ -438,18 +438,18 @@ void industrialVision::addTextBrower(QString text,QString flag)
 }
 void industrialVision::getXMLPATH(QString xmlPath)
 {
-    AppendText("¶ÁÈ¡xmlÂ·¾¶:"+ xmlPath,Green);
+    AppendText("è¯»å–xmlè·¯å¾„:"+ xmlPath,Green);
     m_xmlpath = xmlPath;
 	if(getPatternInfoFromXML(m_xmlpath)){
-	AppendText("¼ÓÔØxmlÄ£°å³É¹¦" + xmlPath, Green);
+	AppendText("åŠ è½½xmlæ¨¡æ¿æˆåŠŸ" + xmlPath, Green);
 	}
 	else {
 		if (!m_processingThread->getmodelAndRealSclar())
 		{
-			AppendText("XML Ä£°åÍ¼Óëµ±Ç°Ïà»úÕ¹Ê¾µÄÍ¼Æ¬±ÈÀı²»Ò»ÖÂ,ÎŞ·¨Æ¥Åä" + xmlPath, Gray);
+			AppendText("XML æ¨¡æ¿å›¾ä¸å½“å‰ç›¸æœºå±•ç¤ºçš„å›¾ç‰‡æ¯”ä¾‹ä¸ä¸€è‡´,æ— æ³•åŒ¹é…" + xmlPath, Gray);
 			return;
 		}
-		AppendText("¼ÓÔØxmlÄ£°åÊ§°Ü" + xmlPath, Red);
+		AppendText("åŠ è½½xmlæ¨¡æ¿å¤±è´¥" + xmlPath, Red);
 	}
 }
 void industrialVision::AppendText(const QString& text,QString flag)
@@ -487,9 +487,9 @@ void industrialVision::restoreWindow()
     ui.textEdit_2->setVisible(small_window_flag);
 	ui.textBrowser_record->setVisible(small_window_flag);
 
-    ///ÆäËûÉèÖÃ
+    ///å…¶ä»–è®¾ç½®
 	small_window_flag = !small_window_flag;
-	//ÉèÖÃ´°¿Ú´óĞ¡
+	//è®¾ç½®çª—å£å¤§å°
 	
 	setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
 	setMinimumSize(0, 0);
@@ -503,14 +503,14 @@ void industrialVision::restoreWindow()
 	setGeometry(originalGeometry);
 
     show();
-     //ÉèÖÃÊÓÆµÕ¹Ê¾ÇøÓòµÄ±ÈÀı
+     //è®¾ç½®è§†é¢‘å±•ç¤ºåŒºåŸŸçš„æ¯”ä¾‹
    // setFixedSize(this->width(), this->height());
 
 }
 
 bool industrialVision::compareAspectRatio(QSize smallPicture)
 {
-	//µÈ´ıÈ¡Á÷Ïß³ÌÖ´ĞĞ,Ö®ÁËºó²ÅÓĞm_widethºÍm_height
+	//ç­‰å¾…å–æµçº¿ç¨‹æ‰§è¡Œ,ä¹‹äº†åæ‰æœ‰m_widethå’Œm_height
 	if (smallPicture.width()<smallPicture.height())
 	{
 		if (m_width < m_height) { return true; }
@@ -535,9 +535,9 @@ bool industrialVision::compareAspectRatio(QSize smallPicture)
 
 QPixmap industrialVision::MatToPixmap(const cv::Mat cvMat)
 {
-	QImage myImage = QImage((const unsigned char*)(cvMat.data), cvMat.cols, cvMat.rows, QImage::Format_Indexed8);   //»Ò¶ÈÍ¼
+	QImage myImage = QImage((const unsigned char*)(cvMat.data), cvMat.cols, cvMat.rows, QImage::Format_Indexed8);   //ç°åº¦å›¾
 
-//QSize±íÊ¾Í¼ÏñÔÚ½çÃæÉÏµÄÏÔÊ¾³ß´ç    
+//QSizeè¡¨ç¤ºå›¾åƒåœ¨ç•Œé¢ä¸Šçš„æ˜¾ç¤ºå°ºå¯¸    
 	return QPixmap::fromImage(myImage).scaled(QSize(myImage.width(), myImage.height()), Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
 
@@ -574,33 +574,33 @@ QPoint industrialVision::getCenterPointFromCircle(QList<QPoint> listCircle)
 void industrialVision::setCURRENT_ROLE(QString currentROle)
 {
 	this->CURRENT_ROLE = currentROle;
-	//´°¿ÚÀ¸Ôö¼Óµ±Ç°È¨ÏŞ
+	//çª—å£æ å¢åŠ å½“å‰æƒé™
 	QString title(windowTitle());
 	title.append("[" + CURRENT_ROLE + "]");
 	setWindowTitle(title);
 	SettingMenus->clear();
-	//Ôö¼ÓÉèÖÃ½çÃæ,¹ÜÀíÔ±ºÍ²Ù×÷Ô±·Ö¿ª
+	//å¢åŠ è®¾ç½®ç•Œé¢,ç®¡ç†å‘˜å’Œæ“ä½œå‘˜åˆ†å¼€
 	if (CURRENT_ROLE == ROLE_ADMIN)
 	{
-		//Í¼±êÉèÖÃ                                                                                                                                                                                                                   
+		//å›¾æ ‡è®¾ç½®                                                                                                                                                                                                                   
 		SettingMenus->addAction(action_setLogoPath);
-		//ÈÕÖ¾ÉèÖÃ
+		//æ—¥å¿—è®¾ç½®
 		SettingMenus->addAction(action_SetAttributes);
 	}
-	//ÃÜÂëÉèÖÃ
+	//å¯†ç è®¾ç½®
 	SettingMenus->addAction(action_password);
 }
 
-//ËÑË÷ÇøÓò°´Å¥
+//æœç´¢åŒºåŸŸæŒ‰é’®
 void industrialVision::openShiShiPiPei()
 {
     if (sourceAreaOn) {
-		AppendText("ËÑË÷ÇøÓò¿ªÆô", Green);
-		//ui.pushButton->setStyleSheet("/* Ö¤È¯ */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* ±³¾°/4 Ò³Ç©Ñ¡ÖĞÉ« */ background: #285790; color: rgb(255, 0, 0); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
+		AppendText("æœç´¢åŒºåŸŸå¼€å¯", Green);
+		//ui.pushButton->setStyleSheet("/* è¯åˆ¸ */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* èƒŒæ™¯/4 é¡µç­¾é€‰ä¸­è‰² */ background: #285790; color: rgb(255, 0, 0); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
     }
     else {
-		AppendText("ËÑË÷ÇøÓò¹Ø±Õ", Red);
-		//ui.pushButton->setStyleSheet("/* Ö¤È¯ */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* ±³¾°/4 Ò³Ç©Ñ¡ÖĞÉ« */ background: #285790; color: rgb(255, 255, 255); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
+		AppendText("æœç´¢åŒºåŸŸå…³é—­", Red);
+		//ui.pushButton->setStyleSheet("/* è¯åˆ¸ */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* èƒŒæ™¯/4 é¡µç­¾é€‰ä¸­è‰² */ background: #285790; color: rgb(255, 255, 255); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
     }
 	
 	emit openSourceArea(sourceAreaOn);
@@ -622,20 +622,20 @@ void industrialVision::setModelXMLFile()
             return;*/
 		m_xmlpath = path;
 		if (getPatternInfoFromXML(m_xmlpath)) {
-			AppendText("¼ÓÔØxmlÄ£°å³É¹¦" + m_xmlpath, Green);
+			AppendText("åŠ è½½xmlæ¨¡æ¿æˆåŠŸ" + m_xmlpath, Green);
 		}
 		else {
 			if(!m_processingThread->getmodelAndRealSclar()){
-			AppendText("XMLÄ£°åÍ¼Óëµ±Ç°Ïà»úÕ¹Ê¾µÄÍ¼Æ¬±ÈÀı²»Ò»ÖÂ,ÎŞ·¨Æ¥Åä" + m_xmlpath, Gray);
+			AppendText("XMLæ¨¡æ¿å›¾ä¸å½“å‰ç›¸æœºå±•ç¤ºçš„å›¾ç‰‡æ¯”ä¾‹ä¸ä¸€è‡´,æ— æ³•åŒ¹é…" + m_xmlpath, Gray);
 			return;
 			}
-			AppendText("¼ÓÔØxmlÄ£°åÊ§°Ü" + m_xmlpath, Red);
+			AppendText("åŠ è½½xmlæ¨¡æ¿å¤±è´¥" + m_xmlpath, Red);
 
 		}
     }
     else {
         QMessageBox::warning(nullptr, tr("Path"),
-            tr("Î´Ñ¡ÔñxmlÄ£°å."));
+            tr("æœªé€‰æ‹©xmlæ¨¡æ¿."));
     }
 }
 
@@ -644,12 +644,12 @@ void industrialVision::rotatePicture()
     rotate_image = !rotate_image;
 }
 
-//±£´æµ±Ç°×´Ì¬ÎªÄ¬ÈÏ×´Ì¬²¢Ëø¶¨ ,·½±ãÏÂ´Î´ò¿ª
+//ä¿å­˜å½“å‰çŠ¶æ€ä¸ºé»˜è®¤çŠ¶æ€å¹¶é”å®š ,æ–¹ä¾¿ä¸‹æ¬¡æ‰“å¼€
 void industrialVision::click_manualOperation()
 {
 	
 	emit setdefultCamare(defaultCamcare);
-	//ÉèÖÃÏà»ú²ÎÊı²»¿ÉĞŞ¸Ä»òÕß¿ÉÒÔ¸ü¸Ä
+	//è®¾ç½®ç›¸æœºå‚æ•°ä¸å¯ä¿®æ”¹æˆ–è€…å¯ä»¥æ›´æ”¹
 	ui.gain_edit->setDisabled(defaultCamcare);
 	ui.framerate_edit->setDisabled(defaultCamcare);
 	ui.grade_edit->setDisabled(defaultCamcare);
@@ -666,11 +666,11 @@ void industrialVision::click_manualOperation()
 		ui.height_edit->setStyleSheet("background-color: grey;");
 		ui.pixelformat_edit->setStyleSheet("background-color: grey;");
 
-		//½«×ÖÌåÑÕÉ«ĞŞ¸ÄÎªºìÉ«
-		ui.pushButton_manualOperation->setStyleSheet("/* Ö¤È¯ */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* ±³¾°/4 Ò³Ç©Ñ¡ÖĞÉ« */ background: #285790; color: rgb(255, 0, 0); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
-		ui.pushButton_manualOperation->setText("½âËø×´Ì¬");
+		//å°†å­—ä½“é¢œè‰²ä¿®æ”¹ä¸ºçº¢è‰²
+		ui.pushButton_manualOperation->setStyleSheet("/* è¯åˆ¸ */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* èƒŒæ™¯/4 é¡µç­¾é€‰ä¸­è‰² */ background: #285790; color: rgb(255, 0, 0); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
+		ui.pushButton_manualOperation->setText("è§£é”çŠ¶æ€");
 
-		//Ëø¶¨×´Ì¬,ÉèÖÃµ±Ç°Ğı×ª·½ÏòÎªÄ¬ÈÏ·½Ïò
+		//é”å®šçŠ¶æ€,è®¾ç½®å½“å‰æ—‹è½¬æ–¹å‘ä¸ºé»˜è®¤æ–¹å‘
 		defaultRotateIndexValue = m_rotateIndexInt;
 	}
 	else {
@@ -683,9 +683,9 @@ void industrialVision::click_manualOperation()
 		ui.height_edit->setStyleSheet("background-color: #10171F;");
 		ui.pixelformat_edit->setStyleSheet("background-color: #10171F;");
 
-		//½«×ÖÌåÑÕÉ«ĞŞ¸ÄÎªÄ¬ÈÏÑÕÉ«
-		ui.pushButton_manualOperation->setStyleSheet("/* Ö¤È¯ */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* ±³¾°/4 Ò³Ç©Ñ¡ÖĞÉ« */ background: #285790; color: rgb(255, 255, 255); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
-		ui.pushButton_manualOperation->setText("Ëø¶¨×´Ì¬");
+		//å°†å­—ä½“é¢œè‰²ä¿®æ”¹ä¸ºé»˜è®¤é¢œè‰²
+		ui.pushButton_manualOperation->setStyleSheet("/* è¯åˆ¸ */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* èƒŒæ™¯/4 é¡µç­¾é€‰ä¸­è‰² */ background: #285790; color: rgb(255, 255, 255); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
+		ui.pushButton_manualOperation->setText("é”å®šçŠ¶æ€");
 	}
 	defaultCamcare = !defaultCamcare;
 }
@@ -693,9 +693,9 @@ void industrialVision::click_manualOperation()
 
 bool industrialVision::getPatternInfoFromXML(QString path)
 {
-    QFile xml_MODEL_FILE(path);         //ĞèÒª´ò¿ªµÄÎÄ¼ş
+    QFile xml_MODEL_FILE(path);         //éœ€è¦æ‰“å¼€çš„æ–‡ä»¶
     if (!xml_MODEL_FILE.exists()) {
-        AppendText("Ä£°åÎÄ¼ş²»´æÔÚ",Red);
+        AppendText("æ¨¡æ¿æ–‡ä»¶ä¸å­˜åœ¨",Red);
         return false;
     }
     QDomDocument doc;
@@ -711,9 +711,9 @@ bool industrialVision::getPatternInfoFromXML(QString path)
         return false;
     }
     xml_MODEL_FILE.close();
-	//ÖØĞÂ°Ñ¸÷Ïî²ÎÊıÖÃ¿Õ
+	//é‡æ–°æŠŠå„é¡¹å‚æ•°ç½®ç©º
 	resetParameters();
-	//¶ÁÈ¡xmlÎÄ¼ş²Ù×÷
+	//è¯»å–xmlæ–‡ä»¶æ“ä½œ
     QDomElement root = doc.documentElement();
     QDomElement elem = root.cloneNode(true).toElement();
     for (int i = 0; i < elem.childNodes().count(); i++) {
@@ -725,20 +725,20 @@ bool industrialVision::getPatternInfoFromXML(QString path)
             if (labelElem.tagName() == "Label") {
 
                 Label* label = new Label;
-                //µ±Ç°typeÃû×Ö
+                //å½“å‰typeåå­—
 				QString typeName = typeElem.attribute("Type");
                 Shape* currentShape = label->createFromElementToPattern(labelElem);
                 QSize small_Picture = currentShape->getCurrSize();
-				//ÅĞ¶Ïµ±Ç°Í¼ºÍÄ£°åÍ¼ÊÇ·ñ±ÈÀıÒ»ÖÂ
+				//åˆ¤æ–­å½“å‰å›¾å’Œæ¨¡æ¿å›¾æ˜¯å¦æ¯”ä¾‹ä¸€è‡´
 				if (!compareAspectRatio(small_Picture))
 				{
-					//´ú±í²»Ò»ÖÂ
+					//ä»£è¡¨ä¸ä¸€è‡´
 					m_processingThread->setmodelAndRealSclar(false);
 					return false;							
 				}																
-				//Ò»ÖÂ	
+				//ä¸€è‡´	
 				m_processingThread->setmodelAndRealSclar(true);
-                if (typeName.contains("ËÑË÷ÇøÓò")) {
+                if (typeName.contains("æœç´¢åŒºåŸŸ")) {
 					areaNode = currentShape->getItem()->boundingRect();
 					areaNodeREAL_size.setX(((double)areaNode.x() / small_Picture.width()) * m_width);
 					areaNodeREAL_size.setY(((double)areaNode.y() / small_Picture.height()) * m_height);
@@ -758,8 +758,8 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 
 					}
 				}
-                else if (typeName.contains("ÌØÕ÷ÇøÓò")) {
-					//ÅĞ¶Ïµ±Ç°ÌØÕ÷ÇøÓòÊÇÄÄÖÖÀàĞÍ
+                else if (typeName.contains("ç‰¹å¾åŒºåŸŸ")) {
+					//åˆ¤æ–­å½“å‰ç‰¹å¾åŒºåŸŸæ˜¯å“ªç§ç±»å‹
 					currentPattern_OBJ = currentShape->getType();
 					
 					if (currentPattern_OBJ == Shape::Rect || currentPattern_OBJ == Shape::Ellipse)
@@ -775,7 +775,7 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 					patternAreaREAL_size_rect.setY(patternAreaREAL_size_rect.y() < 0 ? 0 : patternAreaREAL_size_rect.y());
 
 					Area* m_area_item = new Area;
-					//¸øpatternImageName¸³ÖµÓÃÓÚ¶ÁÈ¡ÌØÕ÷Í¼
+					//ç»™patternImageNameèµ‹å€¼ç”¨äºè¯»å–ç‰¹å¾å›¾
 					 pattern_Path = m_area_item->getFileName(labelElem.firstChildElement("Area")).trimmed();
 					 SAFE_DELETE(m_area_item);
 					
@@ -793,7 +793,7 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 						
 						patternAreaREAL_size_polygon.clear();
 						Area* m_area_item = new Area;
-						//¸øpatternImageName¸³ÖµÓÃÓÚ¶ÁÈ¡ÌØÕ÷Í¼
+						//ç»™patternImageNameèµ‹å€¼ç”¨äºè¯»å–ç‰¹å¾å›¾
 						pattern_Path = m_area_item->getFileName(labelElem.firstChildElement("Area")).trimmed();
 						SAFE_DELETE(m_area_item);
 
@@ -807,8 +807,8 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 						}
 					}
 			}
-				else if (typeName.contains("Êä³öµã")) {
-					//ÕÒµ½Êä³öµã²¢ÇÒ»ñÈ¡ÆäÖĞĞÄ×ø±ê
+				else if (typeName.contains("è¾“å‡ºç‚¹")) {
+					//æ‰¾åˆ°è¾“å‡ºç‚¹å¹¶ä¸”è·å–å…¶ä¸­å¿ƒåæ ‡
 					QDomElement elemPoint = labelElem.firstChildElement("Area");
 					auto imageNodes = elemPoint.childNodes();
 					for (int i = 0; i < imageNodes.count(); i++) {
@@ -828,7 +828,7 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 					}
 						if (!QpointList.isEmpty())
 						{
-							//»ñµÃÊä³öµãµÄÖĞĞÄ×ø±ê
+							//è·å¾—è¾“å‡ºç‚¹çš„ä¸­å¿ƒåæ ‡
 							centerPoint = getCenterPointFromCircle(QpointList);
 							centerPoint.setX(((double)centerPoint.x() / small_Picture.width()) * m_width);
 							centerPoint.setY(((double)centerPoint.y() / small_Picture.height()) * m_height);
@@ -842,20 +842,20 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 
     if (pattern_Path.isEmpty())
     {
-		AppendText("ÌØÕ÷ÇøÓò¶ÁÈ¡´íÎó,ÇëÔÚÄ£°å½çÃæÉèÖÃÄ£°åÍ¼",Red);
+		AppendText("ç‰¹å¾åŒºåŸŸè¯»å–é”™è¯¯,è¯·åœ¨æ¨¡æ¿ç•Œé¢è®¾ç½®æ¨¡æ¿å›¾",Red);
         return false;
     }
    if (areaNodeREAL_size.x()<0|| areaNodeREAL_size.y()<0)
    {
-	   AppendText("ËÑË÷ÇøÓò×ø±ê´íÎó,ÇëÖØĞÂÖÆ×÷", Red);
+	   AppendText("æœç´¢åŒºåŸŸåæ ‡é”™è¯¯,è¯·é‡æ–°åˆ¶ä½œ", Red);
 	   return false;
    }
-   //·¶Î§¿ò
+   //èŒƒå›´æ¡†
    srcQRect.setX(areaNodeREAL_size.x());
    srcQRect.setY(areaNodeREAL_size.y());
    srcQRect.setWidth(areaNodeREAL_size.width());
    srcQRect.setHeight(areaNodeREAL_size.height());
-   //Ã»ÓĞÉèÖÃ·¶Î§¿ò,ÔòÄ¬ÈÏÈ«Í¼
+   //æ²¡æœ‰è®¾ç½®èŒƒå›´æ¡†,åˆ™é»˜è®¤å…¨å›¾
    if (srcQRect.x() == 0 && srcQRect.y() == 0 && srcQRect.width() == 0 && srcQRect.height() == 0) {
 	   srcQRect.setWidth(m_width);
 	   srcQRect.setHeight(m_height);
@@ -864,10 +864,10 @@ bool industrialVision::getPatternInfoFromXML(QString path)
    if(currentPattern_OBJ == Shape::Rect){
 	if (patternAreaREAL_size_rect.x() < 0 || patternAreaREAL_size_rect.y() < 0)
 		{
-	   AppendText("ÌØÕ÷ÇøÓò×ø±ê´íÎó,ÇëÖØĞÂÖÆ×÷", Red);
+	   AppendText("ç‰¹å¾åŒºåŸŸåæ ‡é”™è¯¯,è¯·é‡æ–°åˆ¶ä½œ", Red);
 	   return false;
 		}
-		//·¢ËÍ¸øpeocessingthreadÏß³Ì Â·¾¶,Æ¥ÅäÄ£°åÖĞĞÄµã×ø±ê,·¶Î§Í¼ÖĞĞÄµã×ø±ê
+		//å‘é€ç»™peocessingthreadçº¿ç¨‹ è·¯å¾„,åŒ¹é…æ¨¡æ¿ä¸­å¿ƒç‚¹åæ ‡,èŒƒå›´å›¾ä¸­å¿ƒç‚¹åæ ‡
 	m_processingThread->setShapeType(1);
 
 		emit singal_sendPatternImage(pattern_Path, patternAreaREAL_size_rect,srcQRect, centerPoint, patternRectCenterPoint);
@@ -913,7 +913,7 @@ void industrialVision::click_stopOperation() {
 industrialVision::~industrialVision()
 {
 
-	//±£´æ¹Ø±ÕÊ±µÄ×´Ì¬
+	//ä¿å­˜å…³é—­æ—¶çš„çŠ¶æ€
 	SaveInitializationParameters();
 	if (!open_mv)
 		return;
@@ -936,35 +936,35 @@ int industrialVision::GetTopLayer(Mat* matTempl, int iMinDstLength)
 
 bool industrialVision::DisplayWindowInitial()
 {
-	//³õÊ¼»¯±äÁ¿
+	//åˆå§‹åŒ–å˜é‡
 	//m_deviceNum = 0;
 	m_bOpenDevice = false;
 
-	//³õÊ¼»¯Ïà»ú
+	//åˆå§‹åŒ–ç›¸æœº
 	memset(&m_stDevList, 0, sizeof(MV_CC_DEVICE_INFO_LIST));
-	//Ã¶¾Ù×ÓÍøÄÚËùÓĞÉè±¸
+	//æšä¸¾å­ç½‘å†…æ‰€æœ‰è®¾å¤‡
 	int nRet = CMvCamera::EnumDevices(MV_GIGE_DEVICE | MV_USB_DEVICE, &m_stDevList);
 	if (MV_OK != nRet)
 	{
-		QMessageBox::warning(this, "¾¯¸æ", "Çë¼ì²éÏà»úÊÇ·ñÕı³£Á¬½Ó£¡");
+		QMessageBox::warning(this, "è­¦å‘Š", "è¯·æ£€æŸ¥ç›¸æœºæ˜¯å¦æ­£å¸¸è¿æ¥ï¼");
 		return false;
 	}
 	 int m_deviceNum = m_stDevList.nDeviceNum;
 	if (m_deviceNum !=1)
 	{
-		QMessageBox::warning(this, "¾¯¸æ", "Çë¼ì²éÏà»úÊÇ·ñÕı³£Á¬½Ó£¡");
+		QMessageBox::warning(this, "è­¦å‘Š", "è¯·æ£€æŸ¥ç›¸æœºæ˜¯å¦æ­£å¸¸è¿æ¥ï¼");
 		return false;
 	}
 	for (int i = 0; i < m_deviceNum; i++)
 	{
 		MV_CC_DEVICE_INFO* pDeviceInfo = m_stDevList.pDeviceInfo[i];
 		if(!m_pcMyCamera->IsDeviceConnected()){
-			int nRet = m_pcMyCamera->Open(pDeviceInfo);   //´ò¿ªÏà»ú
+			int nRet = m_pcMyCamera->Open(pDeviceInfo);   //æ‰“å¼€ç›¸æœº
 			if (MV_OK != nRet)
 			{
 				//delete m_pcMyCamera;
 				//m_pcMyCamera = NULL;
-				QMessageBox::warning(this, "¾¯¸æ", "´ò¿ªÉè±¸Ê§°Ü£¡");
+				QMessageBox::warning(this, "è­¦å‘Š", "æ‰“å¼€è®¾å¤‡å¤±è´¥ï¼");
 				return false;
 			}
 			m_cameraThread->setCameraPtr(m_pcMyCamera);
@@ -985,7 +985,7 @@ void industrialVision::setButtonClickLimits(bool flag)
 	ui.pushButton_stopOperation->setEnabled(flag);
 }
 
-//Í¨ÓÃ·½·¨ ·µ»Øµ¯´°
+//é€šç”¨æ–¹æ³• è¿”å›å¼¹çª—
 void industrialVision::ShowErrorMsg(QString csMessage, int nErrorNum)
 {
     QString errorMsg;
@@ -1020,7 +1020,7 @@ void industrialVision::ShowErrorMsg(QString csMessage, int nErrorNum)
     }
 
   // MessageBox(errorMsg, TEXT("PROMPT"), MB_OK | MB_ICONWARNING);
-    QMessageBox::critical(this, "´íÎóĞÅÏ¢", errorMsg);
+    QMessageBox::critical(this, "é”™è¯¯ä¿¡æ¯", errorMsg);
 
 }
 
@@ -1044,7 +1044,7 @@ int industrialVision::SetExposureTime()
 {
 	m_pcMyCamera->SetEnumValue("ExposureAuto", MV_EXPOSURE_AUTO_MODE_OFF);
 
-	//ÍâÃæÏÔÊ¾µÄÖµÊÇ³ıÒÔÁË100µÄ
+	//å¤–é¢æ˜¾ç¤ºçš„å€¼æ˜¯é™¤ä»¥äº†100çš„
     m_dExposureEdit = ui.exposure_edit->text().toFloat() * 100;
 	return m_pcMyCamera->SetFloatValue("ExposureTime", (float)m_dExposureEdit);
 }
@@ -1066,7 +1066,7 @@ int industrialVision::GetGain()
 
 int industrialVision::SetGain()
 {
-	// ch:ÉèÖÃÔöÒæÇ°ÏÈ°Ñ×Ô¶¯ÔöÒæ¹Ø±Õ£¬Ê§°ÜÎŞĞè·µ»Ø
+	// ch:è®¾ç½®å¢ç›Šå‰å…ˆæŠŠè‡ªåŠ¨å¢ç›Šå…³é—­ï¼Œå¤±è´¥æ— éœ€è¿”å›
  //en:Set Gain after Auto Gain is turned off, this failure does not need to return
 	m_pcMyCamera->SetEnumValue("GainAuto", 0);
     m_dGainEdit = ui.gain_edit->text().toFloat();
@@ -1167,37 +1167,37 @@ void industrialVision::OnBnClickedSetParameterButton()
 	if (nRet != MV_OK)
 	{
 		bIsSetSucceed = false;
-		AppendText("ÉèÖÃÆØ¹âÊ±¼äÊ§°Ü", Red);
+		AppendText("è®¾ç½®æ›å…‰æ—¶é—´å¤±è´¥", Red);
 
 	}
 	nRet = SetGain();
 	if (nRet != MV_OK)
 	{
 		bIsSetSucceed = false;
-		AppendText("ÉèÖÃÔöÒæÊ§°Ü", Red);
+		AppendText("è®¾ç½®å¢ç›Šå¤±è´¥", Red);
 	}
 	nRet = SetFrameRate();
 	if (nRet != MV_OK)
 	{
 		bIsSetSucceed = false;
-		AppendText("ÉèÖÃÖ¡ÂÊÊ§°Ü", Red);
+		AppendText("è®¾ç½®å¸§ç‡å¤±è´¥", Red);
 
 	}
 
 	if (true == bIsSetSucceed)
 	{
-		AppendText("²ÎÊıÉèÖÃ³É¹¦",Green);
+		AppendText("å‚æ•°è®¾ç½®æˆåŠŸ",Green);
 	}
-	//µÃ·Ö
+	//å¾—åˆ†
 	QString String_m_grade = ui.grade_edit->text();
-	double ba = String_m_grade.toDouble();//QString ×ª»»Îª char*  
+	double ba = String_m_grade.toDouble();//QString è½¬æ¢ä¸º char*  
 
 	if (0 < ba && ba < 100)
-	{ //ÔÚ0-1·¶Î§ÄÚ
+	{ //åœ¨0-1èŒƒå›´å†…
 		String_m_grade = QString::number(ba, 'f', 0);
 	}
 	else
-	{ //ÉèÎªÄ¬ÈÏÖµ  
+	{ //è®¾ä¸ºé»˜è®¤å€¼  
 		String_m_grade = QString::number(m_dScore, 'f', 0);
 	}
 	ui.grade_edit->clear();
@@ -1208,37 +1208,37 @@ void industrialVision::OnBnClickedSetParameterButton()
 
 void industrialVision::Setinitializationparameters()
 {
-	//  //¶ÁÈ¡ÉÏ´Î¹Ø±ÕÊ±µÄ×´Ì¬
+	//  //è¯»å–ä¸Šæ¬¡å…³é—­æ—¶çš„çŠ¶æ€
 	QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
 	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
 	settings->beginGroup("Idus");
-	//ÆØ¹â
+	//æ›å…‰
     QString exposure = settings->value("m_dExposureEdit").toString();
     if (exposure.isEmpty())
     {
-        //´ÓÏà»ú»ñÈ¡²ÎÊı
+        //ä»ç›¸æœºè·å–å‚æ•°
         GetExposureTime();
     }
     else {
 		ui.exposure_edit->clear();
 		ui.exposure_edit->setText(exposure);
     }
-    //ÔöÒæ
+    //å¢ç›Š
 	QString m_dGainEdit = settings->value("m_dGainEdit").toString();
 	if (m_dGainEdit.isEmpty())
 	{
-		//´ÓÏà»ú»ñÈ¡²ÎÊı
+		//ä»ç›¸æœºè·å–å‚æ•°
         GetGain();
 	}
 	else {
 		ui.gain_edit->clear();
 		ui.gain_edit->setText(m_dGainEdit);
 	}
-    //Ö¡ÂÊ
+    //å¸§ç‡
 	QString m_dFrameRateEdit = settings->value("m_dFrameRateEdit").toString();
 	if (m_dFrameRateEdit.isEmpty())
 	{
-		//´ÓÏà»ú»ñÈ¡²ÎÊı
+		//ä»ç›¸æœºè·å–å‚æ•°
         GetFrameRate();
 	}
 	else {
@@ -1246,16 +1246,16 @@ void industrialVision::Setinitializationparameters()
 		ui.framerate_edit->setText(m_dFrameRateEdit);
 	}
 
-	//µÃ·Ö
+	//å¾—åˆ†
 	QString String_m_grade = settings->value("m_grade").toString();
-	int ba = String_m_grade.toInt();//QString ×ª»»Îª char*  
+	int ba = String_m_grade.toInt();//QString è½¬æ¢ä¸º char*  
 
 	if (0< ba && ba  < 100)
-	{ //ÔÚ0-1·¶Î§ÄÚ
+	{ //åœ¨0-1èŒƒå›´å†…
 		String_m_grade = QString::number(ba, 'f', 0);
 	}
 	else
-	{ //ÉèÎªÄ¬ÈÏÖµ  
+	{ //è®¾ä¸ºé»˜è®¤å€¼  
 		String_m_grade = QString::number(m_dScore, 'f', 0);
 	}
 
@@ -1263,23 +1263,23 @@ void industrialVision::Setinitializationparameters()
 	ui.grade_edit->clear();
 	ui.grade_edit->setText(String_m_grade);
 	emit send_Grade(String_m_grade);
-	//ÏñËØ¸ñÊ½
+	//åƒç´ æ ¼å¼
 	QString m_chPixelFormat = settings->value("m_chPixelFormat").toString();
 	if (m_chPixelFormat.isEmpty())
 	{
-		//´ÓÏà»ú»ñÈ¡²ÎÊı
+		//ä»ç›¸æœºè·å–å‚æ•°
         GetPixelFormat();
 	}
 	else {
 		ui.pixelformat_edit->clear();
 		ui.pixelformat_edit->setText(m_chPixelFormat);
 	}
-	//¿í
+	//å®½
         GetWidth();
-	//¸ß
+	//é«˜
         GetHeight();
 	
-		//ÉèÖÃĞı×ª
+		//è®¾ç½®æ—‹è½¬
 		double m_rotateIndex = settings->value("m_rotateIndex", "0").toDouble();
 		 m_rotateIndexInt = static_cast<int>(m_rotateIndex);
 		m_cameraThread->setRotateIndex(m_rotateIndexInt);
@@ -1288,23 +1288,23 @@ void industrialVision::Setinitializationparameters()
 		
 		if (m_rotateIndexInt == 1 || m_rotateIndexInt == 3)
 		{
-			//½»»»³¤¿íµÄÖµ
+			//äº¤æ¢é•¿å®½çš„å€¼
 			int temp = m_width;
 			m_width = m_height;
 			m_height = temp;
 		}
-		//xmlÂ·¾¶
+		//xmlè·¯å¾„
 		QString m_xmlFilePath = settings->value("m_xmlFilePath").toString();
 		if (m_xmlFilePath.isEmpty())
 		{
-			AppendText("xmlÄ¬ÈÏÂ·¾¶Îª¿Õ,ÇëÉèÖÃÄ£°åÎÄ¼şÂ·¾¶", Red);
+			AppendText("xmlé»˜è®¤è·¯å¾„ä¸ºç©º,è¯·è®¾ç½®æ¨¡æ¿æ–‡ä»¶è·¯å¾„", Red);
 		}
 		else {
 			getXMLPATH(m_xmlFilePath);
-			AppendText("¼ÓÔØÂ·¾¶¶ÁÈ¡xmlÎÄ¼şÍê³É", Green);
+			AppendText("åŠ è½½è·¯å¾„è¯»å–xmlæ–‡ä»¶å®Œæˆ", Green);
 		}
 
-    //ÉèÖÃ²ÎÊı
+    //è®¾ç½®å‚æ•°
     OnBnClickedSetParameterButton();
 	settings->endGroup();
 	delete settings;
@@ -1312,7 +1312,7 @@ void industrialVision::Setinitializationparameters()
 
 void industrialVision::SaveInitializationParameters()
 {
-	//±£´æ¹Ø±ÕÊ±µÄ×´Ì¬
+	//ä¿å­˜å…³é—­æ—¶çš„çŠ¶æ€
 	QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
 	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
 	settings->beginGroup("Idus");
@@ -1348,12 +1348,12 @@ void industrialVision::smallwindow_button_click()
     
     ui.list_widget->setVisible(small_window_flag);
 
-        //´°¿ÚÇĞ»»ÉèÖÃ³Étrue
+        //çª—å£åˆ‡æ¢è®¾ç½®æˆtrue
 	QList<QAction*> actions = ui.menuBar->actions();
 	for (int i = 0; i < actions.size(); i++)
 	{
 		QAction* actionItem = actions.at(i);
-		if (actionItem->text() == "ÊµÊ±ÏÔÊ¾")
+		if (actionItem->text() == "å®æ—¶æ˜¾ç¤º")
 		{
             continue;
 		}
@@ -1361,22 +1361,22 @@ void industrialVision::smallwindow_button_click()
 	}
 	ui.textEdit_2->setVisible(small_window_flag);
 	ui.textBrowser_record->setVisible(small_window_flag);
-	// »ñÈ¡²¢±£´æµ±Ç°´°¿ÚµÄÎ»ÖÃºÍ´óĞ¡
+	// è·å–å¹¶ä¿å­˜å½“å‰çª—å£çš„ä½ç½®å’Œå¤§å°
 	originalGeometry = geometry();
 
 	setGeometry(50, 50, 200, 133);
-	// ÉèÖÃ´°¿Ú¿ÉÍÏ¶¯µ÷Õû´óĞ¡£¬²¢ÉèÖÃ×îĞ¡ºÍ×î´ó´óĞ¡
-	setMinimumSize(200, 133);  // ÉèÖÃ×îĞ¡Îª200x200
-	setMaximumSize(800, 533);  // ÉèÖÃ×î´óÎª800x533
+	// è®¾ç½®çª—å£å¯æ‹–åŠ¨è°ƒæ•´å¤§å°ï¼Œå¹¶è®¾ç½®æœ€å°å’Œæœ€å¤§å¤§å°
+	setMinimumSize(200, 133);  // è®¾ç½®æœ€å°ä¸º200x200
+	setMaximumSize(800, 533);  // è®¾ç½®æœ€å¤§ä¸º800x533
 
-	// ÉèÖÃÊÓÆµÕ¹Ê¾ÇøÓòµÄ±ÈÀı
+	// è®¾ç½®è§†é¢‘å±•ç¤ºåŒºåŸŸçš„æ¯”ä¾‹
     small_window_flag = !small_window_flag;
     setWindowFlags(Qt::WindowStaysOnTopHint);
     show();
 }
                                                       
-//todo,,, ÊµÊ±·¶Î§¿ò
-// ¸ß¼¶ÉèÖÃ½çÃæ
+//todo,,, å®æ—¶èŒƒå›´æ¡†
+// é«˜çº§è®¾ç½®ç•Œé¢
 void industrialVision::slot_displayPixmap(QPixmap newPixmap, int index)
 {
 	if (newPixmap.isNull())
@@ -1389,7 +1389,7 @@ void industrialVision::slot_displayPixmap(QPixmap newPixmap, int index)
 		//ui.openGLWidget->set
 		qreal dpr = devicePixelRatioF();
 		//ui.openGLWidget->paintEvent();
-		ui.openGLWidget->setPixmap(newPixmap, "");   //Ê¹ÓÃOpenGLWidgetÏÔÊ¾
+		ui.openGLWidget->setPixmap(newPixmap, "");   //ä½¿ç”¨OpenGLWidgetæ˜¾ç¤º
 	}
 }
 
@@ -1401,10 +1401,10 @@ void industrialVision::slot_get_patternResult(QPointF resultPoint,int matchTime)
 	createOncePattern();
 }
 
-//ÊôĞÔÉèÖÃ
+//å±æ€§è®¾ç½®
 void industrialVision::action_AttributesSet()
 {
-	//ÉèÖÃÂ·¾¶,Óë´ò¿ªÎÄ¼şS
+	//è®¾ç½®è·¯å¾„,ä¸æ‰“å¼€æ–‡ä»¶S
 	logoset.show();
 }
 
@@ -1421,16 +1421,16 @@ void industrialVision::updateTime()
 
 void industrialVision::slot_modelPictureReadFlag()
 {
-	AppendText("Ä£°åÍ¼¶ÁÈ¡¹ı³ÌÖĞ´íÎó,ÇëÖØĞÂÉèÖÃÄ£°åÍ¼,»òÕßÄ£°åÍ¼Â·¾¶´íÎó", Red);
+	AppendText("æ¨¡æ¿å›¾è¯»å–è¿‡ç¨‹ä¸­é”™è¯¯,è¯·é‡æ–°è®¾ç½®æ¨¡æ¿å›¾,æˆ–è€…æ¨¡æ¿å›¾è·¯å¾„é”™è¯¯", Red);
 }
 
 void industrialVision::getRotateValue(int x)
 {
-	AppendText("Ğı×ªÍ¼Ïñ...", Green);
+	AppendText("æ—‹è½¬å›¾åƒ...", Green);
 	m_cameraThread->setRotateIndex(x);
-	//ÉèÖÃÕ¹Ê¾Í¼Æ¬µÄ³¤¿í,ÓÃÓÚÄ£°å¶ÁÈ¡µÄ±ÈÀıÉèÖÃ
+	//è®¾ç½®å±•ç¤ºå›¾ç‰‡çš„é•¿å®½,ç”¨äºæ¨¡æ¿è¯»å–çš„æ¯”ä¾‹è®¾ç½®
 	
-		//½»»»³¤¿íµÄÖµ
+		//äº¤æ¢é•¿å®½çš„å€¼
 		int temp = m_width;
 		m_width = m_height;
 		m_height = temp;
@@ -1438,7 +1438,7 @@ void industrialVision::getRotateValue(int x)
 	if(!m_xmlpath.isEmpty()){
 	if (!getPatternInfoFromXML(m_xmlpath)) {
 		if (!m_processingThread->getmodelAndRealSclar()) {
-			AppendText("XMLÄ£°åÍ¼Óëµ±Ç°Ïà»úÕ¹Ê¾µÄÍ¼Æ¬±ÈÀı²»Ò»ÖÂ,ÎŞ·¨Æ¥Åä" + m_xmlpath, Gray);
+			AppendText("XMLæ¨¡æ¿å›¾ä¸å½“å‰ç›¸æœºå±•ç¤ºçš„å›¾ç‰‡æ¯”ä¾‹ä¸ä¸€è‡´,æ— æ³•åŒ¹é…" + m_xmlpath, Gray);
 			return;
 		}
 	}
@@ -1447,12 +1447,12 @@ void industrialVision::getRotateValue(int x)
 
 void industrialVision::actionPasswordAction()
 {
-	//´ò¿ªÃÜÂëÉèÖÃ½çÃæ
+	//æ‰“å¼€å¯†ç è®¾ç½®ç•Œé¢
 	passwordSetItem.setcurrentRole(CURRENT_ROLE);
 	passwordSetItem.show();
 }
 
-//ÇĞ»»ÓÃ»§
+//åˆ‡æ¢ç”¨æˆ·
 void industrialVision::actionuserSwitch()
 {
 	emit sign_switchLogin();
@@ -1490,11 +1490,11 @@ int industrialVision::CloseDevice()
 }
 
 void industrialVision::reinitialize() {
-	//ÉèÖÃÈÕÖ¾
-	AppendText("ÇĞ»»ÓÃ»§°´Å¥µã»÷", Green);
+	//è®¾ç½®æ—¥å¿—
+	AppendText("åˆ‡æ¢ç”¨æˆ·æŒ‰é’®ç‚¹å‡»", Green);
 	setWindowTitle("V-Gp System V1.0");
-	//ÖØĞÂ¼ÓÔØÉèÖÃ½ç
-	//ÖØĞÂÉèÖÃ±êÌâ
+	//é‡æ–°åŠ è½½è®¾ç½®ç•Œ
+	//é‡æ–°è®¾ç½®æ ‡é¢˜
 }
 
 void industrialVision::resetParameters()
@@ -1505,7 +1505,7 @@ void industrialVision::resetParameters()
 	areaNodeREAL_size.setY(0);
 	areaNodeREAL_size.setWidth(0);
 	areaNodeREAL_size.setHeight(0);
-	//ÖØÖÃrect
+	//é‡ç½®rect
 		patternAreaREAL_size_rect.setX(0);
 		patternAreaREAL_size_rect.setY(0);
 		patternAreaREAL_size_rect.setWidth(0);

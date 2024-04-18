@@ -1,4 +1,4 @@
-#include "mygraphicsview.h"
+ï»¿#include "mygraphicsview.h"
 
 
 
@@ -23,14 +23,14 @@ QPoint MyGraphicsView::returnMouseInView()
 	return graphicPos;
 }
 
-//¸æÖªShapeºÍPaintSceneËõ·Å
+//å‘ŠçŸ¥Shapeå’ŒPaintSceneç¼©æ”¾
 void MyGraphicsView::resizeEvent(QResizeEvent* event)
 {
 	emit viewResized(event);
 }
 
 
-//¹öÂÖËõ·Å
+//æ»šè½®ç¼©æ”¾
 void MyGraphicsView::wheelEvent(QWheelEvent* event)
 {
 

@@ -1,4 +1,4 @@
-#include "mygraphicsitems.h"
+﻿#include "mygraphicsitems.h"
 
 MyGraphicsRectItem::MyGraphicsRectItem(QGraphicsItem* parent)
 {
@@ -24,7 +24,7 @@ QVariant MyGraphicsRectItem::itemChange(QGraphicsItem::GraphicsItemChange change
 		int rectY = int(boundingRect().y());
 		int rectWidth = int(boundingRect().width());
 		int rectHeight = int(boundingRect().height());
-		//�޶��϶��ķ�Χ
+		//限定拖动的范围
 		QRectF rect(0 - rectX,
 			0 - rectY,
 			scene()->width() - rectWidth,

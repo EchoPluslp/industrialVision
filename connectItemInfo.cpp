@@ -1,8 +1,8 @@
-#include "connectItemInfo.h"
+ï»¿#include "connectItemInfo.h"
 
 connectItemInfo::connectItemInfo(QObject* parent)
 {
-    //·¢ËÍĞÅºÅÀàÁ¬½Ó ÖĞ¼ä´«µİº¯Êı
+    //å‘é€ä¿¡å·ç±»è¿æ¥ ä¸­é—´ä¼ é€’å‡½æ•°
 
     connect(&TransmitSignals::GetInstance(), &TransmitSignals::send_pattern_result, this, &connectItemInfo::receive_pattern_result, Qt::UniqueConnection);
 
@@ -10,7 +10,7 @@ connectItemInfo::connectItemInfo(QObject* parent)
 void connectItemInfo::Thread_deal()
 {
 
-    //¼ìÑé  ÉèÖÃÄ¬ÈÏÖµ
+    //æ£€éªŒ  è®¾ç½®é»˜è®¤å€¼
     if (server_ip.isEmpty()) {
         server_ip = "127.0.0.1";
     }
@@ -30,24 +30,24 @@ void connectItemInfo::Thread_deal()
     //SOCKET s_accept;
     //SOCKET s_server;
     //while(1){
-    ////³õÊ¼»¯WSA
+    ////åˆå§‹åŒ–WSA
     //WORD sockVersion = MAKEWORD(2, 2);
-    //WSADATA wsaData;//WSADATA½á¹¹Ìå±äÁ¿µÄµØÖ·Öµ
+    //WSADATA wsaData;//WSADATAç»“æ„ä½“å˜é‡çš„åœ°å€å€¼
 
     ////int WSAStartup(WORD wVersionRequested, LPWSADATA lpWSAData);
-    ////³É¹¦Ê±»á·µ»Ø0£¬Ê§°ÜÊ±·µ»Ø·ÇÁãµÄ´íÎó´úÂëÖµ
+    ////æˆåŠŸæ—¶ä¼šè¿”å›0ï¼Œå¤±è´¥æ—¶è¿”å›éé›¶çš„é”™è¯¯ä»£ç å€¼
     //if (WSAStartup(sockVersion, &wsaData) != 0)
     //{
     //   // cout << "WSAStartup() error!" << endl;
     //    //return -1;
     //}
 
-    //////Òª´¦ÀíµÄÈÎÎñ... ÀıÈçºÄÊ±3ÃëµÄ²Ù×÷
-    //    //´´½¨Ì×½Ó×Ö
-    //   //1.´´½¨¿ÕµÄSocket                  
-    //    //parm1:af µØÖ·Ğ­Òé×å ipv4 ipv6
-    //    //parm2:type ´«ÊäĞ­ÒéÀàĞÍ Á÷Ê½Ì×½Ó×Ö(SOCK_STREAM) Êı¾İ±¨
-    //    //parm3£ºprotocl Ê¹ÓÃ¾ßÌåµÄÄ³¸ö´«ÊäĞ­Òé
+    //////è¦å¤„ç†çš„ä»»åŠ¡... ä¾‹å¦‚è€—æ—¶3ç§’çš„æ“ä½œ
+    //    //åˆ›å»ºå¥—æ¥å­—
+    //   //1.åˆ›å»ºç©ºçš„Socket                  
+    //    //parm1:af åœ°å€åè®®æ— ipv4 ipv6
+    //    //parm2:type ä¼ è¾“åè®®ç±»å‹ æµå¼å¥—æ¥å­—(SOCK_STREAM) æ•°æ®æŠ¥
+    //    //parm3ï¼šprotocl ä½¿ç”¨å…·ä½“çš„æŸä¸ªä¼ è¾“åè®®
     // s_server = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     //if (s_server == INVALID_SOCKET)
     //{
@@ -55,35 +55,35 @@ void connectItemInfo::Thread_deal()
     //}
     //else {
 
-    //    //  cout << "Ì×½Ó×Ö´´½¨³É¹¦£¡" << endl;
+    //    //  cout << "å¥—æ¥å­—åˆ›å»ºæˆåŠŸï¼" << endl;
     //}
-    ////2.¸øsocket°ó¶¨ipµØÖ·ºÍ¶Ë¿ÚºÅ
-    //struct sockaddr_in server_addr;   // sockaddr_in, sockaddr  ÀÏ°æ±¾ºÍĞÂ°æµÄÇø±ğ
-    //server_addr.sin_family = AF_INET;  // ºÍ´´½¨socketÊ±±ØĞëÒ»Ñù
-    //server_addr.sin_port = htons(60000);       // ¶Ë¿ÚºÅ  ´ó¶Ë£¨¸ßÎ»£©´æ´¢(±¾µØ)ºÍĞ¡¶Ë£¨µÍÎ»£©´æ´¢(ÍøÂç£©£¬Á½¸ö´æ´¢Ë³ĞòÊÇ·´×ÅµÄ  htons ½«±¾µØ×Ö½ÚĞò×ªÎªÍøÂç×Ö½ÚĞò
-    //server_addr.sin_addr.S_un.S_addr = inet_addr("127.0.0.1"); //inet_addr½«µã·ÖÊ®½øÖÆµÄipµØÖ·×ªÎª¶ş½øÖÆ
+    ////2.ç»™socketç»‘å®šipåœ°å€å’Œç«¯å£å·
+    //struct sockaddr_in server_addr;   // sockaddr_in, sockaddr  è€ç‰ˆæœ¬å’Œæ–°ç‰ˆçš„åŒºåˆ«
+    //server_addr.sin_family = AF_INET;  // å’Œåˆ›å»ºsocketæ—¶å¿…é¡»ä¸€æ ·
+    //server_addr.sin_port = htons(60000);       // ç«¯å£å·  å¤§ç«¯ï¼ˆé«˜ä½ï¼‰å­˜å‚¨(æœ¬åœ°)å’Œå°ç«¯ï¼ˆä½ä½ï¼‰å­˜å‚¨(ç½‘ç»œï¼‰ï¼Œä¸¤ä¸ªå­˜å‚¨é¡ºåºæ˜¯åç€çš„  htons å°†æœ¬åœ°å­—èŠ‚åºè½¬ä¸ºç½‘ç»œå­—èŠ‚åº
+    //server_addr.sin_addr.S_un.S_addr = inet_addr("127.0.0.1"); //inet_addrå°†ç‚¹åˆ†åè¿›åˆ¶çš„ipåœ°å€è½¬ä¸ºäºŒè¿›åˆ¶
     //if (::bind(s_server, (SOCKADDR*)&server_addr, sizeof(SOCKADDR)) == SOCKET_ERROR) {
     //    WSACleanup();
     //}
     //else {
-    //    //°ó¶¨³É¹¦
+    //    //ç»‘å®šæˆåŠŸ
     //}
 
-    ////3.ÉèÖÃÌ×½Ó×ÖÎª¼àÌı×´Ì¬  SOMAXCONN ¼àÌıµÄ¶Ë¿ÚÊı 
+    ////3.è®¾ç½®å¥—æ¥å­—ä¸ºç›‘å¬çŠ¶æ€  SOMAXCONN ç›‘å¬çš„ç«¯å£æ•° 
     //if (listen(s_server, SOMAXCONN) < 0) {
     //    WSACleanup();
     //}
     //else {
 
     //}
-    //    //¶ÔÓ¦´ËÊ±Ëù½¨Á¢Á¬½ÓµÄÌ×½Ó×ÖµÄ¾ä±ú
-    //    sockaddr_in remoteAddr;   //½ÓÊÕÁ¬½Óµ½·şÎñÆ÷ÉÏµÄµØÖ·ĞÅÏ¢
+    //    //å¯¹åº”æ­¤æ—¶æ‰€å»ºç«‹è¿æ¥çš„å¥—æ¥å­—çš„å¥æŸ„
+    //    sockaddr_in remoteAddr;   //æ¥æ”¶è¿æ¥åˆ°æœåŠ¡å™¨ä¸Šçš„åœ°å€ä¿¡æ¯
     //    int remoteAddrLen = sizeof(remoteAddr);
 
-    //    // Èç¹ûÓĞ¿Í»§¶ËÇëÇóÁ¬½Ó
+    //    // å¦‚æœæœ‰å®¢æˆ·ç«¯è¯·æ±‚è¿æ¥
     //    s_accept = accept(s_server, (SOCKADDR*)&remoteAddr, &remoteAddrLen);
     //    if (s_accept == INVALID_SOCKET) {
-    //        //  WriteDataToLogFile(_T("Á¬½ÓÊ§°Ü"));
+    //        //  WriteDataToLogFile(_T("è¿æ¥å¤±è´¥"));
     //        WSACleanup();
     //    }
 
@@ -91,14 +91,14 @@ void connectItemInfo::Thread_deal()
     //    char recv_buf[BUFSIZ] = { 0 };
     //     
     //    while (true) {
-    //        // recv´ÓÖ¸¶¨µÄsocket½ÓÊÜÏûÏ¢
+    //        // recvä»æŒ‡å®šçš„socketæ¥å—æ¶ˆæ¯
     //        if (recv(s_accept, recv_buf, BUFSIZ, 0) >= 0) {
     //            if (recv_buf[0] == '\0') {
     //               send(s_accept, recv_buf, BUFSIZ, 0);
     //                continue;
     //            } 
     //            emit triggerPattern();
-    //            //»ñÈ¡StringÊı¾İ 
+    //            //è·å–Stringæ•°æ® 
     //            //OnMatch = true;
     //            std::string stringTemp = recv_buf;
     //            QString Cstr;
@@ -146,17 +146,17 @@ void connectItemInfo::Thread_deal()
     //        }
     //        else {
     //            int x = WSAGetLastError();
-    //            // cout << "½ÓÊÕÊ§°Ü!!£¡" << endl;
+    //            // cout << "æ¥æ”¶å¤±è´¥!!ï¼" << endl;
     //            break;
     //        }
 
     //    }
     //closesocket(s_accept);
 
-    ////¹Ø±ÕÌ×½Ó×Ö
+    ////å…³é—­å¥—æ¥å­—
     //closesocket(s_server);
     //}
-    ////ÊÍ·ÅDLL×ÊÔ´
+    ////é‡Šæ”¾DLLèµ„æº
     //WSACleanup();
 
 }

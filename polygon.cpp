@@ -1,4 +1,4 @@
-#include "polygon.h"
+﻿#include "polygon.h"
 
 
 void Polygon::mousePress(QGraphicsSceneMouseEvent* event)

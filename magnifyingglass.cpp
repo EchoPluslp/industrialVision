@@ -1,10 +1,10 @@
-#include "magnifyingglass.h"
+﻿#include "magnifyingglass.h"
 #include <QVBoxLayout>
 #include <QSlider>
 #include <QLabel>
 MagnifyingGlass::MagnifyingGlass(QWidget* parent) : QDockWidget(parent)
 {
-	setWindowTitle("�Ŵ�");
+	setWindowTitle("放大镜");
 
 	setFeatures(QDockWidget::DockWidgetClosable);
 	setFeatures(QDockWidget::DockWidgetMovable);

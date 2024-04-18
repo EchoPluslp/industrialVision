@@ -1,4 +1,4 @@
-#include "algorithmLibrary.h"
+﻿#include "algorithmLibrary.h"
 #include <QImage>
 #include <vector>
 #include <math.h>

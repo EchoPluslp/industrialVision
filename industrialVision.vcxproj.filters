@@ -62,6 +62,11 @@
     <Filter Include="Header Files\Controllers">
       <UniqueIdentifier>{d69e0ba2-7c0d-49df-8152-157b59694820}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Translation Files">
+      <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
+      <Extensions>ts</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -408,5 +413,10 @@
     <ClInclude Include="SharedData.h">
       <Filter>Header Files\Tools</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtTranslation Include="industrialvision_en.ts">
+      <Filter>Translation Files</Filter>
+    </QtTranslation>
   </ItemGroup>
 </Project>

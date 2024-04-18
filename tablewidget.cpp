@@ -1,4 +1,4 @@
-#include "tablewidget.h"
+ï»¿#include "tablewidget.h"
 
 TableWidget::TableWidget(QWidget* parent)
 {
@@ -35,7 +35,7 @@ GaryPatternItemWidget::GaryPatternItemWidget(QWidget* parent)
 //}
 void GaryPatternItemWidget::create_UI() {
     kind_comBox = new QComboBox;
-    QStringList kind_items = { "Æ½·½²îÆ¥Åä","±ê×¼Æ½·½²îÆ¥Åä","Ïà¹ØÆ¥Åä","±ê×¼Ïà¹ØÆ¥Åä","Ïà¹ØÏµÊýÆ¥Åä","±ê×¼Ïà¹ØÏµÊýÆ¥Åä" };
+    QStringList kind_items = { "å¹³æ–¹å·®åŒ¹é…","æ ‡å‡†å¹³æ–¹å·®åŒ¹é…","ç›¸å…³åŒ¹é…","æ ‡å‡†ç›¸å…³åŒ¹é…","ç›¸å…³ç³»æ•°åŒ¹é…","æ ‡å‡†ç›¸å…³ç³»æ•°åŒ¹é…" };
     kind_comBox->addItems(kind_items);
     kind_comBox->setObjectName("kind");
 
@@ -48,12 +48,12 @@ void GaryPatternItemWidget::create_UI() {
     this->setColumnCount(2);
     this->setRowCount(2);
     QTableWidgetItem* title_kind;
-    title_kind = new QTableWidgetItem("Æ¥Åä·½·¨");
+    title_kind = new QTableWidgetItem("åŒ¹é…æ–¹æ³•");
     this->setItem(0, 0, title_kind);
     this->setCellWidget(0, 1, kind_comBox);
 
     QTableWidgetItem* title_ksize;
-    title_ksize = new QTableWidgetItem("µÃ·Ö");
+    title_ksize = new QTableWidgetItem("å¾—åˆ†");
     this->setItem(1, 0, title_ksize);
     this->setCellWidget(1, 1, ksize_spinBox);
 

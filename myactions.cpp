@@ -111,7 +111,7 @@ SquarePenModeAction::SquarePenModeAction(QObject* parent) : MyActions(parent) {
 
 CirclePenModeAction::CirclePenModeAction(QObject* parent) : MyActions(parent) {
 	setIcon(QIcon("./Image/Icon/circle_pen_mode"));
-	setText("圆形掩膜");
+	setText(tr("圆形掩膜"));
 	setFont(QFont(tr("宋体"), 30, QFont::Bold, false));//宋体26号，加粗，斜体字
 }
 
@@ -178,8 +178,8 @@ searchAreaRectAction::searchAreaRectAction(QObject* parent) : MyActions(parent)
 }
 featureMatchingRectAction::featureMatchingRectAction(QObject* parent) : MyActions(parent)
 {
-	setIcon(QIcon("./Image/Icon/square_pen_mode"));
-	setText("特征区域");
+	setIcon(QIcon("./Image/Icon/rect_mode"));
+	setText("矩形");
 	//setShortcuts(QKeySequence::Redo);
 	setFont(QFont(tr("宋体"), 30, QFont::Bold, false));//宋体26号，加粗，斜体字
 }

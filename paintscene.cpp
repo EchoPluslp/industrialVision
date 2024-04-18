@@ -1,11 +1,11 @@
-#include "paintscene.h"
+ï»¿#include "paintscene.h"
 #include "mygraphicsview.h"
 
 #define SAFE_DELETE(p) { if (p) { delete (p);     (p) = nullptr; } }
 
 PaintScene::PaintScene(QObject* parent) : QGraphicsScene(parent),
 currShapeType(Shape::Figure::Empty), currShape(nullptr), radius(20), isDrawing(false), ifTrackMouse(true) {
-	// ³õÊ¼»¯²ÎÕÕÏß
+	// åˆå§‹åŒ–å‚ç…§çº¿
 	crossLineX = new QGraphicsLineItem;
 	crossLineY = new QGraphicsLineItem;
 	squarePenCurse = new QGraphicsRectItem(0, 0, 0, 0);
@@ -58,7 +58,7 @@ QPen& PaintScene::getPen()
 
 void PaintScene::changeCurrImage(QImage image)
 { 
-	QGraphicsView* view = views()[0];//ÏÔÊ¾ÓÃview£¬views()[1]Îª·Å´ó¾µµÄview
+	QGraphicsView* view = views()[0];//æ˜¾ç¤ºç”¨viewï¼Œviews()[1]ä¸ºæ”¾å¤§é•œçš„view
 
 	auto list = items();
 	for (auto i : list) {
@@ -123,13 +123,13 @@ void PaintScene::setRadius(int value)
 
 void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 
-	// »­Í¼ÊÂ¼şºöÂÔÓÒ¼ü
+	// ç”»å›¾äº‹ä»¶å¿½ç•¥å³é”®
 	if (!isDrawing && event->button() == Qt::MouseButton::RightButton) {
 		QGraphicsScene::mousePressEvent(event);
 		return;
 	}
 
-	// rectÎª»­±ÊÔÊĞíµÄ·¶Î§
+	// rectä¸ºç”»ç¬”å…è®¸çš„èŒƒå›´
 	QRectF rect;
 	if (currShapeType == Shape::CirclePen || currShapeType == Shape::SquarePen) {
 		rect = QRect(radius,
@@ -141,7 +141,7 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 		rect = sceneRect();
 	}
 
-	// ÏŞÖÆ»­±ÊÔÚrectÄÚ
+	// é™åˆ¶ç”»ç¬”åœ¨rectå†…
 	bool currentInRectFlag = false ;
 	if (!rect.contains(event->scenePos())) {
 		QPointF newPos = event->scenePos();
@@ -151,16 +151,16 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 		currentInRectFlag = true;
 	}
 
-	// Ã»ÓĞ»­±Ê¹¤¾ßÊ±¿ÉÑ¡ÖĞ¶ÔÏó£¬·ñÔò²»¿É
+	// æ²¡æœ‰ç”»ç¬”å·¥å…·æ—¶å¯é€‰ä¸­å¯¹è±¡ï¼Œå¦åˆ™ä¸å¯
 	if (currShapeType == Shape::Empty) {
 		for (auto i : items()) {
 			if (i != currPixmap && i != crossLineX && i != crossLineY && i != circlePenCurse && i != squarePenCurse) {
-				//ÉèÖÃ¿ÉÒÔÍÏ¶¯
+				//è®¾ç½®å¯ä»¥æ‹–åŠ¨
 				//i->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
-				//ÉèÖÃ²»¿ÉÍÏ¶¯
+				//è®¾ç½®ä¸å¯æ‹–åŠ¨
 				i->setFlags(QGraphicsItem::ItemIsSelectable  | QGraphicsItem::ItemSendsGeometryChanges);
 
-				//todo .....ÉèÖÃÍÏ¶¯Ä£Ê½,
+				//todo .....è®¾ç½®æ‹–åŠ¨æ¨¡å¼,
 					isDraging = true;
 			}
 		}
@@ -172,7 +172,7 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 		}
 	}
 
-	// »­Í¼Ê±ÏÔÊ¾µÄ±Ê´¥
+	// ç”»å›¾æ—¶æ˜¾ç¤ºçš„ç¬”è§¦
 	QPen pen;
 	pen.setColor(QColor(0x16, 0xa0, 0x85));
 	pen.setWidth(radius < 3 ? radius : 3);
@@ -185,7 +185,7 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 	}
 
 
-	// Èç¹ûµ±Ç°Ã»ÓĞÔÚ»æÍ¼£¬Ôò¿ªÊ¼ĞÂ»æÍ¼
+	// å¦‚æœå½“å‰æ²¡æœ‰åœ¨ç»˜å›¾ï¼Œåˆ™å¼€å§‹æ–°ç»˜å›¾
 	if (!isDrawing) {
 		isDrawing = true;
 		ifTrackMouse = true;
@@ -248,10 +248,10 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 		}
 	}
 
-	// ·¢ËÍ×ø±êĞÅÏ¢
+	// å‘é€åæ ‡ä¿¡æ¯
 	emit scenePos(QPoint(int(event->scenePos().x()), int(event->scenePos().y())));
 	if (currPixmap) {
-		// ¸üĞÂ²ÎÕÕÏß
+		// æ›´æ–°å‚ç…§çº¿
 		crossLineX->setLine(event->scenePos().x(), 0, event->scenePos().x(), currPixmap->pixmap().height());
 		crossLineX->setZValue(currPixmap->zValue() + 1);
 		crossLineY->setLine(0, event->scenePos().y(), currPixmap->pixmap().width(), event->scenePos().y());
@@ -268,19 +268,19 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 		}
 
 		if (currShapeType == Shape::CirclePen) {
-			// Èç¹ûµ±Ç°ĞÎ×´ÀàĞÍÊÇ´ø±ÊµÄÊ®×ÖÏß
+			// å¦‚æœå½“å‰å½¢çŠ¶ç±»å‹æ˜¯å¸¦ç¬”çš„åå­—çº¿
 			crosshairLinePosX->setLine(event->scenePos().x(), event->scenePos().y() - radius, event->scenePos().x(), event->scenePos().y() + radius);
 			crosshairLinePosY->setLine(event->scenePos().x() - radius, event->scenePos().y(), event->scenePos().x() + radius, event->scenePos().y());
 
-   // Ìí¼Ó´¹Ö±Ïß£¨sendPosX£©µ½Í¼ĞÎ³¡¾°ÖĞ
+   // æ·»åŠ å‚ç›´çº¿ï¼ˆsendPosXï¼‰åˆ°å›¾å½¢åœºæ™¯ä¸­
 			addItem(crosshairLinePosX);
-			// Ìí¼ÓË®Æ½Ïß£¨sendPosY£©µ½Í¼ĞÎ³¡¾°ÖĞ
+			// æ·»åŠ æ°´å¹³çº¿ï¼ˆsendPosYï¼‰åˆ°å›¾å½¢åœºæ™¯ä¸­
 			addItem(crosshairLinePosY);
 
-			// ½«ZÖµÉèÖÃÎªµ±Ç°ÏñËØÍ¼µÄZÖµ¼Ó1
+			// å°†Zå€¼è®¾ç½®ä¸ºå½“å‰åƒç´ å›¾çš„Zå€¼åŠ 1
 			crosshairLinePosX->setZValue(currPixmap->zValue() + 1);
 			crosshairLinePosY->setZValue(currPixmap->zValue() + 1);
-			// Ê¹sendPosXºÍsendPosY¿É¼û
+			// ä½¿sendPosXå’ŒsendPosYå¯è§
 			crosshairLinePosX->setVisible(true);
 			crosshairLinePosY->setVisible(true);
 		}
@@ -297,7 +297,7 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 }
 
 void PaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
-	// rectÎª»­±ÊÔÊĞíµÄ·¶Î§
+	// rectä¸ºç”»ç¬”å…è®¸çš„èŒƒå›´
 	QRectF rect;
 	if (currShapeType == Shape::CirclePen || currShapeType == Shape::SquarePen) {
 		rect = QRect(radius,
@@ -309,7 +309,7 @@ void PaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
 		rect = sceneRect();
 	}
 
-	// ÏŞÖÆ»­±ÊÔÚrectÄÚ
+	// é™åˆ¶ç”»ç¬”åœ¨rectå†…
 	if (!rect.contains(event->scenePos())) {
 		QPointF newPos = event->scenePos();
 		newPos.setX(qMin(rect.right(), qMax(newPos.x(), rect.left())));
@@ -317,11 +317,11 @@ void PaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
 		event->setScenePos(newPos);
 	}
 
-	//»æÍ¼ÊÂ¼ş
+	//ç»˜å›¾äº‹ä»¶
 	if (currShape && isDrawing) {
 		currShape->mouseMove(event);
 	}
-	// ¸üĞÂ²ÎÕÕÏß
+	// æ›´æ–°å‚ç…§çº¿
 	if (currPixmap) {
 		crossLineX->setLine(event->scenePos().x(), 0, event->scenePos().x(), currPixmap->pixmap().height());
 		crossLineX->setZValue(currPixmap->zValue() + 1);
@@ -340,8 +340,8 @@ void PaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
 			squarePenCurse->setVisible(false);
 		}
 		if (currShapeType == Shape::CirclePen) {
-			// Èç¹ûµ±Ç°ĞÎ×´ÀàĞÍÊÇ´ø±ÊµÄÊ®×ÖÏß
-	   // Ìí¼Ó´¹Ö±Ïß£¨sendPosX£©µ½Í¼ĞÎ³¡¾°ÖĞ
+			// å¦‚æœå½“å‰å½¢çŠ¶ç±»å‹æ˜¯å¸¦ç¬”çš„åå­—çº¿
+	   // æ·»åŠ å‚ç›´çº¿ï¼ˆsendPosXï¼‰åˆ°å›¾å½¢åœºæ™¯ä¸­
 		
 
 			crosshairLinePosX->setLine(event->scenePos().x(), event->scenePos().y() - radius, event->scenePos().x(), event->scenePos().y() + radius);
@@ -349,10 +349,10 @@ void PaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
 			
 			addItem(crosshairLinePosX);
 			addItem(crosshairLinePosY);
-			// ½«ZÖµÉèÖÃÎªµ±Ç°ÏñËØÍ¼µÄZÖµ¼Ó1
+			// å°†Zå€¼è®¾ç½®ä¸ºå½“å‰åƒç´ å›¾çš„Zå€¼åŠ 1
 			crosshairLinePosX->setZValue(currPixmap->zValue() + 1);
 			crosshairLinePosY->setZValue(currPixmap->zValue() + 1);
-			// Ê¹sendPo  sXºÍsendPosY¿É¼û
+			// ä½¿sendPo  sXå’ŒsendPosYå¯è§
 			crosshairLinePosX->setVisible(true);
 			crosshairLinePosY->setVisible(true);
 		}
@@ -362,14 +362,14 @@ void PaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
 		}
 	}
 
-	// ·¢ËÍµ±Ç°Êó±êÎ»ÖÃ
+	// å‘é€å½“å‰é¼ æ ‡ä½ç½®
 	emit scenePos(QPoint(int(event->scenePos().x()), int(event->scenePos().y())));
 
 	QGraphicsScene::mouseMoveEvent(event);
 }
 
 void PaintScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event) {
-	// rectÎª»­±ÊÔÊĞíµÄ·¶Î§
+	// rectä¸ºç”»ç¬”å…è®¸çš„èŒƒå›´
 	QRectF rect;
 	if (currShapeType == Shape::CirclePen || currShapeType == Shape::SquarePen) {
 		rect = QRect(radius,
@@ -381,7 +381,7 @@ void PaintScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event) {
 		rect = sceneRect();
 	}
 
-	// ÏŞÖÆ»­±ÊÔÚrectÄÚ
+	// é™åˆ¶ç”»ç¬”åœ¨rectå†…
 	if (!rect.contains(event->scenePos())) {
 		QPointF newPos = event->scenePos();
 		newPos.setX(qMin(rect.right(), qMax(newPos.x(), rect.left())));
@@ -397,7 +397,7 @@ void PaintScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event) {
 
 	if (isDrawing) {
 		if (currShape->quitDrawing(event) || event->button() == Qt::MouseButton::RightButton) {
-			// ½áÊø±¾´Î»æ»­
+			// ç»“æŸæœ¬æ¬¡ç»˜ç”»
 			isDrawing = false;
 			ifTrackMouse = false;
 			currShape->mouseRelease(event);

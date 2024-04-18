@@ -1,17 +1,17 @@
-#include "filelistdockwidget.h"
+ï»¿#include "filelistdockwidget.h"
 
 FileListDockWidget::FileListDockWidget(QWidget* parent) : QDockWidget(parent) {
 
 	{
 		QFont myFont;
-		//ÉèÖÃÎÄ×Ö´óĞ¡
+		//è®¾ç½®æ–‡å­—å¤§å°
 		myFont.setPointSize(20);
-		//ÉèÖÃÎÄ×Ö×ÖÌå
+		//è®¾ç½®æ–‡å­—å­—ä½“
 		setFont(myFont);
 		//setText(title);
 		// 
 		// This
-		setWindowTitle("´ò¿ªµÄÎÄ¼şÁĞ±í");
+		setWindowTitle("æ‰“å¼€çš„æ–‡ä»¶åˆ—è¡¨");
 		dockContent = new QWidget(this);
 		setFeatures(QDockWidget::NoDockWidgetFeatures);
 		setFeatures(QDockWidget::DockWidgetClosable);
@@ -22,7 +22,7 @@ FileListDockWidget::FileListDockWidget(QWidget* parent) : QDockWidget(parent) {
 
 	{
 		lineEdit = new QLineEdit(this);
-		lineEdit->setPlaceholderText("ËÑË÷");
+		lineEdit->setPlaceholderText("æœç´¢");
 		lineEdit->installEventFilter(this);
 	}
 
@@ -54,7 +54,7 @@ FileListDockWidget::FileListDockWidget(QWidget* parent) : QDockWidget(parent) {
 
 
 
-//²¶×½lineEditµÄ»Ø³µÊÂ¼ş£¬ËÑË÷ÎÄ¼ş
+//æ•æ‰lineEditçš„å›è½¦äº‹ä»¶ï¼Œæœç´¢æ–‡ä»¶
 bool FileListDockWidget::eventFilter(QObject* obj, QEvent* event)
 {
 	if (obj == lineEdit) {

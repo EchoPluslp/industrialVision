@@ -1,4 +1,4 @@
-#include "label.h"
+﻿#include "label.h"
 
 Label::Label(const int id, const QString& type, const QColor color, Area* area) :
 	m_id(id), m_type(type), m_color(color), m_area(area) {

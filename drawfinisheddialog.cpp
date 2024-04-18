@@ -1,4 +1,4 @@
-#include "drawfinisheddialog.h"
+ï»¿#include "drawfinisheddialog.h"
 
 DrawFinishedDialog::DrawFinishedDialog(QWidget* parent) :
 	QDialog(parent)
@@ -21,37 +21,37 @@ void DrawFinishedDialog::showEvent(QShowEvent* e)
 		switch (currentShape) {
 		case Shape::searchAreaRect: {
 			for (int i = 0; i < 3; i++) {
-				QListWidgetItem* item = listWidget->item(i); // »ñÈ¡µÚi¸öÔªËØ
+				QListWidgetItem* item = listWidget->item(i); // è·å–ç¬¬iä¸ªå…ƒç´ 
 				if (i==0) {
-					item->setHidden(false); // ÏÔÊ¾ÔªËØ
+					item->setHidden(false); // æ˜¾ç¤ºå…ƒç´ 
 					item->setSelected(true);
 					ui.lineEdit->setText(item->text());
 					continue;;
 				}
-					item->setHidden(true); // Òş²Ø×îºó1,2¸öÔªËØ		
+					item->setHidden(true); // éšè—æœ€å1,2ä¸ªå…ƒç´ 		
 			}
 			break;
 			}
 		case Shape::featureMatchingRect: {
-			//¾ØĞÎ¿ò
+			//çŸ©å½¢æ¡†
 			for (int i = 0; i < 3; i++) {
-				QListWidgetItem* item = listWidget->item(i); // »ñÈ¡µÚi¸öÔªËØ
+				QListWidgetItem* item = listWidget->item(i); // è·å–ç¬¬iä¸ªå…ƒç´ 
 				if (i==1) {
-					item->setHidden(false); // ÏÔÊ¾ÔªËØ
+					item->setHidden(false); // æ˜¾ç¤ºå…ƒç´ 
 					item->setSelected(true);
 					ui.lineEdit->setText(item->text());
 					continue;
 				}
-					item->setHidden(true); // Òş²Ø×îºóÒ»¸öÔªËØ				
+					item->setHidden(true); // éšè—æœ€åä¸€ä¸ªå…ƒç´ 				
 			}
 			break;
 			}
 		case Shape::CirclePen: {
-			//¾ØĞÎ¿ò
+			//çŸ©å½¢æ¡†
 			for (int i = 0; i < 3; i++) {
-				QListWidgetItem* item = listWidget->item(i); // »ñÈ¡µÚi¸öÔªËØ
+				QListWidgetItem* item = listWidget->item(i); // è·å–ç¬¬iä¸ªå…ƒç´ 
 				if (i == 2) {
-					item->setHidden(false); // ÏÔÊ¾ÔªËØ
+					item->setHidden(false); // æ˜¾ç¤ºå…ƒç´ 
 					item->setSelected(true);
 					ui.lineEdit->setText(item->text());
 					continue;
@@ -72,7 +72,7 @@ void DrawFinishedDialog::emitcurrentShapeType(Shape::Figure flag) {
 	//emit sendTypeName(flag);
 	if (flag == Shape::searchAreaRect)
 	{
-		QString string("1.ËÑË÷ÇøÓò");
+		QString string("1.æœç´¢åŒºåŸŸ");
 		emit sendTypeName(string);
 
 	}
@@ -80,12 +80,12 @@ void DrawFinishedDialog::emitcurrentShapeType(Shape::Figure flag) {
 		flag == Shape::Polygon ||
 		flag == Shape::Ellipse)
 	{
-		QString string("2.ÌØÕ÷ÇøÓò");
+		QString string("2.ç‰¹å¾åŒºåŸŸ");
 		emit sendTypeName(string);
 	}
 	else if (flag == Shape::CirclePen)
 	{
-		QString string("3.Êä³öµã");
+		QString string("3.è¾“å‡ºç‚¹");
 		emit sendTypeName(string);
 	}
 
@@ -101,7 +101,7 @@ void DrawFinishedDialog::on_buttonBox_accepted()
 {
 	auto text = ui.lineEdit->text();
 	if (text.isNull() || text.isEmpty()) {
-		QMessageBox::warning(this, tr("Warn"), tr("Î´Ñ¡ÔñÊôĞÔ"));
+		QMessageBox::warning(this, tr("Warn"), tr("æœªé€‰æ‹©å±æ€§"));
 	}
 	else {
 

@@ -1,4 +1,4 @@
-#include "labelsdockwidget.h"
+ï»¿#include "labelsdockwidget.h"
 
 QString LabelsDockWidget::toName(const QString& type, const int id)
 {
@@ -11,13 +11,13 @@ LabelsDockWidget::LabelsDockWidget(QWidget* parent) : QDockWidget(parent) {
 	{
 
 		QFont myFont;
-		//ÉèÖÃÎÄ×Ö´óÐ¡
+		//è®¾ç½®æ–‡å­—å¤§å°
 		myFont.setPointSize(30);
-		//ÉèÖÃÎÄ×Ö×ÖÌå
+		//è®¾ç½®æ–‡å­—å­—ä½“
 		setFont(myFont);
 		//setText(title);
 
-		setWindowTitle("ÒÑÑ¡²Ù×÷");
+		setWindowTitle("å·²é€‰æ“ä½œ");
 
 		setAllowedAreas(Qt::DockWidgetArea::RightDockWidgetArea);
 		setFeatures(QDockWidget::NoDockWidgetFeatures);
@@ -29,11 +29,11 @@ LabelsDockWidget::LabelsDockWidget(QWidget* parent) : QDockWidget(parent) {
 	{
 		// ListWidget
 		listWidget = new QListWidget(this);
-		// ´´½¨Ò»¸ö×ÖÌå¶ÔÏó
+		// åˆ›å»ºä¸€ä¸ªå­—ä½“å¯¹è±¡
 		QFont font;
-		font.setPointSize(12); // ÉèÖÃ×ÖÌå´óÐ¡Îª12µã
+		font.setPointSize(12); // è®¾ç½®å­—ä½“å¤§å°ä¸º12ç‚¹
 
-		// ÉèÖÃ QListWidget µÄ×ÖÌå
+		// è®¾ç½® QListWidget çš„å­—ä½“
 		listWidget->setFont(font);
 
 		connect(listWidget, &QListWidget::itemClicked,
@@ -41,7 +41,7 @@ LabelsDockWidget::LabelsDockWidget(QWidget* parent) : QDockWidget(parent) {
 				emit itemClicked(item->text());
 			});
 
-		//ÒÑÑ¡²Ù×÷Ë«»÷
+		//å·²é€‰æ“ä½œåŒå‡»
 		connect(listWidget, &QListWidget::itemDoubleClicked,
 			[&](QListWidgetItem* item) {
 				emit itemDoubleClicked(item->text());
@@ -49,7 +49,7 @@ LabelsDockWidget::LabelsDockWidget(QWidget* parent) : QDockWidget(parent) {
 	}
 	{
 		//pushButton = new QPushButton(this);
-		//pushButton->setText("É¾³ý");
+		//pushButton->setText("åˆ é™¤");
 	/*	connect(pushButton, &QPushButton::clicked,
 			[&]() {
 				emit deleteCurrLabel(currLabelName());

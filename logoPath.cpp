@@ -1,4 +1,4 @@
-#include"logoPath.h"
+ï»¿#include"logoPath.h"
 
 
 logoPath::logoPath(QWidget* parent) :
@@ -6,11 +6,11 @@ logoPath::logoPath(QWidget* parent) :
 	ui(new Ui::logoPath)
 {
 	ui->setupUi(this);
-	//¶ÁÈ¡±¾µØÉèÖÃµÄÈÕÖ¾ÎÄ¼ş¼ĞµØÖ·
+	//è¯»å–æœ¬åœ°è®¾ç½®çš„æ—¥å¿—æ–‡ä»¶å¤¹åœ°å€
 	QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
 	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
 	settings->beginGroup("Idus");
-	//logo²ÎÊıºÍÈÕÖ¾²ÎÊı
+	//logoå‚æ•°å’Œæ—¥å¿—å‚æ•°
 	QString lineEdit_logoPath = settings->value("logopath", "Image/login/logo.png").toString();
 	QString lineEdit_namePath = settings->value("textpath", "Image/login/text.png").toString();
 
@@ -18,21 +18,21 @@ logoPath::logoPath(QWidget* parent) :
 	ui->lineEdit_namePath->setText(lineEdit_namePath);
 
 
-	//°×É«Ìî³ä×óÉÏ½ÇÍ¼±ê
+	//ç™½è‰²å¡«å……å·¦ä¸Šè§’å›¾æ ‡
 	QPixmap pixmap(100, 100);
 	pixmap.fill(Qt::white);
 	setWindowIcon(QIcon(pixmap));
-	setWindowTitle("logoÉèÖÃ");
+	setWindowTitle("logoè®¾ç½®");
 	setWindowFlags(Qt::WindowCloseButtonHint);
 
 }
 
 void logoPath::logoSet_click()
 {
-	// ´ò¿ªÎÄ¼ş¶Ô»°¿òÒÔÑ¡ÔñÍ¼ÏñÎÄ¼ş
-	QString filePath = QFileDialog::getOpenFileName(this, tr("Ñ¡ÔñÍ¼Ïñ"), QDir::homePath(), tr("Í¼ÏñÎÄ¼ş (*.png *.jpg *.bmp)"));
+	// æ‰“å¼€æ–‡ä»¶å¯¹è¯æ¡†ä»¥é€‰æ‹©å›¾åƒæ–‡ä»¶
+	QString filePath = QFileDialog::getOpenFileName(this, tr("é€‰æ‹©å›¾åƒ"), QDir::homePath(), tr("å›¾åƒæ–‡ä»¶ (*.png *.jpg *.bmp)"));
 
-	// ¼ì²éÊÇ·ñÑ¡ÔñÁËÎÄ¼ş
+	// æ£€æŸ¥æ˜¯å¦é€‰æ‹©äº†æ–‡ä»¶
 	if (!filePath.isEmpty()) {
 		ui->lineEdit_logoPath->setText(filePath); 
 	}
@@ -41,8 +41,8 @@ void logoPath::logoSet_click()
 
 void logoPath::namePath_click()
 {
-	// ´ò¿ªÎÄ¼ş¶Ô»°¿òÒÔÑ¡ÔñÍ¼ÏñÎÄ¼ş
-	QString filePath = QFileDialog::getOpenFileName(this, tr("Ñ¡ÔñÍ¼Ïñ"), QDir::homePath(), tr("Í¼ÏñÎÄ¼ş (*.png *.jpg *.bmp)"));
+	// æ‰“å¼€æ–‡ä»¶å¯¹è¯æ¡†ä»¥é€‰æ‹©å›¾åƒæ–‡ä»¶
+	QString filePath = QFileDialog::getOpenFileName(this, tr("é€‰æ‹©å›¾åƒ"), QDir::homePath(), tr("å›¾åƒæ–‡ä»¶ (*.png *.jpg *.bmp)"));
 
 	if (!filePath.isEmpty()) {
 		ui->lineEdit_namePath->setText(filePath);
@@ -66,7 +66,7 @@ void logoPath::setParam_click()
 	settings->beginGroup("Idus");
 	settings->setValue("logopath", logoPath);
 	settings->setValue("namepath", namePath);
-	QMessageBox::warning(this, "±£´æĞÅÏ¢", "±£´æ³É¹¦,½«ÔÚÏÂÒ»´ÎÖØÆôÊ±ÉúĞ§");
+	QMessageBox::warning(this, "ä¿å­˜ä¿¡æ¯", "ä¿å­˜æˆåŠŸ,å°†åœ¨ä¸‹ä¸€æ¬¡é‡å¯æ—¶ç”Ÿæ•ˆ");
 	close();
 }
 

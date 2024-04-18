@@ -1,4 +1,4 @@
-#include "ellipse.h"
+﻿#include "ellipse.h"
 #include <QDebug>
 void Ellipse::mousePress(QGraphicsSceneMouseEvent* event) {
 	auto x = event->scenePos().x();

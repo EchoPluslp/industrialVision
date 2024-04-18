@@ -1,4 +1,4 @@
-#include "rect.h"
+﻿#include "rect.h"
 
 void Rect::mousePress(QGraphicsSceneMouseEvent* event) {
 	auto x = event->scenePos().x();

@@ -1,4 +1,4 @@
-
+﻿
 #include "transmitsignals.h"
 
 TransmitSignals::TransmitSignals()

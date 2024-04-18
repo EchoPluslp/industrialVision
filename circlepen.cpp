@@ -1,4 +1,4 @@
-#include "circlepen.h"
+ï»¿#include "circlepen.h"
 
 
 
@@ -43,7 +43,7 @@ void CirclePen::mouseRelease(QGraphicsSceneMouseEvent* event)
 	//	2 * m_radius));
 	//m_path = m_path.united(p);
 	pathItem->setPath(m_path);
-	//ÉèÖÃÑ¡Ôñ×´Ì¬
+	//è®¾ç½®é€‰æ‹©çŠ¶æ€
 }
 
 

@@ -1,4 +1,4 @@
-#include "curve.h"
+﻿#include "curve.h"
 
 void Curve::mousePress(QGraphicsSceneMouseEvent* event) {
 	int x = int(event->scenePos().x());

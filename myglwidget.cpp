@@ -1,22 +1,22 @@
-#include "myglwidget.h"
+ï»¿#include "myglwidget.h"
 #include<QDebug>
 MyGLWidget::MyGLWidget(QWidget* parent)
 	: QOpenGLWidget(parent)
 {
 	myText = "";
 	crosshair = new QAction(this);
-	crosshair->setText("Ê®×ÖÏß");
-	crosshair->setFont(QFont(tr("ËÎÌå"), 26, QFont::Bold, false));//ËÎÌå26ºÅ£¬¼Ó´Ö£¬Ğ±Ìå×Ö
+	crosshair->setText("åå­—çº¿");
+	crosshair->setFont(QFont(tr("å®‹ä½“"), 26, QFont::Bold, false));//å®‹ä½“26å·ï¼ŒåŠ ç²—ï¼Œæ–œä½“å­—
 	connect(crosshair, &QAction::triggered, this, &MyGLWidget::crosshair_Flag);
 
 
-	rotate = new QAction(tr("Ğı×ª"), this);
-	rotate->setFont(QFont(tr("ËÎÌå"), 26, QFont::Bold, false));//ËÎÌå26ºÅ£¬¼Ó´Ö£¬Ğ±Ìå×Ö
+	rotate = new QAction(tr("æ—‹è½¬"), this);
+	rotate->setFont(QFont(tr("å®‹ä½“"), 26, QFont::Bold, false));//å®‹ä½“26å·ï¼ŒåŠ ç²—ï¼Œæ–œä½“å­—
 	connect(rotate, &QAction::triggered, this, &MyGLWidget::rotate_Flag);
 
 	//connect(quitSreenShot, SIGNAL(triggered()), this, SLOT(MenuClose()));
-	restore = new QAction(tr("»¹Ô­Í¼Æ¬"), this);
-	restore->setFont(QFont(tr("ËÎÌå"), 26, QFont::Bold, false));//ËÎÌå26ºÅ£¬¼Ó´Ö£¬Ğ±Ìå×Ö
+	restore = new QAction(tr("è¿˜åŸå›¾ç‰‡"), this);
+	restore->setFont(QFont(tr("å®‹ä½“"), 26, QFont::Bold, false));//å®‹ä½“26å·ï¼ŒåŠ ç²—ï¼Œæ–œä½“å­—
 	connect(restore, &QAction::triggered, this, &MyGLWidget::restore_Flag);
 
 	
@@ -24,8 +24,8 @@ MyGLWidget::MyGLWidget(QWidget* parent)
 	RightButtonMenu = new QMenu(this);
 	RightButtonMenu->setStyleSheet("QMenu{ background - color:rgb(40,87,144); border:1px solid rgb(40,87,144); }\
 		QMenu::item{ max-width:20px; font - size: 12px; color: rgb(225,225,225); background:rgba(40,87,144,0.5); border:1px solid rgba(82,130,164,1);}\
-		QMenu::item:selected{ background:rgba(82,130,164,1); border:1px solid rgba(82,130,164,1); }  /*Ñ¡ÖĞ»òÕßËµÊó±ê»¬¹ı×´Ì¬*/\
-		QMenu::item:pressed{ background:rgba(82,130,164,0.4); border:1px solid rgba(82,130,164,1);/*ŞôÏÂ×´Ì¬*/ }");
+		QMenu::item:selected{ background:rgba(82,130,164,1); border:1px solid rgba(82,130,164,1); }  /*é€‰ä¸­æˆ–è€…è¯´é¼ æ ‡æ»‘è¿‡çŠ¶æ€*/\
+		QMenu::item:pressed{ background:rgba(82,130,164,0.4); border:1px solid rgba(82,130,164,1);/*æ‘ä¸‹çŠ¶æ€*/ }");
 	RightButtonMenu->setMaximumWidth(300);
 	RightButtonMenu->setMaximumHeight(300);
 }
@@ -38,14 +38,14 @@ MyGLWidget::~MyGLWidget()
 bool falg = true;
 void MyGLWidget::setPixmap(QPixmap pixmap, QString text)
 {	
-	//ÅĞ¶ÏÊÇ·ñÓĞÊ®×ÖÏß
+	//åˆ¤æ–­æ˜¯å¦æœ‰åå­—çº¿
 	myPixmap = pixmap;
 
 	if (drawCrossHair_Flag)
 	{
 		drawcrossHair();
 	}
-	//Ğı×ªÍ¼Æ¬
+	//æ—‹è½¬å›¾ç‰‡
 	//rotatePic();
 	
 	myText = text;
@@ -60,28 +60,28 @@ void MyGLWidget::setMouseClickFlag(bool flag)
 	if (flag)
 	{
 
-		// ÉèÖÃ crosshair µÄÎÄ±¾²¢½ûÓÃµã»÷´¥·¢ÊÂ¼ş
-		crosshair->setText(tr("Ê®×ÖÏß£¨ÒÑËø¶¨£©"));
+		// è®¾ç½® crosshair çš„æ–‡æœ¬å¹¶ç¦ç”¨ç‚¹å‡»è§¦å‘äº‹ä»¶
+		crosshair->setText(tr("åå­—çº¿ï¼ˆå·²é”å®šï¼‰"));
 		crosshair->setDisabled(flag);
 
-		//// ÉèÖÃ rotate µÄÎÄ±¾²¢½ûÓÃµã»÷´¥·¢ÊÂ¼ş
-		rotate->setText(tr("Ğı×ª£¨ÒÑËø¶¨£©"));
+		//// è®¾ç½® rotate çš„æ–‡æœ¬å¹¶ç¦ç”¨ç‚¹å‡»è§¦å‘äº‹ä»¶
+		rotate->setText(tr("æ—‹è½¬ï¼ˆå·²é”å®šï¼‰"));
 		rotate->setDisabled(flag);
 
-		//// ÉèÖÃ restore µÄÎÄ±¾²¢½ûÓÃµã»÷´¥·¢ÊÂ¼ş
-		restore->setText(tr("»¹Ô­Í¼Æ¬£¨ÒÑËø¶¨£©"));
+		//// è®¾ç½® restore çš„æ–‡æœ¬å¹¶ç¦ç”¨ç‚¹å‡»è§¦å‘äº‹ä»¶
+		restore->setText(tr("è¿˜åŸå›¾ç‰‡ï¼ˆå·²é”å®šï¼‰"));
 		restore->setDisabled(flag);
 	}else {
-		// ÉèÖÃ crosshair µÄÎÄ±¾²¢½ûÓÃµã»÷´¥·¢ÊÂ¼ş
-		crosshair->setText(tr("Ê®×ÖÏß"));
+		// è®¾ç½® crosshair çš„æ–‡æœ¬å¹¶ç¦ç”¨ç‚¹å‡»è§¦å‘äº‹ä»¶
+		crosshair->setText(tr("åå­—çº¿"));
 		crosshair->setDisabled(flag);
 
-		//// ÉèÖÃ rotate µÄÎÄ±¾²¢½ûÓÃµã»÷´¥·¢ÊÂ¼ş
-		rotate->setText(tr("Ğı×ª"));
+		//// è®¾ç½® rotate çš„æ–‡æœ¬å¹¶ç¦ç”¨ç‚¹å‡»è§¦å‘äº‹ä»¶
+		rotate->setText(tr("æ—‹è½¬"));
 		rotate->setDisabled(flag);
 
-		//// ÉèÖÃ restore µÄÎÄ±¾²¢½ûÓÃµã»÷´¥·¢ÊÂ¼ş
-		restore->setText(tr("»¹Ô­Í¼Æ¬"));
+		//// è®¾ç½® restore çš„æ–‡æœ¬å¹¶ç¦ç”¨ç‚¹å‡»è§¦å‘äº‹ä»¶
+		restore->setText(tr("è¿˜åŸå›¾ç‰‡"));
 		restore->setDisabled(flag);
 	}
 }
@@ -92,14 +92,14 @@ void MyGLWidget::paintEvent(QPaintEvent* event)
 	const QRect& rect = event->rect();
 
 	QPainter painter(this);
-	if (!this->myPixmap.isNull())//Èç¹ûÍ¼Æ¬²»Îª¿Õ
+	if (!this->myPixmap.isNull())//å¦‚æœå›¾ç‰‡ä¸ä¸ºç©º
 	{
 		painter.eraseRect(rect);
-		painter.translate(0 + XPtInterval, 0 + YPtInterval);//½øĞĞÆ½ÒÆ
-		//	//°´ÕÕ¸ß¶ÈµÈ±ÈÀıËõ·ÅÍ¼Æ¬
+		painter.translate(0 + XPtInterval, 0 + YPtInterval);//è¿›è¡Œå¹³ç§»
+		//	//æŒ‰ç…§é«˜åº¦ç­‰æ¯”ä¾‹ç¼©æ”¾å›¾ç‰‡
 	int H = this->height();
 	int realH = myPixmap.height();
-	//QPixmap pix = myPixmap.scaledToHeight(H - 5);//Í¼Æ¬Ëõ·Åµ½Ö¸¶¨¸ß¶È
+	//QPixmap pix = myPixmap.scaledToHeight(H - 5);//å›¾ç‰‡ç¼©æ”¾åˆ°æŒ‡å®šé«˜åº¦
 
 		painter.drawPixmap(QRect(0, 0, myPixmap.width() * factor, (myPixmap.height() - 25) * factor), myPixmap);
 	}
@@ -111,37 +111,37 @@ void MyGLWidget::mousePressEvent(QMouseEvent* event)
 	{
 		RightButtonMenu->clear();
 		RightButtonMenu->addAction(crosshair);
-		RightButtonMenu->addSeparator();    //·Ö¸îÏß
+		RightButtonMenu->addSeparator();    //åˆ†å‰²çº¿
 		RightButtonMenu->addAction(rotate);
-		RightButtonMenu->addSeparator();    //·Ö¸îÏß
+		RightButtonMenu->addSeparator();    //åˆ†å‰²çº¿
 		RightButtonMenu->addAction(restore);
-		RightButtonMenu->exec(QCursor::pos());  //ÔÚµ±Ç°Êó±ê´¦¶Â×¡
-		//ÒÔ×èÈû·½Ê½ÏÔÊ¾²Ëµ¥£¬²ÎÊı¿ÉÖ¸Ê¾²Ëµ¥ÏÔÊ¾Î»ÖÃ£¬ÁíÍâ¸Ãº¯Êı¿É·µ»Øµ¥»÷Ñ¡ÖĞÏî
+		RightButtonMenu->exec(QCursor::pos());  //åœ¨å½“å‰é¼ æ ‡å¤„å µä½
+		//ä»¥é˜»å¡æ–¹å¼æ˜¾ç¤ºèœå•ï¼Œå‚æ•°å¯æŒ‡ç¤ºèœå•æ˜¾ç¤ºä½ç½®ï¼Œå¦å¤–è¯¥å‡½æ•°å¯è¿”å›å•å‡»é€‰ä¸­é¡¹
 	}
 	oldPos = event->pos();
 	Pressed = true;
 }
 
 
-void MyGLWidget::mouseMoveEvent(QMouseEvent* event)//ÒÆ¶¯
+void MyGLWidget::mouseMoveEvent(QMouseEvent* event)//ç§»åŠ¨
 {
-	if (Pressed != false)//°´ÏÂÊó±ê
+	if (Pressed != false)//æŒ‰ä¸‹é¼ æ ‡
 	{
-		this->setCursor(Qt::SizeAllCursor);//ÉèÖÃ¹â±ê
+		this->setCursor(Qt::SizeAllCursor);//è®¾ç½®å…‰æ ‡
 		QPoint pos = event->pos();
-		int xPtInterval = pos.x() - oldPos.x();//¼ÆËãÒÆ¶¯µÄ¾àÀë
+		int xPtInterval = pos.x() - oldPos.x();//è®¡ç®—ç§»åŠ¨çš„è·ç¦»
 		int yPtInterval = pos.y() - oldPos.y();
-		XPtInterval += xPtInterval;//¼ÓÉÏÆ«ÒÆµÄ¾àÀë
+		XPtInterval += xPtInterval;//åŠ ä¸Šåç§»çš„è·ç¦»
 		YPtInterval += yPtInterval;
-		oldPos = pos;//¸üĞÂÎ»ÖÃ
+		oldPos = pos;//æ›´æ–°ä½ç½®
 		update();
 	}
 }
 
-void MyGLWidget::mouseReleaseEvent(QMouseEvent* event)//Êó±êÊÍ·Å
+void MyGLWidget::mouseReleaseEvent(QMouseEvent* event)//é¼ æ ‡é‡Šæ”¾
 {
 	Pressed = false;
-	this->setCursor(Qt::ArrowCursor);//ÉèÖÃ¹â±ê
+	this->setCursor(Qt::ArrowCursor);//è®¾ç½®å…‰æ ‡
 }
 
 void MyGLWidget::mouseDoubleClickEvent(QMouseEvent* event)
@@ -152,7 +152,7 @@ void MyGLWidget::mouseDoubleClickEvent(QMouseEvent* event)
     update();
 }
 
-void MyGLWidget::wheelEvent(QWheelEvent* event)     //Êó±ê»¬ÂÖÊÂ¼ş
+void MyGLWidget::wheelEvent(QWheelEvent* event)     //é¼ æ ‡æ»‘è½®äº‹ä»¶
 {
 	double numDegrees = event->delta() / 8.0;
 	double numSteps = numDegrees / 15.0;
@@ -171,7 +171,7 @@ void MyGLWidget::wheelEvent(QWheelEvent* event)     //Êó±ê»¬ÂÖÊÂ¼ş
 void MyGLWidget::drawcrossHair()
 {
 	QPen pen;
-	pen.setStyle(Qt::SolidLine);            //¶¨Òå»­±ÊµÄ·ç¸ñ£¬Ö±Ïß¡¢ĞéÏßµÈ
+	pen.setStyle(Qt::SolidLine);            //å®šä¹‰ç”»ç¬”çš„é£æ ¼ï¼Œç›´çº¿ã€è™šçº¿ç­‰
 	pen.setWidth(10);
 	pen.setBrush(Qt::green);
 	QPainter painter(&myPixmap);
@@ -191,7 +191,7 @@ void MyGLWidget::rotate_Flag() {
 	{
 		m_rotateIndexInt = 0;
 	}
-	//´«¸øÖ÷½çÃæµÄÖµ,ÓÃÓÚÄ£°åÍ¼µÄĞı×ªÖÆ×÷
+	//ä¼ ç»™ä¸»ç•Œé¢çš„å€¼,ç”¨äºæ¨¡æ¿å›¾çš„æ—‹è½¬åˆ¶ä½œ
 	emit rotateIndexValueChanged(m_rotateIndexInt);
 }
 

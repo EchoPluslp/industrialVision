@@ -1,28 +1,28 @@
-#include "passwordSet.h"
+ï»¿#include "passwordSet.h"
 passwordSet::passwordSet(QWidget* parent) :
 	QWidget(parent),
 	ui(new Ui::password)
 {
 	ui->setupUi(this);
-	//¶ÁÈ¡±¾µØÉèÖÃµÄÈÕÖ¾ÎÄ¼ş¼ĞµØÖ·
+	//è¯»å–æœ¬åœ°è®¾ç½®çš„æ—¥å¿—æ–‡ä»¶å¤¹åœ°å€
 	QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
 	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
 	settings->beginGroup("Idus");
-	//ÃÜÂë
+	//å¯†ç 
 	QString logDirectory = settings->value("password").toString();
-	//¹ÜÀíÔ±ÃÜÂë
+	//ç®¡ç†å‘˜å¯†ç 
 	QString passwordAdmin = settings->value("passwordAdmin", "2222").toString();
-	//²Ù×÷Ô±ÃÜÂë
+	//æ“ä½œå‘˜å¯†ç 
 	QString passwordUser = settings->value("passwordUser", "1111").toString();
 	ui->lineEdit_admin->setText(passwordAdmin);
 	ui->lineEdit_user->setText(passwordUser);
 
 
-	//°×É«Ìî³ä×óÉÏ½ÇÍ¼±ê
+	//ç™½è‰²å¡«å……å·¦ä¸Šè§’å›¾æ ‡
 	QPixmap pixmap(100, 100);
 	pixmap.fill(Qt::white);
 	setWindowIcon(QIcon(pixmap));
-	setWindowTitle("ÃÜÂëÉèÖÃ");
+	setWindowTitle("å¯†ç è®¾ç½®");
 	setWindowFlags(Qt::WindowCloseButtonHint);
 
 }
@@ -37,35 +37,35 @@ void passwordSet::readSetPassword()
 
 void passwordSet::passwordAdminSetclick() {
 	QString password = ui->lineEdit_admin->text();
-	//ÉèÖÃÃÜÂë
+	//è®¾ç½®å¯†ç 
 	if(isAlphaNumeric(password)){
 	QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
 	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
 	settings->beginGroup("Idus");
 	settings->setValue("passwordAdmin", password);
-	//´´½¨³É¹¦
-	QMessageBox::information(nullptr, "ÉèÖÃ¹ÜÀíÔ±ÃÜÂë", "¹ÜÀíÔ±ÃÜÂë´´½¨³É¹¦");
+	//åˆ›å»ºæˆåŠŸ
+	QMessageBox::information(nullptr, "è®¾ç½®ç®¡ç†å‘˜å¯†ç ", "ç®¡ç†å‘˜å¯†ç åˆ›å»ºæˆåŠŸ");
 	this->close();
 	}
 	else {
-		QMessageBox::warning(nullptr, "ÉèÖÃ¹ÜÀíÔ±ÃÜÂë", "¹ÜÀíÔ±´´½¨Ê§°Ü,Ö»ÄÜ°üº¬Êı×ÖºÍ×ÖÄ¸");
+		QMessageBox::warning(nullptr, "è®¾ç½®ç®¡ç†å‘˜å¯†ç ", "ç®¡ç†å‘˜åˆ›å»ºå¤±è´¥,åªèƒ½åŒ…å«æ•°å­—å’Œå­—æ¯");
 
 	}
 }
 void passwordSet::passwordUserSetclick() {
 	QString password = ui->lineEdit_user->text();
-	//ÉèÖÃÃÜÂë
+	//è®¾ç½®å¯†ç 
 	if (isAlphaNumeric(password)) {
 		QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
 		QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
 		settings->beginGroup("Idus");
 		settings->setValue("passwordUser", password);
-		//´´½¨³É¹¦
-		QMessageBox::information(nullptr, "ÉèÖÃ²Ù×÷Ô±ÃÜÂë", "²Ù×÷Ô±ÃÜÂë´´½¨³É¹¦");
+		//åˆ›å»ºæˆåŠŸ
+		QMessageBox::information(nullptr, "è®¾ç½®æ“ä½œå‘˜å¯†ç ", "æ“ä½œå‘˜å¯†ç åˆ›å»ºæˆåŠŸ");
 		this->close();
 	}
 	else {
-		QMessageBox::warning(nullptr, "ÉèÖÃ²Ù×÷Ô±ÃÜÂë", "²Ù×÷Ô±´´½¨Ê§°Ü,Ö»ÄÜ°üº¬Êı×ÖºÍ×ÖÄ¸");
+		QMessageBox::warning(nullptr, "è®¾ç½®æ“ä½œå‘˜å¯†ç ", "æ“ä½œå‘˜åˆ›å»ºå¤±è´¥,åªèƒ½åŒ…å«æ•°å­—å’Œå­—æ¯");
 
 	}
 }
@@ -84,7 +84,7 @@ bool passwordSet::isAlphaNumeric(const QString& qstr) {
 
 void passwordSet::setcurrentRole(QString stringRole)
 {
-	if (stringRole == "²Ù×÷Ô±")
+	if (stringRole == "æ“ä½œå‘˜")
 	{
 		ui->pushButton_setadmin->setHidden(true);
 		ui->lineEdit_admin->setHidden(true);

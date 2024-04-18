@@ -1,4 +1,4 @@
-#include"logoSet.h"
+ï»¿#include"logoSet.h"
 
 
 logoSet::logoSet(QWidget* parent) :
@@ -6,19 +6,19 @@ logoSet::logoSet(QWidget* parent) :
 	ui(new Ui::logoSet)
 {
 	ui->setupUi(this);
-	//¶ÁÈ¡±¾µØÉèÖÃµÄÈÕÖ¾ÎÄ¼ş¼ĞµØÖ·
+	//è¯»å–æœ¬åœ°è®¾ç½®çš„æ—¥å¿—æ–‡ä»¶å¤¹åœ°å€
 	QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
 	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
 	settings->beginGroup("Idus");
-	//ÆØ¹â
+	//æ›å…‰
 	QString logDirectory = settings->value("logDirectory").toString();
 	ui->lineEdit->setText(logDirectory);
 
-	//°×É«Ìî³ä×óÉÏ½ÇÍ¼±ê
+	//ç™½è‰²å¡«å……å·¦ä¸Šè§’å›¾æ ‡
 	QPixmap pixmap(100, 100);
 	pixmap.fill(Qt::white);
 	setWindowIcon(QIcon(pixmap));
-	setWindowTitle("ÈÕÖ¾¹ÜÀí");
+	setWindowTitle("æ—¥å¿—ç®¡ç†");
 	setWindowFlags(Qt::WindowCloseButtonHint);
 
 }
@@ -38,8 +38,8 @@ void logoSet::readLog_click()
 }
 
 void logoSet::logSet_click() {
-	//ÎÄ¼ş¼Ğ
-	    QString  srcDirPath = QFileDialog::getExistingDirectory(this, "Ñ¡ÔñÎÄ¼ş¼Ğ","/");
+	//æ–‡ä»¶å¤¹
+	    QString  srcDirPath = QFileDialog::getExistingDirectory(this, "é€‰æ‹©æ–‡ä»¶å¤¹","/");
 		 if (srcDirPath.isEmpty()){
 		        return;
 		     }

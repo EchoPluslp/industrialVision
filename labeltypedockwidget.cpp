@@ -1,10 +1,10 @@
-#include "labeltypedockwidget.h"
+ï»¿#include "labeltypedockwidget.h"
 
 LabelTypeDockWidget::LabelTypeDockWidget(QWidget* parent) : QDockWidget(parent)
 {
 	//{
 	//	// This
-	//	setWindowTitle("ÊôÐÔ");
+	//	setWindowTitle("å±žæ€§");
 	//	setAllowedAreas(Qt::DockWidgetArea::RightDockWidgetArea);
 	//	setFeatures(QDockWidget::NoDockWidgetFeatures);
 	//	setFeatures(QDockWidget::DockWidgetClosable);
@@ -34,7 +34,7 @@ QList<QListWidgetItem*> LabelTypeDockWidget::getItemList() const
 void LabelTypeDockWidget::typeCreated(const QString& type, QColor color)
 {
 	auto item = new QListWidgetItem(type);
-	//ÉèÖÃ±³¾°É«
+	//è®¾ç½®èƒŒæ™¯è‰²
 	color.setAlpha(80);
 	item->setBackgroundColor(color);
 	listWidget->addItem(item);

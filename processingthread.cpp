@@ -1,4 +1,4 @@
-#include "processingthread.h"
+ï»¿#include "processingthread.h"
 #define NOMINMAX
 
 using namespace std;
@@ -20,7 +20,7 @@ ProcessingThread::~ProcessingThread()
 
 }
 
-void ProcessingThread::initThread()   //³õÊ¼»¯Í¼Ïñ´¦ÀíÏß³Ì
+void ProcessingThread::initThread()   //åˆå§‹åŒ–å›¾åƒå¤„ç†çº¿ç¨‹
 {
 	startFlag = false;
 	pattern_Flag = false;
@@ -55,11 +55,11 @@ void ProcessingThread::run()
 				Mat tempMap = m_imageVector_1.at(0);
 				QPixmap newPixmap_1 = cvMatToPixmap(tempMap);
 
-				//Ö´ĞĞÆ¥Åä
+				//æ‰§è¡ŒåŒ¹é…
 				if (pattern_Flag && modelAndRealSclar)
 				{
-					QTime timedebuge;//ÉùÃ÷Ò»¸öÊ±ÖÓ¶ÔÏó
-					timedebuge.start();//¿ªÊ¼¼ÆÊ±
+					QTime timedebuge;//å£°æ˜ä¸€ä¸ªæ—¶é’Ÿå¯¹è±¡
+					timedebuge.start();//å¼€å§‹è®¡æ—¶
 					if (areaMatRect.x+ areaMatRect.width>tempMap.cols )
 					{
 						areaMatRect.x = tempMap.cols - areaMatRect.width;
@@ -98,8 +98,8 @@ void ProcessingThread::run()
 						QPainter painter(&newPixmap_1);
 
 						QPen pen;
-						pen.setStyle(Qt::SolidLine);            //¶¨Òå»­±ÊµÄ·ç¸ñ£¬Ö±Ïß¡¢ĞéÏßµÈ
-						pen.setWidth(10);                        //¶¨Òå»­±ÊµÄ´óĞ¡
+						pen.setStyle(Qt::SolidLine);            //å®šä¹‰ç”»ç¬”çš„é£æ ¼ï¼Œç›´çº¿ã€è™šçº¿ç­‰
+						pen.setWidth(10);                        //å®šä¹‰ç”»ç¬”çš„å¤§å°
 						pen.setBrush(Qt::green);
 						painter.setPen(pen);
 						painter.drawEllipse(QPointF(drawCenterPoint.x, drawCenterPoint.y), 50, 50);
@@ -107,34 +107,34 @@ void ProcessingThread::run()
 
 				}
 
-				//¿ÉÒÔÖ´ĞĞÆ¥Åä,µ«ÊÇ±ÈÀı²»¶ÔµÄÇé¿ö,Ò²¾ÍËµ²»Í¬±ÈÀıÊ±,´¥·¢ÁËÆ¥Åä,Æ¥Åä´íÎó
+				//å¯ä»¥æ‰§è¡ŒåŒ¹é…,ä½†æ˜¯æ¯”ä¾‹ä¸å¯¹çš„æƒ…å†µ,ä¹Ÿå°±è¯´ä¸åŒæ¯”ä¾‹æ—¶,è§¦å‘äº†åŒ¹é…,åŒ¹é…é”™è¯¯
 				if (pattern_Flag && modelAndRealSclar == false) {
 					patternNG();
 				}
 				pattern_Flag = false;
-				//ÅĞ¶ÏÊÇ·ñĞèÒªÕ¹Ê¾·¶Î§Í¼
+				//åˆ¤æ–­æ˜¯å¦éœ€è¦å±•ç¤ºèŒƒå›´å›¾
 				if (area_Flag)
 				{
 					QPen pen;
-					pen.setStyle(Qt::SolidLine);            //¶¨Òå»­±ÊµÄ·ç¸ñ£¬Ö±Ïß¡¢ĞéÏßµÈ
-					pen.setWidth(10);                        //¶¨Òå»­±ÊµÄ´óĞ¡
+					pen.setStyle(Qt::SolidLine);            //å®šä¹‰ç”»ç¬”çš„é£æ ¼ï¼Œç›´çº¿ã€è™šçº¿ç­‰
+					pen.setWidth(10);                        //å®šä¹‰ç”»ç¬”çš„å¤§å°
 					pen.setBrush(Qt::red);
 					QPainter painter(&newPixmap_1);
 					painter.setPen(pen);
 					painter.drawRect(areaMatRect.x, areaMatRect.y, areaMatRect.width, areaMatRect.height);
 					
 				}
-				//½«´¦ÀíºÃµÄÍ¼Ïñ·¢ÏÖµ½Ö÷½çÃæ
+				//å°†å¤„ç†å¥½çš„å›¾åƒå‘ç°åˆ°ä¸»ç•Œé¢
 				emit signal_newPixmap(newPixmap_1, 0);
 				m_width = newPixmap_1.width();
 				m_height = newPixmap_1.height();
-				//Ê¹ÓÃÍêºóÇå¿ÕÈİÆ÷
+				//ä½¿ç”¨å®Œåæ¸…ç©ºå®¹å™¨
 				m_imageVector_1.clear();
 			}
 			if (m_imageVector_1.size() > 1) {
 				m_imageVector_1.clear();
 			}
-		msleep(20);   //´Ë´¦»º³å¿É¼õÉÙcpuÔËĞĞÂÊ,×¢Òâ²»ÒªÂıÓÚÏà»úÏß³ÌµÄ»º³å
+		msleep(20);   //æ­¤å¤„ç¼“å†²å¯å‡å°‘cpuè¿è¡Œç‡,æ³¨æ„ä¸è¦æ…¢äºç›¸æœºçº¿ç¨‹çš„ç¼“å†²
 	}
 }
 
@@ -155,13 +155,13 @@ QImage ProcessingThread::cvMatToImage(const cv::Mat cvMat)
 //Mat->QPixmap
 QPixmap ProcessingThread::cvMatToPixmap(const cv::Mat cvMat)
 {
-	QImage myImage = QImage((const unsigned char*)(cvMat.data), cvMat.cols, cvMat.rows, QImage::Format_Indexed8);   //»Ò¶ÈÍ¼
+	QImage myImage = QImage((const unsigned char*)(cvMat.data), cvMat.cols, cvMat.rows, QImage::Format_Indexed8);   //ç°åº¦å›¾
 
-	//QSize±íÊ¾Í¼ÏñÔÚ½çÃæÉÏµÄÏÔÊ¾³ß´ç
+	//QSizeè¡¨ç¤ºå›¾åƒåœ¨ç•Œé¢ä¸Šçš„æ˜¾ç¤ºå°ºå¯¸
 	return QPixmap::fromImage(myImage).scaled(QSize(myImage.width(), myImage.height()), Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
 
-cv::Mat ProcessingThread::ImageToMat(QImage& image) //QImage×ªMat
+cv::Mat ProcessingThread::ImageToMat(QImage& image) //QImageè½¬Mat
 {
 
 	Mat mat = cv::Mat(image.height(), image.width(), CV_8UC1, (void*)image.constBits(), image.bytesPerLine());
@@ -193,9 +193,9 @@ void ProcessingThread::slot_recievePatternImage(QString pattern_Path,QRectF patt
 
 
 	String pattern_STD_Path = pattern_Path.toLocal8Bit().constData();
-	size_t pos = pattern_STD_Path.find("="); // ÕÒµ½µÈºÅµÄÎ»ÖÃ
-	if (pos != string::npos) { // Èç¹ûÕÒµ½ÁËµÈºÅ
-		pattern_STD_Path.erase(pos, 1); // É¾³ıµÈºÅ×Ö·û
+	size_t pos = pattern_STD_Path.find("="); // æ‰¾åˆ°ç­‰å·çš„ä½ç½®
+	if (pos != string::npos) { // å¦‚æœæ‰¾åˆ°äº†ç­‰å·
+		pattern_STD_Path.erase(pos, 1); // åˆ é™¤ç­‰å·å­—ç¬¦
 	}
 
 	 Mat ReadImagestd =  imread(pattern_STD_Path, CV_8UC1);
@@ -203,11 +203,11 @@ void ProcessingThread::slot_recievePatternImage(QString pattern_Path,QRectF patt
 	 if (ReadImagestd.empty())
 	 {
 		 emit signal_modelPictureReadFlag();
-		 //Ä£°åÍ¼¶ÁÈ¡´íÎó!!!
+		 //æ¨¡æ¿å›¾è¯»å–é”™è¯¯!!!
 		 return;
 	 }
 	 patternMat = ReadImagestd(Rect(pattern_Rect.x(), pattern_Rect.y(), pattern_Rect.width(), pattern_Rect.height())).clone();
-	///////////////////ÉèÖÃÄ£°åÍ¼
+	///////////////////è®¾ç½®æ¨¡æ¿å›¾
 
 	m_TemplData.clear();
 
@@ -242,7 +242,7 @@ void ProcessingThread::slot_recievePatternImage(QString pattern_Path,QRectF patt
 		templData->vecTemplMean[i] = templMean;
 		templData->vecTemplNorm[i] = templNorm;
 	}
-	//ÉèÖÃÊä³öµã×ø±ê
+	//è®¾ç½®è¾“å‡ºç‚¹åæ ‡
 	centerPointInProcess.setX(centerPoint.x());
 	centerPointInProcess.setY(centerPoint.y()); 
 
@@ -255,7 +255,7 @@ void ProcessingThread::slot_recievePatternImage(QString pattern_Path,QRectF patt
 	 templData->bIsPatternLearned = true;
 }
 
-//Ä£°åÍ¼,Ô­Í¼
+//æ¨¡æ¿å›¾,åŸå›¾
 cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bool modelflag)
 {
 	if (m_matSrc.empty() || m_matDst.empty())
@@ -269,7 +269,7 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
 
     //
     int iTopLayer = GetTopLayer(&m_matDst, (int)sqrt((double)256));
-    //½¨Á¢½ğ×ÖËş
+    //å»ºç«‹é‡‘å­—å¡”
     std::vector<cv::Mat> vecMatSrcPyr;
     cv::buildPyramid(m_matSrc, vecMatSrcPyr, iTopLayer);
 	s_TemplData* pTemplData;
@@ -284,7 +284,7 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
     int cols = pTemplData->vecPyramid[iTopLayer].cols;
     int rows = pTemplData->vecPyramid[iTopLayer].rows;
     double x = 2.0 / max(pTemplData->vecPyramid[iTopLayer].cols, pTemplData->vecPyramid[iTopLayer].rows);
-    //µÚÒ»½×¶Î´Ó×î¶¥²ãÕÒ³ö´óÖÂµÄ½Ç¶ÈÓëroi
+    //ç¬¬ä¸€é˜¶æ®µä»æœ€é¡¶å±‚æ‰¾å‡ºå¤§è‡´çš„è§’åº¦ä¸roi
     double dAngleStep = atan(2.0 / max(pTemplData->vecPyramid[iTopLayer].cols, pTemplData->vecPyramid[iTopLayer].rows)) * R2D;
 
     std::vector<double> vecAngles;
@@ -361,11 +361,11 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
     int iMatchSize = (int)vecMatchParameter.size();
     int iDstW = pTemplData->vecPyramid[iTopLayer].cols, iDstH = pTemplData->vecPyramid[iTopLayer].rows;
 
-    //µÚÒ»½×¶Îdebug½YÊø
-    //ÊÇ·ñ¿ªÆôÑÇÏñËØ
+    //ç¬¬ä¸€é˜¶æ®µdebugçµæŸ
+    //æ˜¯å¦å¼€å¯äºšåƒç´ 
     bool bSubPixelEstimation = true;
     int iStopLayer = 0;
-    //int iSearchSize = min (m_iMaxPos + MATCH_CANDIDATE_NUM, (int)vecMatchParameter.size ());//¿ÉÄÜ²»ĞèÒªËÑŒ¤µ½È«²¿ Ì«ÀËÙM•rég
+    //int iSearchSize = min (m_iMaxPos + MATCH_CANDIDATE_NUM, (int)vecMatchParameter.size ());//å¯èƒ½ä¸éœ€è¦æœå°‹åˆ°å…¨éƒ¨ å¤ªæµªè²»æ™‚é–“
     vector<s_MatchParameter> vecAllResult;
     for (int i = 0; i < (int)vecMatchParameter.size(); i++)
         //for (int i = 0; i < iSearchSize; i++)
@@ -373,7 +373,7 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
         double dRAngle = -vecMatchParameter[i].dMatchAngle * D2R;
         Point2f ptLT = ptRotatePt2f(vecMatchParameter[i].pt, ptCenter, dRAngle);
 
-        double dAngleStep = atan(2.0 / max(iDstW, iDstH)) * R2D;//min¸Äémax
+        double dAngleStep = atan(2.0 / max(iDstW, iDstH)) * R2D;//minæ”¹ç‚ºmax
         vecMatchParameter[i].dAngleStart = vecMatchParameter[i].dMatchAngle - dAngleStep;
         vecMatchParameter[i].dAngleEnd = vecMatchParameter[i].dMatchAngle + dAngleStep;
 
@@ -386,8 +386,8 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
         {
             for (int iLayer = iTopLayer - 1; iLayer >= iStopLayer; iLayer--)
             {
-                //ËÑÑ°½Ç¶È
-                dAngleStep = atan(2.0 / max(pTemplData->vecPyramid[iLayer].cols, pTemplData->vecPyramid[iLayer].rows)) * R2D;//min¸Äémax
+                //æœå¯»è§’åº¦
+                dAngleStep = atan(2.0 / max(pTemplData->vecPyramid[iLayer].cols, pTemplData->vecPyramid[iLayer].rows)) * R2D;//minæ”¹ç‚ºmax
                 vector<double> vecAngles;
                 //double dAngleS = vecMatchParameter[i].dAngleStart, dAngleE = vecMatchParameter[i].dAngleEnd;
                 double dMatchedAngle = vecMatchParameter[i].dMatchAngle;
@@ -418,7 +418,7 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
                         iMaxScoreIndex = j;
                         dBigValue = vecNewMatchParameter[j].dMatchScore;
                     }
-                    //´ÎÏñËØ¹ÀÓ‹
+                    //æ¬¡åƒç´ ä¼°è¨ˆ
                     if (ptMaxLoc.x == 0 || ptMaxLoc.y == 0 || ptMaxLoc.x == matResult.cols - 1 || ptMaxLoc.y == matResult.rows - 1)
                         vecNewMatchParameter[j].bPosOnBorder = true;
                     if (!vecNewMatchParameter[j].bPosOnBorder)
@@ -427,12 +427,12 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
                             for (int x = -1; x <= 1; x++)
                                 vecNewMatchParameter[j].vecResult[x + 1][y + 1] = matResult.at<float>(ptMaxLoc + Point(x, y));
                     }
-                    //´ÎÏñËØ¹ÀËã
+                    //æ¬¡åƒç´ ä¼°ç®—
                 }
                 if (vecNewMatchParameter[iMaxScoreIndex].dMatchScore < vecLayerScore[iLayer])
                     break;
 
-                //´ÎÏñËØ¹ÀËã
+                //æ¬¡åƒç´ ä¼°ç®—
                 if (bSubPixelEstimation
                     && iLayer == 0
                     && (!vecNewMatchParameter[iMaxScoreIndex].bPosOnBorder)
@@ -444,13 +444,13 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
                      vecNewMatchParameter[iMaxScoreIndex].pt = Point2d(dNewX, dNewY);
                      vecNewMatchParameter[iMaxScoreIndex].dMatchAngle = dNewAngle;
                 }
-                //´ÎÏñËØ¹ÀÓ‹
+                //æ¬¡åƒç´ ä¼°è¨ˆ
                 double dNewMatchAngle = vecNewMatchParameter[iMaxScoreIndex].dMatchAngle;
 
-                //ÈÃ×ø±êÏµ»Øµ½Ğı×ªÊ±(GetRotatedROI)µÄ(0, 0)
+                //è®©åæ ‡ç³»å›åˆ°æ—‹è½¬æ—¶(GetRotatedROI)çš„(0, 0)
                 Point2f ptPaddingLT = ptRotatePt2f(ptLT * 2, ptSrcCenter, dNewMatchAngle * D2R) - Point2f(3, 3);
                 Point2f pt(vecNewMatchParameter[iMaxScoreIndex].pt.x + ptPaddingLT.x, vecNewMatchParameter[iMaxScoreIndex].pt.y + ptPaddingLT.y);
-                //ÔÚĞı×ª
+                //åœ¨æ—‹è½¬
                 pt = ptRotatePt2f(pt, ptSrcCenter, -dNewMatchAngle * D2R);
 
                 if (iLayer == iStopLayer)
@@ -460,7 +460,7 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
                 }
                 else
                 {
-                    //¸üĞÂMatchAngle ptLT
+                    //æ›´æ–°MatchAngle ptLT
                     vecMatchParameter[i].dMatchAngle = dNewMatchAngle;
                     vecMatchParameter[i].dAngleStart = vecMatchParameter[i].dMatchAngle - dAngleStep / 2;
                     vecMatchParameter[i].dAngleEnd = vecMatchParameter[i].dMatchAngle + dAngleStep / 2;
@@ -472,7 +472,7 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
     FilterWithScore(&vecAllResult, m_dScore);
 
 
-    //×îºóÂËµôÖØµş
+    //æœ€åæ»¤æ‰é‡å 
     iDstW = pTemplData->vecPyramid[iStopLayer].cols, iDstH = pTemplData->vecPyramid[iStopLayer].rows;
 
     for (int i = 0; i < (int)vecAllResult.size(); i++)
@@ -483,19 +483,19 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
         ptRT = Point2f(ptLT.x + iDstW * (float)cos(dRAngle), ptLT.y - iDstW * (float)sin(dRAngle));
         ptLB = Point2f(ptLT.x + iDstH * (float)sin(dRAngle), ptLT.y + iDstH * (float)cos(dRAngle));
         ptRB = Point2f(ptRT.x + iDstH * (float)sin(dRAngle), ptRT.y + iDstH * (float)cos(dRAngle));
-        //¼ÇÂ¼Ğı×ª¾ØÕó
+        //è®°å½•æ—‹è½¬çŸ©é˜µ
         Point2f ptRectCenter = Point2f((ptLT.x + ptRT.x + ptLB.x + ptRB.x) / 4.0f, (ptLT.y + ptRT.y + ptLB.y + ptRB.y) / 4.0f);
         vecAllResult[i].rectR = RotatedRect(ptRectCenter, pTemplData->vecPyramid[iStopLayer].size(), (float)vecAllResult[i].dMatchAngle);
     }
     FilterWithRotatedRect(&vecAllResult, CV_TM_CCOEFF_NORMED, m_dMaxOverlap);
-    //×îºóÂËµôÖØµşÇé¿ö
-    //¸ù¾İ·ÖÊıÅÅĞò
+    //æœ€åæ»¤æ‰é‡å æƒ…å†µ
+    //æ ¹æ®åˆ†æ•°æ’åº
     sort(vecAllResult.begin(), vecAllResult.end(), compareScoreBig2Small);
 
     iMatchSize = (int)vecAllResult.size();
     if (vecAllResult.size() == 0)
     {
-        //Ã»Æ¥ÅäÉÏ
+        //æ²¡åŒ¹é…ä¸Š
 		patternNG();
 
         return resultPoint;
@@ -520,7 +520,7 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
             sstm.dMatchedAngle -= 360;
 
         //Test Subpixel
-        //´æ³öMATCH ROI
+        //å­˜å‡ºMATCH ROI
         if (i + 1 == m_iMaxPos)
             break;
         if (sstm.ptCenter.x > 0 && sstm.ptCenter.y > 0) {
@@ -534,7 +534,7 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
 			resultPoint.y = areaMatRect.y + sstm.ptCenter.y;
 
 
-			//ÓĞÊä³öµã
+			//æœ‰è¾“å‡ºç‚¹
 			if ((!(centerPointInProcess.x() == 0 && centerPointInProcess.y() == 0)))
 			{     
 				
@@ -542,16 +542,28 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
 				lastResult.setX(centerPointx.x());
 				lastResult.setY(centerPointx.y());
 			}
-			//»æÍ¼µÄÖĞĞÄµã
+			//ç»˜å›¾çš„ä¸­å¿ƒç‚¹
 			drawCenterPoint.x = lastResult.x();
 			drawCenterPoint.y = lastResult.y();
 
-            lastResult.setX(lastResult.x()- (m_width / 2));  //ÏòÓÒÎªxÕı·½Ïò
-            lastResult.setY((m_height / 2) - lastResult.y());//ÏòÉÏÎªyÕı·½Ïò
-			
-		  
+            lastResult.setX(lastResult.x()- (m_width / 2));  //å‘å³ä¸ºxæ­£æ–¹å‘
+          //  lastResult.setY((m_height / 2) - lastResult.y());//å‘ä¸Šä¸ºyæ­£æ–¹å‘
+			//Yå‘ä¸‹ä¸ºæ­£æ–¹å½¢
+		  lastResult.setY(lastResult.y()-(m_height / 2));//å‘ä¸Šä¸ºyæ­£æ–¹å‘
+
             finall_Total_Result.ptCenter = cv::Point2d(lastResult.x(), lastResult.y());
-            finall_Total_Result.dMatchedAngle = sstm.dMatchedAngle;
+			finall_Total_Result.dMatchScore = sstm.dMatchScore;
+			//è§’åº¦å–åå€¼
+			//sstm.dMatchedAngle = -sstm.dMatchedAngle;
+			if (sstm.dMatchedAngle< 0)
+			{
+				sstm.dMatchedAngle = -sstm.dMatchedAngle;
+			}
+			else if(sstm.dMatchedAngle > 0) {
+				sstm.dMatchedAngle = 360 - sstm.dMatchedAngle;
+			}
+			finall_Total_Result.dMatchedAngle = sstm.dMatchedAngle;
+
             finall_Total_Result.pattern_flag = true;
             finall_Total_Result.flag = true;
         }
@@ -561,7 +573,7 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
 
 void ProcessingThread::patternNG()
 {
-	//Ã»Æ¥ÅäÉÏ
+	//æ²¡åŒ¹é…ä¸Š
 	finall_Total_Result.ptCenter = cv::Point2d(-m_width, -m_height);
 	finall_Total_Result.dMatchedAngle = sstm.dMatchedAngle;
 	finall_Total_Result.pattern_flag = false;
@@ -738,12 +750,12 @@ void ProcessingThread::CCOEFF_Denominator(cv::Mat& matSrc, s_TemplData* pTemplDa
 
 Point ProcessingThread::GetNextMaxLoc(Mat& matResult, Point ptMaxLoc, Size sizeTemplate, double& dMaxValue, double dMaxOverlap, s_BlockMax& blockMax)
 {
-	//±È¶Ôµ½µÄÇøÓòĞèÖØĞÂ¿¼ÂÇÖØµş±ÈÀı
+	//æ¯”å¯¹åˆ°çš„åŒºåŸŸéœ€é‡æ–°è€ƒè™‘é‡å æ¯”ä¾‹
 	int iStartX = int(ptMaxLoc.x - sizeTemplate.width * (1 - dMaxOverlap));
 	int iStartY = int(ptMaxLoc.y - sizeTemplate.height * (1 - dMaxOverlap));
 	cv::Rect rectIgnore(iStartX, iStartY, int(2 * sizeTemplate.width * (1 - dMaxOverlap))
 		, int(2 * sizeTemplate.height * (1 - dMaxOverlap)));
-	//Í¿ºÚ
+	//æ¶‚é»‘
 	rectangle(matResult, rectIgnore, Scalar(-1), CV_FILLED);
 	blockMax.UpdateMax(rectIgnore);
 	Point ptReturn;
@@ -754,25 +766,25 @@ Point ProcessingThread::GetNextMaxLoc(Mat& matResult, Point ptMaxLoc, Size sizeT
 
 Point ProcessingThread::GetNextMaxLoc(Mat& matResult, Point ptMaxLoc, Size sizeTemplate, double& dMaxValue, double dMaxOverlap)
 {
-	//±ÈŒ¦µ½µÄ…^ÓòÍêÈ«²»ÖØ¯B : +-Ò»‚€˜Ó°åŒ’¸ß
+	//æ¯”å°åˆ°çš„å€åŸŸå®Œå…¨ä¸é‡ç–Š : +-ä¸€å€‹æ¨£æ¿å¯¬é«˜
 	//int iStartX = ptMaxLoc.x - iTemplateW;
 	//int iStartY = ptMaxLoc.y - iTemplateH;
 	//int iEndX = ptMaxLoc.x + iTemplateW;
 
 	//int iEndY = ptMaxLoc.y + iTemplateH;
-	////‰TºÚ
+	////å¡—é»‘
 	//rectangle (matResult, Rect (iStartX, iStartY, 2 * iTemplateW * (1-dMaxOverlap * 2), 2 * iTemplateH * (1-dMaxOverlap * 2)), Scalar (dMinValue), CV_FILLED);
-	////µÃµ½ÏÂÒ»‚€×î´óÖµ
+	////å¾—åˆ°ä¸‹ä¸€å€‹æœ€å¤§å€¼
 	//Point ptNewMaxLoc;
 	//minMaxLoc (matResult, 0, &dMaxValue, 0, &ptNewMaxLoc);
 	//return ptNewMaxLoc;
 
-	//ÖØµşÇøÓò¿¼ÂÇÖØµş·¶Î§
+	//é‡å åŒºåŸŸè€ƒè™‘é‡å èŒƒå›´
 	int iStartX = ptMaxLoc.x - sizeTemplate.width * (1 - dMaxOverlap);
 	int iStartY = ptMaxLoc.y - sizeTemplate.height * (1 - dMaxOverlap);
-	//Í¿ºÚ
+	//æ¶‚é»‘
 	rectangle(matResult, cv::Rect(iStartX, iStartY, 2 * sizeTemplate.width * (1 - dMaxOverlap), 2 * sizeTemplate.height * (1 - dMaxOverlap)), Scalar(-1), CV_FILLED);
-	//µÃµ½ÏÂÒ»¸ö×î´óÖµ
+	//å¾—åˆ°ä¸‹ä¸€ä¸ªæœ€å¤§å€¼
 	Point ptNewMaxLoc;
 	minMaxLoc(matResult, 0, &dMaxValue, 0, &ptNewMaxLoc);
 	return ptNewMaxLoc;
@@ -788,7 +800,7 @@ void ProcessingThread::GetRotatedROI(Mat& matSrc, Size size, Point2f ptLT, doubl
 	Mat rMat = getRotationMatrix2D(ptC, dAngle, 1);
 	rMat.at<double>(0, 2) -= ptLT_rotate.x - 3;
 	rMat.at<double>(1, 2) -= ptLT_rotate.y - 3;
-	//Æ½ÒÆĞı×ª¾ØÕó(0, 2) (1, 2)µÄ²î£¬ÎªĞı×ªºóµÄÔ­ĞÍÆ«ÒÆ£¬-= ptLT_rotate.x - 3 ´ú±íĞı×ªºóµÄ·½Ïò-X·½ÏòÒÆ„ÓptLT_rotate.x - 3
+	//å¹³ç§»æ—‹è½¬çŸ©é˜µ(0, 2) (1, 2)çš„å·®ï¼Œä¸ºæ—‹è½¬åçš„åŸå‹åç§»ï¼Œ-= ptLT_rotate.x - 3 ä»£è¡¨æ—‹è½¬åçš„æ–¹å‘-Xæ–¹å‘ç§»å‹•ptLT_rotate.x - 3
 	//Debug
 
 	//Debug
@@ -846,7 +858,7 @@ bool ProcessingThread::SubPixEsimation(std::vector<s_MatchParameter>* vec, doubl
 			}
 		}
 	}
-	//Çó½âZ¾Øê‡£¬µÃµ½k0~k9
+	//æ±‚è§£ZçŸ©é™£ï¼Œå¾—åˆ°k0~k9
 	//[ x* ] = [ 2k0 k3 k4 ]-1 [ -k6 ]
 	//| y* | = | k3 2k1 k5 |   | -k7 |
 	//[ t* ] = [ k4 k5 2k2 ]   [ -k8 ]
@@ -887,15 +899,15 @@ void ProcessingThread::SortPtWithCenter(std::vector<cv::Point2f>& vecSort)
 		float fNormVec1 = vec1.x * vec1.x + vec1.y * vec1.y;
 		float fDot = vec1.x;
 
-		if (vec1.y < 0)//ÈôµãÔÚÖĞĞÄµÄÉÏ·½
+		if (vec1.y < 0)//è‹¥ç‚¹åœ¨ä¸­å¿ƒçš„ä¸Šæ–¹
 		{
 			vecPtAngle[i].second = acos(fDot / fNormVec1) * R2D;
 		}
-		else if (vec1.y > 0)//ÏÂ·½
+		else if (vec1.y > 0)//ä¸‹æ–¹
 		{
 			vecPtAngle[i].second = 360 - acos(fDot / fNormVec1) * R2D;
 		}
-		else//µãÓëÖĞĞÄÔÚÏàÍ¬Y
+		else//ç‚¹ä¸ä¸­å¿ƒåœ¨ç›¸åŒY
 		{
 			if (vec1.x - ptCenter.x > 0)
 				vecPtAngle[i].second = 0;
@@ -921,7 +933,7 @@ void ProcessingThread::FilterWithScore(std::vector<s_MatchParameter>* vec, doubl
 			break;
 		}
 	}
-	if (iIndexDelete == iSize + 1)//›]ÓĞÈÎºÎÔªËØĞ¡ÓÚdScore
+	if (iIndexDelete == iSize + 1)//æ²’æœ‰ä»»ä½•å…ƒç´ å°äºdScore
 		return;
 	vec->erase(vec->begin() + iIndexDelete, vec->end());
 	return;
@@ -943,9 +955,9 @@ void ProcessingThread::FilterWithRotatedRect(vector<s_MatchParameter>* vec, int 
 			rect2 = vec->at(j).rectR;
 			vector<Point2f> vecInterSec;
 			int iInterSecType = rotatedRectangleIntersection(rect1, rect2, vecInterSec);
-			if (iInterSecType == INTERSECT_NONE)//ÎŞ½»¼¯
+			if (iInterSecType == INTERSECT_NONE)//æ— äº¤é›†
 				continue;
-			else if (iInterSecType == INTERSECT_FULL) //Ò»¸ö¾ØĞÎ°ü¹üÄşÍâÒ»¸ö
+			else if (iInterSecType == INTERSECT_FULL) //ä¸€ä¸ªçŸ©å½¢åŒ…è£¹å®å¤–ä¸€ä¸ª
 			{
 				int iDeleteIndex;
 				if (iMethod == CV_TM_SQDIFF)
@@ -954,18 +966,18 @@ void ProcessingThread::FilterWithRotatedRect(vector<s_MatchParameter>* vec, int 
 					iDeleteIndex = (vec->at(i).dMatchScore >= vec->at(j).dMatchScore) ? j : i;
 				vec->at(iDeleteIndex).bDelete = TRUE;
 			}
-			else//½»µã > 0
+			else//äº¤ç‚¹ > 0
 			{
-				if (vecInterSec.size() < 3)//Ò»¸ö»òÕßÁ½¸ö½»µã
+				if (vecInterSec.size() < 3)//ä¸€ä¸ªæˆ–è€…ä¸¤ä¸ªäº¤ç‚¹
 					continue;
 				else
 				{
 					int iDeleteIndex;
-					//ÇóÃæ»ıÓëÖØµşµÄ±ÈÀı
+					//æ±‚é¢ç§¯ä¸é‡å çš„æ¯”ä¾‹
 					SortPtWithCenter(vecInterSec);
 					double dArea = contourArea(vecInterSec);
 					double dRatio = dArea / rect1.size.area();
-					//Èô´óÓÚ×î´óµÄÖØµş±ÈÀı£¬Ñ¡·ÖÊı¸ßµÄ
+					//è‹¥å¤§äºæœ€å¤§çš„é‡å æ¯”ä¾‹ï¼Œé€‰åˆ†æ•°é«˜çš„
 					if (dRatio > dMaxOverLap)
 					{
 						if (iMethod == CV_TM_SQDIFF)
@@ -996,16 +1008,16 @@ void ProcessingThread::slot_processThread_Pattren()
 
 void ProcessingThread::set_Grade(QString grade)
 {
-	// ½«QString×ª»»ÎªÕûÊı
+	// å°†QStringè½¬æ¢ä¸ºæ•´æ•°
 	int m_dScoreint = grade.toInt();
 
-	// ¼ì²éÖµÊÇ·ñÔÚ [0, 100] ·¶Î§ÄÚ
+	// æ£€æŸ¥å€¼æ˜¯å¦åœ¨ [0, 100] èŒƒå›´å†…
 	if (m_dScoreint >= 0 && m_dScoreint <= 100)
 	{
-		// ½«Æä×ª»»Îª´øÓĞÁ½Î»Ğ¡ÊıµÄÊ®½øÖÆÊı
+		// å°†å…¶è½¬æ¢ä¸ºå¸¦æœ‰ä¸¤ä½å°æ•°çš„åè¿›åˆ¶æ•°
 		double m_dScoreDecimal = static_cast<double>(m_dScoreint) / 100.0;
 
-		// Ê¹ÓÃ 'f' ¸ñÊ½¹æ·¶½«Ê®½øÖÆÊı¸ñÊ½»¯Îª´øÓĞÁ½Î»Ğ¡ÊıµÄQString
+		// ä½¿ç”¨ 'f' æ ¼å¼è§„èŒƒå°†åè¿›åˆ¶æ•°æ ¼å¼åŒ–ä¸ºå¸¦æœ‰ä¸¤ä½å°æ•°çš„QString
 		QString formattedGrade = QString::number(m_dScoreDecimal, 'f', 2);
 
 		m_dScore = formattedGrade.toDouble();
@@ -1017,7 +1029,7 @@ void ProcessingThread::set_Grade(QString grade)
 	}
 }
 
-//Ä£°åÆ¥Åä½çÃæ´°¿ÚÔËĞĞ
+//æ¨¡æ¿åŒ¹é…ç•Œé¢çª—å£è¿è¡Œ
 void ProcessingThread::slot_processMatchPicture(QImage patternImage, QImage sourceImage)
 {
 	cv::Mat patternImageMat = ImageToMat(patternImage);
@@ -1055,12 +1067,12 @@ void ProcessingThread::slot_processMatchPicture(QImage patternImage, QImage sour
 		templData->vecTemplMean[i] = templMean;
 		templData->vecTemplNorm[i] = templNorm;
 	}
-	//ÉèÖÃÊä³öµã×ø±ê
+	//è®¾ç½®è¾“å‡ºç‚¹åæ ‡
 
 	templData->bIsPatternLearned = true;
 
-	QTime timedebuge;//ÉùÃ÷Ò»¸öÊ±ÖÓ¶ÔÏó
-	timedebuge.start();//¿ªÊ¼¼ÆÊ±
+	QTime timedebuge;//å£°æ˜ä¸€ä¸ªæ—¶é’Ÿå¯¹è±¡
+	timedebuge.start();//å¼€å§‹è®¡æ—¶
 
 	cv::Point2d resultPoint = MatchPicture(patternImageMat, sourceImageMat, true);
 
@@ -1070,7 +1082,7 @@ void ProcessingThread::slot_processMatchPicture(QImage patternImage, QImage sour
 }
 
 
-//Ğı×ªÍ¼Ïñ
+//æ—‹è½¬å›¾åƒ
 Mat ImageRotate(Mat image, double angle)
 {
 	Mat newImg;
@@ -1082,8 +1094,8 @@ Mat ImageRotate(Mat image, double angle)
 
 ResultPoint ProcessingThread::slot_processMatchPictureWithSource( cv::Mat sourceImage)
 {            
-	QTime timedebuge;//ÉùÃ÷Ò»¸öÊ±ÖÓ¶ÔÏó
-	timedebuge.start();//¿ªÊ¼¼ÆÊ±
+	QTime timedebuge;//å£°æ˜ä¸€ä¸ªæ—¶é’Ÿå¯¹è±¡
+	timedebuge.start();//å¼€å§‹è®¡æ—¶
 
 	cv::Mat patternImageMat = patternMatEllipse;
 	cv::Mat sourceImageMat = sourceImage;
@@ -1095,7 +1107,7 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithSource( cv::Mat source
 	double start = 0;
 	double range = 10;
 
-	//¶¨ÒåÍ¼Æ¬Æ¥ÅäËùĞèÒªµÄ²ÎÊı
+	//å®šä¹‰å›¾ç‰‡åŒ¹é…æ‰€éœ€è¦çš„å‚æ•°
 	int resultCols = sourceImageMat.cols - patternImageMat.cols + 1;
 	int resultRows = sourceImageMat.rows - patternImageMat.rows + 1;
 	Mat result = Mat(resultCols, resultRows, CV_8U);
@@ -1103,13 +1115,13 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithSource( cv::Mat source
 	sourceImageMat.copyTo(src);
 	patternImageMat.copyTo(model);
 	maskImageMat.copyTo(mask);
-	//¶ÔÄ£°åÍ¼ÏñºÍ´ı¼ì²âÍ¼Ïñ·Ö±ğ½øĞĞÍ¼Ïñ½ğ×ÖËşÏÂ²ÉÑù  6²ã
+	//å¯¹æ¨¡æ¿å›¾åƒå’Œå¾…æ£€æµ‹å›¾åƒåˆ†åˆ«è¿›è¡Œå›¾åƒé‡‘å­—å¡”ä¸‹é‡‡æ ·  6å±‚
 	for (int i = 0; i < 3; i++)
 	{
 		pyrDown(src, src, Size(src.cols / 2, src.rows / 2));
 		pyrDown(model, model, Size(model.cols / 2, model.rows / 2));
 		pyrDown(mask, mask, Size(mask.cols / 2, mask.rows / 2));
-		// ãĞÖµ»¯´¦Àí£¬±£³Ö¶şÖµÍ¼ÌØĞÔ
+		// é˜ˆå€¼åŒ–å¤„ç†ï¼Œä¿æŒäºŒå€¼å›¾ç‰¹æ€§
 		cv::threshold(mask, mask, 128, 255, cv::THRESH_BINARY);
 	}
 	mask.copyTo(maskTemplate);
@@ -1117,7 +1129,7 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithSource( cv::Mat source
 
 	TemplateMatchModes matchMode = TM_CCOEFF_NORMED;
 
-	//ÔÚÃ»ÓĞĞı×ªµÄÇé¿öÏÂ½øĞĞµÚÒ»´ÎÆ¥Åä
+	//åœ¨æ²¡æœ‰æ—‹è½¬çš„æƒ…å†µä¸‹è¿›è¡Œç¬¬ä¸€æ¬¡åŒ¹é…
 	double minVal, maxVal;
 	Point minLoc, maxLoc;
 	matchTemplate(src, model, result, matchMode, mask);
@@ -1127,7 +1139,7 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithSource( cv::Mat source
 	if (isinf(temp))
 	{
 		temp = 0;
-		//µÚÒ»´Î¾ÍÃ»ÕÒµ½
+		//ç¬¬ä¸€æ¬¡å°±æ²¡æ‰¾åˆ°
 		//patternNG();
 		//return ResultPoint(-m_width, -m_height,0,0);
 	}
@@ -1168,8 +1180,8 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithSource( cv::Mat source
 		drawCenterPoint.x = itemn.X;
 		drawCenterPoint.y = itemn.Y;
 
-		lastResult.setX(itemn.X - (m_width / 2));  //ÏòÓÒÎªxÕı·½Ïò
-		lastResult.setY((m_height / 2) - itemn.Y);//ÏòÉÏÎªyÕı·½Ïò
+		lastResult.setX(itemn.X - (m_width / 2));  //å‘å³ä¸ºxæ­£æ–¹å‘
+		lastResult.setY((m_height / 2) - itemn.Y);//å‘ä¸Šä¸ºyæ­£æ–¹å‘
 
 		
 		finall_Total_Result.ptCenter = cv::Point2d(lastResult.x(), lastResult.y());
@@ -1181,7 +1193,7 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithSource( cv::Mat source
 		return itemn;
 	}
 	else {
-		//Î´Æ¥Åä³É¹¦
+		//æœªåŒ¹é…æˆåŠŸ
 		patternNG();
 		return ResultPoint(-m_width, -m_height,0,0);
 
@@ -1192,8 +1204,8 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithSource( cv::Mat source
 
 ResultPoint ProcessingThread::slot_processMatchPictureWithMask(QImage patternImage, QImage sourceImage,QImage maskImage)
 {
-	QTime timedebuge;//ÉùÃ÷Ò»¸öÊ±ÖÓ¶ÔÏó
-	timedebuge.start();//¿ªÊ¼¼ÆÊ±
+	QTime timedebuge;//å£°æ˜ä¸€ä¸ªæ—¶é’Ÿå¯¹è±¡
+	timedebuge.start();//å¼€å§‹è®¡æ—¶
 
 	cv::Mat patternImageMat = ImageToMat(patternImage);
 	cv::Mat sourceImageMat = ImageToMat(sourceImage);
@@ -1205,7 +1217,7 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithMask(QImage patternIma
 	double start = 0;
 	double range = 20;
 
-	//¶¨ÒåÍ¼Æ¬Æ¥ÅäËùĞèÒªµÄ²ÎÊı
+	//å®šä¹‰å›¾ç‰‡åŒ¹é…æ‰€éœ€è¦çš„å‚æ•°
 	int resultCols = sourceImageMat.cols - patternImageMat.cols + 1;
 	int resultRows = sourceImageMat.rows - patternImageMat.rows + 1;
 	Mat result = Mat(resultCols, resultRows, CV_8U);
@@ -1213,20 +1225,20 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithMask(QImage patternIma
 	sourceImageMat.copyTo(src);
 	patternImageMat.copyTo(model);
 	maskImageMat.copyTo(mask);
-	//¶ÔÄ£°åÍ¼ÏñºÍ´ı¼ì²âÍ¼Ïñ·Ö±ğ½øĞĞÍ¼Ïñ½ğ×ÖËşÏÂ²ÉÑù  3²ã
+	//å¯¹æ¨¡æ¿å›¾åƒå’Œå¾…æ£€æµ‹å›¾åƒåˆ†åˆ«è¿›è¡Œå›¾åƒé‡‘å­—å¡”ä¸‹é‡‡æ ·  3å±‚
 	for (int i = 0; i <  3; i++)
 	{
 		pyrDown(src, src, Size(src.cols / 2, src.rows / 2));
 		pyrDown(model, model, Size(model.cols / 2, model.rows / 2));
 		pyrDown(mask, mask, Size(mask.cols / 2, mask.rows / 2));
-	 // ãĞÖµ»¯´¦Àí£¬±£³Ö¶şÖµÍ¼ÌØĞÔ
+	 // é˜ˆå€¼åŒ–å¤„ç†ï¼Œä¿æŒäºŒå€¼å›¾ç‰¹æ€§
 		cv::threshold(mask, mask, 128, 255, cv::THRESH_BINARY);
 	}
 	mask.copyTo(maskTemplate);
 
 	TemplateMatchModes matchMode = TM_CCOEFF_NORMED;
 
-	//ÔÚÃ»ÓĞĞı×ªµÄÇé¿öÏÂ½øĞĞµÚÒ»´ÎÆ¥Åä
+	//åœ¨æ²¡æœ‰æ—‹è½¬çš„æƒ…å†µä¸‹è¿›è¡Œç¬¬ä¸€æ¬¡åŒ¹é…
 	double minVal, maxVal;
 	Point minLoc, maxLoc;
 	matchTemplate(src, model, result, matchMode,mask);
@@ -1284,30 +1296,30 @@ void ProcessingThread::slot_recievePatternImageWithMask(QString pattern_Path, QR
 
 
 	String pattern_STD_Path = pattern_Path.toLocal8Bit().constData();
-	size_t pos = pattern_STD_Path.find("="); // ÕÒµ½µÈºÅµÄÎ»ÖÃ
-	if (pos != string::npos) { // Èç¹ûÕÒµ½ÁËµÈºÅ
-		pattern_STD_Path.erase(pos, 1); // É¾³ıµÈºÅ×Ö·û
+	size_t pos = pattern_STD_Path.find("="); // æ‰¾åˆ°ç­‰å·çš„ä½ç½®
+	if (pos != string::npos) { // å¦‚æœæ‰¾åˆ°äº†ç­‰å·
+		pattern_STD_Path.erase(pos, 1); // åˆ é™¤ç­‰å·å­—ç¬¦
 	}
 
-	//Ô­Í¼
+	//åŸå›¾
 	Mat ReadImagestd = imread(pattern_STD_Path, CV_8UC1);
 
 	if (ReadImagestd.empty())
 	{
 		emit signal_modelPictureReadFlag();
-		//Ä£°åÍ¼¶ÁÈ¡´íÎó!!!
+		//æ¨¡æ¿å›¾è¯»å–é”™è¯¯!!!
 		return;
 	}
 
 	Mat patternMatEllipse1 = ReadImagestd(Rect(pattern_Rect.x(), pattern_Rect.y(), pattern_Rect.width(), pattern_Rect.height())).clone();
 	patternMatEllipse = patternMatEllipse1;
-	// ¶¨ÒåÍÖÔ²²ÎÊı
+	// å®šä¹‰æ¤­åœ†å‚æ•°
 	cv::Point center(pattern_Rect.x() + pattern_Rect.width() / 2, pattern_Rect.y()
 		+ pattern_Rect.height() / 2);
 	int width = pattern_Rect.width();
 	int length = pattern_Rect.height();
 
-	// ´´½¨ÍÖÔ²µÄÑÚÂë
+	// åˆ›å»ºæ¤­åœ†çš„æ©ç 
 	cv::Mat mask = cv::Mat::zeros(ReadImagestd.size(), CV_8UC1);
 	cv::ellipse(mask, center, cv::Size(width / 2, length / 2), 0, 0, 360, 255, -1);
 	cv::Rect patternAreaRealSize(pattern_Rect.x(), pattern_Rect.y(), pattern_Rect.width(), pattern_Rect.height());
@@ -1324,51 +1336,51 @@ void ProcessingThread::slot_recievePatternImageWithPolygonMask(QString pattern_P
 
 
 	String pattern_STD_Path = pattern_Path.toLocal8Bit().constData();
-	size_t pos = pattern_STD_Path.find("="); // ÕÒµ½µÈºÅµÄÎ»ÖÃ
-	if (pos != string::npos) { // Èç¹ûÕÒµ½ÁËµÈºÅ
-		pattern_STD_Path.erase(pos, 1); // É¾³ıµÈºÅ×Ö·û
+	size_t pos = pattern_STD_Path.find("="); // æ‰¾åˆ°ç­‰å·çš„ä½ç½®
+	if (pos != string::npos) { // å¦‚æœæ‰¾åˆ°äº†ç­‰å·
+		pattern_STD_Path.erase(pos, 1); // åˆ é™¤ç­‰å·å­—ç¬¦
 	}
 
-	//Ô­Í¼
+	//åŸå›¾
 	Mat ReadImagestd = imread(pattern_STD_Path, CV_8UC1);
 	if (ReadImagestd.empty())
 	{
 		emit signal_modelPictureReadFlag();
-		//Ä£°åÍ¼¶ÁÈ¡´íÎó!!!
+		//æ¨¡æ¿å›¾è¯»å–é”™è¯¯!!!
 		return;
 	}
 
-	//»ñµÃÄ£°åÍ¼
-		// ½«QPolygonFÖĞµÄµã×ø±ê×ª»»Îªvector<cv::Point>
+	//è·å¾—æ¨¡æ¿å›¾
+		// å°†QPolygonFä¸­çš„ç‚¹åæ ‡è½¬æ¢ä¸ºvector<cv::Point>
 	std::vector<cv::Point> points;
 	for (const QPointF& point : pattern_Rect) {
 		points.emplace_back(static_cast<int>(point.x()), static_cast<int>(point.y()));
 	}
 	points.pop_back();
-	// ´´½¨Ò»¸öÓëÍ¼ÏñÏàÍ¬´óĞ¡µÄºÚÉ«ÑÚÂë
+	// åˆ›å»ºä¸€ä¸ªä¸å›¾åƒç›¸åŒå¤§å°çš„é»‘è‰²æ©ç 
 	cv::Mat mask = cv::Mat::zeros(ReadImagestd.size(), ReadImagestd.type());
 
 
-	// ½«µã×ø±ê×ª»»Îªvector<vector<cv::Point>>ĞÎÊ½ÒÔ·ûºÏcv::fillPolyµÄÒªÇó
+	// å°†ç‚¹åæ ‡è½¬æ¢ä¸ºvector<vector<cv::Point>>å½¢å¼ä»¥ç¬¦åˆcv::fillPolyçš„è¦æ±‚
 	std::vector<std::vector<cv::Point>> pts = { points };
-	// ÔÚÑÚÂëÉÏÌî³ä¶à±ßĞÎÇøÓò
+	// åœ¨æ©ç ä¸Šå¡«å……å¤šè¾¹å½¢åŒºåŸŸ
 	cv::fillPoly(mask, pts, cv::Scalar(255, 255, 255));
 
-	// Ê¹ÓÃÑÚÂëÌáÈ¡¶à±ßĞÎÇøÓò
+	// ä½¿ç”¨æ©ç æå–å¤šè¾¹å½¢åŒºåŸŸ
 	cv::Mat result;
 	cv::bitwise_and(ReadImagestd, mask, result);
-	// ²éÕÒ°üº¬¶à±ßĞÎµÄ×îĞ¡¾ØĞÎ ±ß½ç¿ò
+	// æŸ¥æ‰¾åŒ…å«å¤šè¾¹å½¢çš„æœ€å°çŸ©å½¢ è¾¹ç•Œæ¡†
 	cv::Rect boundingRect = cv::boundingRect(points);
 
-	// ²Ã¼ôÍ¼Ïñ£¬È¥µôÅÔ±ßµÄºÚÉ«ÇøÓò
+	// è£å‰ªå›¾åƒï¼Œå»æ‰æ—è¾¹çš„é»‘è‰²åŒºåŸŸ
 	cv::Mat croppedResult = result(boundingRect).clone();
 
 
-	// Ñ¡ÔñÊÊµ±µÄãĞÖµ£¬ÕâÀïÊ¹ÓÃ 128 ×÷ÎªÀı×Ó£¬¿ÉÒÔ¸ù¾İÊµ¼ÊÇé¿öµ÷Õû
+	// é€‰æ‹©é€‚å½“çš„é˜ˆå€¼ï¼Œè¿™é‡Œä½¿ç”¨ 128 ä½œä¸ºä¾‹å­ï¼Œå¯ä»¥æ ¹æ®å®é™…æƒ…å†µè°ƒæ•´
 	int threshold_value = 1;
 
-	// Ó¦ÓÃ¶şÖµ»¯²Ù×÷
-	//Ä£°åÍ¼,maskÍ¼
+	// åº”ç”¨äºŒå€¼åŒ–æ“ä½œ
+	//æ¨¡æ¿å›¾,maskå›¾
 	cv::threshold(croppedResult, mask, threshold_value, 255, cv::THRESH_BINARY);
 
 	patternMatEllipseMask = mask;

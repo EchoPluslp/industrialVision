@@ -1,4 +1,4 @@
-#include "mycommand.h"
+ï»¿#include "mycommand.h"
 #define SAFE_DELETE(p) { if (p) { delete (p);     (p) = nullptr; } }
 
 
@@ -20,7 +20,7 @@ CreateLabelCommand::~CreateLabelCommand()
 }
 
 
-//´´½¨
+//åˆ›å»º
 void CreateLabelCommand::redo()
 {
 	if (!m_area)
@@ -33,7 +33,7 @@ void CreateLabelCommand::redo()
 		m_id = label->getId();
 }
 
-//É¾³ý
+//åˆ é™¤
 void CreateLabelCommand::undo()
 {
 	m_labelController->deleteLabel(m_type, m_id);
@@ -58,7 +58,7 @@ DeleteCurrLabelCommand::~DeleteCurrLabelCommand()
 }
 
 
-//É¾³ýµ±Ç°
+//åˆ é™¤å½“å‰
 void DeleteCurrLabelCommand::redo()
 {
 	if (m_labelController)
@@ -68,7 +68,7 @@ void DeleteCurrLabelCommand::redo()
 
 
 
-//»Ø³·É¾³ý
+//å›žæ’¤åˆ é™¤
 void DeleteCurrLabelCommand::undo()
 {
 	if (!m_label)
@@ -107,7 +107,7 @@ CloseImageCommand::CloseImageCommand(FileController* fileController, QUndoComman
 	m_fileController = fileController;
 }
 
-//É¾³ýµ±Ç°
+//åˆ é™¤å½“å‰
 void CloseImageCommand::redo()
 {
 	m_imageName = m_fileController->getCurrImageName();

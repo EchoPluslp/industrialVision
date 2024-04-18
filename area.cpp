@@ -1,4 +1,4 @@
-#include "area.h"
+ï»¿#include "area.h"
 Area::~Area()
 {
 	for (Shape*& s : m_imageShapeMap) {
@@ -17,7 +17,7 @@ bool Area::addImageShape(const QString& image, Shape* shape)
 
 	if (m_imageShapeMap.contains(image)) {
 		qDebug() << "Area::addImageShape::image exists";
-		//Ò»ÕÅÍ¼Æ¬ÉÏÓÐÇÒ½öÓÐÒ»¸öShape, ÒÔ×îºóÒ»´ÎÎª×¼
+		//ä¸€å¼ å›¾ç‰‡ä¸Šæœ‰ä¸”ä»…æœ‰ä¸€ä¸ªShape, ä»¥æœ€åŽä¸€æ¬¡ä¸ºå‡†
 		if (m_imageShapeMap[image]) {
 			delete  m_imageShapeMap[image];
 		}

@@ -1,4 +1,4 @@
-#include "labelcontroller.h"
+ï»¿#include "labelcontroller.h"
 #define SAFE_DELETE(p) { if (p) { delete (p);     (p) = nullptr; } }
 LabelController::LabelController(QObject* parent) : QObject(parent)
 {
@@ -16,7 +16,7 @@ LabelController::~LabelController()
 
 bool LabelController::createType(const QString& type)
 {
-	// ²»´æÔÚ´Ëtype
+	// ä¸å­˜åœ¨æ­¤type
 	if (!m_typeToCount.contains(type)) {
 
 		m_typeToCount[type] = 0;
@@ -29,7 +29,7 @@ bool LabelController::createType(const QString& type)
 		return true;
 	}
 	else {
-		// ÒÑ¾­´æÔÚ£¬²»¸²¸Ç´´½¨
+		// å·²ç»å­˜åœ¨ï¼Œä¸è¦†ç›–åˆ›å»º
 		qDebug() << "LabelController::createType::type exists";
 		return false;
 	}
@@ -44,7 +44,7 @@ Label* LabelController::createLabel(const QString& type, Area* area) {
 	Label* label = new Label(id, type, m_typeToColor[type], area);
 
 	m_typeToLabel[type].append(label);
-	if (type.contains("ÇøÓòÑ¡Ôñ")){
+	if (type.contains("åŒºåŸŸé€‰æ‹©")){
 		m_labelToAttr[type] =  ParamsItem();
 	}
 	emit labelCreated(type, id);
@@ -277,13 +277,13 @@ LabelController* LabelController::createFromElement(QDomElement elem)
 
 bool LabelController::checkSaveLabelOn()
 {
-	//ÅĞ¶ÏÊÇ·ñ·ûºÏ¹æ·¶,Ö÷ÒªÅĞ¶ÏËÑË÷ÇøÓòºÍÌØÕ÷ÇøÓò,Êä³öµãÊÇ·ñÓĞ¶à¸ö
+	//åˆ¤æ–­æ˜¯å¦ç¬¦åˆè§„èŒƒ,ä¸»è¦åˆ¤æ–­æœç´¢åŒºåŸŸå’Œç‰¹å¾åŒºåŸŸ,è¾“å‡ºç‚¹æ˜¯å¦æœ‰å¤šä¸ª
 	for (auto type : m_typeToCount.keys()) {
 		QList<Label*> labelList = m_typeToLabel.value(type);
 		if (labelList.count() > 1)
 		{
-			QMessageBox::warning(nullptr, tr("±£´æÒì³£"),
-				tr("±£´æ×´Ì¬Òì³£,Çë±£³ÖËÑË÷ÇøÓò,ÌØÕ÷ÇøÓò,Êä³öµã¸÷×Ô×î¶à1¸ö"));
+			QMessageBox::warning(nullptr, tr("ä¿å­˜å¼‚å¸¸"),
+				tr("ä¿å­˜çŠ¶æ€å¼‚å¸¸,è¯·ä¿æŒæœç´¢åŒºåŸŸ,ç‰¹å¾åŒºåŸŸ,è¾“å‡ºç‚¹å„è‡ªæœ€å¤š1ä¸ª"));
 			return false;
 		}
 	}

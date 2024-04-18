@@ -1,4 +1,4 @@
-#include "statusbar.h"
+﻿#include "statusbar.h"
 
 StatusBar::StatusBar(QWidget* parent) :
 	QStatusBar(parent)

@@ -1,4 +1,4 @@
-#include "createModel.h"
+ï»¿#include "createModel.h"
 #include "ui_createModel.h"
 
 #define SAFE_DELETE(p) { if (p) { delete (p);     (p) = nullptr; } }
@@ -9,7 +9,7 @@ createModel::createModel(QWidget* parent) :
 {
     ui->setupUi(this);
 
-    setWindowTitle("Ä£°åÉèÖÃ");
+    setWindowTitle("æ¨¡æ¿è®¾ç½®");
     windowTitleItem = windowTitle();
     QWidget* c = this->takeCentralWidget();
     if (c) delete c;
@@ -75,7 +75,7 @@ createModel::createModel(QWidget* parent) :
     connect(ellipseModeAction, &EllipseModeAction::triggered,
         this, &createModel::onEllipseModeTriggered);
 
-    //É¾³ı²Ù×÷
+    //åˆ é™¤æ“ä½œ
     auto deleteLabelAction = new DeleteLabelAction(this);
     connect(deleteLabelAction, &DeleteLabelAction::triggered,
         [=]() {
@@ -105,12 +105,12 @@ createModel::createModel(QWidget* parent) :
     connect(curseModeAction, &CurseModeAction::triggered,
         this, &createModel::onCurseModeTriggered);
 
-    //ËÑË÷ÇøÓò
+    //æœç´¢åŒºåŸŸ
 	auto searchAreaRectActionItem = new searchAreaRectAction(this);
 	connect(searchAreaRectActionItem, &searchAreaRectAction::triggered,
 		this, &createModel::onSearchAreaRectTriggered);
     
-    //ÌØÕ÷Æ¥Åä
+    //ç‰¹å¾åŒ¹é…
 	auto featureMatchingRectActionItem = new featureMatchingRectAction(this);
 	connect(featureMatchingRectActionItem, &featureMatchingRectAction::triggered,
 		this, &createModel::onFeatureMatchingTriggered);
@@ -140,15 +140,15 @@ createModel::createModel(QWidget* parent) :
 
 
     QActionGroup* drawingActionGroup = new QActionGroup(this);
-    //Ñ¡Ôñ
+    //é€‰æ‹©
     drawingActionGroup->addAction(curseModeAction);
-    //¾ØĞÎ
+    //çŸ©å½¢
    // drawingActionGroup->addAction(rectModeAction);
-    //ÍÖÔ²
+    //æ¤­åœ†
     drawingActionGroup->addAction(ellipseModeAction);
-    //¶à±ßĞÎ
+    //å¤šè¾¹å½¢
     drawingActionGroup->addAction(polygonModeAction);
-    //ÇúÏß
+    //æ›²çº¿
   //  drawingActionGroup->addAction(curveModeAction);
     drawingActionGroup->addAction(squarePenModeAction);
     drawingActionGroup->addAction(circlePenModeAction);
@@ -168,11 +168,11 @@ createModel::createModel(QWidget* parent) :
     // set up and connect menu bar
     menuBar = new MenuBar(this);
     QMenu* menus[3];
-    menus[0] = new QMenu("ÎÄ¼ş", menuBar);
-    menus[1] = new QMenu("¹¤¾ß", menuBar);
-    menus[2] = new QMenu("°ïÖú", menuBar);
+    menus[0] = new QMenu("æ–‡ä»¶", menuBar);
+    menus[1] = new QMenu("å·¥å…·", menuBar);
+    menus[2] = new QMenu("å¸®åŠ©", menuBar);
     // menus[3] = new QMenu("&Help", menuBar);
-    //ĞŞ¸ÄµØÖ·
+    //ä¿®æ”¹åœ°å€
     for (int i = 0; i < 3; i++) {
         menuBar->addMenu(menus[i]);
     }
@@ -220,7 +220,7 @@ createModel::createModel(QWidget* parent) :
 	toolBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
 	toolBar->addSeparator();
-	//µ¼Èë
+	//å¯¼å…¥
 	toolBar->addAction(importAction);
 	toolBar->addSeparator();
 	QWidget* test1 = new QWidget();
@@ -230,15 +230,15 @@ createModel::createModel(QWidget* parent) :
 	toolBar->addWidget(test1);
 	toolBar->addSeparator();
 
-    //²É¼¯Í¼Æ¬
+    //é‡‡é›†å›¾ç‰‡
     toolBar->addAction(getImageAction);
-     //ËÑË÷ÇøÓò
+     //æœç´¢åŒºåŸŸ
     toolBar->addSeparator();
 	toolBar->addAction(searchAreaRectActionItem);
 	toolBar->addSeparator();
 
-    //ÌØÕ÷Æ¥Åä
-	//´´½¨ÏÂÀ­²Ëµ¥
+    //ç‰¹å¾åŒ¹é…
+	//åˆ›å»ºä¸‹æ‹‰èœå•
 	QMenu* menuSelection = new QMenu(this);
 	menuSelection->addAction(featureMatchingRectActionItem);
 	menuSelection->addAction(polygonModeAction);
@@ -249,36 +249,36 @@ createModel::createModel(QWidget* parent) :
 	aBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 	//aBtn->setDefaultAction(ui->actSelPopMenu);
 	aBtn->setMenu(menuSelection);
-	aBtn->setText("ÌØÕ÷ÇøÓò");
-	aBtn->setIcon(QIcon("./Image/Icon/credit-card"));
+	aBtn->setText("ç‰¹å¾åŒºåŸŸ");
+	aBtn->setIcon(QIcon("./Image/Icon/square_pen_mode"));
 	toolBar->addWidget(aBtn);
 	toolBar->addSeparator();
 
-   //Êä³öµã
+   //è¾“å‡ºç‚¹
    toolBar->addAction(setPointAction);
    toolBar->addSeparator();
 
-    //·Å´ó¾µ
+    //æ”¾å¤§é•œ
 	//toolBar->addAction(magnifyAction);
 	//toolBar->addSeparator();
 
-    //³·Ïú
+    //æ’¤é”€
 	toolBar->addAction(undoAction);
 	toolBar->addSeparator();
 	toolBar->addAction(deleteLabelAction);
 	toolBar->addSeparator();
-    //Ñ¡Ôñ
+    //é€‰æ‹©
 	toolBar->addAction(curseModeAction);
 //	toolBar->addSeparator();
-    //¾ØĞÎ
+    //çŸ©å½¢
 //	toolBar->addAction(rectModeAction);
-    //ÍÖÔ²
+    //æ¤­åœ†
 	toolBar->addSeparator();
 
-    //¶à±ßĞÎ
+    //å¤šè¾¹å½¢
 	//toolBar->addAction(polygonModeAction);
 	toolBar->addSeparator();
-    //ÑÚÄ¤
+    //æ©è†œ
 	//toolBar->addAction(circlePenModeAction);
 	//toolBar->addAction(squarePenModeAction);
     QWidget* test3 = new QWidget();
@@ -306,8 +306,8 @@ createModel::createModel(QWidget* parent) :
 
   //  toolBar->addAction(twoDModeAction);
     this->addToolBar(Qt::TopToolBarArea, toolBar);
-    toolBar->setMovable(false);// ÉèÖÃ¹¤¾ßÀ¸²»¿ÉÒÆ¶¯
-	toolBar->setFloatable(false); // ÉèÖÃ¹¤¾ßÀ¸²»¿É¸¡¶¯
+    toolBar->setMovable(false);// è®¾ç½®å·¥å…·æ ä¸å¯ç§»åŠ¨
+	toolBar->setFloatable(false); // è®¾ç½®å·¥å…·æ ä¸å¯æµ®åŠ¨
 	toolBar->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     // Init 2D
@@ -340,7 +340,7 @@ createModel::createModel(QWidget* parent) :
 
 	/*   connect(radiusSlider, &QSlider::valueChanged,
 		   paintScene2D, &PaintScene::setRadius);*/
-    //ÉèÖÃ³õÊ¼»­±Ê°ë¾¶
+    //è®¾ç½®åˆå§‹ç”»ç¬”åŠå¾„
     //radiusSlider->setValue(20);
 
     fileController2D = new FileController(this);
@@ -510,7 +510,7 @@ createModel::createModel(QWidget* parent) :
   //  addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, fileListDockWidget2D);
     on2DModeTriggered();
 
-	//°×É«Ìî³ä×óÉÏ½ÇÍ¼±ê
+	//ç™½è‰²å¡«å……å·¦ä¸Šè§’å›¾æ ‡
 	QPixmap pixmap(100, 100);
 	pixmap.fill(Qt::white);
 	setWindowIcon(QIcon(pixmap));
@@ -532,7 +532,7 @@ void createModel::closeEvent(QCloseEvent* event)
 void createModel::keyPressEvent(QKeyEvent* event)
 {
 	switch (event->key()) {
-		// ´¦Àí Backspace »ò Delete ¼üµÄ°´ÏÂÊÂ¼ş
+		// å¤„ç† Backspace æˆ– Delete é”®çš„æŒ‰ä¸‹äº‹ä»¶
 
 	case Qt::Key_Backspace:
     {
@@ -547,7 +547,7 @@ void createModel::keyPressEvent(QKeyEvent* event)
 		break;
     }
     default:
-		// µ÷ÓÃ»ùÀàµÄ´¦Àíº¯Êı´¦ÀíÆäËû¼üÅÌ°´¼ü
+		// è°ƒç”¨åŸºç±»çš„å¤„ç†å‡½æ•°å¤„ç†å…¶ä»–é”®ç›˜æŒ‰é”®
 		QMainWindow::keyPressEvent(event);
 		break;
 	}
@@ -567,18 +567,18 @@ void createModel::onSaveAsTriggered() {
 }
 
 void createModel::onCloseFileTriggered() {
-    //ÅĞ¶ÏÊÇ·ñ¹Ø±Õ
+    //åˆ¤æ–­æ˜¯å¦å…³é—­
 	QMessageBox::StandardButton reply;
-	reply = QMessageBox::question(this, "È·ÈÏ¹Ø±Õ", "È·¶¨Òª¹Ø±ÕÎÄ¼şÂğ?", QMessageBox::Yes | QMessageBox::No);
+	reply = QMessageBox::question(this, "ç¡®è®¤å…³é—­", "ç¡®å®šè¦å…³é—­æ–‡ä»¶å—?", QMessageBox::Yes | QMessageBox::No);
 
 	if (reply == QMessageBox::Yes) {
-		// ÓÃ»§Ñ¡ÔñÁË"ÊÇ"
+		// ç”¨æˆ·é€‰æ‹©äº†"æ˜¯"
 		CloseImageCommand* closeImageCommand = new CloseImageCommand(fileController);
 		undoStack->push(closeImageCommand);
 		labelController->deleteAllLabel();
 	}
 	else {
-		// ÓÃ»§Ñ¡ÔñÁË"·ñ"»òÕß¹Ø±Õ¶Ô»°¿ò
+		// ç”¨æˆ·é€‰æ‹©äº†"å¦"æˆ–è€…å…³é—­å¯¹è¯æ¡†
 	}
 }
 
@@ -704,7 +704,7 @@ void createModel::onMagnifyTriggered()
 }
 
 
-//´ÓÏà»ú»ñµÃÍ¼Æ¬
+//ä»ç›¸æœºè·å¾—å›¾ç‰‡
 void createModel::onGetImageTriggered()
 {
     emit getImageFromCamera();
@@ -716,7 +716,7 @@ void createModel::sendImgToFileController(QImage image,QString modePath)
     if (image.isNull())
     {
 		QMessageBox::warning(nullptr, tr("Path"),
-			tr("Ïà»ú×´Ì¬Òì³£,Î´»ñÈ¡µ½Í¼Æ¬"));
+			tr("ç›¸æœºçŠ¶æ€å¼‚å¸¸,æœªè·å–åˆ°å›¾ç‰‡"));
         return;
     }
 	fileController->getImageFromCamera(image);
@@ -726,7 +726,7 @@ void createModel::sendImgToFileController(QImage image,QString modePath)
 
 void createModel::onExecPatternAction()
 {
-    //Ö´ĞĞÄ£°åÆ¥Åä
+    //æ‰§è¡Œæ¨¡æ¿åŒ¹é…
     fileController->onExecPattern(labelController);
 }
 

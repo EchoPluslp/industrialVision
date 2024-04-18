@@ -1,4 +1,4 @@
-#include "login.h"
+ï»¿#include "login.h"
 #include <QtWidgets/QApplication>
 #include <QCoreApplication>
 bool checkOnly();
@@ -11,19 +11,19 @@ int main(int argc, char *argv[]){
 #endif
 	if (!checkOnly())
 	{
-		QMessageBox::critical(NULL, "´íÎóĞÅÏ¢", "ÊÓ¾õÈí¼şÒÑ¾­Æô¶¯,Çë¹Ø±ÕºóÔÙÖØĞÂ´ò¿ª");
+		QMessageBox::critical(NULL, "é”™è¯¯ä¿¡æ¯", "è§†è§‰è½¯ä»¶å·²ç»å¯åŠ¨,è¯·å…³é—­åå†é‡æ–°æ‰“å¼€");
 		return NULL;
 	}
 
 	QApplication a(argc, argv);
 	 
-	//  //¶ÁÈ¡ÉÏ´Î¹Ø±ÕÊ±µÄ×´Ì¬
+	//  //è¯»å–ä¸Šæ¬¡å…³é—­æ—¶çš„çŠ¶æ€
 	QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
 	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
 	settings->beginGroup("Idus");
-	//¹ÜÀíÔ±ÃÜÂë
+	//ç®¡ç†å‘˜å¯†ç 
 	QString passwordAdmin = settings->value("passwordAdmin","2222").toString();
-	//²Ù×÷Ô±ÃÜÂë
+	//æ“ä½œå‘˜å¯†ç 
 	QString passwordUser = settings->value("passwordUser","1111").toString();
 
 	
@@ -31,7 +31,7 @@ int main(int argc, char *argv[]){
 	//{
 	//	industrialVision w;
 
-	//	//Ã»ÓĞÃÜÂëÊ±,Ö±½Ó½øÈ¥
+	//	//æ²¡æœ‰å¯†ç æ—¶,ç›´æ¥è¿›å»
 	//	w.showNormal();
 	//	return a.exec();
 	//}
@@ -43,14 +43,14 @@ int main(int argc, char *argv[]){
  
 bool checkOnly()
 {
-	//  ´´½¨»¥³âÁ¿  
+	//  åˆ›å»ºäº’æ–¥é‡  
 	HANDLE m_hMutex = CreateMutex(NULL, FALSE, L"fortest_abc123");
-	//  ¼ì²é´íÎó´úÂë  
+	//  æ£€æŸ¥é”™è¯¯ä»£ç   
 	if (GetLastError() == ERROR_ALREADY_EXISTS) {
-		//  Èç¹ûÒÑÓĞ»¥³âÁ¿´æÔÚÔòÊÍ·Å¾ä±ú²¢¸´Î»»¥³âÁ¿  
+		//  å¦‚æœå·²æœ‰äº’æ–¥é‡å­˜åœ¨åˆ™é‡Šæ”¾å¥æŸ„å¹¶å¤ä½äº’æ–¥é‡  
 		CloseHandle(m_hMutex);
 		m_hMutex = NULL;
-		//  ³ÌĞòÍË³ö  
+		//  ç¨‹åºé€€å‡º  
 		return  false;
 	}
 	else

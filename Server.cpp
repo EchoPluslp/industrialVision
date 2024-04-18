@@ -1,4 +1,4 @@
-#include "Server.h"
+ï»¿#include "Server.h"
 s_SingleTargetMatch finall_Total_Result; 
  
 Server::Server() 
@@ -9,18 +9,18 @@ Server::Server()
 	connect(this, &Server::triggerPattern, &TransmitSignals::GetInstance(), &TransmitSignals::create_once_pattern, Qt::UniqueConnection);
 	connect(this, &Server::logoString, &TransmitSignals::GetInstance(), &TransmitSignals::sendToIndustrString,Qt::QueuedConnection);
 
-	//  //¶ÁÈ¡ÉÏ´Î¹Ø±ÕÊ±µÄ×´Ì¬
+	//  //è¯»å–ä¸Šæ¬¡å…³é—­æ—¶çš„çŠ¶æ€
 	QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
 	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
 	settings->beginGroup("Idus");
-	//¶¨Ê±ÉèÖÃÊ±¼ä
+	//å®šæ—¶è®¾ç½®æ—¶é—´
 	QString timevalueQString = settings->value("timevalue","1000").toString();
 	timestart = timevalueQString.toInt();
 	if (server->listen(QHostAddress::LocalHost, 60000)) {
-		emit logoString("·şÎñÆ÷ÒÑÆô¶¯£¬µÈ´ı¿Í»§¶ËÁ¬½Ó...", "GREEN");
+		emit logoString("æœåŠ¡å™¨å·²å¯åŠ¨ï¼Œç­‰å¾…å®¢æˆ·ç«¯è¿æ¥...", "GREEN");
 	}
 	else {
-			emit logoString("ÎŞ·¨Æô¶¯·şÎñÆ÷...", "GREEN");
+			emit logoString("æ— æ³•å¯åŠ¨æœåŠ¡å™¨...", "GREEN");
 	}
 }
 
@@ -28,16 +28,16 @@ void Server::onNewConnection()
 {
 	QTcpSocket* clientSocket = server->nextPendingConnection();
 	QString x = QString::number(clientSocket->peerPort());
-	QString logString =  "¿Í»§¶Ë " + clientSocket->peerAddress().toString() + ":" + x + " Á¬½Ó³É¹¦";
+	QString logString =  "å®¢æˆ·ç«¯ " + clientSocket->peerAddress().toString() + ":" + x + " è¿æ¥æˆåŠŸ";
 	emit logoString(logString, "GREEN");
 
 	clientQueue.clear();
 	isBusy = false;
 
-	// ½«¿Í»§¶ËÁ¬½ÓÌí¼Óµ½ÇëÇó¶ÓÁĞ
+	// å°†å®¢æˆ·ç«¯è¿æ¥æ·»åŠ åˆ°è¯·æ±‚é˜Ÿåˆ—
 	clientQueue.enqueue(clientSocket);
 
-	// Èç¹û·şÎñÆ÷¿ÕÏĞ£¬¿ªÊ¼´¦ÀíÇëÇó
+	// å¦‚æœæœåŠ¡å™¨ç©ºé—²ï¼Œå¼€å§‹å¤„ç†è¯·æ±‚
 	if (!isBusy) {
 		processNextRequest();
 	}
@@ -47,26 +47,26 @@ void Server::onReadyRead()
 	QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
 
 	if (!clientSocket) {
-		QString logStringFromClient = "·şÎñ¶Ë½ÓÊÜµ½ÏûÏ¢Òì³£: ÇëÖØÆô";
+		QString logStringFromClient = "æœåŠ¡ç«¯æ¥å—åˆ°æ¶ˆæ¯å¼‚å¸¸: è¯·é‡å¯";
 		return;
 	}
 
 	QByteArray data = clientSocket->readAll();
 	QString message = QString(data);
 
-	QString logStringFromClient =  "½ÓÊÕµ½À´×Ô¿Í»§¶ËµÄÏûÏ¢: " + message;
+	QString logStringFromClient =  "æ¥æ”¶åˆ°æ¥è‡ªå®¢æˆ·ç«¯çš„æ¶ˆæ¯: " + message;
 	emit logoString(logStringFromClient, "GREEN");
 	QString sendMessager;
 	if (isJsonString(message)) {
-		//È¡µÃID
+		//å–å¾—ID
 		QJsonDocument jsonDocument = QJsonDocument::fromJson(message.toUtf8());
-		// »ñÈ¡JSON¶ÔÏó
+		// è·å–JSONå¯¹è±¡
 		QJsonObject jsonObject = jsonDocument.object();
 
 		QJsonValue nameValue = jsonObject.value("CmdId");
 		QString cmdID = nameValue.toString();
 
-		//ÊÇjson
+		//æ˜¯json
 		QJsonObject sendMessager = recvMsgByJson(message, cmdID);
 		QJsonDocument document;
 
@@ -75,23 +75,23 @@ void Server::onReadyRead()
 		QByteArray abyte = document.toJson(QJsonDocument::Compact);
 
 		clientSocket->write(abyte);
-		QString logStringToClient = "¸ø¿Í»§¶Ë·¢ËÍÊı¾İ:" + abyte;
+		QString logStringToClient = "ç»™å®¢æˆ·ç«¯å‘é€æ•°æ®:" + abyte;
 
 		emit logoString(logStringToClient, "GREEN");
 	}
 	else {
-		//ÅĞ¶Ï½ÓÊÜµÄÊı¾İ¸ñÊ½ ²»ÊÇjson
+		//åˆ¤æ–­æ¥å—çš„æ•°æ®æ ¼å¼ ä¸æ˜¯json
 
-		//ÔÚÕâÀï¿ÉÒÔ¶Ô¿Í»§¶ËÏûÏ¢½øĞĞ´¦Àí
+		//åœ¨è¿™é‡Œå¯ä»¥å¯¹å®¢æˆ·ç«¯æ¶ˆæ¯è¿›è¡Œå¤„ç†
 		 sendMessager = recvMsg(message);
 		 clientSocket->write(sendMessager.toUtf8());
-		 QString logStringToClient = "¸ø¿Í»§¶Ë·¢ËÍÊı¾İ:" + sendMessager;
+		 QString logStringToClient = "ç»™å®¢æˆ·ç«¯å‘é€æ•°æ®:" + sendMessager;
 
 		 emit logoString(logStringToClient, "GREEN");
 	}
 
-	// ·¢ËÍ´¦ÀíºóµÄÏûÏ¢»Ø¿Í»§¶Ë
-	// ´¦ÀíÍêÇëÇóºó£¬¼ÌĞø´¦ÀíÏÂÒ»¸öÇëÇó
+	// å‘é€å¤„ç†åçš„æ¶ˆæ¯å›å®¢æˆ·ç«¯
+	// å¤„ç†å®Œè¯·æ±‚åï¼Œç»§ç»­å¤„ç†ä¸‹ä¸€ä¸ªè¯·æ±‚
 	processNextRequest();
 
 	
@@ -109,35 +109,35 @@ QString Server::recvMsg(QString receiveMessage)
 	QString send_buf = "T;1;100;1;1;1,";
 	if (receiveMessage <= 0)
 	{
-		QString logStringToClient = "½ÓÊÜreceiveMessageº¯ÊıÒì³£:";
+		QString logStringToClient = "æ¥å—receiveMessageå‡½æ•°å¼‚å¸¸:";
 		emit logoString(logStringToClient, "RED");
 		return false;
 	}
 	emit triggerPattern(); 	
-	// ´´½¨Ò»¸ö¶¨Ê±Æ÷
+	// åˆ›å»ºä¸€ä¸ªå®šæ—¶å™¨
 	QTimer timer;
-	timer.setSingleShot(true); // ÉèÖÃÎªµ¥´Î´¥·¢
+	timer.setSingleShot(true); // è®¾ç½®ä¸ºå•æ¬¡è§¦å‘
 
-	// Á¬½Ó¶¨Ê±Æ÷µÄtimeoutĞÅºÅµ½Ò»¸ö²Ûº¯Êı£¬¸Ã²Ûº¯ÊıÔÚ¶¨Ê±Æ÷³¬Ê±Ê±´¥·¢
+	// è¿æ¥å®šæ—¶å™¨çš„timeoutä¿¡å·åˆ°ä¸€ä¸ªæ§½å‡½æ•°ï¼Œè¯¥æ§½å‡½æ•°åœ¨å®šæ—¶å™¨è¶…æ—¶æ—¶è§¦å‘
 	QObject::connect(&timer, &QTimer::timeout, [&]() {
-		// ÔÚ¶¨Ê±Æ÷³¬Ê±Ê±Ö´ĞĞÖĞ¶Ï´¦Àí
-		QString logStringToClient = "¶¨Ê±Æ÷´¥·¢£¬ÖĞ¶Ïµ±Ç°´¦Àí";
+		// åœ¨å®šæ—¶å™¨è¶…æ—¶æ—¶æ‰§è¡Œä¸­æ–­å¤„ç†
+		QString logStringToClient = "å®šæ—¶å™¨è§¦å‘ï¼Œä¸­æ–­å½“å‰å¤„ç†";
 		emit logoString(logStringToClient, "GRAY");
 
-		finall_Total_Result.flag = true; // ĞŞ¸ÄflagµÄÖµ
+		finall_Total_Result.flag = true; // ä¿®æ”¹flagçš„å€¼
 		finall_Total_Result.pattern_flag = false;
 		});
 
-	timer.start(timestart); // Æô¶¯¶¨Ê±Æ÷£¬ÉèÖÃ³¬Ê±Ê±¼äÎª1Ãë
+	timer.start(timestart); // å¯åŠ¨å®šæ—¶å™¨ï¼Œè®¾ç½®è¶…æ—¶æ—¶é—´ä¸º1ç§’
 
 	while (!finall_Total_Result.flag) {
-		// ÔÚÕâÀïµÈ´ı£¬Ö±µ½¶¨Ê±Æ÷´¥·¢»òflag±äÎªtrue
-		QCoreApplication::processEvents(); // ÔÊĞíQtÊÂ¼ş´¦Àí
+		// åœ¨è¿™é‡Œç­‰å¾…ï¼Œç›´åˆ°å®šæ—¶å™¨è§¦å‘æˆ–flagå˜ä¸ºtrue
+		QCoreApplication::processEvents(); // å…è®¸Qtäº‹ä»¶å¤„ç†
 	}
-	//¶¨Ê±Æ÷Í£Ö¹
+	//å®šæ—¶å™¨åœæ­¢
 	timer.stop();
 	timer.deleteLater();
-	//ÖØÖÃflagÖµ
+	//é‡ç½®flagå€¼
 	finall_Total_Result.flag = false;
 	if (finall_Total_Result.pattern_flag){
 		char s[10];
@@ -151,7 +151,7 @@ QString Server::recvMsg(QString receiveMessage)
 		send_buf.append(",");
 
 		std::ostringstream out;
-		//±£Áô1¸öĞ¡Êıµã
+		//ä¿ç•™1ä¸ªå°æ•°ç‚¹
 		out << std::fixed << std::setprecision(1) << finall_Total_Result.dMatchedAngle;
 		std::string angle_String = out.str();
 
@@ -170,50 +170,50 @@ QString Server::recvMsg(QString receiveMessage)
 
 QJsonObject Server::recvMsgByJson(QString receiveMessage, QString cmdID)
 {
-	// ´´½¨Ò»¸ö¿ÕµÄ JSON ¶ÔÏó
+	// åˆ›å»ºä¸€ä¸ªç©ºçš„ JSON å¯¹è±¡
 	QJsonObject jsonObject;
 
 	if (receiveMessage <= 0)
 	{
-		QString logStringToClient = "½ÓÊÜreceiveMessageº¯ÊıÒì³£:";
+		QString logStringToClient = "æ¥å—receiveMessageå‡½æ•°å¼‚å¸¸:";
 		emit logoString(logStringToClient, "RED");
 		return jsonObject;
 	}
 	emit triggerPattern();
-	// ´´½¨Ò»¸ö¶¨Ê±Æ÷
+	// åˆ›å»ºä¸€ä¸ªå®šæ—¶å™¨
 	QTimer timer;
-	timer.setSingleShot(true); // ÉèÖÃÎªµ¥´Î´¥·¢
+	timer.setSingleShot(true); // è®¾ç½®ä¸ºå•æ¬¡è§¦å‘
 
-	// Á¬½Ó¶¨Ê±Æ÷µÄtimeoutĞÅºÅµ½Ò»¸ö²Ûº¯Êı£¬¸Ã²Ûº¯ÊıÔÚ¶¨Ê±Æ÷³¬Ê±Ê±´¥·¢
+	// è¿æ¥å®šæ—¶å™¨çš„timeoutä¿¡å·åˆ°ä¸€ä¸ªæ§½å‡½æ•°ï¼Œè¯¥æ§½å‡½æ•°åœ¨å®šæ—¶å™¨è¶…æ—¶æ—¶è§¦å‘
 	QObject::connect(&timer, &QTimer::timeout, [&]() {
-		// ÔÚ¶¨Ê±Æ÷³¬Ê±Ê±Ö´ĞĞÖĞ¶Ï´¦Àí
-		QString logStringToClient = "¶¨Ê±Æ÷´¥·¢£¬ÖĞ¶Ïµ±Ç°´¦Àí";
+		// åœ¨å®šæ—¶å™¨è¶…æ—¶æ—¶æ‰§è¡Œä¸­æ–­å¤„ç†
+		QString logStringToClient = "å®šæ—¶å™¨è§¦å‘ï¼Œä¸­æ–­å½“å‰å¤„ç†";
 		emit logoString(logStringToClient, "GRAY");
 
-		finall_Total_Result.flag = true; // ĞŞ¸ÄflagµÄÖµ
+		finall_Total_Result.flag = true; // ä¿®æ”¹flagçš„å€¼
 		finall_Total_Result.pattern_flag = false;
 		});
 
-	timer.start(timestart); // Æô¶¯¶¨Ê±Æ÷£¬ÉèÖÃ³¬Ê±Ê±¼äÎª1Ãë
+	timer.start(timestart); // å¯åŠ¨å®šæ—¶å™¨ï¼Œè®¾ç½®è¶…æ—¶æ—¶é—´ä¸º1ç§’
 
 	while (!finall_Total_Result.flag) {
-		// ÔÚÕâÀïµÈ´ı£¬Ö±µ½¶¨Ê±Æ÷´¥·¢»òflag±äÎªtrue
-		QCoreApplication::processEvents(); // ÔÊĞíQtÊÂ¼ş´¦Àí
+		// åœ¨è¿™é‡Œç­‰å¾…ï¼Œç›´åˆ°å®šæ—¶å™¨è§¦å‘æˆ–flagå˜ä¸ºtrue
+		QCoreApplication::processEvents(); // å…è®¸Qtäº‹ä»¶å¤„ç†
 	}
-	//¶¨Ê±Æ÷Í£Ö¹
+	//å®šæ—¶å™¨åœæ­¢
 	timer.stop();
 	timer.deleteLater();
-	//ÖØÖÃflagÖµ
+	//é‡ç½®flagå€¼
 	finall_Total_Result.flag = false;
 
 		jsonObject["CmdId"] = cmdID;	    
 		jsonObject["ErrCode"] = "0";
 		jsonObject["ErrDesc"] = "";
-		// ÉèÖÃ "Datas" Êı×é
+		// è®¾ç½® "Datas" æ•°ç»„
 		QJsonArray datasArray;
 		QJsonObject dataObject;
 
-		//Æ¥ÅäÊÇ·ñ³É¹¦
+		//åŒ¹é…æ˜¯å¦æˆåŠŸ
 		if (finall_Total_Result.pattern_flag) {
 
 			dataObject["isOK"] = "OK";
@@ -225,19 +225,19 @@ QJsonObject Server::recvMsgByJson(QString receiveMessage, QString cmdID)
 		dataObject["x"] = QString::number(finall_Total_Result.ptCenter.x, 'f', 1);
 		dataObject["y"] = QString::number(finall_Total_Result.ptCenter.y, 'f', 1);
 		dataObject["a"] = QString::number(finall_Total_Result.dMatchedAngle, 'f', 1);
-		dataObject["MatchRatio"] = "1.0";
-		// ½«×Ó¶ÔÏóÌí¼Óµ½ "Datas" Êı×é
+		dataObject["MatchRatio"] = QString::number(finall_Total_Result.dMatchScore, 'f', 2);
+		// å°†å­å¯¹è±¡æ·»åŠ åˆ° "Datas" æ•°ç»„
 		datasArray.append(dataObject);
 
-		//Ìí¼Óµ½json¶ÔÏóÖĞ
+		//æ·»åŠ åˆ°jsonå¯¹è±¡ä¸­
 		jsonObject["Datas"] = datasArray;
 
 		jsonObject["ReslutImage"] = "";
 
-		// ½« JSON ¶ÔÏó×ª»»Îª JSON ÎÄµµ
+		// å°† JSON å¯¹è±¡è½¬æ¢ä¸º JSON æ–‡æ¡£
 		QJsonDocument jsonDocument(jsonObject);
 
-		// ½« JSON ÎÄµµ×ª»»Îª×Ö·û´®
+		// å°† JSON æ–‡æ¡£è½¬æ¢ä¸ºå­—ç¬¦ä¸²
 		QString jsonString = jsonDocument.toJson(QJsonDocument::Compact);
 
 	
@@ -248,15 +248,15 @@ QJsonObject Server::recvMsgByJson(QString receiveMessage, QString cmdID)
 void Server::processNextRequest()
 {
 	if (clientQueue.isEmpty()) {
-		// ¶ÓÁĞÎª¿Õ£¬Ã»ÓĞµÈ´ıµÄÇëÇó
+		// é˜Ÿåˆ—ä¸ºç©ºï¼Œæ²¡æœ‰ç­‰å¾…çš„è¯·æ±‚
 		isBusy = false;
 		return;
 	}
 
-	// ´Ó¶ÓÁĞÖĞÈ¡³öÏÂÒ»¸ö¿Í»§¶ËÁ¬½Ó
+	// ä»é˜Ÿåˆ—ä¸­å–å‡ºä¸‹ä¸€ä¸ªå®¢æˆ·ç«¯è¿æ¥
 	QTcpSocket* clientSocket = clientQueue.dequeue();
 
-	// ´¦Àí¿Í»§¶ËÇëÇó
+	// å¤„ç†å®¢æˆ·ç«¯è¯·æ±‚
 	isBusy = true;
 	//onReadyRead();
 	connect(clientSocket, &QTcpSocket::readyRead, this, &Server::onReadyRead);

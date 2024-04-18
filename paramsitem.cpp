@@ -1,8 +1,8 @@
-#include "paramsitem.h"
+ï»¿#include "paramsitem.h"
 
 ParamsItem::ParamsItem()
 {
-    //Êµ¼ÊÉÏÃ»ÓÃ£¬Item³õÊ¼»¯Ê±»á¶ÔÓÃµ½µÄparams¸³Öµ
+    //å®é™…ä¸Šæ²¡ç”¨ï¼ŒItemåˆå§‹åŒ–æ—¶ä¼šå¯¹ç”¨åˆ°çš„paramsèµ‹å€¼
     _kind = 0;
     _ksize = 1;
     _ksigma = 1;

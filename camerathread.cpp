@@ -1,4 +1,4 @@
-#include "camerathread.h"
+ï»¿#include "camerathread.h"
 
 CameraThread::CameraThread(QObject* parent)
 	: QThread{ parent }
@@ -51,7 +51,7 @@ int CameraThread::getRotateIndex()
 }
 QSize CameraThread::getrealPictureSize()
 {
-	msleep(30);   //ÊÊµ±»º³å,¼õÉÙcpuÔËĞĞÂÊ
+	msleep(30);   //é€‚å½“ç¼“å†²,å‡å°‘cpuè¿è¡Œç‡
 
 	return realPictureSize;
 }
@@ -69,28 +69,28 @@ void CameraThread::run()
 	}
 	while (startFlag)
 	{
-		//½«Í¼Æ¬Ìí¼Óµ½´¦ÀíÏß³Ì
+		//å°†å›¾ç‰‡æ·»åŠ åˆ°å¤„ç†çº¿ç¨‹
 		cv::Mat imagePtr;
 		//cameraPtr->CommandExecute("TriggerSoftware");
 		cameraPtr->ReadBuffer(imagePtr);
-		//Ìí¼Óµ½ÈİÆ÷
+		//æ·»åŠ åˆ°å®¹å™¨
 		if(imagePtr.empty())
 			continue;
 		std::lock_guard<std::mutex> lock(mtx);
 
-		////Ğı×ª
+		////æ—‹è½¬
 		cv::Mat srcCopy = rotateImage(imagePtr, degrees[rotateIndexValue % degrees.size()]);
 		dimensions.width = srcCopy.cols;
 		dimensions.height = srcCopy.rows;
 		m_imageVector_1.push_back(srcCopy);
 
-		msleep(30);   //ÊÊµ±»º³å,¼õÉÙcpuÔËĞĞÂÊ
+		msleep(30);   //é€‚å½“ç¼“å†²,å‡å°‘cpuè¿è¡Œç‡
 	}
 }
 
 /**
- * degree Ö»ÄÜÊÇ 90¡ã¡¢180¡ã¡¢270¡ã
- * ¸Ã½Ç¶ÈÎªË³Ê±Õë·½Ïò£¬Èç¹ûÏëÄæÊ±ÕëĞı×ª£¬½«ÏÂÃæµÄ 90¡ã ºÍ 270¡ã µÄÊµÏÖ½»»»¼´¿É
+ * degree åªèƒ½æ˜¯ 90Â°ã€180Â°ã€270Â°
+ * è¯¥è§’åº¦ä¸ºé¡ºæ—¶é’ˆæ–¹å‘ï¼Œå¦‚æœæƒ³é€†æ—¶é’ˆæ—‹è½¬ï¼Œå°†ä¸‹é¢çš„ 90Â° å’Œ 270Â° çš„å®ç°äº¤æ¢å³å¯
  * @param src_img
  * @param degree
  * @return

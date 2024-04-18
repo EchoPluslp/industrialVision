@@ -1,15 +1,15 @@
-#include "connectServer.h"
+ï»¿#include "connectServer.h"
 
 connectServer::connectServer(QMainWindow*parent)
 	: QDialog(parent)
 {
 	ui.setupUi(this);
-	//µã»÷ºó,´´½¨¼àÌıÏß³Ì
+	//ç‚¹å‡»å,åˆ›å»ºç›‘å¬çº¿ç¨‹
 	//itemInfo = new connectItemInfo(this);
 	//itemInfo->moveToThread(subThread);
 	//QObject::connect(subThread, &QThread::started, itemInfo, &connectItemInfo::Thread_deal);
 	
-	//°×É«Ìî³ä×óÉÏ½ÇÍ¼±ê
+	//ç™½è‰²å¡«å……å·¦ä¸Šè§’å›¾æ ‡
 	QPixmap pixmap(100, 100);
 	pixmap.fill(Qt::white);
 	setWindowIcon(QIcon(pixmap));
@@ -38,15 +38,15 @@ connectServer::~connectServer()
 
 
 
-//´´½¨µã»÷ÊÂ¼ş
+//åˆ›å»ºç‚¹å‡»äº‹ä»¶
 bool connectServer::create_server() {
 
-	//¼ì²éipµØÖ·ÊÇ·ñÕıÈ·
+	//æ£€æŸ¥ipåœ°å€æ˜¯å¦æ­£ç¡®
 	QString ip = ui.lineEdit->text();
 	if(!NetParameterAck::isIPv4(ip))
 	{
 		QMessageBox::warning(nullptr, tr("Path"),
-			tr("ip»òÕß¶Ë¿ÚÉèÖÃ³öÏÖÎÊÌâ."));
+			tr("ipæˆ–è€…ç«¯å£è®¾ç½®å‡ºç°é—®é¢˜."));
 		return false;
 	}
 	QString port = ui.lineEdit_2->text();
@@ -61,8 +61,8 @@ bool connectServer::create_server() {
 		this->close();
 		return true;
 	}
-	QMessageBox::warning(nullptr, tr("Í¨Ñ¶"),
-		tr("ip»òÕß¶Ë¿ÚÉèÖÃ³öÏÖÎÊÌâ."));
+	QMessageBox::warning(nullptr, tr("é€šè®¯"),
+		tr("ipæˆ–è€…ç«¯å£è®¾ç½®å‡ºç°é—®é¢˜."));
 	return false;
 }
 
