@@ -17,6 +17,7 @@ public:
 	logoPath(QWidget* parent = Q_NULLPTR);
 	//已选操作和属性设置 
 	//~logoPath();
+	void setlogPathItem_language(QString language);
 private:
 	Ui::logoPath* ui;
 

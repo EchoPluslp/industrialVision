@@ -39,6 +39,29 @@ void logoPath::logoSet_click()
 	
 }
 
+void logoPath::setlogPathItem_language(QString language)
+{
+	if (language == "zh")
+	{
+		ui->pushButton->setText("图标设置");
+		ui->pushButton_2->setText("软件名称设置");
+		ui->pushButton_3->setText("保存");
+		ui->pushButton_4->setText("取消");
+	}else if (language == "en")
+	{
+		ui->pushButton->setText("Icon");
+		ui->pushButton_2->setText("SoftwareName");
+		ui->pushButton_3->setText("Save");
+		ui->pushButton_4->setText("Cancel");
+	}else if (language =="es")
+	{
+		ui->pushButton->setText("Iconos");
+		ui->pushButton_2->setText("Nombre");
+		ui->pushButton_3->setText("Guardar");
+		ui->pushButton_4->setText("Cancelación");
+	}
+}
+
 void logoPath::namePath_click()
 {
 	// 打开文件对话框以选择图像文件

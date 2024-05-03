@@ -48,6 +48,7 @@ public:
 	explicit createModel(QWidget* parent = nullptr);
 	~createModel();
 	void closeEvent(QCloseEvent* event);
+	void setcreateModelItem_language(QString language);
 protected:
 	void keyPressEvent(QKeyEvent* event) override;
 	void handleBackspaceOrDelete();
@@ -142,6 +143,45 @@ public:
 		twoD
 	};
 	Mode currMode = NoMode;
+
+	//按钮集合类
+	//效果预览
+	ExecPatternAction *execPatternAction;
+	//采集图片
+	GetImageAction *getImageAction;
+	//保存
+	SaveAction *saveAction;
+	//另存为
+	SaveAsAction *saveAsAction;
+	//关闭当前文件
+	CloseFileAction *closeFileAction;
+	//导入模板
+	ImportAction* importAction;
+	//矩形
+	RectModeAction* rectModeAction;
+	//输出点
+	SetPointAction* setPointAction;
+	//椭圆
+	EllipseModeAction* ellipseModeAction;
+	//删除操作
+	DeleteLabelAction* deleteLabelAction;
+	//多边形
+	PolygonModeAction* polygonModeAction;
+	//选择
+	CurseModeAction* curseModeAction;
+	//搜索区域
+	searchAreaRectAction* searchAreaRectActionItem;
+	//特征区域
+	featureMatchingRectAction* featureMatchingRectActionItem;
+	QToolButton* aBtn = new QToolButton(this);
+
+	//撤销
+	UndoAction* undoAction;
+	//帮助
+	helpAction* helpActionitem;
+
+
+
 signals:
 	void getImageFromCamera();
 	void sendXMLPath(QString xmlPath);

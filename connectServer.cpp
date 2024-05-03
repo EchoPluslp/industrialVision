@@ -36,6 +36,23 @@ connectServer::~connectServer()
 	itemInfo = nullptr;
 }
 
+void connectServer::setconnectValual_language(QString language)
+{
+	if (language == "zh")
+	{
+		ui.label_2->setText("端口：");
+		ui.pushButton_create_server->setText("创建服务端");
+	}else if (language=="en")
+	{
+		ui.label_2->setText("Port：");
+		ui.pushButton_create_server->setText("Create server");
+	}else if (language=="es")
+	{
+		ui.label_2->setText("Puerto：");
+		ui.pushButton_create_server->setText("Crear servicio");
+	}
+}
+
 
 
 //创建点击事件

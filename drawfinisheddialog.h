@@ -25,6 +25,7 @@ public:
 	void showEvent(QShowEvent* e);
 	void setShapeFlag(Shape::Figure flag);
 	void emitcurrentShapeType(Shape::Figure flag);
+	QString language;
 
 	
 signals:

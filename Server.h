@@ -63,6 +63,7 @@ public:
 	bool operator_TCPCanSend = false;
 //	void setTCPCanSendStatus(bool flag);
 	bool isJsonString(const QString& str);
+	QString language;
 private:
 	//bool coreFunc();
 	SOCKET servSock;

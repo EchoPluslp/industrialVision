@@ -57,6 +57,7 @@ void MyGLWidget::setPixmap(QPixmap pixmap, QString text)
 
 void MyGLWidget::setMouseClickFlag(bool flag)
 {
+	language_flag = flag;
 	if (flag)
 	{
 
@@ -203,4 +204,48 @@ void MyGLWidget::restore_Flag() {
 	update();
 	emit rotateIndexValueChanged(m_rotateIndexInt);
 
+}
+
+void MyGLWidget::set_system_language(QString language)
+{
+
+	if (language_flag)
+	{
+		if (language == "zh")
+		{
+			crosshair->setText(tr("十字线（已锁定）"));
+			rotate->setText(tr("旋转（已锁定）"));
+			restore->setText(tr("还原图片（已锁定）"));
+		}else if (language == "en")
+		{
+			crosshair->setText(tr("Crosshair (locked)"));
+			rotate->setText(tr("Rotation (locked)"));
+			restore->setText(tr("Restore pictures (locked)"));
+		}else if (language == "es")
+		{
+			crosshair->setText(tr("Punto de mira (bloqueado)"));
+			rotate->setText(tr("Rotación (bloqueada)"));
+			restore->setText(tr("Restaurar imágenes (bloqueadas)"));
+		}
+	}
+	else {
+		if (language == "zh")
+		{
+			crosshair->setText(tr("十字线"));
+			rotate->setText(tr("旋转"));
+			restore->setText(tr("还原图片"));
+		}
+		else if (language == "en")
+		{
+			crosshair->setText(tr("Crosshair"));
+			rotate->setText(tr("Rotation"));
+			restore->setText(tr("Restore pictures "));
+		}
+		else if (language == "es")
+		{
+			crosshair->setText(tr("Punto de mira"));
+			rotate->setText(tr("Rotación"));
+			restore->setText(tr("Restaurar imágenes"));
+		}
+	}
 }

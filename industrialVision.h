@@ -53,6 +53,9 @@ public:
 	  QString CURRENT_ROLE;
 
 	 connectServer connectValual;
+     //当前默认语言
+     QString setLanguageItem;
+	 void setLanguageInfo(QString language);
 
 private:
 	static void __stdcall ImageCallback(unsigned char* pData, MV_FRAME_OUT_INFO_EX* pFrameInfo, void* pUser);
@@ -106,6 +109,17 @@ private:
     QAction *action_setLogoPath;
     QAction *action_SetAttributes;
     QAction *action_password;
+	QAction* action_userSwitch;
+	QAction* action_helpInfo;
+
+
+    //QACTION 语言设置
+	QMenu* LanguageMenus;
+
+    QAction* action_language_zh;
+	QAction* action_language_en;
+	QAction* action_language_es;
+
 
     //界面计时器
 	QTimer* timer  = new QTimer;  //初始化定时器
@@ -114,6 +128,7 @@ private:
 	bool isStart = false;        //记录是否已经开始计时
 	QPoint patternRectCenterPoint;
     bool m_h_Value_Swap_Flag = true;
+
 private:
 	Ui::industrialVision ui;
     logoSet logoset;
@@ -135,6 +150,7 @@ private:
 	int GetHeight();                      //获取图片高度
 
     int CloseDevice();                   // ch:关闭设备 | en:Close Device
+
 
 private:
     bool                    m_bOpenDevice = false;                        // ch:是否打开设备 | en:Whether to open device
@@ -245,6 +261,9 @@ private slots:
          void actionPasswordAction();
          void actionLogAndPathAction();
          void actionuserSwitch();
+	    void languageSet_zh();
+	    void languageSet_en();
+	    void languageSet_es();
 signals:
     void sendQimageToVisualTemplate(QImage data);
     void cameraTovisualTemplate(QImage img,QString path);
@@ -259,7 +278,9 @@ signals:
     void singal_sendPatternImageWithMaskEllipse(QString patternImage_Path, QRectF patternRect, QRectF qrect, QPoint centerPoint, QPoint patternRectCenterPoint);
 	void singal_sendPatternImageWithMaskPolygon(QString patternImage_Path, QPolygonF patternPolygon, QRectF qrect, QPoint centerPoint, QPoint patternRectCenterPoint);
 
-    
+    void send_system_language(QString language);
+	void send_login_language(QString language);
+
 };
 
 #endif

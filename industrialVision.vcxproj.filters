@@ -342,11 +342,6 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="industrialVision.qrc">
-      <Filter>Resource Files</Filter>
-    </QtRcc>
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="industrialVision.rc" />
   </ItemGroup>
   <ItemGroup>
@@ -413,5 +408,10 @@
     <ClInclude Include="SharedData.h">
       <Filter>Header Files\Tools</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="Resource.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
   </ItemGroup>
 </Project>

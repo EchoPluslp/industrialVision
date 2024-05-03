@@ -206,4 +206,5 @@ public:
 	explicit helpAction(QObject* parent = nullptr);
 };
 
+
 #endif // MYACTIONS_H

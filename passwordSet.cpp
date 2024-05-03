@@ -94,3 +94,20 @@ void passwordSet::setcurrentRole(QString stringRole)
 		ui->lineEdit_admin->setHidden(false);
 	}
 }
+
+void passwordSet::setPasswordLanguage(QString language)
+{
+	if (language == "zh")
+	{
+		ui->pushButton_setadmin->setText("设置管理员密码");
+		ui->pushButton_setuser->setText("设置操作员密码");
+	}else if (language == "en")
+	{
+		ui->pushButton_setadmin->setText("Set administrator password");
+		ui->pushButton_setuser->setText("Set operator password");
+	}else if (language == "es")
+	{
+		ui->pushButton_setadmin->setText("Contraseña del Administrador");
+		ui->pushButton_setuser->setText("Contraseña del operador");
+	}
+}

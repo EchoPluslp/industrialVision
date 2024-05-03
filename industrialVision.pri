@@ -7,10 +7,114 @@
 message("You are running qmake on a generated .pro file. This may not work!")
 
 
-HEADERS += ./industrialVision.h \
-    ./MvCamera.h
-SOURCES += ./main.cpp \
-    ./industrialVision.cpp \
-    ./MvCamera.cpp
-FORMS += ./industrialVision.ui
-RESOURCES += industrialVision.qrc
+HEADERS += ./resource.h \
+    ./resource1.h \
+    ./preHeader.h \
+    ./MvCamera.h \
+    ./logoSet.h \
+    ./logoPath.h \
+    ./passwordSet.h \
+    ./smallMainWindow.h \
+    ./login.h \
+    ./industrialVision.h \
+    ./algorithmLibrary.h \
+    ./paramsitem.h \
+    ./tablewidget.h \
+    ./listwidget.h \
+    ./Server.h \
+    ./TransmitSignals.h \
+    ./connectServer.h \
+    ./connectItemInfo.h \
+    ./mygraphicsitems.h \
+    ./graphicsview.h \
+    ./myglwidget.h \
+    ./statusbar.h \
+    ./toolbar.h \
+    ./menubar.h \
+    ./myactions.h \
+    ./drawfinisheddialog.h \
+    ./filelistdockwidget.h \
+    ./labelsdockwidget.h \
+    ./labeltypedockwidget.h \
+    ./magnifyingglass.h \
+    ./mygraphicsview.h \
+    ./createModel.h \
+    ./globalvar.h \
+    ./Mstruct.h \
+    ./SharedData.h \
+    ./processingthread.h \
+    ./CameraThread.h \
+    ./point.h \
+    ./rect.h \
+    ./shape.h \
+    ./squarepen.h \
+    ./area.h \
+    ./circlepen.h \
+    ./curve.h \
+    ./ellipse.h \
+    ./label.h \
+    ./mycommand.h \
+    ./polygon.h \
+    ./paintscene.h \
+    ./areacontroller.h \
+    ./filecontroller.h \
+    ./labelcontroller.h
+SOURCES += ./industrialVision.cpp \
+    ./login.cpp \
+    ./logoPath.cpp \
+    ./logoSet.cpp \
+    ./main.cpp \
+    ./MvCamera.cpp \
+    ./passwordSet.cpp \
+    ./smallMainWindow.cpp \
+    ./algorithmLibrary.cpp \
+    ./listwidget.cpp \
+    ./paramsitem.cpp \
+    ./tablewidget.cpp \
+    ./connectItemInfo.cpp \
+    ./connectServer.cpp \
+    ./Server.cpp \
+    ./transmitsignals.cpp \
+    ./createModel.cpp \
+    ./area.cpp \
+    ./areacontroller.cpp \
+    ./circlepen.cpp \
+    ./curve.cpp \
+    ./ellipse.cpp \
+    ./filecontroller.cpp \
+    ./label.cpp \
+    ./labelcontroller.cpp \
+    ./mycommand.cpp \
+    ./paintscene.cpp \
+    ./polygon.cpp \
+    ./rect.cpp \
+    ./shape.cpp \
+    ./squarepen.cpp \
+    ./drawfinisheddialog.cpp \
+    ./filelistdockwidget.cpp \
+    ./graphicsview.cpp \
+    ./labelsdockwidget.cpp \
+    ./labeltypedockwidget.cpp \
+    ./magnifyingglass.cpp \
+    ./menubar.cpp \
+    ./myactions.cpp \
+    ./myglwidget.cpp \
+    ./mygraphicsitems.cpp \
+    ./mygraphicsview.cpp \
+    ./statusbar.cpp \
+    ./toolbar.cpp \
+    ./camerathread.cpp \
+    ./globalvar.cpp \
+    ./processingthread.cpp
+FORMS += ./createModel.ui \
+    ./drawfinisheddialog.ui \
+    ./industrialVision.ui \
+    ./labelAttr.ui \
+    ./login.ui \
+    ./logoPath.ui \
+    ./logoSet.ui \
+    ./passwordSet.ui \
+    ./smallMainWindow.ui \
+    ./statusbar.ui \
+    ./connectServer.ui
+RESOURCES += Resource.qrc

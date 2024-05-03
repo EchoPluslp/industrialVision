@@ -501,7 +501,8 @@ void FileController::onExecPattern(LabelController* labelController)
 	int cuurImageHeight = cuurImage.height();
 
 	for (Label* label : labelController->getLabelsOfImage(currImageName)) {
-		if (label->getType().contains("搜索区域"))
+		if (label->getType().contains("搜索区域")|| label->getType().contains("SearchArea")||
+			label->getType().contains("Área de búsqueda"))
 		{
 			if (label) {
 				const Area* area = label->getArea();
@@ -516,7 +517,8 @@ void FileController::onExecPattern(LabelController* labelController)
 				} 
 			}
 		}
-		if (label->getType().contains("特征区域"))
+		if (label->getType().contains("特征区域")|| label->getType().contains("CharacteristicArea") || 
+			label->getType().contains("Zona característica"))
 		{
 			if (label) {
 				const Area* area = label->getArea();
@@ -574,8 +576,9 @@ void FileController::onExecPattern(LabelController* labelController)
 	{
 		if (patternAreaREAL_size_rect.x() == 0 && patternAreaREAL_size_rect.y() == 0 && patternAreaREAL_size_rect.width() == 0 && patternAreaREAL_size_rect.height() == 0)
 		{
+
 			QMessageBox::warning(nullptr, tr("Warning"),
-				"没有特征区域");
+				"NO CharacteristicArea/无特征区域");
 			return;
 		}
 		//获取区域
@@ -591,7 +594,7 @@ void FileController::onExecPattern(LabelController* labelController)
 		if (patternAreaREAL_size_rect.x() == 0 && patternAreaREAL_size_rect.y() == 0 && patternAreaREAL_size_rect.width() == 0 && patternAreaREAL_size_rect.height() == 0)
 		{
 			QMessageBox::warning(nullptr, tr("Warning"),
-				"没有特征区域");
+				"NO CharacteristicArea/无特征区域");
 			return;
 		}
 		//获取区域

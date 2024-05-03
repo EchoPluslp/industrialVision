@@ -19,6 +19,7 @@ public:
 	bool passwordSet::isAlphaNumeric(const QString& str);
 	QString stringRole;
 	void setcurrentRole(QString stringRole);
+	void setPasswordLanguage(QString language);
 private:
 	Ui::password* ui;
 

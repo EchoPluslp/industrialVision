@@ -72,21 +72,59 @@ void DrawFinishedDialog::emitcurrentShapeType(Shape::Figure flag) {
 	//emit sendTypeName(flag);
 	if (flag == Shape::searchAreaRect)
 	{
-		QString string("1.搜索区域");
-		emit sendTypeName(string);
+		if (language == "zh")
+		{
+			QString string("1.搜索区域");
+			emit sendTypeName(string);
+		}else if (language == "en")
+		{
+			QString string("1.Search Area");
+			emit sendTypeName(string);
+		}
+		else if (language == "es")
+		{
+			QString string("1.Área de búsqueda");
+			emit sendTypeName(string);
+		}
 
 	}
 	else if (flag == Shape::featureMatchingRect ||
 		flag == Shape::Polygon ||
 		flag == Shape::Ellipse)
 	{
-		QString string("2.特征区域");
-		emit sendTypeName(string);
+		if (language == "zh")
+		{
+			QString string("2.特征区域");
+			emit sendTypeName(string);
+		}
+		else if (language == "en")
+		{
+			QString string("2.Characteristic areas");
+			emit sendTypeName(string);
+		}
+		else if (language == "es")
+		{
+			QString string("2.Zona características");
+			emit sendTypeName(string);
+		}
 	}
 	else if (flag == Shape::CirclePen)
 	{
-		QString string("3.输出点");
-		emit sendTypeName(string);
+		if (language == "zh")
+		{
+			QString string("3.输出点");
+			emit sendTypeName(string);
+		}
+		else if (language == "en")
+		{
+			QString string("3.Output point");
+			emit sendTypeName(string);
+		}
+		else if (language == "es")
+		{
+			QString string("3.punto de salida");
+			emit sendTypeName(string);
+		}
 	}
 
 }

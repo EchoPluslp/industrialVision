@@ -20,7 +20,7 @@ public:
 	connectServer(QMainWindow *parent = Q_NULLPTR);
 	Server  getConnectItemInfo();
 	~connectServer();
-
+	void setconnectValual_language(QString language);
 public	slots:
 	bool create_server();
 

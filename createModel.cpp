@@ -19,64 +19,53 @@ createModel::createModel(QWidget* parent) :
     statusBar = new StatusBar(this);
     this->setStatusBar(statusBar);
 
-    auto execPatternAction = new ExecPatternAction(this);
+    //效果预览
+     execPatternAction = new ExecPatternAction(this);
     connect(execPatternAction, &ExecPatternAction::triggered,
         this, &createModel::onExecPatternAction);
 
-    auto getImageAction = new GetImageAction(this);
+    //采集图片
+     getImageAction = new GetImageAction(this);
     connect(getImageAction, &GetImageAction::triggered,
         this, &createModel::onGetImageTriggered);
 
-    //connect(getImagqweAction, &GetImageAction::triggered,
-    //    this, &createModel::onGetImageTriggered);
-
-    auto openFileAction = new OpenFileAction(this);
-    connect(openFileAction, &OpenFileAction::triggered,
-        this, &createModel::onOpenFileTriggered);
-
-    auto openDirAction = new OpenDirAction(this);
-    connect(openDirAction, &OpenDirAction::triggered,
-        this, &createModel::onOpenDirTriggered);
-
-    auto saveAction = new SaveAction(this);
+    //保存
+     saveAction = new SaveAction(this);
     connect(saveAction, &SaveAction::triggered,
         this, &createModel::onSaveTriggered);
 
-    auto saveAsAction = new SaveAsAction(this);
+	//另保存
+     saveAsAction = new SaveAsAction(this);
     connect(saveAsAction, &SaveAsAction::triggered,
         this, &createModel::onSaveAsTriggered);
 
-    auto closeFileAction = new CloseFileAction(this);
+    //关闭当前文件
+     closeFileAction = new CloseFileAction(this);
     connect(closeFileAction, &CloseFileAction::triggered,
         this, &createModel::onCloseFileTriggered);
 
-    auto importAction = new ImportAction(this);
+    //导入模板
+     importAction = new ImportAction(this);
     connect(importAction, &ImportAction::triggered,
         this, &createModel::onImportTriggered);
 
-    auto nextImageAction = new NextImageAction(this);
-    connect(nextImageAction, &NextImageAction::triggered,
-        this, &createModel::onNextImageTriggered);
-
-    auto prevImageAction = new PrevImageAction(this);
-    connect(prevImageAction, &PrevImageAction::triggered,
-        this, &createModel::onPrevImageTriggered);
-
-    auto rectModeAction = new RectModeAction(this);
+    //矩形
+     rectModeAction = new RectModeAction(this);
     connect(rectModeAction, &RectModeAction::triggered,
         this, &createModel::onRectModeTriggered);
 
-    //;testSquarePen
-	auto setPointAction = new SetPointAction(this);
+    //输出点
+	 setPointAction = new SetPointAction(this);
 	connect(setPointAction, &SetPointAction::triggered,
 		this, &createModel::onCirclePenModeTriggered);
 
-    auto ellipseModeAction = new EllipseModeAction(this);
+    //椭圆
+     ellipseModeAction = new EllipseModeAction(this);
     connect(ellipseModeAction, &EllipseModeAction::triggered,
         this, &createModel::onEllipseModeTriggered);
 
     //删除操作
-    auto deleteLabelAction = new DeleteLabelAction(this);
+     deleteLabelAction = new DeleteLabelAction(this);
     connect(deleteLabelAction, &DeleteLabelAction::triggered,
         [=]() {
             emit labelsDockWidget->deleteCurrLabel(labelsDockWidget->currLabelName());
@@ -84,57 +73,43 @@ createModel::createModel(QWidget* parent) :
 			paintScene2D->updateShapes(labelController2D, fileController2D->getCurrImageName());
 
         });
-
-    auto polygonModeAction = new PolygonModeAction(this);
+    //多边形
+     polygonModeAction = new PolygonModeAction(this);
     connect(polygonModeAction, &PolygonModeAction::triggered,
         this, &createModel::onPolygonModeTriggered);
 
-    auto curveModeAction = new CurveModeAction(this);
-    connect(curveModeAction, &CurveModeAction::triggered,
-        this, &createModel::onCurveModeTriggered);
 
-    auto squarePenModeAction = new SquarePenModeAction(this);
-    connect(squarePenModeAction, &SquarePenModeAction::triggered,
-        this, &createModel::onSquarePenModeTriggered);
+    //方形掩膜
+    //auto squarePenModeAction = new SquarePenModeAction(this);
+    //connect(squarePenModeAction, &SquarePenModeAction::triggered,
+    //    this, &createModel::onSquarePenModeTriggered);
 
-    auto circlePenModeAction = new CirclePenModeAction(this);
-    connect(circlePenModeAction, &CirclePenModeAction::triggered,
-        this, &createModel::onCirclePenModeTriggered);
-
-    auto curseModeAction = new CurseModeAction(this);
+    //圆形掩膜
+    //auto circlePenModeAction = new CirclePenModeAction(this);
+    //connect(circlePenModeAction, &CirclePenModeAction::triggered,
+    //    this, &createModel::onCirclePenModeTriggered);
+    //选择
+     curseModeAction = new CurseModeAction(this);
     connect(curseModeAction, &CurseModeAction::triggered,
         this, &createModel::onCurseModeTriggered);
 
     //搜索区域
-	auto searchAreaRectActionItem = new searchAreaRectAction(this);
+	 searchAreaRectActionItem = new searchAreaRectAction(this);
 	connect(searchAreaRectActionItem, &searchAreaRectAction::triggered,
 		this, &createModel::onSearchAreaRectTriggered);
     
     //特征匹配
-	auto featureMatchingRectActionItem = new featureMatchingRectAction(this);
+	featureMatchingRectActionItem = new featureMatchingRectAction(this);
 	connect(featureMatchingRectActionItem, &featureMatchingRectAction::triggered,
 		this, &createModel::onFeatureMatchingTriggered);
 
-
-    auto twoDModeAction = new TwoDModeAction(this);
-    //connect(twoDModeAction, &TwoDModeAction::triggered,
-    //    this, &createModel::on2DModeTriggered);
-
-
-
-    auto magnifyAction = new MagnifyAction(this);
-    connect(magnifyAction, &MagnifyAction::triggered,
-        this, &createModel::onMagnifyTriggered);
-
-    auto undoAction = new UndoAction(this);
+    //撤销
+     undoAction = new UndoAction(this);
     connect(undoAction, &MagnifyAction::triggered,
         this, &createModel::onUndoTriggered, Qt::ConnectionType::DirectConnection);
-
-    auto redoAction = new RedoAction(this);
-    connect(redoAction, &MagnifyAction::triggered,
-        this, &createModel::onRedoTriggered, Qt::ConnectionType::DirectConnection);
     
-		auto helpActionitem = new helpAction(this);
+    //帮助
+		 helpActionitem = new helpAction(this);
 	connect(helpActionitem, &helpAction::triggered,
 		this, &createModel::helpActionTriggered, Qt::ConnectionType::DirectConnection);
 
@@ -150,20 +125,20 @@ createModel::createModel(QWidget* parent) :
     drawingActionGroup->addAction(polygonModeAction);
     //曲线
   //  drawingActionGroup->addAction(curveModeAction);
-    drawingActionGroup->addAction(squarePenModeAction);
-    drawingActionGroup->addAction(circlePenModeAction);
+   // drawingActionGroup->addAction(squarePenModeAction);
+   // drawingActionGroup->addAction(circlePenModeAction);
 
     curseModeAction->setCheckable(true);
     curseModeAction->setChecked(true);
-    circlePenModeAction->setCheckable(true);
-    squarePenModeAction->setCheckable(true);
+   // circlePenModeAction->setCheckable(true);
+    //squarePenModeAction->setCheckable(true);
     rectModeAction->setCheckable(true);
     ellipseModeAction->setCheckable(true);
-    curveModeAction->setCheckable(true);
+    //curveModeAction->setCheckable(true);
     polygonModeAction->setCheckable(true);
     //twoDModeAction->setCheckable(true);
    // twoDModeAction->setChecked(true);
-    magnifyAction->setCheckable(true);
+  //  magnifyAction->setCheckable(true);
 
     // set up and connect menu bar
     menuBar = new MenuBar(this);
@@ -244,7 +219,7 @@ createModel::createModel(QWidget* parent) :
 	menuSelection->addAction(polygonModeAction);
 	menuSelection->addAction(ellipseModeAction);
 
-	QToolButton* aBtn = new QToolButton(this);
+	aBtn = new QToolButton(this);
 	aBtn->setPopupMode(QToolButton::InstantPopup);
 	aBtn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 	//aBtn->setDefaultAction(ui->actSelPopMenu);
@@ -529,6 +504,7 @@ void createModel::closeEvent(QCloseEvent* event)
 {
 }
 
+
 void createModel::keyPressEvent(QKeyEvent* event)
 {
 	switch (event->key()) {
@@ -781,4 +757,121 @@ void createModel::helpActionTriggered() {
 
 }
 
+void createModel::setcreateModelItem_language(QString language)
+{
+    drawFinishedDialog->language = language;
+	if (language=="zh")
+	{
+		//效果预览
+		execPatternAction->setText("效果预览");
+		//采集图片
+		getImageAction->setText("采集图片");
+		//保存
+		saveAction->setText("保存");
+		//另存为
+		saveAsAction->setText("另存为");
+		//关闭当前文件
+		 closeFileAction->setText("关闭当前文件");
+		//导入模板
+		importAction->setText("导入模板");
+		//矩形
+		rectModeAction->setText("矩形");
+		//输出点
+		setPointAction->setText("输出点");
+		//椭圆
+		ellipseModeAction->setText("椭圆");
+		//删除操作
+		deleteLabelAction->setText("删除操作");
+		//多边形
+		polygonModeAction->setText("多边形");
+		//选择
+		curseModeAction->setText("选择");
+		//搜索区域
+		searchAreaRectActionItem->setText("搜索区域");
+		//特征区域
+		featureMatchingRectActionItem->setText("特征区域");
+		//撤销
+		undoAction->setText("撤销");
+		//帮助
+		helpActionitem->setText("帮助");
+
+        aBtn->setText("特征区域");
+        labelsDockWidget->setWindowTitle("已选操作");
+	}else if (language == "en")
+	{
+		//效果预览
+		execPatternAction->setText("Effect preview");
+		//采集图片
+		getImageAction->setText("Collecting");
+		//保存
+		saveAction->setText("Save");
+		//另存为
+		saveAsAction->setText("SaveAs");
+		//关闭当前文件
+		closeFileAction->setText("CloseFile");
+		//导入模板
+		importAction->setText("Import");
+		//矩形
+		rectModeAction->setText("Rectangle");
+		//输出点
+		setPointAction->setText("Output point");
+		//椭圆
+		ellipseModeAction->setText("Ellipse");
+		//删除操作
+		deleteLabelAction->setText("Delete");
+		//多边形
+		polygonModeAction->setText("Polygon");
+		//选择
+		curseModeAction->setText("Choice");
+		//搜索区域
+		searchAreaRectActionItem->setText("SearchArea");
+		//特征区域
+		featureMatchingRectActionItem->setText("Rectangle");
+		aBtn->setText("CharacteristicArea");
+		//撤销
+		undoAction->setText("Revoke");
+		//帮助
+		helpActionitem->setText("Help");
+        //已选操作
+		labelsDockWidget->setWindowTitle("SelectedAction");
+
+	}else if (language == "es")
+	{
+		//效果预览
+		execPatternAction->setText("Vista previa del efecto");
+		//采集图片
+		getImageAction->setText("Recogida");
+		//保存
+		saveAction->setText("Salvar");
+		//另存为
+		saveAsAction->setText("SaveAs");
+		//关闭当前文件
+		closeFileAction->setText("Guardar como");
+		//导入模板
+		importAction->setText("Importación");
+		//矩形
+		rectModeAction->setText("Rectangular");
+		//输出点
+		setPointAction->setText("Punto de salida");
+		//椭圆
+		ellipseModeAction->setText("Elíptico");
+		//删除操作
+		deleteLabelAction->setText("Eliminar");
+		//多边形
+		polygonModeAction->setText("Polígono");
+		//选择
+		curseModeAction->setText("Selección");
+		//搜索区域
+		searchAreaRectActionItem->setText("Área de búsqueda");
+		//特征区域
+		featureMatchingRectActionItem->setText("Rectángulos");
+		aBtn->setText("Zona característica");
+		//撤销
+		undoAction->setText("Revocación");
+		//帮助
+		helpActionitem->setText("Ayudar");
+		//已选操作
+		labelsDockWidget->setWindowTitle("Seleccionada");
+	}
+}
 

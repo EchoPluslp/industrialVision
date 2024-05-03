@@ -160,9 +160,6 @@
     <QtUic Include="statusbar.ui" />
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="industrialVision.qrc" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="industrialVision.rc" />
   </ItemGroup>
   <ItemGroup>
@@ -217,6 +214,9 @@
     <ClInclude Include="polygon.h" />
     <ClInclude Include="preHeader.h" />
     <ClInclude Include="MvCamera.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="Resource.qrc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

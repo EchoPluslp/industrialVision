@@ -4,14 +4,16 @@
 
 TEMPLATE = app
 TARGET = industrialVision
-DESTDIR = ./x64/Debug
+DESTDIR = ./x64/Release
+QT += xml
 CONFIG += debug
+DEFINES += WIN32_LEAN_AND_MEAN
 LIBS += -L"." \
     -lMvCameraControl \
-    -lopencv_world440d
+    -lopencv_world440
 DEPENDPATH += .
 MOC_DIR += .
-OBJECTS_DIR += debug
+OBJECTS_DIR += release
 UI_DIR += .
 RCC_DIR += .
 include(industrialVision.pri)

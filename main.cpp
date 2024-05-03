@@ -3,6 +3,7 @@
 #include <QCoreApplication>
 bool checkOnly();
 
+QLocale::Language m_lanuage;
 int main(int argc, char *argv[]){
 
 
@@ -25,7 +26,7 @@ int main(int argc, char *argv[]){
 	QString passwordAdmin = settings->value("passwordAdmin","2222").toString();
 	//操作员密码
 	QString passwordUser = settings->value("passwordUser","1111").toString();
-
+	m_lanuage = QLocale::system().language();
 	
 	//if (passwordUser.isNull() || passwordUser.size() == 0)
 	//{

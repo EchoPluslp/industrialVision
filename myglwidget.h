@@ -59,11 +59,13 @@ private:
 	QAction* restore; //»¹Ô­Í¼Æ¬
 	QMenu* RightButtonMenu; //ÓÒ¼ü²Ëµ¥
 	const 	std::vector<int> angleArc = { 0,90,180,270 };
+	bool language_flag = FALSE;
 public slots:
 	void crosshair_Flag();
 	void rotate_Flag();
 	void restore_Flag();
 	void setMouseClickFlag(bool flag);
+	void set_system_language(QString language);
 signals:
 	void rotateIndexValueChanged(int value);
 };
