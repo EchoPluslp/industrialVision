@@ -789,7 +789,7 @@ void createModel::setcreateModelItem_language(QString language)
 		//搜索区域
 		searchAreaRectActionItem->setText("搜索区域");
 		//特征区域
-		featureMatchingRectActionItem->setText("特征区域");
+		featureMatchingRectActionItem->setText("矩形");
 		//撤销
 		undoAction->setText("撤销");
 		//帮助

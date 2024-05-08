@@ -14,7 +14,7 @@ Server::Server()
 	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
 	settings->beginGroup("Idus");
 	//定时设置时间
-	QString timevalueQString = settings->value("timevalue","3000").toString();
+	QString timevalueQString = settings->value("timevalue","5000").toString();
 	 language = settings->value("language", "zh").toString();
 
 	timestart = timevalueQString.toInt();
@@ -87,15 +87,15 @@ void Server::onReadyRead()
 		QString logStringFromClient_err = "";
 		if (language == "zh")
 		{
-			logStringFromClient_err + "服务端接受到消息异常: 请重启程序";
+			logStringFromClient_err = logStringFromClient_err + "服务端接受到消息异常: 请重启程序";
 		}
 		else if (language == "en")
 		{
-			logStringFromClient_err + "The server received a message exception: Please restart the program";
+			logStringFromClient_err = logStringFromClient_err + "The server received a message exception: Please restart the program";
 		}
 		else if (language == "es")
 		{
-			logStringFromClient_err + "El servidor recibió un mensaje anormal: reinicie el programa";
+			logStringFromClient_err = logStringFromClient_err + "El servidor recibió un mensaje anormal: reinicie el programa";
 		}
 		emit logoString(logStringFromClient_err, "Red");
 
@@ -108,15 +108,15 @@ void Server::onReadyRead()
 	QString logStringFromClient ="";
 	if (language == "zh")
 	{
-		logStringFromClient + "接收到来自客户端的消息:" + message;
+		logStringFromClient = logStringFromClient + "接收到来自客户端的消息:" + message;
 	}
 	else if (language == "en")
 	{
-		logStringFromClient + "Received message from client:" + message;
+		logStringFromClient = logStringFromClient + "Received message from client:" + message;
 	}
 	else if (language == "es")
 	{
-		logStringFromClient + "Se recibieron mensajes del cliente:" + message;
+		logStringFromClient = logStringFromClient + "Se recibieron mensajes del cliente:" + message;
 	}
 
 	emit logoString(logStringFromClient, "GREEN");
@@ -144,15 +144,15 @@ void Server::onReadyRead()
 		QString logStringToClient = "";
 		if (language == "zh")
 		{
-			logStringToClient + "给客户端发送数据:" + abyte;
+			logStringToClient = logStringToClient + "给客户端发送数据:" + abyte;
 		}
 		else if (language == "en")
 		{
-			logStringToClient + "Send data to the client" + abyte;
+			logStringToClient = logStringToClient + "Send data to the client" + abyte;
 		}
 		else if (language == "es")
 		{
-			logStringToClient + "Enviar datos al cliente" + abyte;
+			logStringToClient = logStringToClient + "Enviar datos al cliente" + abyte;
 		}
 		emit logoString(logStringToClient, "GREEN");
 	}
@@ -166,15 +166,15 @@ void Server::onReadyRead()
 
 		 if (language == "zh")
 		 {
-			 logStringToClient + "给客户端发送数据:" + sendMessager;
+			 logStringToClient = logStringToClient + "给客户端发送数据:" + sendMessager;
 		 }
 		 else if (language == "en")
 		 {
-			 logStringToClient + "Send data to the client" + sendMessager;
+			 logStringToClient = logStringToClient + "Send data to the client" + sendMessager;
 		 }
 		 else if (language == "es")
 		 {
-			 logStringToClient + "Enviar datos al cliente" + sendMessager;
+			 logStringToClient = logStringToClient + "Enviar datos al cliente" + sendMessager;
 		 }
 
 		 emit logoString(logStringToClient, "GREEN");
@@ -214,15 +214,15 @@ QString Server::recvMsg(QString receiveMessage)
 		QString logStringToClient = "";
 		if (language == "zh")
 		{
-			logStringToClient + "定时器触发，中断当前处理";
+			logStringToClient = logStringToClient + "定时器触发，中断当前处理";
 		}
 		else if (language == "en")
 		{
-			logStringToClient + "Timer triggered, interrupting current processing";
+			logStringToClient = logStringToClient + "Timer triggered, interrupting current processing";
 		}
 		else if (language == "es")
 		{
-			logStringToClient + "Activación del cronómetro para interrumpir el procesamiento actual";
+			logStringToClient = logStringToClient + "Activación del cronómetro para interrumpir el procesamiento actual";
 		}
 
 		emit logoString(logStringToClient, "GRAY");
@@ -293,15 +293,15 @@ QJsonObject Server::recvMsgByJson(QString receiveMessage, QString cmdID)
 		QString logStringToClient ="";
 		if (language == "zh")
 		{
-			logStringToClient + "定时器触发，中断当前处理";
+			logStringToClient = logStringToClient + "定时器触发，中断当前处理";
 		}
 		else if (language == "en")
 		{
-			logStringToClient + "Timer triggered, interrupting current processing";
+			logStringToClient = logStringToClient + "Timer triggered, interrupting current processing";
 		}
 		else if (language == "es")
 		{
-			logStringToClient + "Activación del cronómetro para interrumpir el procesamiento actual";
+			logStringToClient = logStringToClient + "Activación del cronómetro para interrumpir el procesamiento actual";
 		}
 
 		emit logoString(logStringToClient, "GRAY");

@@ -1177,6 +1177,16 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithSource( cv::Mat source
 	{
 		ResultPoint itemn(areaMatRect.x+location.x * pow(2, 3) + patternWidth / 2 , areaMatRect.y+location.y * pow(2, 3)+ patternHeight / 2, -angle, temp);
 
+
+		//有输出点
+		if ((!(centerPointInProcess.x() == 0 && centerPointInProcess.y() == 0)))
+		{
+
+			QPoint centerPointx = calculateOffsetB(patternRectCenterPointInProcess, centerPointInProcess, initialDistance, initialDirection, QPoint(itemn.X, itemn.Y));
+			itemn.X = centerPointx.x();
+			itemn.Y = centerPointx.y();
+		}
+
 		drawCenterPoint.x = itemn.X;
 		drawCenterPoint.y = itemn.Y;
 
@@ -1275,6 +1285,15 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithMask(QImage patternIma
 	if (temp > m_dScore)
 	{
 		 ResultPoint itemn(location.x * pow(2, 3), location.y * pow(2, 3), angle, temp);
+		 //有输出点
+	/*	 if ((!(centerPointInProcess.x() == 0 && centerPointInProcess.y() == 0)))
+		 {
+
+			 QPoint centerPointx = calculateOffsetB(patternRectCenterPointInProcess, centerPointInProcess, initialDistance, initialDirection, QPoint(lastResult.x(), lastResult.y()));
+			 lastResult.setX(centerPointx.x());
+			 lastResult.setY(centerPointx.y());
+		 }*/
+
 		 int total_time = timedebuge.elapsed();
 		 emit QPointSendtoFileControl(QPoint(itemn.X + patternWidth/2 , itemn.Y + patternHeight / 2), total_time);
 		 return itemn;

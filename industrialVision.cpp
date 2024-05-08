@@ -146,7 +146,7 @@ industrialVision::industrialVision(QWidget *parent)
 
 	LanguageMenus->addAction(action_language_zh);
 	LanguageMenus->addAction(action_language_en);
-	LanguageMenus->addAction(action_language_es);
+	//LanguageMenus->addAction(action_language_es);
 	ui.menuBar->addMenu(LanguageMenus);
 	///////
 
@@ -1098,7 +1098,7 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 						for (int i = 0; i < prev.count(); i++) {
 							auto point = prev.at(i);
 							patternAreaREAL_size_polygon << QPointF(point * ratio);
-						}
+						  }
 					}
 			}
 				else if (typeName.contains("输出点")|| typeName.contains("Output point")||
@@ -1127,8 +1127,9 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 							centerPoint = getCenterPointFromCircle(QpointList);
 							centerPoint.setX(((double)centerPoint.x() / small_Picture.width()) * m_width);
 							centerPoint.setY(((double)centerPoint.y() / small_Picture.height()) * m_height);
-						//	patternRectCenterPoint.setX(patternAreaREAL_size.x() + (patternAreaREAL_size.width() / 2));
-							//patternRectCenterPoint.setY(patternAreaREAL_size.y() + (patternAreaREAL_size.height() / 2));
+							//输出点中心实际的中心坐标
+							patternRectCenterPoint.setX(patternAreaREAL_size_rect.x() + (patternAreaREAL_size_rect.width() / 2));
+							patternRectCenterPoint.setY(patternAreaREAL_size_rect.y() + (patternAreaREAL_size_rect.height() / 2));
 						}
 				}
 			}
