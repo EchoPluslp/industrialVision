@@ -1286,13 +1286,13 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithMask(QImage patternIma
 	{
 		 ResultPoint itemn(location.x * pow(2, 3), location.y * pow(2, 3), angle, temp);
 		 //有输出点
-	/*	 if ((!(centerPointInProcess.x() == 0 && centerPointInProcess.y() == 0)))
+		 if ((!(centerPointInProcess.x() == 0 && centerPointInProcess.y() == 0)))
 		 {
 
-			 QPoint centerPointx = calculateOffsetB(patternRectCenterPointInProcess, centerPointInProcess, initialDistance, initialDirection, QPoint(lastResult.x(), lastResult.y()));
-			 lastResult.setX(centerPointx.x());
-			 lastResult.setY(centerPointx.y());
-		 }*/
+			 QPoint centerPointx = calculateOffsetB(patternRectCenterPointInProcess, centerPointInProcess, initialDistance, initialDirection, QPoint(itemn.X, itemn.Y));
+			 itemn.X = centerPointx.x();
+			 itemn.Y = centerPointx.y();
+		 }
 
 		 int total_time = timedebuge.elapsed();
 		 emit QPointSendtoFileControl(QPoint(itemn.X + patternWidth/2 , itemn.Y + patternHeight / 2), total_time);
@@ -1342,8 +1342,19 @@ void ProcessingThread::slot_recievePatternImageWithMask(QString pattern_Path, QR
 	cv::Mat mask = cv::Mat::zeros(ReadImagestd.size(), CV_8UC1);
 	cv::ellipse(mask, center, cv::Size(width / 2, length / 2), 0, 0, 360, 255, -1);
 	cv::Rect patternAreaRealSize(pattern_Rect.x(), pattern_Rect.y(), pattern_Rect.width(), pattern_Rect.height());
-
 	patternMatEllipseMask = mask(patternAreaRealSize);	
+
+	//设置输出点坐标
+		//设置输出点坐标
+	centerPointInProcess.setX(centerPoint.x());
+	centerPointInProcess.setY(centerPoint.y());
+
+	patternRectCenterPointInProcess.setX(patternRectCenterPoint.x());
+	patternRectCenterPointInProcess.setY(patternRectCenterPoint.y());
+
+	initialDistance = calculateInitialDistance(patternRectCenterPoint, centerPoint);    // Initial distance between A and B
+	initialDirection = calculateInitialDirection(patternRectCenterPoint, centerPoint);  // Initial direction angle in degrees
+
 }
 
 void ProcessingThread::slot_recievePatternImageWithPolygonMask(QString pattern_Path, QPolygonF pattern_Rect, QRectF areaRect, QPoint centerPoint, QPoint patternRectCenterPoint)
