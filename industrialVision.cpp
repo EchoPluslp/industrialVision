@@ -146,7 +146,7 @@ industrialVision::industrialVision(QWidget *parent)
 
 	LanguageMenus->addAction(action_language_zh);
 	LanguageMenus->addAction(action_language_en);
-	//LanguageMenus->addAction(action_language_es);
+	LanguageMenus->addAction(action_language_es);
 	ui.menuBar->addMenu(LanguageMenus);
 	///////
 
@@ -172,7 +172,7 @@ industrialVision::industrialVision(QWidget *parent)
 	setButtonClickLimits(false);
 	//白色填充左上角图标
     setWindowTitle("V-Gp System V1.0");
-	setWindowIcon(QIcon("icon.ico"));
+	setWindowIcon(QIcon("Image/login/icon.ico"));
 	setLanguageInfo(setLanguageItem);
 
 	if (setLanguageItem=="zh")

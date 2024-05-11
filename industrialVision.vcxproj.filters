@@ -414,4 +414,8 @@
       <Filter>Resource Files</Filter>
     </QtRcc>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="title.png" />
+    <Image Include="Image\login\icon.ico" />
+  </ItemGroup>
 </Project>

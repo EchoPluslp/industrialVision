@@ -18,3 +18,4 @@ UI_DIR += .
 RCC_DIR += .
 include(industrialVision.pri)
 win32:RC_FILE = industrialVision.rc
+RC_ICONS = Image/login/icon.ico

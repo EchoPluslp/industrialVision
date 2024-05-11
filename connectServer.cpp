@@ -10,9 +10,8 @@ connectServer::connectServer(QMainWindow*parent)
 	//QObject::connect(subThread, &QThread::started, itemInfo, &connectItemInfo::Thread_deal);
 	
 	//白色填充左上角图标
-	QPixmap pixmap(100, 100);
-	pixmap.fill(Qt::white);
-	setWindowIcon(QIcon(pixmap));
+	setWindowIcon(QIcon("Image/login/icon.ico"));
+
 
   connect(this, &connectServer::send_ipAndPort, itemInfo, &connectItemInfo::reveive_ipAndPort);
   connect(subThread, &QThread::started, itemInfo, &connectItemInfo::Thread_deal);

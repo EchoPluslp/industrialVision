@@ -23,13 +23,12 @@ login::login(QWidget* parent) :
 	currentLanguage = settings->value("language","zh").toString();
 	slot_seting_language(currentLanguage);
 
-	//白色填充左上角图标
-	QPixmap pixmap(100, 100);
-	pixmap.fill(Qt::white);
-	setWindowIcon(QIcon(pixmap));
+	
 	connect(&w, &industrialVision::sign_switchLogin,this,&login::slot_switchLog,Qt::DirectConnection);
 	connect(&w, &industrialVision::send_login_language, this, &login::slot_seting_language, Qt::DirectConnection);
 	settings->endGroup();
+	setWindowIcon(QIcon("Image/login/icon.ico"));
+
 }
 
 void login::login_in() {

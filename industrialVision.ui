@@ -27,7 +27,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>x64/Debug/title.png</normaloff>x64/Debug/title.png</iconset>
+    <normaloff>logo.ico</normaloff>logo.ico</iconset>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>

@@ -10,6 +10,8 @@ createModel::createModel(QWidget* parent) :
     ui->setupUi(this);
 
     setWindowTitle(tr("模板设置"));
+	setWindowIcon(QIcon("Image/login/icon.ico"));
+
     windowTitleItem = windowTitle();
     QWidget* c = this->takeCentralWidget();
     if (c) delete c;
@@ -484,11 +486,6 @@ createModel::createModel(QWidget* parent) :
     addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, labelsDockWidget2D);
   //  addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, fileListDockWidget2D);
     on2DModeTriggered();
-
-	//白色填充左上角图标
-	QPixmap pixmap(100, 100);
-	pixmap.fill(Qt::white);
-	setWindowIcon(QIcon(pixmap));
 }
 
 createModel::~createModel()
