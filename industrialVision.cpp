@@ -1654,7 +1654,8 @@ bool industrialVision::read_info_from_ini(QString path)
 			nthresholdValue, nSampleDirection, nMeasureNums, QRect(roiX, roiY, roiWidth, roiHeight),QPointF(pt_start_lineX, pt_start_lineY),
 			QPointF(pt_end_lineX, pt_end_lineY));
 		m_xmlpath = path;
-
+		//设置为ini模式
+		m_processingThread->setShape_match(true);
 		return true;
 		// 退出分组
 	}
@@ -1685,15 +1686,15 @@ bool industrialVision::read_info_from_ini(QString path)
 			dSigma, nThreshold, nTranslation, nMesureNums, nCircleSize, nSampleDirection, QRectF(roiX, roiY, roiWidth, roiHeight));
 		settings.endGroup();
 		m_xmlpath = path;
-
+		//设置为ini模式
+		m_processingThread->setShape_match(true);
 		return true;
 
 		}
 	settings.endGroup();
 
 	}
-	//设置为ini模式
-	m_processingThread->setShape_match(true);
+
 	}
 
 	else {//读取模板匹配的数据
