@@ -782,7 +782,7 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 					return false;							
 				}																
 				//一致	
-				m_processingThread->setmodelAndRealSclar(true);
+				m_processingThread->setmodelAndRealSclar(true); 
                 if (typeName.contains("搜索区域")) {
 					areaNode = currentShape->getItem()->boundingRect();
 					areaNodeREAL_size.setX(((double)areaNode.x() / small_Picture.width()) * m_width);
@@ -935,7 +935,6 @@ bool industrialVision::getPatternInfoFromXML(QString path)
 		return true;
 	}else if (currentPattern_OBJ == Shape::Ellipse)
 	{
-		//123
 		m_processingThread->setShapeType(0);
 
 		emit singal_sendPatternImageWithMaskEllipse(pattern_Path, patternAreaREAL_size_rect, srcQRect, centerPoint, patternRectCenterPoint);
@@ -1648,7 +1647,7 @@ bool industrialVision::read_info_from_ini(QString path)
 
 		double pt_end_lineX = settings.value("pt_end_line.x", 0).toDouble();
 		double pt_end_lineY = settings.value("pt_end_line.y", 0).toDouble();
-		settings.endGroup();
+		//settings.endGroup();
 
 		emit sendInfo_shapeMatch_Value(QPointF(pt_begin_cv2X, pt_begin_cv2Y), QPointF(pt_end_cv2X, pt_end_cv2Y), height, width,
 			nthresholdValue, nSampleDirection, nMeasureNums, QRect(roiX, roiY, roiWidth, roiHeight),QPointF(pt_start_lineX, pt_start_lineY),
@@ -1656,7 +1655,6 @@ bool industrialVision::read_info_from_ini(QString path)
 		m_xmlpath = path;
 		//设置为ini模式
 		m_processingThread->setShape_match(true);
-		return true;
 		// 退出分组
 	}
 	if (groupName.contains("circle"))
@@ -1684,16 +1682,16 @@ bool industrialVision::read_info_from_ini(QString path)
 
 		emit sendInfo_shapeMatch_CIRCLE(QPointF(pdCenterX, pdCenterY), nRadius, dMeasureLength, dMeasureHeight,
 			dSigma, nThreshold, nTranslation, nMesureNums, nCircleSize, nSampleDirection, QRectF(roiX, roiY, roiWidth, roiHeight));
-		settings.endGroup();
+		//settings.endGroup();
 		m_xmlpath = path;
 		//设置为ini模式
 		m_processingThread->setShape_match(true);
-		return true;
 
 		}
 	settings.endGroup();
 
 	}
+	return true;
 
 	}
 
