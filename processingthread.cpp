@@ -473,8 +473,9 @@ void ProcessingThread::slot_recievePatternImage(QString pattern_Path,QRectF patt
 	
 	 initialDistance = calculateInitialDistance(patternRectCenterPoint, centerPoint);    // Initial distance between A and B
 	 initialDirection = calculateInitialDirection(patternRectCenterPoint, centerPoint);  // Initial direction angle in degrees
-	
+	 setAngleMatchInformation();
 	 templData->bIsPatternLearned = true;
+
 }
 
 //模板图,原图
@@ -509,6 +510,7 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
     //第一阶段从最顶层找出大致的角度与roi
     double dAngleStep = atan(2.0 / max(pTemplData->vecPyramid[iTopLayer].cols, pTemplData->vecPyramid[iTopLayer].rows)) * R2D;
 
+	//2024-6-25-增加配置文件设置角度信息和正反信息
     std::vector<double> vecAngles;
     if (m_dToleranceAngle < VISION_TOLERANCE)
         vecAngles.push_back(0.0);
@@ -736,11 +738,26 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
         sstm.ptCenter = Point2d((sstm.ptLT.x + sstm.ptRT.x + sstm.ptRB.x + sstm.ptLB.x) / 4, (sstm.ptLT.y + sstm.ptRT.y + sstm.ptRB.y + sstm.ptLB.y) / 4);
         sstm.dMatchedAngle = -vecAllResult[i].dMatchAngle;
         sstm.dMatchScore = vecAllResult[i].dMatchScore;
-        if (sstm.dMatchedAngle < -180)
-            sstm.dMatchedAngle += 360;
-        if (sstm.dMatchedAngle > 180)
-            sstm.dMatchedAngle -= 360;
+		/* if (sstm.dMatchedAngle < -180)
+			 sstm.dMatchedAngle += 360;
+		 if (sstm.dMatchedAngle > 180)
+			 sstm.dMatchedAngle -= 360;*/
+		if (sstm.dMatchedAngle<0)
+		{
+			//如果小于0，转换成为逆时针的360度范围
+			sstm.dMatchedAngle += 360;
+		}
 
+
+		if (rotationDirection == 1)
+		{
+			//由逆时针--->转为顺时针。   
+			sstm.dMatchedAngle = 360 - sstm.dMatchedAngle;
+		}
+		
+		if (sstm.dMatchedAngle == 360) {
+			sstm.dMatchedAngle = 0;
+		}
         //Test Subpixel
         //存出MATCH ROI
         if (i + 1 == m_iMaxPos)
@@ -1149,6 +1166,7 @@ void ProcessingThread::FilterWithScore(std::vector<s_MatchParameter>* vec, doubl
 	return;
 }
 
+
 void ProcessingThread::FilterWithRotatedRect(vector<s_MatchParameter>* vec, int iMethod, double dMaxOverLap)
 {
 	int iMatchSize = (int)vec->size();
@@ -1305,9 +1323,15 @@ void ProcessingThread::slot_processMatchPicture(QImage patternImage, QImage sour
 
 	int total_time = timedebuge.elapsed();
 	
+	setAngleMatchInformation();
+
 	emit QPointSendtoFileControl(QPoint(resultPoint.x, resultPoint.y), total_time);
 }
 
+void ProcessingThread:: setAngleMatchInformation() {
+	//sef
+	//
+}
 
 //旋转图像
 Mat ImageRotate(Mat image, double angle)

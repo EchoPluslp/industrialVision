@@ -166,6 +166,8 @@ public:
 	void setShape_match(bool flag) {
 		shape_match = flag; modelAndRealSclar = false;
 	};
+	//设置匹配角度的信息
+	void setAngleMatchInformation();
 signals: 
 	void signal_newPixmap(QPixmap newPixmap, int id);
 	void signal_patternResult(QPointF qpointf,int dateTime);
@@ -234,6 +236,8 @@ private:
 	 QList< PatternInfo> shapeMatch_Patten;
 
 	 QList< PatternInfo_circle> shapeMatch_Patten_Circle;
+
+	 int rotationDirection = 0;
 
 
 };

@@ -34,6 +34,7 @@
 #include "SharedData.h"
 #include "mainwindow.h"
 #include "ncc_modelmatch.h"
+#include "matchParam.h"
 using namespace cv;
 using namespace std;
 
@@ -89,11 +90,12 @@ private:
     cv::Mat rotaete_imgTemp;
 	QPoint centerPoint;
 	QRect originalGeometry; // 用于保存初始窗口位置和大小
-
-
+    
+    //旋转参数设置
+    matchParam angeleMatchParamItem;
     double                      m_dToleranceAngle =0;
     double                  m_dScore = 80;//得分阈值
-    double                  m_iMaxPos =   2;//最多数量
+    double                  m_iMaxPos =   1;//最多数量
     double                  m_dMaxOverlap  = 0;
     bool                       rotate_image = false;
     bool                    shizixian = true;
@@ -111,6 +113,8 @@ private:
     QAction *action_setLogoPath;
     QAction *action_SetAttributes;
     QAction *action_password;
+	QAction* action_angleParam;
+
 
     //界面计时器
 	QTimer* timer  = new QTimer;  //初始化定时器
@@ -252,6 +256,7 @@ private slots:
          void actionPasswordAction();
          void actionLogAndPathAction();
          void actionuserSwitch();
+         void actionAngleParam();
 signals:
     void sendQimageToVisualTemplate(QImage data);
     void cameraTovisualTemplate(QImage img,QString path);

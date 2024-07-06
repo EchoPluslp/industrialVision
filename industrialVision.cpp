@@ -106,6 +106,12 @@ industrialVision::industrialVision(QWidget *parent)
 	action_setLogoPath->setFont(QFont(tr("宋体"), 40, QFont::Bold, false));
 	connect(action_setLogoPath, &QAction::triggered,
 		this, &industrialVision::actionLogAndPathAction);
+	
+		action_angleParam = new QAction();
+		action_angleParam->setText("旋转参数");
+		action_angleParam->setFont(QFont(tr("宋体"), 40, QFont::Bold, false));
+	connect(action_angleParam, &QAction::triggered,
+		this, &industrialVision::actionAngleParam);
 
 	SettingMenus = new QMenu("&设置", ui.menuBar);
 	ui.menuBar->addMenu(SettingMenus);
@@ -632,6 +638,9 @@ void industrialVision::setCURRENT_ROLE(QString currentROle)
 	}
 	//密码设置
 	SettingMenus->addAction(action_password);
+
+	//密码设置
+	SettingMenus->addAction(action_angleParam);
 }
 
 //搜索区域按钮
@@ -1354,7 +1363,7 @@ void industrialVision::Setinitializationparameters()
 			m_height = temp;
 		}
 		//xml路径
-		QString m_xmlFilePath = settings->value("m_xmlFilePath").toString();
+	/*	QString m_xmlFilePath = settings->value("m_xmlFilePath").toString();
 		if (m_xmlFilePath.isEmpty())
 		{
 			AppendText("xml默认路径为空,请设置模板文件路径", Red);
@@ -1362,7 +1371,7 @@ void industrialVision::Setinitializationparameters()
 		else {
 			getXMLPATH(m_xmlFilePath);
 			AppendText("加载路径读取xml文件完成", Green);
-		}
+		}*/
 
     //设置参数
     OnBnClickedSetParameterButton();
@@ -1530,6 +1539,10 @@ void industrialVision::actionuserSwitch()
 {
 	emit sign_switchLogin();
 	//close();
+}
+//设置旋转界面
+void industrialVision::actionAngleParam() {
+	angeleMatchParamItem.show();
 }
 
 void industrialVision::actionLogAndPathAction()

@@ -14,7 +14,7 @@ Server::Server()
 	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
 	settings->beginGroup("Idus");
 	//定时设置时间
-	QString timevalueQString = settings->value("timevalue","1000").toString();
+	QString timevalueQString = settings->value("timevalue","3000").toString();
 	timestart = timevalueQString.toInt();
 	if (server->listen(QHostAddress::LocalHost, 60000)) {
 		emit logoString("服务器已启动，等待客户端连接...", "GREEN");

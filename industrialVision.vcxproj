@@ -135,6 +135,7 @@
     <ClCompile Include="magnifyingglass.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow.cpp" />
+    <ClCompile Include="matchParam.cpp" />
     <ClCompile Include="menubar.cpp" />
     <ClCompile Include="MvCamera.cpp" />
     <ClCompile Include="myactions.cpp" />
@@ -172,6 +173,7 @@
     <QtUic Include="logoPath.ui" />
     <QtUic Include="logoSet.ui" />
     <QtUic Include="mainwindow.ui" />
+    <QtUic Include="mattchParam.ui" />
     <QtUic Include="ncc_mainwindow.ui" />
     <QtUic Include="passwordSet.ui" />
     <QtUic Include="smallMainWindow.ui" />
@@ -202,6 +204,7 @@
     <QtMoc Include="logoSet.h" />
     <QtMoc Include="logoPath.h" />
     <QtMoc Include="mainwindow.h" />
+    <QtMoc Include="matchParam.h" />
     <ClInclude Include="Mstruct.h" />
     <QtMoc Include="passwordSet.h" />
     <ClInclude Include="myCCaliperGUI.h" />
