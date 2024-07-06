@@ -1331,6 +1331,13 @@ void ProcessingThread::slot_processMatchPicture(QImage patternImage, QImage sour
 void ProcessingThread:: setAngleMatchInformation() {
 	//sef
 	//
+	QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
+	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
+	settings->beginGroup("Idus");
+	QString file_toleranceAngle = settings->value("toleranceAngle", "0").toString();
+	QString file_rotationDirection = settings->value("rotationDirection", "0").toString();
+	m_dToleranceAngle = file_toleranceAngle.toInt();
+	rotationDirection = file_rotationDirection.toInt();
 }
 
 //Ðý×ªÍ¼Ïñ
