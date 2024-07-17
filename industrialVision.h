@@ -90,6 +90,8 @@ private:
 	QPoint centerPoint;
 	QRect originalGeometry; // 用于保存初始窗口位置和大小
 
+    //2024-7-17 新增十字架左右移动
+   QPoint buttonLeftAction;
 
     double                      m_dToleranceAngle =0;
     double                  m_dScore = 80;//得分阈值
@@ -123,6 +125,7 @@ private:
 	Ui::industrialVision ui;
     logoSet logoset;
 	logoPath logoPathItem;
+
 
     /*ch:最开始时的窗口初始化 | en:Window initialization*/
     bool DisplayWindowInitial();
@@ -252,6 +255,8 @@ private slots:
          void actionPasswordAction();
          void actionLogAndPathAction();
          void actionuserSwitch();
+         //2024-7-17,十字架移动
+         void action_ButtonLeft(QPoint buttonItem);
 signals:
     void sendQimageToVisualTemplate(QImage data);
     void cameraTovisualTemplate(QImage img,QString path);
@@ -275,6 +280,9 @@ signals:
     void sendInfo_shapeMatch_CIRCLE(QPointF centerP,qreal nRadius,qreal dMeasureLength, qreal dMeasureHeight,
        qreal dSigma,qreal nThreshold,qreal nTranslation,qreal nMesureNums,qreal nCircleSize,
         qreal nSampleDirection, QRectF roi);
+
+    //2024-7-17 十字架移动
+    void action_SendButtonValue(QPoint pointItem);
 };
 
 #endif

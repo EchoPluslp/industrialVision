@@ -59,12 +59,17 @@ private:
 	QAction* restore; //还原图片
 	QMenu* RightButtonMenu; //右键菜单
 	const 	std::vector<int> angleArc = { 0,90,180,270 };
+
+	QPoint drawLinePoint;   //画图中新的鼠标位置
+
 public slots:
 	void crosshair_Flag();
 	void rotate_Flag();
 	void restore_Flag();
 	void setMouseClickFlag(bool flag);
+	void receive_ButtonLeft(QPoint buttonLeft);
 signals:
 	void rotateIndexValueChanged(int value);
+	void sendButton(QPoint buttonValue);
 };
 #endif // MYGLWIDGET_H

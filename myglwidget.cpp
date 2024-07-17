@@ -97,8 +97,8 @@ void MyGLWidget::paintEvent(QPaintEvent* event)
 		painter.eraseRect(rect);
 		painter.translate(0 + XPtInterval, 0 + YPtInterval);//进行平移
 		//	//按照高度等比例缩放图片
-	int H = this->height();
-	int realH = myPixmap.height();
+		int H = this->height();
+		int realH = myPixmap.height();
 	//QPixmap pix = myPixmap.scaledToHeight(H - 5);//图片缩放到指定高度
 
 		painter.drawPixmap(QRect(0, 0, myPixmap.width() * factor, (myPixmap.height() - 25) * factor), myPixmap);
@@ -117,6 +117,15 @@ void MyGLWidget::mousePressEvent(QMouseEvent* event)
 		RightButtonMenu->addAction(restore);
 		RightButtonMenu->exec(QCursor::pos());  //在当前鼠标处堵住
 		//以阻塞方式显示菜单，参数可指示菜单显示位置，另外该函数可返回单击选中项
+	}else if (event->button() == Qt::LeftButton)
+	{
+		// 将鼠标事件位置转换为QPixmap坐标
+		QPoint posInPixmap = (event->pos() - QPoint(XPtInterval, YPtInterval)) / factor;
+
+		// 将事件的位置转换为 myPixmap 的坐标
+		drawLinePoint = posInPixmap;
+		sendButton(posInPixmap);
+		//int x = 10;
 	}
 	oldPos = event->pos();
 	Pressed = true;
@@ -176,8 +185,8 @@ void MyGLWidget::drawcrossHair()
 	pen.setBrush(Qt::green);
 	QPainter painter(&myPixmap);
 	painter.setPen(pen);
-	painter.drawLine(QLine(myPixmap.width() / 2, 0, myPixmap.width() / 2, myPixmap.height()));
-	painter.drawLine(QLine(0, myPixmap.height() / 2, myPixmap.width(), myPixmap.height() / 2));
+	painter.drawLine(QLine(drawLinePoint.x(), 0, drawLinePoint.x(), myPixmap.height()));
+	painter.drawLine(QLine(0, drawLinePoint.y(), myPixmap.width(), drawLinePoint.y()));
 }
 
 
@@ -203,4 +212,7 @@ void MyGLWidget::restore_Flag() {
 	update();
 	emit rotateIndexValueChanged(m_rotateIndexInt);
 
+}
+void MyGLWidget::receive_ButtonLeft(QPoint pointItem) {
+	drawLinePoint = pointItem;
 }

@@ -133,6 +133,11 @@ industrialVision::industrialVision(QWidget *parent)
 	
 	connect(ui.openGLWidget, &MyGLWidget::rotateIndexValueChanged, this, &industrialVision::getRotateValue,Qt::QueuedConnection);
 	
+	connect(ui.openGLWidget, &MyGLWidget::sendButton, this, &industrialVision::action_ButtonLeft, Qt::QueuedConnection);
+
+	connect(this, &industrialVision::action_SendButtonValue,ui.openGLWidget, &MyGLWidget::receive_ButtonLeft, Qt::QueuedConnection);
+
+
 	connect(this, &industrialVision::setdefultCamare, ui.openGLWidget, &MyGLWidget::setMouseClickFlag, Qt::QueuedConnection);
 
 	
@@ -315,6 +320,7 @@ void industrialVision::click_editVision()
 	//发送ini路径给主界面
     connect(&nccmatchWindow, &NCCMainWindow::sendINIPath , this, &industrialVision::getXMLPATH, Qt::UniqueConnection);
 
+	
 	nccmatchWindow.show();
     //更新xml文件
     AppendText("打开视觉模板界面",Green);
@@ -1353,8 +1359,13 @@ void industrialVision::Setinitializationparameters()
 			m_width = m_height;
 			m_height = temp;
 		}
+		double m_LeftButtonX = settings->value("m_LeftButton.X", "0").toDouble();
+		double m_LeftButtonY = settings->value("m_LeftButton.Y", "0").toDouble();
+		emit action_SendButtonValue(QPoint(m_LeftButtonX, m_LeftButtonY));
+
+
 		//xml路径
-		QString m_xmlFilePath = settings->value("m_xmlFilePath").toString();
+	/*	QString m_xmlFilePath = settings->value("m_xmlFilePath").toString();
 		if (m_xmlFilePath.isEmpty())
 		{
 			AppendText("xml默认路径为空,请设置模板文件路径", Red);
@@ -1362,7 +1373,7 @@ void industrialVision::Setinitializationparameters()
 		else {
 			getXMLPATH(m_xmlFilePath);
 			AppendText("加载路径读取xml文件完成", Green);
-		}
+		}*/
 
     //设置参数
     OnBnClickedSetParameterButton();
@@ -1385,6 +1396,8 @@ void industrialVision::SaveInitializationParameters()
 	settings->setValue("m_height", ui.height_edit->text());
 	settings->setValue("m_xmlFilePath", m_xmlpath); 
 	settings->setValue("m_rotateIndex", m_cameraThread->getRotateIndex());
+	settings->setValue("m_LeftButton.X", buttonLeftAction.x());
+	settings->setValue("m_LeftButton.Y", buttonLeftAction.y());
 
 	settings->endGroup();
 	delete settings;
@@ -1532,10 +1545,14 @@ void industrialVision::actionuserSwitch()
 	//close();
 }
 
+void industrialVision::action_ButtonLeft(QPoint buttonItem)
+{
+	buttonLeftAction = buttonItem;
+}
+
 void industrialVision::actionLogAndPathAction()
 {
 	logoPathItem.show();
-
 }
 
 

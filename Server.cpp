@@ -14,7 +14,7 @@ Server::Server()
 	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
 	settings->beginGroup("Idus");
 	//定时设置时间
-	QString timevalueQString = settings->value("timevalue","1000").toString();
+	QString timevalueQString = settings->value("timevalue","3000").toString();
 	timestart = timevalueQString.toInt();
 	if (server->listen(QHostAddress::LocalHost, 60000)) {
 		emit logoString("服务器已启动，等待客户端连接...", "GREEN");
@@ -146,7 +146,9 @@ QString Server::recvMsg(QString receiveMessage)
 		send_buf.append(s);
 		send_buf.append(",");
 
-		sprintf(xx, "%.1f", finall_Total_Result.ptCenter.y);
+		//sprintf(xx, "%.1f", finall_Total_Result.ptCenter.y);
+		sprintf(xx, "%.1f", 0);
+
 		send_buf.append(xx);
 		send_buf.append(",");
 
@@ -223,7 +225,8 @@ QJsonObject Server::recvMsgByJson(QString receiveMessage, QString cmdID)
 		}
 
 		dataObject["x"] = QString::number(finall_Total_Result.ptCenter.x, 'f', 1);
-		dataObject["y"] = QString::number(finall_Total_Result.ptCenter.y, 'f', 1);
+		//dataObject["y"] = QString::number(finall_Total_Result.ptCenter.y, 'f', 1);
+		dataObject["y"] = QString::number(0);
 		dataObject["a"] = QString::number(finall_Total_Result.dMatchedAngle, 'f', 1);
 		dataObject["MatchRatio"] = "1.0";
 		// 将子对象添加到 "Datas" 数组
