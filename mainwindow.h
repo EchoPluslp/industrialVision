@@ -85,7 +85,7 @@ public  slots:
 
     void sendImgToControllerShape(QImage image);
 
-    void fitcircle();
+	void fitcircle();
 
     void fitline();
 

@@ -287,37 +287,14 @@ void industrialVision::receive_ServerCreateInfo(QString flag)
 	AppendText("服务端已经开启或者开启失败", Red);
 }
 
-//void industrialVision::click_editVision()
-//{
-//    connect(&createModelItem, &createModel::getImageFromCamera, this, &industrialVision::getImageOneFrame,Qt::UniqueConnection);
-//
-	//connect(this, &industrialVision::cameraTovisualTemplate,&createModelItem, &createModel::sendImgToFileController, Qt::UniqueConnection);
-//
-//    connect(&createModelItem, &createModel::sendXMLPath , this, &industrialVision::getXMLPATH, Qt::UniqueConnection);
-//
-//	connect(createModelItem.fileController2D, &FileController::sendImageToPattern, m_processingThread, &ProcessingThread::slot_processMatchPicture, Qt::UniqueConnection);
-//	
-//	connect(createModelItem.fileController2D, &FileController::sendImageToPatternWithMask, m_processingThread, &ProcessingThread::slot_processMatchPictureWithMask, Qt::UniqueConnection);
-//
-//	connect(m_processingThread, &ProcessingThread::QPointSendtoFileControl,createModelItem.fileController2D, &FileController::slot_receiveDrawPoint, Qt::UniqueConnection);
-//
-//
-//    createModelItem.show();
-//    //更新xml文件
-//    AppendText("打开视觉模板界面",Green);
-//}
 
 //新的模板匹配~,将形状匹配和模板匹配融合起来
 void industrialVision::click_editVision()
 {
 	connect(this, &industrialVision::cameraTovisualTemplate, &nccmatchWindow, &NCCMainWindow::sendImgToControllerShape, Qt::UniqueConnection);
-
 	connect(&nccmatchWindow, &NCCMainWindow::getImageFromCamera, this, &industrialVision::getImageOneFrame, Qt::UniqueConnection);
-	
 	connect(&nccmatchWindow, &NCCMainWindow::sendImageToPattern, m_processingThread, &ProcessingThread::slot_processMatchPicture, Qt::UniqueConnection);
-
 	connect(m_processingThread, &ProcessingThread::QPointSendtoFileControl,&nccmatchWindow, &NCCMainWindow::slot_receiveDrawPoint, Qt::UniqueConnection);
-
 	//发送ini路径给主界面
     connect(&nccmatchWindow, &NCCMainWindow::sendINIPath , this, &industrialVision::getXMLPATH, Qt::UniqueConnection);
 
@@ -745,220 +722,6 @@ void industrialVision::click_manualOperation()
 }
 
 
-bool industrialVision::getPatternInfoFromXML(QString path)
-{
-    QFile xml_MODEL_FILE(path);         //需要打开的文件
-    if (!xml_MODEL_FILE.exists()) {
-        AppendText("模板文件不存在",Red);
-        return false;
-    }
-    QDomDocument doc;
-    QRectF areaNode;
-    QRectF patternArea;
-    cv::Rect srcRect;
-    QString pattern_Path;
-	QList<QPoint> QpointList;
-	int currentPattern_OBJ;
-    if (!doc.setContent(&xml_MODEL_FILE))
-    {
-        xml_MODEL_FILE.close();
-        return false;
-    }
-    xml_MODEL_FILE.close();
-	//重新把各项参数置空
-	resetParameters();
-	//读取xml文件操作
-    QDomElement root = doc.documentElement();
-    QDomElement elem = root.cloneNode(true).toElement();
-    for (int i = 0; i < elem.childNodes().count(); i++) {
-        auto typeElem = elem.childNodes().at(i).toElement();
-		int childcount = typeElem.childNodes().count();
-        for (int j = 0; j < childcount; j++) {
-            auto labelElem = typeElem.childNodes().at(j).toElement();
-			 
-            if (labelElem.tagName() == "Label") {
-
-                Label* label = new Label;
-                //当前type名字
-				QString typeName = typeElem.attribute("Type");
-                Shape* currentShape = label->createFromElementToPattern(labelElem);
-                QSize small_Picture = currentShape->getCurrSize();
-				//判断当前图和模板图是否比例一致
-				if (!compareAspectRatio(small_Picture))
-				{
-					//代表不一致
-					m_processingThread->setmodelAndRealSclar(false);
-					return false;							
-				}																
-				//一致	
-				m_processingThread->setmodelAndRealSclar(true); 
-                if (typeName.contains("搜索区域")) {
-					areaNode = currentShape->getItem()->boundingRect();
-					areaNodeREAL_size.setX(((double)areaNode.x() / small_Picture.width()) * m_width);
-					areaNodeREAL_size.setY(((double)areaNode.y() / small_Picture.height()) * m_height);
-					areaNodeREAL_size.setWidth(((double)areaNode.width() / small_Picture.width()) * m_width);
-					areaNodeREAL_size.setHeight(((double)areaNode.height() / small_Picture.height()) * m_height);
-					
-					areaNodeREAL_size.setX(areaNodeREAL_size.x() < 0 ? 0 : areaNodeREAL_size.x());
-					areaNodeREAL_size.setY(areaNodeREAL_size.y() < 0 ? 0 : areaNodeREAL_size.y());
-
-					if (areaNodeREAL_size.x() + areaNodeREAL_size.width() > m_width)
-					{
-						areaNodeREAL_size.setWidth(m_width - areaNodeREAL_size.x());
-					}
-					if (areaNodeREAL_size.y() + areaNodeREAL_size.height() > m_height)
-					{
-						areaNodeREAL_size.setHeight(m_height - areaNodeREAL_size.y());
-
-					}
-				}
-                else if (typeName.contains("特征区域")) {
-					//判断当前特征区域是哪种类型
-					currentPattern_OBJ = currentShape->getType();
-					
-					if (currentPattern_OBJ == Shape::Rect || currentPattern_OBJ == Shape::Ellipse)
-					{
-					currentShape->getItem();
-					patternArea = currentShape->getItem()->boundingRect();
-					patternAreaREAL_size_rect.setX(((double)patternArea.x() / small_Picture.width()) * m_width);
-					patternAreaREAL_size_rect.setY(((double)patternArea.y() / small_Picture.height()) * m_height);
-					patternAreaREAL_size_rect.setWidth(((double)patternArea.width() / small_Picture.width()) * m_width);
-					patternAreaREAL_size_rect.setHeight(((double)patternArea.height() / small_Picture.height()) * m_height);
-					
-					patternAreaREAL_size_rect.setX(patternAreaREAL_size_rect.x() < 0 ? 0 : patternAreaREAL_size_rect.x());
-					patternAreaREAL_size_rect.setY(patternAreaREAL_size_rect.y() < 0 ? 0 : patternAreaREAL_size_rect.y());
-
-					Area* m_area_item = new Area;
-					//给patternImageName赋值用于读取特征图
-					 pattern_Path = m_area_item->getFileName(labelElem.firstChildElement("Area")).trimmed();
-					 SAFE_DELETE(m_area_item);
-					
-					 if (patternAreaREAL_size_rect.x() + patternAreaREAL_size_rect.width() > m_width)
-					 {
-						 patternAreaREAL_size_rect.setWidth(m_width - patternAreaREAL_size_rect.x());
-					 }
-					 if (patternAreaREAL_size_rect.y() + patternAreaREAL_size_rect.height() > m_height)
-					 {
-						 patternAreaREAL_size_rect.setHeight(m_height - patternAreaREAL_size_rect.y());
-					 }
-				}
-					else if (currentPattern_OBJ == Shape::Polygon)
-					{
-						
-						patternAreaREAL_size_polygon.clear();
-						Area* m_area_item = new Area;
-						//给patternImageName赋值用于读取特征图
-						pattern_Path = m_area_item->getFileName(labelElem.firstChildElement("Area")).trimmed();
-						SAFE_DELETE(m_area_item);
-
-						MyGraphicsPolygonItem* currItem = (MyGraphicsPolygonItem*)currentShape->getItem();
-						double ratio = double(m_width) / double(currentShape->m_currSize.width());
-
-						QPolygonF prev = currItem->polygon();
-						for (int i = 0; i < prev.count(); i++) {
-							auto point = prev.at(i);
-							patternAreaREAL_size_polygon << QPointF(point * ratio);
-						}
-					}
-			}
-				else if (typeName.contains("输出点")) {
-					//找到输出点并且获取其中心坐标
-					QDomElement elemPoint = labelElem.firstChildElement("Area");
-					auto imageNodes = elemPoint.childNodes();
-					for (int i = 0; i < imageNodes.count(); i++) {
-						auto imageElem = imageNodes.at(i).toElement();
-
-						auto shapeElemPoint = imageElem.firstChildElement("Shape");
-						if (shapeElemPoint.isNull())
-							return false;
-						auto itemElem = shapeElemPoint.firstChildElement("Item");
-						auto pointNodes = itemElem.childNodes();
-						for (int count = 0; count < pointNodes.count(); count++) {
-							QDomElement pointElem = pointNodes.at(count).toElement();
-							QPoint point = QPoint(pointElem.attribute("X", "0").toInt(), pointElem.attribute("Y", "0").toInt());
-							
-							QpointList.append(point);
-						}
-					}
-						if (!QpointList.isEmpty())
-						{
-							//获得输出点的中心坐标
-							centerPoint = getCenterPointFromCircle(QpointList);
-							centerPoint.setX(((double)centerPoint.x() / small_Picture.width()) * m_width);
-							centerPoint.setY(((double)centerPoint.y() / small_Picture.height()) * m_height);
-							if (currentPattern_OBJ == Shape::Ellipse||currentPattern_OBJ == Shape::Rect )
-							{
-								patternRectCenterPoint.setX(patternAreaREAL_size_rect.x() + (patternAreaREAL_size_rect.width() / 2));
-								patternRectCenterPoint.setY(patternAreaREAL_size_rect.y() + (patternAreaREAL_size_rect.height() / 2));
-							}else if (currentPattern_OBJ == Shape::Polygon)
-							{
-								// 将QPolygonF中的点坐标转换为vector<cv::Point>
-								std::vector<cv::Point> points;
-								for (const QPointF& point : patternAreaREAL_size_polygon) {
-									points.emplace_back(static_cast<int>(point.x()), static_cast<int>(point.y()));
-								}
-								points.pop_back();
-
-								cv::Rect boundingRect = cv::boundingRect(points);
-								patternRectCenterPoint.setX(boundingRect.x + (boundingRect.width / 2));
-								patternRectCenterPoint.setY(boundingRect.y + (boundingRect.height / 2));
-							}
-
-						}
-					}
-				}
-			}
-        }
-
-    if (pattern_Path.isEmpty())
-    {
-		AppendText("特征区域读取错误,请在模板界面设置模板图",Red);
-        return false;
-    }
-   if (areaNodeREAL_size.x()<0|| areaNodeREAL_size.y()<0)
-   {
-	   AppendText("搜索区域坐标错误,请重新制作", Red);
-	   return false;
-   }
-   //范围框
-   srcQRect.setX(areaNodeREAL_size.x());
-   srcQRect.setY(areaNodeREAL_size.y());
-   srcQRect.setWidth(areaNodeREAL_size.width());
-   srcQRect.setHeight(areaNodeREAL_size.height());
-   //没有设置范围框,则默认全图
-   if (srcQRect.x() == 0 && srcQRect.y() == 0 && srcQRect.width() == 0 && srcQRect.height() == 0) {
-	   srcQRect.setWidth(m_width);
-	   srcQRect.setHeight(m_height);
-   }
-
-   if(currentPattern_OBJ == Shape::Rect){
-	if (patternAreaREAL_size_rect.x() < 0 || patternAreaREAL_size_rect.y() < 0)
-		{
-	   AppendText("特征区域坐标错误,请重新制作", Red);
-	   return false;
-		}
-		//发送给peocessingthread线程 路径,匹配模板中心点坐标,范围图中心点坐标
-	m_processingThread->setShapeType(1);
-
-		emit singal_sendPatternImage(pattern_Path, patternAreaREAL_size_rect,srcQRect, centerPoint, patternRectCenterPoint);
-		return true;
-	}else if (currentPattern_OBJ == Shape::Ellipse)
-	{
-		m_processingThread->setShapeType(0);
-
-		emit singal_sendPatternImageWithMaskEllipse(pattern_Path, patternAreaREAL_size_rect, srcQRect, centerPoint, patternRectCenterPoint);
-		return true;
-	}
-	else if (currentPattern_OBJ == Shape::Polygon)
-   {
-	   
-	   m_processingThread->setShapeType(0);
-	   emit singal_sendPatternImageWithMaskPolygon(pattern_Path, patternAreaREAL_size_polygon, srcQRect, centerPoint, patternRectCenterPoint);
-	   return true;
-   }
-
-   return false;
-}
 
 void industrialVision::click_stopOperation() {
      if (FALSE == m_bOpenDevice || FALSE == m_bStartGrabbing || NULL == m_pcMyCamera)
@@ -1394,7 +1157,6 @@ void industrialVision::SaveInitializationParameters()
 	settings->setValue("m_height", ui.height_edit->text());
 	settings->setValue("m_xmlFilePath", m_xmlpath); 
 	settings->setValue("m_rotateIndex", m_cameraThread->getRotateIndex());
-
 	settings->endGroup();
 	delete settings;
 
@@ -1550,7 +1312,6 @@ void industrialVision::actionLogAndPathAction()
 	logoPathItem.show();
 
 }
-
 
 int industrialVision::CloseDevice()
 {

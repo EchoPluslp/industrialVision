@@ -2,7 +2,6 @@
 #define DRAWFINISHEDDIALOG_H
 #pragma execution_character_set("utf-8")
 
-#include "ui_drawfinisheddialog.h"
 #include <QMessageBox>
 #include <QListWidgetItem>
 #include <QList>
@@ -36,8 +35,6 @@ private slots:
 	void on_buttonBox_accepted();
 	void on_buttonBox_rejected();
 
-private:
-	Ui::DrawFinishedDialog ui;
 };
 
 #endif // DRAWFINISHEDDIALOG_H

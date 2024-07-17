@@ -19,7 +19,7 @@ MyGLWidget::MyGLWidget(QWidget* parent)
 	restore->setFont(QFont(tr("宋体"), 26, QFont::Bold, false));//宋体26号，加粗，斜体字
 	connect(restore, &QAction::triggered, this, &MyGLWidget::restore_Flag);
 
-	
+
 	//connect(saveCopyAs, SIGNAL(triggered()), this, SLOT(SaveCopyAs()));
 	RightButtonMenu = new QMenu(this);
 	RightButtonMenu->setStyleSheet("QMenu{ background - color:rgb(40,87,144); border:1px solid rgb(40,87,144); }\
@@ -37,7 +37,7 @@ MyGLWidget::~MyGLWidget()
 }
 bool falg = true;
 void MyGLWidget::setPixmap(QPixmap pixmap, QString text)
-{	
+{
 	//判断是否有十字线
 	myPixmap = pixmap;
 
@@ -47,7 +47,7 @@ void MyGLWidget::setPixmap(QPixmap pixmap, QString text)
 	}
 	//旋转图片
 	//rotatePic();
-	
+
 	myText = text;
 	m_width = pixmap.width();
 	m_height = pixmap.height();
@@ -71,7 +71,8 @@ void MyGLWidget::setMouseClickFlag(bool flag)
 		//// 设置 restore 的文本并禁用点击触发事件
 		restore->setText(tr("还原图片（已锁定）"));
 		restore->setDisabled(flag);
-	}else {
+	}
+	else {
 		// 设置 crosshair 的文本并禁用点击触发事件
 		crosshair->setText(tr("十字线"));
 		crosshair->setDisabled(flag);
@@ -97,9 +98,9 @@ void MyGLWidget::paintEvent(QPaintEvent* event)
 		painter.eraseRect(rect);
 		painter.translate(0 + XPtInterval, 0 + YPtInterval);//进行平移
 		//	//按照高度等比例缩放图片
-	int H = this->height();
-	int realH = myPixmap.height();
-	//QPixmap pix = myPixmap.scaledToHeight(H - 5);//图片缩放到指定高度
+		int H = this->height();
+		int realH = myPixmap.height();
+		//QPixmap pix = myPixmap.scaledToHeight(H - 5);//图片缩放到指定高度
 
 		painter.drawPixmap(QRect(0, 0, myPixmap.width() * factor, (myPixmap.height() - 25) * factor), myPixmap);
 	}
@@ -145,11 +146,11 @@ void MyGLWidget::mouseReleaseEvent(QMouseEvent* event)//鼠标释放
 }
 
 void MyGLWidget::mouseDoubleClickEvent(QMouseEvent* event)
-{ 
-	factor=0.3;
-    XPtInterval = 0;
-    YPtInterval = 0;
-    update();
+{
+	factor = 0.3;
+	XPtInterval = 0;
+	YPtInterval = 0;
+	update();
 }
 
 void MyGLWidget::wheelEvent(QWheelEvent* event)     //鼠标滑轮事件
@@ -187,7 +188,7 @@ void MyGLWidget::crosshair_Flag() {
 
 void MyGLWidget::rotate_Flag() {
 	m_rotateIndexInt++;
-	if ((m_rotateIndexInt % angleArc.size()) == 0 )
+	if ((m_rotateIndexInt % angleArc.size()) == 0)
 	{
 		m_rotateIndexInt = 0;
 	}

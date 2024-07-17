@@ -23,12 +23,6 @@
       <Extensions>qrc;*</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
-    <Filter Include="Header Files\handelListWidget">
-      <UniqueIdentifier>{497407a3-fc76-4fd4-b6cd-75b36abb6655}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\handelListWidget">
-      <UniqueIdentifier>{ca74e55d-601f-45bc-befd-ea8bf729793a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Form Files\connect">
       <UniqueIdentifier>{e2ea994f-6c83-4db2-8e34-43c1cc1132db}</UniqueIdentifier>
     </Filter>
@@ -38,29 +32,14 @@
     <Filter Include="Header Files\connect">
       <UniqueIdentifier>{b9b5739b-8a0c-4f40-9f6c-313d9e3cccc4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Components">
-      <UniqueIdentifier>{d90be461-cd95-4226-97e0-9aca5f551728}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\creataModel">
-      <UniqueIdentifier>{9f1b0a6c-8301-4f55-a854-539550d0a343}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\creataModel">
       <UniqueIdentifier>{ef1577da-1028-4197-8a10-460afdeed5be}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Controllers">
-      <UniqueIdentifier>{db971119-65aa-42b3-9daf-27e846c3cc54}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Components">
-      <UniqueIdentifier>{5e49df7c-34b8-4a4a-b167-7e314d11a8fd}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Tools">
       <UniqueIdentifier>{02c17ee9-45ff-461d-a406-bcdef3bcf3e6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Tools">
       <UniqueIdentifier>{ce195e01-b761-46b8-8955-158d588918d1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Controllers">
-      <UniqueIdentifier>{d69e0ba2-7c0d-49df-8152-157b59694820}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\shapeMatch">
       <UniqueIdentifier>{438a65dc-86ea-4007-a5f7-77712c93f8ea}</UniqueIdentifier>
@@ -88,18 +67,6 @@
     <ClCompile Include="MvCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="listwidget.cpp">
-      <Filter>Source Files\handelListWidget</Filter>
-    </ClCompile>
-    <ClCompile Include="algorithmLibrary.cpp">
-      <Filter>Source Files\handelListWidget</Filter>
-    </ClCompile>
-    <ClCompile Include="tablewidget.cpp">
-      <Filter>Source Files\handelListWidget</Filter>
-    </ClCompile>
-    <ClCompile Include="paramsitem.cpp">
-      <Filter>Source Files\handelListWidget</Filter>
-    </ClCompile>
     <ClCompile Include="login.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -115,87 +82,6 @@
     <ClCompile Include="industrialVision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="createModel.cpp">
-      <Filter>Source Files\creataModel</Filter>
-    </ClCompile>
-    <ClCompile Include="area.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="areacontroller.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="circlepen.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="curve.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="ellipse.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="filecontroller.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="label.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="labelcontroller.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="mycommand.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="paintscene.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="polygon.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="rect.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="shape.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="squarepen.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="drawfinisheddialog.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="filelistdockwidget.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="labelsdockwidget.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="labeltypedockwidget.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="magnifyingglass.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="menubar.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="myactions.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="mygraphicsitems.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="mygraphicsview.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="statusbar.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="toolbar.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="graphicsview.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
     <ClCompile Include="smallMainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -210,9 +96,6 @@
     </ClCompile>
     <ClCompile Include="processingthread.cpp">
       <Filter>Source Files\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="myglwidget.cpp">
-      <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="logoSet.cpp">
       <Filter>Source Files</Filter>
@@ -271,17 +154,17 @@
     <ClCompile Include="bee_point.cpp">
       <Filter>Source Files\shapeMatch</Filter>
     </ClCompile>
+    <ClCompile Include="myglwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="matchParam.cpp">
-      <Filter>Source Files\Components</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fileOrderList.h">
+      <Filter>Header Files\modelMatch</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="listwidget.h">
-      <Filter>Header Files\handelListWidget</Filter>
-    </QtMoc>
-    <QtMoc Include="tablewidget.h">
-      <Filter>Header Files\handelListWidget</Filter>
-    </QtMoc>
     <QtMoc Include="login.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -297,68 +180,17 @@
     <QtMoc Include="industrialVision.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="menubar.h">
-      <Filter>Header Files\Components</Filter>
-    </QtMoc>
-    <QtMoc Include="myactions.h">
-      <Filter>Header Files\Components</Filter>
-    </QtMoc>
-    <QtMoc Include="toolbar.h">
-      <Filter>Header Files\Components</Filter>
-    </QtMoc>
-    <QtMoc Include="paintscene.h">
-      <Filter>Header Files\Controllers</Filter>
-    </QtMoc>
-    <QtMoc Include="drawfinisheddialog.h">
-      <Filter>Header Files\Components</Filter>
-    </QtMoc>
-    <QtMoc Include="filelistdockwidget.h">
-      <Filter>Header Files\Components</Filter>
-    </QtMoc>
-    <QtMoc Include="labelsdockwidget.h">
-      <Filter>Header Files\Components</Filter>
-    </QtMoc>
-    <QtMoc Include="labeltypedockwidget.h">
-      <Filter>Header Files\Components</Filter>
-    </QtMoc>
-    <QtMoc Include="magnifyingglass.h">
-      <Filter>Header Files\Components</Filter>
-    </QtMoc>
-    <QtMoc Include="mygraphicsview.h">
-      <Filter>Header Files\Components</Filter>
-    </QtMoc>
-    <QtMoc Include="statusbar.h">
-      <Filter>Header Files\Components</Filter>
-    </QtMoc>
-    <QtMoc Include="areacontroller.h">
-      <Filter>Header Files\Controllers</Filter>
-    </QtMoc>
-    <QtMoc Include="filecontroller.h">
-      <Filter>Header Files\Controllers</Filter>
-    </QtMoc>
-    <QtMoc Include="labelcontroller.h">
-      <Filter>Header Files\Controllers</Filter>
-    </QtMoc>
-    <QtMoc Include="graphicsview.h">
-      <Filter>Header Files\Components</Filter>
-    </QtMoc>
     <QtMoc Include="smallMainWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Server.h">
       <Filter>Header Files\connect</Filter>
     </QtMoc>
-    <QtMoc Include="createModel.h">
-      <Filter>Header Files\creataModel</Filter>
-    </QtMoc>
     <QtMoc Include="CameraThread.h">
       <Filter>Header Files\Tools</Filter>
     </QtMoc>
     <QtMoc Include="processingthread.h">
       <Filter>Header Files\Tools</Filter>
-    </QtMoc>
-    <QtMoc Include="myglwidget.h">
-      <Filter>Header Files\Components</Filter>
     </QtMoc>
     <QtMoc Include="logoSet.h">
       <Filter>Header Files</Filter>
@@ -393,8 +225,11 @@
     <QtMoc Include="bee_point.h">
       <Filter>Header Files\shapeMatch</Filter>
     </QtMoc>
+    <QtMoc Include="myglwidget.h">
+      <Filter>Header Files\creataModel</Filter>
+    </QtMoc>
     <QtMoc Include="matchParam.h">
-      <Filter>Header Files\Components</Filter>
+      <Filter>Header Files\creataModel</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
@@ -404,13 +239,7 @@
     <QtUic Include="connectServer.ui">
       <Filter>Form Files\connect</Filter>
     </QtUic>
-    <QtUic Include="createModel.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtUic Include="statusbar.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="drawfinisheddialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="labelAttr.ui">
@@ -447,68 +276,14 @@
     </QtRcc>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="industrialVision.rc" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="MvCamera.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="preHeader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="paramsitem.h">
-      <Filter>Header Files\handelListWidget</Filter>
-    </ClInclude>
-    <ClInclude Include="algorithmLibrary.h">
-      <Filter>Header Files\handelListWidget</Filter>
-    </ClInclude>
-    <ClInclude Include="mygraphicsitems.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="area.h">
-      <Filter>Header Files\Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="circlepen.h">
-      <Filter>Header Files\Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="curve.h">
-      <Filter>Header Files\Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="ellipse.h">
-      <Filter>Header Files\Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="label.h">
-      <Filter>Header Files\Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="mycommand.h">
-      <Filter>Header Files\Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="polygon.h">
-      <Filter>Header Files\Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="rect.h">
-      <Filter>Header Files\Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="squarepen.h">
-      <Filter>Header Files\Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="shape.h">
-      <Filter>Header Files\Controllers</Filter>
     </ClInclude>
     <ClInclude Include="globalvar.h">
       <Filter>Header Files\Tools</Filter>
     </ClInclude>
     <ClInclude Include="Mstruct.h">
       <Filter>Header Files\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="resource1.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="point.h">
-      <Filter>Header Files\Controllers</Filter>
     </ClInclude>
     <ClInclude Include="SharedData.h">
       <Filter>Header Files\Tools</Filter>

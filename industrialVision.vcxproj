@@ -43,8 +43,8 @@
     <LibraryPath>F:\mvs\Development\Libraries\win64;C:\Users\qazws\Downloads\Compressed\opencv440\opencv440\build\x64\vc16\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\qazws\Downloads\Compressed\opencv440\opencv440\build\include\opencv2;C:\Users\qazws\Downloads\Compressed\opencv440\opencv440\build\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\qazws\Downloads\Compressed\opencv440\opencv440\build\x64\vc16\lib;F:\mvs\Development\Libraries\win64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files\MVTec\HALCON-23.05-Progress\bin\x64-win64\hdevelopxl.exe;C:\Program Files\MVTec\HALCON-23.05-Progress\include;C:\Program Files\MVTec\HALCON-23.05-Progress\include\halconcpp;C:\Program Files\MVTec\HALCON-23.05-Progress\include\halconc;C:\Users\qazws\Downloads\Compressed\opencv440\opencv440\build\include\opencv2;C:\Users\qazws\Downloads\Compressed\opencv440\opencv440\build\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\MVTec\HALCON-23.05-Progress\lib\x64-win64;C:\Users\qazws\Downloads\Compressed\opencv440\opencv440\build\x64\vc16\lib;F:\mvs\Development\Libraries\win64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt_defaults.props')">
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
@@ -84,7 +84,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-      <AdditionalIncludeDirectories>.\;F:\MVS\Development\Includes;$(QTDIR)\include\QtXml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(HALCONROOT)/include/halconcpp;$(HALCONROOT)/include;.\;F:\MVS\Development\Includes;$(QTDIR)\include\QtXml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Optimization>Disabled</Optimization>
     </ClCompile>
@@ -92,14 +92,11 @@
       <SubSystem>Windows</SubSystem>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>MvCameraControl.lib;opencv_world440.lib;Qt5Xml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>halconcpp.lib;MvCameraControl.lib;opencv_world440.lib;Qt5Xml.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="algorithmLibrary.cpp" />
-    <ClCompile Include="area.cpp" />
-    <ClCompile Include="areacontroller.cpp" />
     <ClCompile Include="bee_calibercircle.cpp" />
     <ClCompile Include="bee_caliberline.cpp" />
     <ClCompile Include="bee_circle.cpp" />
@@ -109,64 +106,35 @@
     <ClCompile Include="bee_rect.cpp" />
     <ClCompile Include="bee_ringexpansion.cpp" />
     <ClCompile Include="camerathread.cpp" />
-    <ClCompile Include="circlepen.cpp" />
     <ClCompile Include="common.h" />
     <ClCompile Include="connectItemInfo.cpp" />
     <ClCompile Include="connectServer.cpp" />
     <ClCompile Include="controlline.cpp" />
-    <ClCompile Include="createModel.cpp" />
-    <ClCompile Include="curve.cpp" />
-    <ClCompile Include="drawfinisheddialog.cpp" />
     <ClCompile Include="edge.cpp" />
-    <ClCompile Include="ellipse.cpp" />
-    <ClCompile Include="filecontroller.cpp" />
-    <ClCompile Include="filelistdockwidget.cpp" />
+    <ClCompile Include="fileOrderList.h" />
     <ClCompile Include="globalvar.cpp" />
-    <ClCompile Include="graphicsview.cpp" />
     <ClCompile Include="industrialVision.cpp" />
-    <ClCompile Include="label.cpp" />
-    <ClCompile Include="labelcontroller.cpp" />
-    <ClCompile Include="labelsdockwidget.cpp" />
-    <ClCompile Include="labeltypedockwidget.cpp" />
-    <ClCompile Include="listwidget.cpp" />
     <ClCompile Include="login.cpp" />
     <ClCompile Include="logoPath.cpp" />
     <ClCompile Include="logoSet.cpp" />
-    <ClCompile Include="magnifyingglass.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow.cpp" />
     <ClCompile Include="matchParam.cpp" />
-    <ClCompile Include="menubar.cpp" />
     <ClCompile Include="MvCamera.cpp" />
-    <ClCompile Include="myactions.cpp" />
     <ClCompile Include="myCCaliperGUI.cpp" />
-    <ClCompile Include="mycommand.cpp" />
     <ClCompile Include="mycorneritem.cpp" />
     <ClCompile Include="myglwidget.cpp" />
-    <ClCompile Include="mygraphicsitems.cpp" />
-    <ClCompile Include="mygraphicsview.cpp" />
     <ClCompile Include="myqgraphicsview.cpp" />
     <ClCompile Include="ncc_modelmatch.cpp" />
-    <ClCompile Include="paintscene.cpp" />
-    <ClCompile Include="paramsitem.cpp" />
     <ClCompile Include="passwordSet.cpp" />
-    <ClCompile Include="polygon.cpp" />
     <QtMoc Include="processingthread.h" />
     <ClCompile Include="processingthread.cpp" />
-    <ClCompile Include="rect.cpp" />
     <ClCompile Include="Server.cpp" />
-    <ClCompile Include="shape.cpp" />
     <ClCompile Include="smallMainWindow.cpp" />
-    <ClCompile Include="squarepen.cpp" />
-    <ClCompile Include="statusbar.cpp" />
-    <ClCompile Include="tablewidget.cpp" />
-    <ClCompile Include="toolbar.cpp" />
     <ClCompile Include="transmitsignals.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="connectServer.ui" />
-    <QtUic Include="createModel.ui" />
-    <QtUic Include="drawfinisheddialog.ui" />
     <QtUic Include="industrialVision.ui" />
     <QtUic Include="labelAttr.ui" />
     <QtUic Include="login.ui" />
@@ -183,12 +151,7 @@
     <QtRcc Include="industrialVision.qrc" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="industrialVision.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="algorithmLibrary.h" />
     <QtMoc Include="CameraThread.h" />
-    <QtMoc Include="graphicsview.h" />
     <QtMoc Include="bee_calibercircle.h" />
     <QtMoc Include="bee_caliberline.h" />
     <QtMoc Include="bee_circle.h" />
@@ -200,7 +163,6 @@
     <ClInclude Include="controlline.h" />
     <ClInclude Include="edge.h" />
     <ClInclude Include="globalvar.h" />
-    <QtMoc Include="myglwidget.h" />
     <QtMoc Include="logoSet.h" />
     <QtMoc Include="logoPath.h" />
     <QtMoc Include="mainwindow.h" />
@@ -209,49 +171,17 @@
     <QtMoc Include="passwordSet.h" />
     <ClInclude Include="myCCaliperGUI.h" />
     <ClInclude Include="mycorneritem.h" />
+    <QtMoc Include="myglwidget.h" />
     <ClInclude Include="myqgraphicsview.h" />
     <QtMoc Include="ncc_modelmatch.h" />
-    <ClInclude Include="point.h" />
-    <ClInclude Include="rect.h" />
     <QtMoc Include="Server.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="resource1.h" />
-    <ClInclude Include="shape.h" />
     <QtMoc Include="smallMainWindow.h" />
     <ClInclude Include="SharedData.h" />
-    <ClInclude Include="squarepen.h" />
-    <QtMoc Include="statusbar.h" />
-    <QtMoc Include="toolbar.h" />
     <QtMoc Include="TransmitSignals.h" />
     <QtMoc Include="connectServer.h" />
     <QtMoc Include="connectItemInfo.h" />
-    <QtMoc Include="tablewidget.h" />
-    <QtMoc Include="listwidget.h" />
     <QtMoc Include="login.h" />
     <QtMoc Include="industrialVision.h" />
-    <QtMoc Include="createModel.h" />
-    <QtMoc Include="menubar.h" />
-    <QtMoc Include="myactions.h" />
-    <QtMoc Include="paintscene.h" />
-    <QtMoc Include="drawfinisheddialog.h" />
-    <QtMoc Include="filelistdockwidget.h" />
-    <QtMoc Include="labelsdockwidget.h" />
-    <QtMoc Include="labeltypedockwidget.h" />
-    <QtMoc Include="magnifyingglass.h" />
-    <ClInclude Include="area.h" />
-    <QtMoc Include="areacontroller.h" />
-    <ClInclude Include="circlepen.h" />
-    <ClInclude Include="curve.h" />
-    <ClInclude Include="ellipse.h" />
-    <QtMoc Include="filecontroller.h" />
-    <ClInclude Include="label.h" />
-    <QtMoc Include="labelcontroller.h" />
-    <ClInclude Include="mycommand.h" />
-    <ClInclude Include="mygraphicsitems.h" />
-    <QtMoc Include="mygraphicsview.h" />
-    <ClInclude Include="paramsitem.h" />
-    <ClInclude Include="polygon.h" />
-    <ClInclude Include="preHeader.h" />
     <ClInclude Include="MvCamera.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

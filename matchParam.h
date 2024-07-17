@@ -2,6 +2,9 @@
 #include "ui_mattchParam.h"
 #include <QSettings>
 #include <QMessageBox>
+#include "QTextCodec.h"
+#pragma execution_character_set("utf-8")
+
 class matchParam : public QWidget
 {
 	Q_OBJECT
@@ -23,10 +26,10 @@ protected:
 private:
 	Ui::matchparam_param* ui;
 	//全局的变量,角度信息
-	int current_dToleranceAngle;
+	int current_dToleranceAngle = 0;
 
 	//全局变量，旋转方向
-	int current_rotationDirection;
+	int current_rotationDirection = 0;
 public slots:
 	void setRotateParam();
 	void cancelRotateParam();

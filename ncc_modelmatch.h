@@ -18,6 +18,7 @@
 #include "bee_ringexpansion.h"
 #include <QMouseEvent>
 #include <QTextCodec>
+#include "fileOrderList.h"
 #pragma execution_character_set("UTF-8")
 
 
@@ -80,11 +81,17 @@ public slots:
 
 	void createRECT(int type, int index);
 
+	void on_action_CreateProject();
 	
+	void on_deleteOrder_click();
+
+	//保存当前顺序成功，将当前顺序加载在顺序列表中
+	void saveOnceOrderItem();
 signals:
 	void getImageFromCamera(QString str);
 	void sendImageToPattern(QImage sourceImage, QImage patternImage);
 	void sendINIPath(QString iniPath);
+	void saveOnceOrderSuccess();
 protected:
 	virtual void keyPressEvent(QKeyEvent* event);
 
@@ -99,14 +106,12 @@ public:
 	NCCMainWindow::STATE_FLAG_MAINWINDOW state_flag_maindow;
 	QGraphicsPixmapItem* ImageItem;
 
-	QString fileName;
 
 
 	//roi列表
 	//搜索区域矩形框
 	bee_rect* source_rect_info = nullptr;
 	int index_source = 0;
-	QList<QGraphicsItem*>* source_rect_List;
 
 	//特征区域矩形框
 	bee_rect* ncc_patten_rect_info = nullptr;
@@ -123,12 +128,23 @@ public:
 
 	//遍历已选操作,保存时获得相应操作
 	int getListItem(QString name);
+
 	cv::Mat QImageToMat(QImage& image); //QImage转Mat
-	//{
 
-	//	Mat mat = cv::Mat(image.height(), image.width(), CV_8UC1, (void*)image.constBits(), image.bytesPerLine());
+	QList<QGraphicsItem*>* source_rect_List;
 
-	//	return mat;
-	//}
+	//图片路径
+	QString fileName;
+
+	QList<FileOrder> FileOrderListItem;
+
+	//当前工程名字
+	QString projectFileName;
+	//当前Image
+	QImage ImageItem_IMAGE;
+
+	//当前处理的OrderItem
+	 FileOrder orderItem;
 };
+
 #endif // MAINWINDOW_H

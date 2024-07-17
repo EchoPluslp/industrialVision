@@ -34,10 +34,10 @@ void matchParam::showEvent(QShowEvent* event)
 	QString file_toleranceAngle = settings->value("toleranceAngle", "0").toString();
 	QString file_rotationDirection = settings->value("rotationDirection", "0").toString();
 	//判断Qstring 是否是数字
-	
+
 	setRotationParam(convert_to_number(file_toleranceAngle),
 		convert_to_number(file_rotationDirection));
-	
+
 	//ui展示当前的值
 	ui->lineEdit_param->setText(QString::number(current_dToleranceAngle));
 	ui->comboBox_rotation->setCurrentIndex(current_rotationDirection);
@@ -77,7 +77,7 @@ matchParam::matchParam(QWidget* parent) :
 {
 	ui->setupUi(this);
 
-	QIntValidator* validator = new QIntValidator(0,180,ui->lineEdit_param);
+	QIntValidator* validator = new QIntValidator(0, 180, ui->lineEdit_param);
 	// 将验证器设置给文本框
 	ui->lineEdit_param->setValidator(validator);
 

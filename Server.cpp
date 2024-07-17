@@ -82,7 +82,7 @@ void Server::onReadyRead()
 	else {
 		//判断接受的数据格式 不是json
 
-		//在这里可以对客户端消息进行处理
+		//在这里可以对客户端消息进行处理s
 		 sendMessager = recvMsg(message);
 		 clientSocket->write(sendMessager.toUtf8());
 		 QString logStringToClient = "给客户端发送数据:" + sendMessager;

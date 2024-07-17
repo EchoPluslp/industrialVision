@@ -742,16 +742,20 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
 			 sstm.dMatchedAngle += 360;
 		 if (sstm.dMatchedAngle > 180)
 			 sstm.dMatchedAngle -= 360;*/
-		if (sstm.dMatchedAngle<0)
+		if (sstm.dMatchedAngle<0 && rotationDirection == 0)
 		{
 			//如果小于0，转换成为逆时针的360度范围
 			sstm.dMatchedAngle += 360;
-		}
-
-
-		if (rotationDirection == 1)
+		}else if (sstm.dMatchedAngle < 0 && rotationDirection == 1)
 		{
 			//由逆时针--->转为顺时针。   
+			sstm.dMatchedAngle  = abs(sstm.dMatchedAngle);
+
+		}else if (sstm.dMatchedAngle > 0 && rotationDirection == 0)
+		{
+			
+		}else if (sstm.dMatchedAngle > 0 && rotationDirection == 1)
+		{
 			sstm.dMatchedAngle = 360 - sstm.dMatchedAngle;
 		}
 		

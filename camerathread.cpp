@@ -8,6 +8,7 @@ CameraThread::CameraThread(QObject* parent)
 
 CameraThread::~CameraThread()
 {
+
 	if (cameraPtr == NULL)
 	{
 		delete cameraPtr;

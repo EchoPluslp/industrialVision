@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1443</width>
-    <height>1091</height>
+    <width>1646</width>
+    <height>1006</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -24,42 +24,113 @@
    <property name="mouseTracking">
     <bool>true</bool>
    </property>
-   <layout class="QGridLayout" name="gridLayout" columnstretch="5,1" columnminimumwidth="0,0">
-    <item row="0" column="0">
-     <widget class="myqgraphicsview" name="graphicsView">
-      <property name="mouseTracking">
-       <bool>true</bool>
+   <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,6">
+    <item>
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QGroupBox" name="groupBox">
       <property name="font">
        <font>
-        <pointsize>24</pointsize>
+        <pointsize>25</pointsize>
         <weight>75</weight>
+        <italic>false</italic>
         <bold>true</bold>
+        <underline>true</underline>
        </font>
       </property>
       <property name="title">
-       <string>已选操作</string>
+       <string>执行顺序</string>
       </property>
-      <property name="flat">
-       <bool>false</bool>
-      </property>
-      <property name="checkable">
-       <bool>false</bool>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QListWidget" name="listWidget">
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QPushButton" name="pushButton_createFile">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>新建顺序</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_deleteFile">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>删除顺序</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QListWidget" name="listWidget_fileOrder"/>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="groupBox_3">
+      <property name="font">
+       <font>
+        <pointsize>25</pointsize>
+       </font>
+      </property>
+      <property name="title">
+       <string>图像操作</string>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="4,1">
+       <item>
+        <widget class="myqgraphicsview" name="graphicsView">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox">
          <property name="font">
           <font>
-           <pointsize>21</pointsize>
+           <pointsize>24</pointsize>
            <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
+         <property name="title">
+          <string>已选操作</string>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QListWidget" name="listWidget">
+            <property name="font">
+             <font>
+              <pointsize>21</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
@@ -77,8 +148,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1443</width>
-     <height>22</height>
+     <width>1646</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -121,16 +192,15 @@
    <addaction name="separator"/>
    <addaction name="action_rotaterect"/>
    <addaction name="separator"/>
-   <addaction name="action_polygon"/>
    <addaction name="separator"/>
    <addaction name="action_circle"/>
    <addaction name="separator"/>
    <addaction name="action_calibercircle"/>
-   <addaction name="separator"/>
-   <addaction name="action_ringexpansion"/>
-   <addaction name="separator"/>
    <addaction name="action_caliberline"/>
    <addaction name="separator"/>
+   <addaction name="separator"/>
+   <addaction name="separator"/>
+   <addaction name="action_ringexpansion"/>
    <addaction name="action_concircle"/>
   </widget>
   <action name="action_choosepicture">
@@ -211,10 +281,10 @@
      <normaloff>Icon/ncc_save.png</normaloff>Icon/ncc_save.png</iconset>
    </property>
    <property name="text">
-    <string>保存当前数据</string>
+    <string>保存当前顺序</string>
    </property>
    <property name="toolTip">
-    <string>保存当前数据</string>
+    <string>保存当前顺序</string>
    </property>
   </action>
   <action name="action_caliberline">
@@ -295,5 +365,42 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButton_createFile</sender>
+   <signal>clicked()</signal>
+   <receiver>ncc_MainWindow</receiver>
+   <slot>on_createOrder_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>136</x>
+     <y>120</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>307</x>
+     <y>64</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_deleteFile</sender>
+   <signal>clicked()</signal>
+   <receiver>ncc_MainWindow</receiver>
+   <slot>on_deleteOrder_click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>246</x>
+     <y>129</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>470</x>
+     <y>63</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>on_createOrder_click()</slot>
+  <slot>on_deleteOrder_click()</slot>
+ </slots>
 </ui>

@@ -46,7 +46,13 @@ NCCMainWindow::NCCMainWindow(QWidget* parent)
 	ui->action_calibercircle->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
 	ui->action_polygon->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
 
-	//信号,连接完成处理
+	//菜单栏新建
+	QMenuBar* qMenubar = this->menuBar();
+	QMenu* qMenuProject = qMenubar->addMenu("工程");
+	QAction* qActionCreate = qMenuProject->addAction("新建工程");
+
+	connect(qActionCreate, &QAction::triggered, this, &NCCMainWindow::on_action_CreateProject);
+	connect(this, &NCCMainWindow::saveOnceOrderSuccess, this, &NCCMainWindow::saveOnceOrderItem);
 }
 
 NCCMainWindow::~NCCMainWindow()
@@ -127,6 +133,7 @@ int NCCMainWindow::getListItem(QString name)
 	for (int i = 0;i< ui->listWidget->count();i++)
 	{
 		QListWidgetItem* item = ui->listWidget->item(i);
+		QString nn = item->text();
 		if (item->text().contains(name))
 		{
 			return i;
@@ -211,7 +218,7 @@ void NCCMainWindow::on_action_rotaterect_triggered()
 	ncc_patten_rect_info->setpixmapheight(ImageItem->pixmap().height() * ImageItem->scale());
 	ncc_patten_rect_info->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
 	//ncc_patten_rect_info->if_ncc_modelShape = true;
-	//给当前rec t设置id
+	//给当前rect设置id
 	this->qgraphicsScene->addItem(ncc_patten_rect_info);
 	ui->graphicsView->setScene(this->qgraphicsScene);
 
@@ -266,6 +273,7 @@ void NCCMainWindow::on_action_concircle_triggered()
 	int currentRow = ui->listWidget->currentRow();
 
 	ui->listWidget->takeItem(currentRow);
+
 	qgraphicsScene->removeItem(source_rect_List->at(currentRow));
 	source_rect_List->removeAt(currentRow);
 
@@ -293,156 +301,190 @@ void NCCMainWindow::on_action_concircle_triggered()
 //}
 
 //保存当前数据
-void NCCMainWindow::on_action_ringexpansion_triggered()
-{
-	int item = 0;
+//void NCCMainWindow::on_action_ringexpansion_triggered()
+//{
+//	int item = 0;
+//	//判断当前特征区域的标志
+//	int pattern_index = getListItem("特征区域");
+//	if (pattern_index ==0)
+//	{
+//		//没有设置特征区域
+//		return;
+//	}
+//	int pattern_rect_index = getListItem("矩形");
+//	int pattern_polygon_index = getListItem("多边形");
+//	int pattern_circle_index = getListItem("圆型");
+//
+//	if (pattern_rect_index != -1)
+//	{
+//		item = 1;
+//	}else if (pattern_polygon_index != -1)
+//	{
+//		item = 2;
+//	}else if (pattern_circle_index!=-1)
+//	{
+//		item = 3;
+//	}
+//		//另存为
+//		QString path = QFileDialog::getSaveFileName(nullptr,
+//			tr("Open File"),
+//			"",
+//			tr("ini Files(*.ini)"));
+//
+//		if (path.isEmpty())
+//		{
+//			return;
+//		}
+//	QSettings* settings = new QSettings(path, QSettings::IniFormat);
+//
+//	QString groupinfo("pattern_info");
+//	settings->beginGroup(groupinfo);
+//	settings->setValue("pattern_info_item", item);
+//	settings->setValue("source_width", ImageItem->pixmap().width());
+//	settings->setValue("source_height", ImageItem->pixmap().height());
+//
+//	int source_rect_index = getListItem("搜索区域");
+//	bee_rect* source_rect_info_item;
+//	if (source_rect_index == -1)
+//	{
+//		source_rect_info_item = new bee_rect();
+//		source_rect_info_item->m_rect.setX(0);
+//		source_rect_info_item->m_rect.setY(0);
+//		source_rect_info_item->m_rect.setWidth(ImageItem->pixmap().width() * ImageItem->scale());
+//		source_rect_info_item->m_rect.setHeight(ImageItem->pixmap().height() * ImageItem->scale());
+//	}
+//	else {
+//		source_rect_info_item = (bee_rect*)source_rect_List->at(source_rect_index);
+//	}
+//
+//	//保存范围图信息
+//	settings->setValue("source_rect_info.x", QString::number(source_rect_info_item->m_rect.x()));
+//	settings->setValue("source_rect_info.y", QString::number(source_rect_info_item->m_rect.y()));
+//	settings->setValue("source_rect_info.width", QString::number(source_rect_info_item->m_rect.width()));
+//	settings->setValue("source_rect_info.height", QString::number(source_rect_info_item->m_rect.height()));
+//	settings->setValue("source_rect_image_info", QString(fileName));
+//
+//	//保存特征图信息
+//	if (pattern_rect_index != -1)
+//	{
+//		bee_rect* ncc_patten_rect_info_item = (bee_rect*)source_rect_List->at(pattern_rect_index);
+//
+//		if (ncc_patten_rect_info_item->if_create)
+//		{
+//		
+//		settings->setValue("pattern_rect_info.x", QString::number(ncc_patten_rect_info_item->m_rect.x()));
+//		settings->setValue("pattern_rect_info.y", QString::number(ncc_patten_rect_info_item->m_rect.y()));
+//		settings->setValue("pattern_rect_info.width", QString::number(ncc_patten_rect_info_item->m_rect.width()));
+//		settings->setValue("pattern_rect_info.height", QString::number(ncc_patten_rect_info_item->m_rect.height()));
+//		}
+//	}	//保存多边形的特征信息
+//	else if (pattern_polygon_index != -1)
+//	{
+//		bee_polygon* ncc_patten_polygon_info_item = (bee_polygon*)source_rect_List->at(pattern_polygon_index);
+//
+//		if (ncc_patten_polygon_info_item->if_create)
+//		{
+//		int num = ncc_patten_polygon_info_item->num;
+//		settings->setValue("pattern_polygon_num", QString::number(num));
+//
+//		QVector<QPointF> pp_item = ncc_patten_polygon_info_item->pp;
+//		for (int i = 0; i < num; i++)
+//		{
+//			QString itemX("pattern_polygon_count_X_");
+//			itemX.append(QString::number(i));
+//			settings->setValue(itemX, QString::number(pp_item.at(i).x()));
+//
+//			QString itemY("pattern_polygon_count_Y_");
+//			itemY.append(QString::number(i));
+//			int y = pp_item.at(i).y();
+//			settings->setValue(itemY, QString::number(pp_item.at(i).y()));
+//			}
+//		 }
+//	}else if (pattern_circle_index!=-1)
+//	{
+//
+//	}
+//	//保存输出点
+//	int source_point_index = getListItem("输出点");
+//
+//	if (source_point_index != -1)
+//	{
+//		bee_point* ncc_patten_point_info_item = (bee_point*)source_rect_List->at(source_point_index);
+//
+//	if (ncc_patten_point_info_item->if_create)
+//	{
+//		QList<mycorneritem*> my_caliberlineItem = ncc_patten_point_info_item->m_HandlesList;
+//		mycorneritem*  pointCount = my_caliberlineItem.at(0);
+//		double x = pointCount->m_point.x();
+//		double y = pointCount->m_point.y();
+//		QString itemoutPoint("pattern_Output_Point_Count");
+//		QString itemoutPointX("pattern_Output_Point_X");
+//		QString itemoutPointY("pattern_Output_Point_Y");
+//
+//		settings->setValue(itemoutPoint, QString::number(1));
+//		settings->setValue(itemoutPointX, QString::number(x));
+//		settings->setValue(itemoutPointY, QString::number(y));
+//	}	
+//	}
+//	settings->endGroup();
+//
+//	delete settings;
+//	
+//	
+//	//保存当前图片
+//	QString dirpath = QApplication::applicationDirPath() + "/model/";
+//	QDir dir(dirpath);
+//	if (!dir.exists())
+//	{
+//		//不存在则创建
+//		dir.mkdir(dirpath); //只创建一级子目录，即必须保证上级目录存在
+//	}
+//
+//	QString fullpath = dirpath + fileName;
+//
+//	//保存当前的图片
+//	QImage matSrcImage = ImageItem->pixmap().toImage();
+//	matSrcImage.save(fullpath, "BMP", 100);
+//
+//	QMessageBox::warning(0, "通知", "保存成功");
+//	//发送当前的文档路径给前端路径
+//	emit sendINIPath(path);
+//}
+
+//保存当前顺序
+void NCCMainWindow::on_action_ringexpansion_triggered() {
+		int item = 0;
 	//判断当前特征区域的标志
 	int pattern_index = getListItem("特征区域");
-	if (pattern_index ==0)
+	if (pattern_index < 0)
 	{
 		//没有设置特征区域
 		return;
 	}
 	int pattern_rect_index = getListItem("矩形");
-	int pattern_polygon_index = getListItem("多边形");
 	int pattern_circle_index = getListItem("圆型");
 
 	if (pattern_rect_index != -1)
 	{
 		item = 1;
-	}else if (pattern_polygon_index != -1)
-	{
-		item = 2;
 	}else if (pattern_circle_index!=-1)
 	{
 		item = 3;
 	}
-		//另存为
-		QString path = QFileDialog::getSaveFileName(nullptr,
-			tr("Open File"),
-			"",
-			tr("ini Files(*.ini)"));
+	//保存数据
+	FileOrder order;
+	order.ImageItem = ImageItem_IMAGE;
+	order.fileOrderList = "1";
+	//搜索区域
+	order.fileList_sourceRect = new bee_rect(source_rect_info);
+	//特征区域
+	order.fileList_mattchRect = new bee_rect(ncc_patten_rect_info);
 
-		if (path.isEmpty())
-		{
-			return;
-		}
-	QSettings* settings = new QSettings(path, QSettings::IniFormat);
-
-	QString groupinfo("pattern_info");
-	settings->beginGroup(groupinfo);
-	settings->setValue("pattern_info_item", item);
-	settings->setValue("source_width", ImageItem->pixmap().width());
-	settings->setValue("source_height", ImageItem->pixmap().height());
-
-	int source_rect_index = getListItem("搜索区域");
-	bee_rect* source_rect_info_item;
-	if (source_rect_index == -1)
-	{
-		source_rect_info_item = new bee_rect();
-		source_rect_info_item->m_rect.setX(0);
-		source_rect_info_item->m_rect.setY(0);
-		source_rect_info_item->m_rect.setWidth(ImageItem->pixmap().width() * ImageItem->scale());
-		source_rect_info_item->m_rect.setHeight(ImageItem->pixmap().height() * ImageItem->scale());
-	}
-	else {
-		source_rect_info_item = (bee_rect*)source_rect_List->at(source_rect_index);
-	}
-
-	//保存范围图信息
-	settings->setValue("source_rect_info.x", QString::number(source_rect_info_item->m_rect.x()));
-	settings->setValue("source_rect_info.y", QString::number(source_rect_info_item->m_rect.y()));
-	settings->setValue("source_rect_info.width", QString::number(source_rect_info_item->m_rect.width()));
-	settings->setValue("source_rect_info.height", QString::number(source_rect_info_item->m_rect.height()));
-	settings->setValue("source_rect_image_info", QString(fileName));
-
-	//保存特征图信息
-	if (pattern_rect_index != -1)
-	{
-		bee_rect* ncc_patten_rect_info_item = (bee_rect*)source_rect_List->at(pattern_rect_index);
-
-		if (ncc_patten_rect_info_item->if_create)
-		{
-		
-		settings->setValue("pattern_rect_info.x", QString::number(ncc_patten_rect_info_item->m_rect.x()));
-		settings->setValue("pattern_rect_info.y", QString::number(ncc_patten_rect_info_item->m_rect.y()));
-		settings->setValue("pattern_rect_info.width", QString::number(ncc_patten_rect_info_item->m_rect.width()));
-		settings->setValue("pattern_rect_info.height", QString::number(ncc_patten_rect_info_item->m_rect.height()));
-		}
-	}	//保存多边形的特征信息
-	else if (pattern_polygon_index != -1)
-	{
-		bee_polygon* ncc_patten_polygon_info_item = (bee_polygon*)source_rect_List->at(pattern_polygon_index);
-
-		if (ncc_patten_polygon_info_item->if_create)
-		{
-		int num = ncc_patten_polygon_info_item->num;
-		settings->setValue("pattern_polygon_num", QString::number(num));
-
-		QVector<QPointF> pp_item = ncc_patten_polygon_info_item->pp;
-		for (int i = 0; i < num; i++)
-		{
-			QString itemX("pattern_polygon_count_X_");
-			itemX.append(QString::number(i));
-			settings->setValue(itemX, QString::number(pp_item.at(i).x()));
-
-			QString itemY("pattern_polygon_count_Y_");
-			itemY.append(QString::number(i));
-			int y = pp_item.at(i).y();
-			settings->setValue(itemY, QString::number(pp_item.at(i).y()));
-			}
-		 }
-	}else if (pattern_circle_index!=-1)
-	{
-
-	}
-	//保存输出点
-	int source_point_index = getListItem("输出点");
-
-	if (source_point_index != -1)
-	{
-		bee_point* ncc_patten_point_info_item = (bee_point*)source_rect_List->at(source_point_index);
-
-	if (ncc_patten_point_info_item->if_create)
-	{
-		QList<mycorneritem*> my_caliberlineItem = ncc_patten_point_info_item->m_HandlesList;
-		mycorneritem*  pointCount = my_caliberlineItem.at(0);
-		double x = pointCount->m_point.x();
-		double y = pointCount->m_point.y();
-		QString itemoutPoint("pattern_Output_Point_Count");
-		QString itemoutPointX("pattern_Output_Point_X");
-		QString itemoutPointY("pattern_Output_Point_Y");
-
-		settings->setValue(itemoutPoint, QString::number(1));
-		settings->setValue(itemoutPointX, QString::number(x));
-		settings->setValue(itemoutPointY, QString::number(y));
-	}	
-	}
-	settings->endGroup();
-
-	delete settings;
+	FileOrderListItem.append(order);
 	
-	
-	//保存当前图片
-	QString dirpath = QApplication::applicationDirPath() + "/model/";
-	QDir dir(dirpath);
-	if (!dir.exists())
-	{
-		//不存在则创建
-		dir.mkdir(dirpath); //只创建一级子目录，即必须保证上级目录存在
-	}
-
-	QString fullpath = dirpath + fileName;
-
-	//保存当前的图片
-	QImage matSrcImage = ImageItem->pixmap().toImage();
-	matSrcImage.save(fullpath, "BMP", 100);
-
-	QMessageBox::warning(0, "通知", "保存成功");
-	//发送当前的文档路径给前端路径
-	emit sendINIPath(path);
+	//保存成功
+	emit saveOnceOrderSuccess();
 }
-
 
 //效果预览按钮
 void NCCMainWindow::on_action_caliberline_triggered()
@@ -574,6 +616,7 @@ void NCCMainWindow::sendImgToControllerShape(QImage image,QString ModelPath)
 	bounds.setHeight(bounds.height());
 	ui->graphicsView->fitInView(bounds, Qt::KeepAspectRatio);
 	state_flag_maindow = CHOOSE_PICTURE;
+	ImageItem_IMAGE = image.copy();
 }
 
 //
@@ -622,8 +665,6 @@ void NCCMainWindow::slot_receiveDrawPoint(QPoint resultPoint, int totalModelTime
 	//绘制文本
 	putText(showImage, text, origin, font_face, font_scale, color, thickness, lineType, bottomLoftOrigin);
 
-
-	
 	cv::resize(showImage, showImage, Size(showImage.cols / 2, showImage.rows / 2), 0, 0);
 
 
@@ -666,4 +707,69 @@ void NCCMainWindow::createRECT(int type, int index)
 		ui->listWidget->addItem(itemValue);
 		source_rect_List->append(source_point_info);
 	}
+}
+
+void NCCMainWindow::on_action_CreateProject()
+{
+	int x = 10;
+	//todo 工程名字界面
+	projectFileName = "1453";
+	qgraphicsScene->clear();
+
+}
+
+
+
+void NCCMainWindow::on_deleteOrder_click()
+{
+
+}
+
+void NCCMainWindow::saveOnceOrderItem()
+{
+	qgraphicsScene->clear();
+
+
+	  orderItem = FileOrderListItem.at(FileOrderListItem.size()-1);
+	  QImage current_Item = orderItem.ImageItem;
+	  qgraphicsScene->setSceneRect(0, 0, current_Item.width(), current_Item.height());
+	  ImageItem = qgraphicsScene->addPixmap(QPixmap::fromImage(current_Item));
+
+	  try
+	  {
+
+		  source_rect_info = new bee_rect(orderItem.fileList_sourceRect);
+		  source_rect_info->setpixmapwidth(ImageItem->pixmap().width() * ImageItem->scale());
+		  source_rect_info->setpixmapheight(ImageItem->pixmap().height() * ImageItem->scale());
+		  source_rect_info->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+
+
+		  ncc_patten_rect_info = new bee_rect(orderItem.fileList_mattchRect);
+		  ncc_patten_rect_info->setpixmapwidth(ImageItem->pixmap().width() * ImageItem->scale());
+		  ncc_patten_rect_info->setpixmapheight(ImageItem->pixmap().height() * ImageItem->scale());
+		  ncc_patten_rect_info->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+
+		  this->qgraphicsScene->addItem(source_rect_info);
+		  this->qgraphicsScene->addItem(ncc_patten_rect_info);
+
+		  ui->graphicsView->setScene(this->qgraphicsScene);
+
+		  qgraphicsScene->update();
+	  }
+	  catch (Exception* e)
+	  {
+		  int x = 10;
+	  }
+	
+
+	////获取List中最后一个item
+ //   orderItem = FileOrderListItem.at(0);
+	//QImage current_Item = orderItem.ImageItem;
+
+	//qgraphicsScene->clear();
+
+
+	//	QString itemValue = "搜索区域-";
+	//itemValue.append(orderItem.fileOrderList);
+	//ui->listWidget_fileOrder->addItem(itemValue);
 }

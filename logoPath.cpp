@@ -19,9 +19,8 @@ logoPath::logoPath(QWidget* parent) :
 
 
 	//白色填充左上角图标
-	QPixmap pixmap(100, 100);
-	pixmap.fill(Qt::white);
-	setWindowIcon(QIcon(pixmap));
+	setWindowIcon(QIcon("Image/login/icon.ico"));
+
 	setWindowTitle("logo设置");
 	setWindowFlags(Qt::WindowCloseButtonHint);
 

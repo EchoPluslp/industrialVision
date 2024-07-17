@@ -19,7 +19,6 @@
 #include<opencv2\opencv.hpp>
 #include <opencv2/imgproc/imgproc_c.h>
 #include "connectServer.h"
-#include "createModel.h"
 #include "logoSet.h"
 #include "logoPath.h"
 #include"smallMainWindow.h"
@@ -76,7 +75,6 @@ private:
 
     int matchTime_total;
     QPointF resultPointF;
-    createModel createModelItem;
 	MainWindow shapeMainWindow;
 
     smallMainWindow smallMainWindow;
@@ -181,7 +179,6 @@ public:
      bool industrialVision::visualTemplate_Control = false;
      passwordSet passwordSetItem;
 
-     bool industrialVision::getPatternInfoFromXML(QString path);
      //false 没有更新 true 已经更新
      bool  sourceAreaOn = true;
 	 bool  small_window_flag = false;

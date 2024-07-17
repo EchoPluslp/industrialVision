@@ -31,6 +31,24 @@ class bee_rect: public QObject,public QAbstractGraphicsShapeItem
     Q_OBJECT
 public:
     bee_rect(QGraphicsItem *parent = nullptr, bool flag=false, bool ncc_flag = false,int index = 0);
+	// 复制构造函数
+	bee_rect(const bee_rect& other)
+		: QObject(nullptr), QAbstractGraphicsShapeItem(nullptr),
+		pixmap_width(other.pixmap_width), pixmap_height(other.pixmap_height),
+		m_startPos(other.m_startPos), n_flag(other.n_flag),
+		m_StateFlag(other.m_StateFlag), if_hover(other.if_hover),
+		m_HandlesList(other.m_HandlesList), m_bRotate(other.m_bRotate),
+		m_rect(other.m_rect), m_poly(other.m_poly), rotate_angle(other.rotate_angle),
+		rotate_center(other.rotate_center), if_rotate(other.if_rotate),
+		if_create(other.if_create), if_handleslist_create(other.if_handleslist_create),
+		create_move(other.create_move), if_ncc_modelShape(other.if_ncc_modelShape),
+		current_roi_index(other.current_roi_index)
+	{
+		std::copy(std::begin(other.pt), std::end(other.pt), std::begin(pt));
+		std::copy(std::begin(other.pp), std::end(other.pp), std::begin(pp));
+	}
+
+
     void setRectSize(QRectF mrect,bool bResetRotateCenter = true);
     QPointF getRotatePoint(QPointF ptCenter, QPointF ptIn, qreal angle);//获取旋转后的点
     QRectF  boundingRect() const;
