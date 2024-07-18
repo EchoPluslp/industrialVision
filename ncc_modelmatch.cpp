@@ -123,6 +123,53 @@ void NCCMainWindow::keyPressEvent(QKeyEvent* event)
 
 }
 
+QString NCCMainWindow::scanDirectory(const QString& directoryPath)
+{
+	QDir dir(directoryPath);
+	if (!dir.exists()) {
+		qDebug() << "The directory does not exist.";
+		return "";
+	}
+
+	// 设置过滤器，只获取一级文件夹
+	dir.setFilter(QDir::NoDotAndDotDot | QDir::Dirs);
+
+	// 获取一级文件夹列表
+	QFileInfoList folderList = dir.entryInfoList();
+	if (folderList.size()==0)
+	{
+		QString newMaxFolderPath = directoryPath + "/" + "0" + "/";
+
+		return newMaxFolderPath;
+	}
+
+
+	// 使用一个字符串列表来存储文件夹名字
+	QStringList folderNames;
+	foreach(QFileInfo folderInfo, folderList) {
+		folderNames << folderInfo.fileName();
+	}
+
+
+	// 查找文件夹名字中的最大值，并加一
+	auto maxElement = std::max_element(folderNames.begin(), folderNames.end(),
+		[](const QString& a, const QString& b) { return a.toInt() < b.toInt(); });
+
+	bool ok;
+	int maxNumber = maxElement->toInt(&ok);
+	if (!ok) {
+		QString newMaxFolderPath = directoryPath + "/" + "0" + "/";
+		return newMaxFolderPath;
+	}
+
+	int newMaxNumber = maxNumber + 1;
+	QString newMaxFolderName = QString::number(newMaxNumber);
+
+	QString newMaxFolderPath = directoryPath +"/"+ newMaxFolderName + "/";
+
+	return newMaxFolderPath;
+}
+
 //返回指定name的index
 int NCCMainWindow::getListItem(QString name)
 {
@@ -271,26 +318,11 @@ void NCCMainWindow::on_action_concircle_triggered()
 	}
 	QListWidgetItem* currentItem = ui->listWidget->currentItem();
 	int currentRow = ui->listWidget->currentRow();
-
+	//删除当前item
 	ui->listWidget->takeItem(currentRow);
 
 	qgraphicsScene->removeItem(source_rect_List->at(currentRow));
 	source_rect_List->removeAt(currentRow);
-
-	//qgraphicsScene->removeItem(source_rect_info);
-	//qgraphicsScene->removeItem(ncc_patten_rect_info);
-	//qgraphicsScene->removeItem(source_polygon_info);
-	//qgraphicsScene->removeItem(source_circle_info);
-
-	//
-	////搜索区域
-	//source_rect_info = nullptr;
-	////特征区域,矩形
-	//ncc_patten_rect_info = nullptr;
-	////特征区域多边形
-	//source_polygon_info = nullptr;
-	////清空圆区域
-	//source_circle_info = nullptr;
 
 	qgraphicsScene->update();
 
@@ -453,37 +485,151 @@ void NCCMainWindow::on_action_concircle_triggered()
 
 //保存当前顺序
 void NCCMainWindow::on_action_ringexpansion_triggered() {
+	//保存数据存储到指定文件夹下面
 		int item = 0;
 	//判断当前特征区域的标志
 	int pattern_index = getListItem("特征区域");
-	if (pattern_index < 0)
+	if (pattern_index ==0)
 	{
 		//没有设置特征区域
 		return;
 	}
 	int pattern_rect_index = getListItem("矩形");
+	int pattern_polygon_index = getListItem("多边形");
 	int pattern_circle_index = getListItem("圆型");
 
 	if (pattern_rect_index != -1)
 	{
 		item = 1;
+	}else if (pattern_polygon_index != -1)
+	{
+		item = 2;
 	}else if (pattern_circle_index!=-1)
 	{
 		item = 3;
 	}
-	//保存数据
-	FileOrder order;
-	order.ImageItem = ImageItem_IMAGE;
-	order.fileOrderList = "1";
-	//搜索区域
-	order.fileList_sourceRect = new bee_rect(source_rect_info);
-	//特征区域
-	order.fileList_mattchRect = new bee_rect(ncc_patten_rect_info);
+		//另存为文件夹路径名
+	QString filePathIn_ = scanDirectory(folderPathChoose);
+	if (filePathIn_.isEmpty())
+	{
+		return;
+	}
 
-	FileOrderListItem.append(order);
+	QDir dir;
+	dir.mkpath(filePathIn_);
+	QSettings* settings = new QSettings(filePathIn_+"/model.ini", QSettings::IniFormat);
+	QString groupinfo("pattern_info");
+	settings->beginGroup(groupinfo);
+	settings->setValue("pattern_info_item", item);
+	settings->setValue("source_width", ImageItem->pixmap().width());
+	settings->setValue("source_height", ImageItem->pixmap().height());
+
+	int source_rect_index = getListItem("搜索区域");
+	bee_rect* source_rect_info_item;
+	if (source_rect_index == -1)
+	{
+		source_rect_info_item = new bee_rect();
+		source_rect_info_item->m_rect.setX(0);
+		source_rect_info_item->m_rect.setY(0);
+		source_rect_info_item->m_rect.setWidth(ImageItem->pixmap().width() * ImageItem->scale());
+		source_rect_info_item->m_rect.setHeight(ImageItem->pixmap().height() * ImageItem->scale());
+	}
+	else {
+		source_rect_info_item = (bee_rect*)source_rect_List->at(source_rect_index);
+	}
+
+	//保存范围图信息
+	settings->setValue("source_rect_info.x", QString::number(source_rect_info_item->m_rect.x()));
+	settings->setValue("source_rect_info.y", QString::number(source_rect_info_item->m_rect.y()));
+	settings->setValue("source_rect_info.width", QString::number(source_rect_info_item->m_rect.width()));
+	settings->setValue("source_rect_info.height", QString::number(source_rect_info_item->m_rect.height()));
+	settings->setValue("source_rect_image_info", QString(fileName));
+	bee_rect* ncc_patten_rect_info_item;
+	//保存特征图信息
+	if (pattern_rect_index != -1)
+	{
+		ncc_patten_rect_info_item = (bee_rect*)source_rect_List->at(pattern_rect_index);
+
+		if (ncc_patten_rect_info_item->if_create)
+		{
+		
+		settings->setValue("pattern_rect_info.x", QString::number(ncc_patten_rect_info_item->m_rect.x()));
+		settings->setValue("pattern_rect_info.y", QString::number(ncc_patten_rect_info_item->m_rect.y()));
+		settings->setValue("pattern_rect_info.width", QString::number(ncc_patten_rect_info_item->m_rect.width()));
+		settings->setValue("pattern_rect_info.height", QString::number(ncc_patten_rect_info_item->m_rect.height()));
+		}
+	}	//保存多边形的特征信息
+	else if (pattern_polygon_index != -1)
+	{
+		bee_polygon* ncc_patten_polygon_info_item = (bee_polygon*)source_rect_List->at(pattern_polygon_index);
+
+		if (ncc_patten_polygon_info_item->if_create)
+		{
+		int num = ncc_patten_polygon_info_item->num;
+		settings->setValue("pattern_polygon_num", QString::number(num));
+
+		QVector<QPointF> pp_item = ncc_patten_polygon_info_item->pp;
+		for (int i = 0; i < num; i++)
+		{
+			QString itemX("pattern_polygon_count_X_");
+			itemX.append(QString::number(i));
+			settings->setValue(itemX, QString::number(pp_item.at(i).x()));
+
+			QString itemY("pattern_polygon_count_Y_");
+			itemY.append(QString::number(i));
+			int y = pp_item.at(i).y();
+			settings->setValue(itemY, QString::number(pp_item.at(i).y()));
+			}
+		 }
+	}else if (pattern_circle_index!=-1)
+	{
+
+	}
+	//保存输出点
+	int source_point_index = getListItem("输出点");
+
+	if (source_point_index != -1)
+	{
+		bee_point* ncc_patten_point_info_item = (bee_point*)source_rect_List->at(source_point_index);
+
+	if (ncc_patten_point_info_item->if_create)
+	{
+		QList<mycorneritem*> my_caliberlineItem = ncc_patten_point_info_item->m_HandlesList;
+		mycorneritem*  pointCount = my_caliberlineItem.at(0);
+		double x = pointCount->m_point.x();
+		double y = pointCount->m_point.y();
+		QString itemoutPoint("pattern_Output_Point_Count");
+		QString itemoutPointX("pattern_Output_Point_X");
+		QString itemoutPointY("pattern_Output_Point_Y");
+
+		settings->setValue(itemoutPoint, QString::number(1));
+		settings->setValue(itemoutPointX, QString::number(x));
+		settings->setValue(itemoutPointY, QString::number(y));
+	}	
+	}
+	settings->endGroup();
+
+	delete settings;
+	
+	
+	//保存当前图片
+
+	QString fullpath = filePathIn_ + "model.bmp";
+	QRect region(ncc_patten_rect_info_item->m_rect.x(), ncc_patten_rect_info_item->m_rect.y(), ncc_patten_rect_info_item->m_rect.width(), 
+		ncc_patten_rect_info_item->m_rect.height());
+
+	//保存当前的图片
+
+	QImage matSrcImage = ImageItem->pixmap().toImage().copy(region);
+	matSrcImage.save(fullpath, "BMP", 100);
+
+	QMessageBox::warning(0, "通知", "保存成功");
+	//发送当前的文档路径给前端路径
+	//emit sendINIPath(filePathIn_);
 	
 	//保存成功
 	emit saveOnceOrderSuccess();
+	
 }
 
 //效果预览按钮
@@ -605,7 +751,7 @@ void NCCMainWindow::on_action_1_to_1_triggered()
 
 void NCCMainWindow::sendImgToControllerShape(QImage image,QString ModelPath)
 {
-	fileName = image.text("name");
+	fileName = ModelPath;
 	qgraphicsScene->clear();
 	qgraphicsScene->setSceneRect(0, 0, image.width(), image.height());
 	ImageItem = qgraphicsScene->addPixmap(QPixmap::fromImage(image));
@@ -711,10 +857,24 @@ void NCCMainWindow::createRECT(int type, int index)
 
 void NCCMainWindow::on_action_CreateProject()
 {
-	int x = 10;
 	//todo 工程名字界面
-	projectFileName = "1453";
-	qgraphicsScene->clear();
+	// 创建文件夹选择对话框
+	QFileDialog dialog(nullptr, "Select or Create Folder", QCoreApplication::applicationDirPath());
+	dialog.setFileMode(QFileDialog::Directory);
+	dialog.setOption(QFileDialog::ShowDirsOnly, true);
+
+	// 显示对话框并获取用户选择的文件夹路径
+	if (dialog.exec() == QDialog::Accepted)
+	{
+		folderPathChoose = dialog.selectedFiles().first();
+		//QDir dir(folderPathChoose);
+		//QString folderName = dir.dirName();
+	}
+	else
+	{
+		qDebug() << "No folder selected.";
+		return;
+	}
 
 }
 
@@ -727,49 +887,24 @@ void NCCMainWindow::on_deleteOrder_click()
 
 void NCCMainWindow::saveOnceOrderItem()
 {
+	//清楚剩下的
 	qgraphicsScene->clear();
+	//清除所有信息
+		if (source_rect_List) {
+			// 清空列表中的项
+			source_rect_List->clear();
 
+			//// 删除列表本身
+			//delete source_rect_List;
 
-	  orderItem = FileOrderListItem.at(FileOrderListItem.size()-1);
-	  QImage current_Item = orderItem.ImageItem;
-	  qgraphicsScene->setSceneRect(0, 0, current_Item.width(), current_Item.height());
-	  ImageItem = qgraphicsScene->addPixmap(QPixmap::fromImage(current_Item));
+			//// 将指针重置为nullptr
+			//source_rect_List = nullptr;
+		}
+	//清空右侧list
+		ui->listWidget->clear();
 
-	  try
-	  {
-
-		  source_rect_info = new bee_rect(orderItem.fileList_sourceRect);
-		  source_rect_info->setpixmapwidth(ImageItem->pixmap().width() * ImageItem->scale());
-		  source_rect_info->setpixmapheight(ImageItem->pixmap().height() * ImageItem->scale());
-		  source_rect_info->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
-
-
-		  ncc_patten_rect_info = new bee_rect(orderItem.fileList_mattchRect);
-		  ncc_patten_rect_info->setpixmapwidth(ImageItem->pixmap().width() * ImageItem->scale());
-		  ncc_patten_rect_info->setpixmapheight(ImageItem->pixmap().height() * ImageItem->scale());
-		  ncc_patten_rect_info->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
-
-		  this->qgraphicsScene->addItem(source_rect_info);
-		  this->qgraphicsScene->addItem(ncc_patten_rect_info);
-
-		  ui->graphicsView->setScene(this->qgraphicsScene);
-
-		  qgraphicsScene->update();
-	  }
-	  catch (Exception* e)
-	  {
-		  int x = 10;
-	  }
+	//保存ini文件信息
 	
 
-	////获取List中最后一个item
- //   orderItem = FileOrderListItem.at(0);
-	//QImage current_Item = orderItem.ImageItem;
 
-	//qgraphicsScene->clear();
-
-
-	//	QString itemValue = "搜索区域-";
-	//itemValue.append(orderItem.fileOrderList);
-	//ui->listWidget_fileOrder->addItem(itemValue);
 }

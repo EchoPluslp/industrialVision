@@ -199,6 +199,13 @@ public:
      void reinitialize();
 
      bool read_info_from_ini(QString path);
+
+     //717获取文件夹下的文件名字
+     QStringList  getSortedFolderNamesAsNumbers(const QString& folderPath);
+     QStringList fileSortedName;//获取的文件夹名字
+     int CurrentExecutionOrder;
+
+     
 	 protected:
 		 void closeEvent(QCloseEvent* event) override {
 			 // 创建 QMessageBox 对话框

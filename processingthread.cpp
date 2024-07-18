@@ -269,7 +269,9 @@ void ProcessingThread::run()
 					ResultPoint Point_2;
 					if (shape_type)
 					{
-						 Point_1 = MatchPicture(patternMat, tempMap(areaMatRect), false);
+						Point_1 = MatchPicture_Halcon(patternMat, tempMap(areaMatRect), false);
+
+					//	 Point_1 = MatchPicture(patternMat, tempMap(areaMatRect), false);
 
 						 pattern_Flag = false;
 						 resultPointF.setX(Point_1.x);
@@ -278,18 +280,8 @@ void ProcessingThread::run()
 						 int total_time = timedebuge.elapsed();
 
 						 emit signal_patternResult(resultPointF, total_time);
+					}
 					
-					}
-					else {
-						Point_2 = slot_processMatchPictureWithSource(tempMap(areaMatRect));
-						pattern_Flag = false;
-						int total_time = timedebuge.elapsed();
-						resultPointF.setX(Point_2.X);
-						resultPointF.setY(Point_2.Y);
-
-						emit signal_patternResult(resultPointF, total_time);
-
-					}
 					if (resultPointF.x() != -m_width && resultPointF.y() != m_height) {
 						QPainter painter(&newPixmap_1);
 
@@ -301,13 +293,8 @@ void ProcessingThread::run()
 						painter.drawEllipse(QPointF(drawCenterPoint.x, drawCenterPoint.y), 50, 50);
 					}
 				}
-				//可以执行匹配,但是比例不对的情况,也就说不同比例时,触发了匹配,匹配错误
-				if (pattern_Flag && modelAndRealSclar == false) {
-					patternNG();
-				}
-
+			
 				pattern_Flag = false;
-				//判断是否需要展示范围图
 				if (area_Flag)
 				{
 					QPen pen;
@@ -478,6 +465,91 @@ void ProcessingThread::slot_recievePatternImage(QString pattern_Path,QRectF patt
 
 }
 
+cv::Point2f ProcessingThread::MatchPicture_Halcon(cv::Mat m_matDst, cv::Mat m_matSrc, bool is_NCC)
+{
+	//ho_Image 特征图
+	// Local iconic v
+	HObject ho_Image = MatToHImage(m_matDst);
+	HObject   ho_ROI, ho_ImageReduced;
+
+	// Local control variables
+	HTuple  hv_ModelID, hv_NumImages, hv_Index, hv_T0;
+	HTuple  hv_Row, hv_Column, hv_Angle, hv_Score, hv_T1, hv_Time;
+
+	//
+	//*****************************************************
+	//1. Creation of the NCC model (offline step)         *
+	//*****************************************************
+	//
+	//Create the ncc model.
+	CreateNccModel(ho_Image, "auto", HTuple(0).TupleRad(), HTuple(0).TupleRad(),
+		"auto", "use_polarity", &hv_ModelID);
+	//
+	//*****************************************************
+	//2. Find objects (online step)                       *
+	//*****************************************************
+
+		HTuple end_val25 = hv_NumImages;
+		HTuple step_val25 = 1;
+
+		HObject ho_Image_Source = MatToHImage(m_matSrc);
+
+			//
+			//Find the ncc model and use the MinScore to decide if it is the CE logo.
+			CountSeconds(&hv_T0);
+			FindNccModel(ho_Image_Source, hv_ModelID, HTuple(0).TupleRad(), HTuple(360).TupleRad(),
+				0.7, 1, 0.5, "true", 0, &hv_Row, &hv_Column, &hv_Angle, &hv_Score);
+			CountSeconds(&hv_T1);
+			double score = hv_Score.D();
+			if (score > 0.7)
+			{
+				hv_Time = (hv_T1 - hv_T0) * 1000;
+				double x = hv_Column.D();
+				double y = hv_Row.D();
+				return cv::Point2f(x, y);
+			}
+				
+			return cv::Point2f();
+
+}
+
+HalconCpp::HObject ProcessingThread::MatToHImage(cv::Mat& cv_img)
+{
+	HalconCpp::HObject H_img;
+	if (cv_img.channels() == 1)
+	{
+		int height = cv_img.rows, width = cv_img.cols;
+		int size = height * width;
+		uchar* temp = new uchar[size];
+		memcpy(temp, cv_img.data, size);
+		HalconCpp::GenImage1(&H_img, "byte", width, height, (Hlong)(temp));
+		delete[] temp;
+	}
+	else if (cv_img.channels() == 3)
+	{
+		int height = cv_img.rows, width = cv_img.cols;
+		int size = height * width;
+		uchar* B = new uchar[size];
+		uchar* G = new uchar[size];
+		uchar* R = new uchar[size];
+		for (int i = 0; i < height; i++)
+		{
+			uchar* p = cv_img.ptr<uchar>(i);
+			for (int j = 0; j < width; j++)
+			{
+				B[i * width + j] = p[3 * j];
+				G[i * width + j] = p[3 * j + 1];
+				R[i * width + j] = p[3 * j + 2];
+			}
+		}
+		HalconCpp::GenImage3(&H_img, "byte", width, height, (Hlong)(R), (Hlong)(G), (Hlong)(B));
+		delete[] R;
+		delete[] G;
+		delete[] B;
+	}
+	return H_img;
+}
+
 //模板图,原图
 cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bool modelflag)
 {
@@ -490,7 +562,6 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
     if (!modelflag &&!m_TemplData.bIsPatternLearned)
 	{patternNG();return resultPoint;}
 
-    //
     int iTopLayer = GetTopLayer(&m_matDst, (int)sqrt((double)256));
     //建立金字塔
     std::vector<cv::Mat> vecMatSrcPyr;
@@ -1322,8 +1393,9 @@ void ProcessingThread::slot_processMatchPicture(QImage patternImage, QImage sour
 
 	QTime timedebuge;//声明一个时钟对象
 	timedebuge.start();//开始计时
+	cv::Point2d resultPoint = MatchPicture_Halcon(patternImageMat, sourceImageMat, true);
 
-	cv::Point2d resultPoint = MatchPicture(patternImageMat, sourceImageMat, true);
+//	cv::Point2d resultPoint = MatchPicture(patternImageMat, sourceImageMat, true);
 
 	int total_time = timedebuge.elapsed();
 	

@@ -641,33 +641,46 @@ void industrialVision::openshizixian()
     shizixian = !shizixian;
 }
 
-void industrialVision::setModelXMLFile()
-{
-        QString path = QFileDialog::getOpenFileName(nullptr, tr("Open File"), ".",
-			tr("配置文件(*ini)"));
-    if (!path.isEmpty()) {
-		QFileInfo fileInfo(path);
-			 if (fileInfo.suffix().toLower() == "ini"){
-			// 文件后缀名包含ini并发送数据
-			if (!read_info_from_ini(path))
-			{
-				QMessageBox::warning(nullptr, tr("Path"),
-					tr("INI模板图与当前相机展示的图片比例不一致,无法匹配"));
-			}
-			else {
-				QMessageBox::warning(nullptr, tr("Path"),
-					tr("INI模板图导入成功"));
-			}
-		}
-		else {
-			QMessageBox::warning(nullptr, tr("Path"),
-				tr("模板错误."));
-		}
-    }
-    else {
-        QMessageBox::warning(nullptr, tr("Path"),
-            tr("未选择INI模板."));
-    }
+//void industrialVision::setModelXMLFile()
+//{
+//        QString path = QFileDialog::getOpenFileName(nullptr, tr("Open File"), ".",
+//			tr("配置文件(*ini)"));
+//    if (!path.isEmpty()) {
+//		QFileInfo fileInfo(path);
+//			 if (fileInfo.suffix().toLower() == "ini"){
+//			// 文件后缀名包含ini并发送数据
+//			if (!read_info_from_ini(path))
+//			{
+//				QMessageBox::warning(nullptr, tr("Path"),
+//					tr("INI模板图与当前相机展示的图片比例不一致,无法匹配"));
+//			}
+//			else {
+//				QMessageBox::warning(nullptr, tr("Path"),
+//					tr("INI模板图导入成功"));
+//			}
+//		}
+//		else {
+//			QMessageBox::warning(nullptr, tr("Path"),
+//				tr("模板错误."));
+//		}
+//    }
+//    else {
+//        QMessageBox::warning(nullptr, tr("Path"),
+//            tr("未选择INI模板."));
+//    }
+//}
+
+//2024717 读取文件夹路径
+void industrialVision::setModelXMLFile() {
+	QString folderPath = QFileDialog::getExistingDirectory(
+		nullptr,
+		"Select Folder",
+		QCoreApplication::applicationDirPath(),
+		QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+	//获取创建List和文件
+	fileSortedName = getSortedFolderNamesAsNumbers(folderPath);
+	//重置当前模板执行顺序
+	CurrentExecutionOrder = 0;
 }
 
 void industrialVision::rotatePicture()
@@ -1342,6 +1355,51 @@ void industrialVision::reinitialize() {
 	setWindowTitle("V-Gp System V1.0");
 	//重新加载设置界
 	//重新设置标题
+}
+
+QStringList industrialVision::getSortedFolderNamesAsNumbers(const QString& folderPath)
+{
+	QDir dir(folderPath);
+
+	if (!dir.exists()) {
+		qDebug() << "The directory does not exist.";
+		return QStringList();
+	}
+
+	// 设置过滤器，只获取一级文件夹
+	dir.setFilter(QDir::NoDotAndDotDot | QDir::Dirs);
+
+	// 获取一级文件夹列表
+	QFileInfoList folderList = dir.entryInfoList();
+
+	// 使用一个结构体来存储文件夹名字及其数值
+	struct FolderInfo {
+		QString name;
+		int number;
+	};
+
+	QList<FolderInfo> folderInfos;
+
+	foreach(const QFileInfo & folderInfo, folderList) {
+		bool ok;
+		int number = folderInfo.fileName().toInt(&ok);
+		if (ok) {
+			folderInfos.append({ folderInfo.fileName(), number });
+		}
+	}
+
+	// 按照数值进行排序
+	std::sort(folderInfos.begin(), folderInfos.end(), [](const FolderInfo& a, const FolderInfo& b) {
+		return a.number < b.number;
+		});
+
+	// 提取排序后的文件夹名字
+	QStringList sortedFolderNames;
+	for (const FolderInfo& info : folderInfos) {
+		sortedFolderNames.append(folderPath + "/" + info.name + "/");
+	}
+
+	return sortedFolderNames;
 }
 
 bool industrialVision::read_info_from_ini(QString path)

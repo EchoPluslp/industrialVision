@@ -105,7 +105,8 @@ public:
 	QGraphicsScene* qgraphicsScene;
 	NCCMainWindow::STATE_FLAG_MAINWINDOW state_flag_maindow;
 	QGraphicsPixmapItem* ImageItem;
-
+	
+	QString scanDirectory(const QString& directoryPath);
 
 
 	//roi列表
@@ -133,7 +134,7 @@ public:
 
 	QList<QGraphicsItem*>* source_rect_List;
 
-	//图片路径
+	//图片绝对路径
 	QString fileName;
 
 	QList<FileOrder> FileOrderListItem;
@@ -145,6 +146,9 @@ public:
 
 	//当前处理的OrderItem
 	 FileOrder orderItem;
+
+	 //选择的文件路径
+	 QString folderPathChoose;
 };
 
 #endif // MAINWINDOW_H

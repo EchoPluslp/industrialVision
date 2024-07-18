@@ -24,64 +24,7 @@
    <property name="mouseTracking">
     <bool>true</bool>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,6">
-    <item>
-     <widget class="QGroupBox" name="groupBox_2">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>25</pointsize>
-        <weight>75</weight>
-        <italic>false</italic>
-        <bold>true</bold>
-        <underline>true</underline>
-       </font>
-      </property>
-      <property name="title">
-       <string>执行顺序</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <widget class="QPushButton" name="pushButton_createFile">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>新建顺序</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_deleteFile">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>删除顺序</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QListWidget" name="listWidget_fileOrder"/>
-       </item>
-      </layout>
-     </widget>
-    </item>
+   <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="6">
     <item>
      <widget class="QGroupBox" name="groupBox_3">
       <property name="font">
@@ -365,40 +308,7 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>pushButton_createFile</sender>
-   <signal>clicked()</signal>
-   <receiver>ncc_MainWindow</receiver>
-   <slot>on_createOrder_click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>136</x>
-     <y>120</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>307</x>
-     <y>64</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_deleteFile</sender>
-   <signal>clicked()</signal>
-   <receiver>ncc_MainWindow</receiver>
-   <slot>on_deleteOrder_click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>246</x>
-     <y>129</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>470</x>
-     <y>63</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>on_createOrder_click()</slot>
   <slot>on_deleteOrder_click()</slot>

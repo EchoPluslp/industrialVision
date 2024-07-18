@@ -18,6 +18,11 @@
 #include <QReadWriteLock>
 #include<QPainter>
 #include "myCCaliperGUI.h"
+#include "HalconCpp.h"
+#include "HDevThread.h"
+
+using namespace HalconCpp;
+
 
 struct PatternInfo
 {
@@ -141,6 +146,10 @@ public:
 	QPixmap cvMatToPixmap(const cv::Mat cvMat);
 	QImage tempqimageFromCamare;
 	cv::Mat ImageToMat(QImage& image); //QImage转Mat
+
+	//2024 717 模板匹配Halcon
+	cv::Point2f ProcessingThread::MatchPicture_Halcon(cv::Mat m_matDst, cv::Mat m_matSrc, bool is_NCC);
+	 HalconCpp::HObject MatToHImage(cv::Mat& cv_img);
 
 	//模板匹配相关函数::
 	cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc, bool modelflag);
