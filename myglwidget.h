@@ -62,6 +62,7 @@ private:
 
 	QPoint drawLinePoint;   //画图中新的鼠标位置
 
+	bool clickFlag;
 public slots:
 	void crosshair_Flag();
 	void rotate_Flag();

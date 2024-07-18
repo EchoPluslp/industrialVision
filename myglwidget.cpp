@@ -57,7 +57,8 @@ void MyGLWidget::setPixmap(QPixmap pixmap, QString text)
 
 void MyGLWidget::setMouseClickFlag(bool flag)
 {
-	if (flag)
+	clickFlag = flag;
+	if (clickFlag)
 	{
 
 		// 设置 crosshair 的文本并禁用点击触发事件
@@ -119,6 +120,11 @@ void MyGLWidget::mousePressEvent(QMouseEvent* event)
 		//以阻塞方式显示菜单，参数可指示菜单显示位置，另外该函数可返回单击选中项
 	}else if (event->button() == Qt::LeftButton)
 	{
+		if (clickFlag)
+		{
+			//已锁定
+			return;
+		}else {
 		// 将鼠标事件位置转换为QPixmap坐标
 		QPoint posInPixmap = (event->pos() - QPoint(XPtInterval, YPtInterval)) / factor;
 
@@ -126,6 +132,7 @@ void MyGLWidget::mousePressEvent(QMouseEvent* event)
 		drawLinePoint = posInPixmap;
 		sendButton(posInPixmap);
 		//int x = 10;
+		}
 	}
 	oldPos = event->pos();
 	Pressed = true;
@@ -215,4 +222,5 @@ void MyGLWidget::restore_Flag() {
 }
 void MyGLWidget::receive_ButtonLeft(QPoint pointItem) {
 	drawLinePoint = pointItem;
+	drawCrossHair_Flag = true;
 }
