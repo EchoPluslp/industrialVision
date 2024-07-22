@@ -202,7 +202,6 @@ public:
 
      //717获取文件夹下的文件名字
      QStringList  getSortedFolderNamesAsNumbers(const QString& folderPath);
-     QStringList fileSortedName;//获取的文件夹名字
      int CurrentExecutionOrder;
 
      
@@ -284,6 +283,8 @@ signals:
     void sendInfo_shapeMatch_CIRCLE(QPointF centerP,qreal nRadius,qreal dMeasureLength, qreal dMeasureHeight,
        qreal dSigma,qreal nThreshold,qreal nTranslation,qreal nMesureNums,qreal nCircleSize,
         qreal nSampleDirection, QRectF roi);
+
+    void sentInformationToItem(QStringList fileSortedName);
 };
 
 #endif

@@ -141,6 +141,9 @@ industrialVision::industrialVision(QWidget *parent)
 	
 	connect(this, &industrialVision::setdefultCamare, ui.openGLWidget, &MyGLWidget::setMouseClickFlag, Qt::QueuedConnection);
 
+
+	connect(this, &industrialVision::sentInformationToItem, m_processingThread, &ProcessingThread::receiveInformationToItem, Qt::QueuedConnection);
+
 	
     //开启服务端
 	connectValual.create_server();
@@ -677,10 +680,38 @@ void industrialVision::setModelXMLFile() {
 		"Select Folder",
 		QCoreApplication::applicationDirPath(),
 		QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+	if (folderPath.isEmpty())
+	{
+		return;
+	}
 	//获取创建List和文件
-	fileSortedName = getSortedFolderNamesAsNumbers(folderPath);
-	//重置当前模板执行顺序
-	CurrentExecutionOrder = 0;
+	QStringList fileSortedName = getSortedFolderNamesAsNumbers(folderPath);
+	if (fileSortedName.isEmpty())
+	{
+		QMessageBox::information(nullptr, "Confirmation", "当前文件夹下没有目录信息");
+		return;
+	}
+	int sortNameSize = fileSortedName.size() - 1;
+	QString returnString = "共有" + QString::number(sortNameSize); +"个步骤，是否继续?";
+	// 添加确认弹窗
+	QMessageBox::StandardButton reply;
+	reply = QMessageBox::question(nullptr, "Confirmation",
+		returnString,
+		QMessageBox::Yes | QMessageBox::No);
+
+	if (reply == QMessageBox::Yes) {
+			//重置当前模板执行顺序
+		CurrentExecutionOrder = 0;
+		//将路径信息和执行顺序发送给process线程
+		emit sentInformationToItem(fileSortedName);
+		
+	}
+	else {
+		// 用户点击取消，执行其他操作
+
+	}
+
+
 }
 
 void industrialVision::rotatePicture()

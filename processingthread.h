@@ -86,7 +86,7 @@ struct PatternInfo_circle
 		this->dMeasureHeight = dMeasureHeight_item;
 		this->dSigma = dSigma_item;
 		this->nThreshold = nThreshold_item;
-		this->nTranslation = nTranslation_item;
+		this->nTranslation = 0;
 		this->nMesureNums = nMesureNums_item;
 		this->nCircleSize = nCircleSize_item;
 		this->nSampleDirection = nSampleDirection_item;
@@ -150,6 +150,8 @@ public:
 	//2024 717 模板匹配Halcon
 	cv::Point2f ProcessingThread::MatchPicture_Halcon(cv::Mat m_matDst, cv::Mat m_matSrc, bool is_NCC);
 	 HalconCpp::HObject MatToHImage(cv::Mat& cv_img);
+	 cv::Rect readImageWithSource(QString stringPath);
+	 cv::Rect readandDecectMattchWithSource(QString stringPath);
 
 	//模板匹配相关函数::
 	cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc, bool modelflag);
@@ -199,6 +201,8 @@ public slots:
 	void get_Info_From_industrial_circle(QPointF centerP, qreal nRadius, qreal dMeasureLength, qreal dMeasureHeight,
 		qreal dSigma, qreal nThreshold, qreal nTranslation, qreal nMesureNums, qreal nCircleSize,
 		qreal nSampleDirection , QRectF roi);
+
+	void receiveInformationToItem(QStringList informationItem);
 private:
 	cv::Point2d drawCenterPoint;
 	bool startFlag = false;
@@ -247,6 +251,10 @@ private:
 	 QList< PatternInfo_circle> shapeMatch_Patten_Circle;
 
 	 int rotationDirection = 0;
+
+	 //718
+	 QStringList informationItemWithMattch;
+	 int currentMattchIndex = 0;
 
 
 };

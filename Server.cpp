@@ -16,7 +16,7 @@ Server::Server()
 	//定时设置时间
 	QString timevalueQString = settings->value("timevalue","3000").toString();
 	timestart = timevalueQString.toInt();
-	if (server->listen(QHostAddress::LocalHost, 60000)) {
+	if (server->listen(QHostAddress::LocalHost, 1000)) {
 		emit logoString("服务器已启动，等待客户端连接...", "GREEN");
 	}
 	else {
@@ -56,30 +56,16 @@ void Server::onReadyRead()
 
 	QString logStringFromClient =  "接收到来自客户端的消息: " + message;
 	emit logoString(logStringFromClient, "GREEN");
-	QString sendMessager;
-	if (isJsonString(message)) {
-		//取得ID
-		QJsonDocument jsonDocument = QJsonDocument::fromJson(message.toUtf8());
-		// 获取JSON对象
-		QJsonObject jsonObject = jsonDocument.object();
 
-		QJsonValue nameValue = jsonObject.value("CmdId");
-		QString cmdID = nameValue.toString();
-
-		//是json
-		QJsonObject sendMessager = recvMsgByJson(message, cmdID);
-		QJsonDocument document;
-
-		document.setObject(sendMessager);
-
-		QByteArray abyte = document.toJson(QJsonDocument::Compact);
-
-		clientSocket->write(abyte);
-		QString logStringToClient = "给客户端发送数据:" + abyte;
-
-		emit logoString(logStringToClient, "GREEN");
+	//20240720 新增请求
+	if (message=="Marking finish"||message.contains("finish"))
+	{
+		processNextRequest();
+		return;
 	}
-	else {
+
+	QString sendMessager;
+	
 		//判断接受的数据格式 不是json
 
 		//在这里可以对客户端消息进行处理s
@@ -88,7 +74,7 @@ void Server::onReadyRead()
 		 QString logStringToClient = "给客户端发送数据:" + sendMessager;
 
 		 emit logoString(logStringToClient, "GREEN");
-	}
+
 
 	// 发送处理后的消息回客户端
 	// 处理完请求后，继续处理下一个请求
@@ -106,7 +92,7 @@ Server::~Server()
 
 QString Server::recvMsg(QString receiveMessage)
 {
-	QString send_buf = "T;1;100;1;1;1,";
+	QString send_buf = "E3_StartMark X=";
 	if (receiveMessage <= 0)
 	{
 		QString logStringToClient = "接受receiveMessage函数异常:";
@@ -128,15 +114,16 @@ QString Server::recvMsg(QString receiveMessage)
 		finall_Total_Result.pattern_flag = false;
 		});
 
-	timer.start(timestart); // 启动定时器，设置超时时间为1秒
+	//timer.start(timestart); // 启动定时器，设置超时时间为1秒
 
 	while (!finall_Total_Result.flag) {
 		// 在这里等待，直到定时器触发或flag变为true
 		QCoreApplication::processEvents(); // 允许Qt事件处理
 	}
 	//定时器停止
-	timer.stop();
-	timer.deleteLater();
+	//timer.stop();
+	//timer.deleteLater();
+	// 
 	//重置flag值 
 	finall_Total_Result.flag = false;
 	if (finall_Total_Result.pattern_flag){
@@ -144,22 +131,12 @@ QString Server::recvMsg(QString receiveMessage)
 		char xx[10];
 		sprintf(s, "%.1f", finall_Total_Result.ptCenter.x);
 		send_buf.append(s);
-		send_buf.append(",");
+		send_buf.append(" Y=");
 
 		sprintf(xx, "%.1f", finall_Total_Result.ptCenter.y);
 		send_buf.append(xx);
-		send_buf.append(",");
-
-		std::ostringstream out;
-		//保留1个小数点
-		out << std::fixed << std::setprecision(1) << finall_Total_Result.dMatchedAngle;
-		std::string angle_String = out.str();
-
-		char* p = new char[strlen(angle_String.c_str()) + 1];
-		strcpy(p, angle_String.c_str());
-		send_buf.append(p);
-		send_buf.append("#;");
-		delete[] p;
+		send_buf.append(" ");
+		send_buf.append("\r\n");
 	}
 	else {
 		QString errSend  = "T;1;100;0;1;0,999,999,999#;";

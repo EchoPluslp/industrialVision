@@ -49,13 +49,14 @@ bool ProcessingThread::getmodelAndRealSclar()
 }
 void ProcessingThread::run()
 {
+	modelAndRealSclar = true;
 	while (startFlag)
 	{
 			if (m_imageVector_1.size() == 1)
 			{
 				Mat tempMap = m_imageVector_1.at(0);
 				QPixmap newPixmap_1 = cvMatToPixmap(tempMap);
-
+		
 				//执行形状匹配
 				if (pattern_Flag && shape_match)
 				{
@@ -257,6 +258,18 @@ void ProcessingThread::run()
 				{
 					QTime timedebuge;//声明一个时钟对象
 					timedebuge.start();//开始计时
+					//特征区域 --当前值++方便下次循环使用
+					if (currentMattchIndex== informationItemWithMattch.size())
+					{
+						currentMattchIndex = 0;
+					}
+					QString currentModelPath = informationItemWithMattch.at(currentMattchIndex++);
+					QString picturePath = currentModelPath + "model.bmp";
+					readandDecectMattchWithSource(picturePath);
+					QString iniPath = currentModelPath + "model.ini";
+					areaMatRect = readImageWithSource(iniPath);
+			
+					//搜索区域
 					if (areaMatRect.x+ areaMatRect.width>tempMap.cols )
 					{
 						areaMatRect.x = tempMap.cols - areaMatRect.width;
@@ -265,13 +278,12 @@ void ProcessingThread::run()
 						areaMatRect.y = tempMap.rows - areaMatRect.height;
 					 
 					}	
-					cv::Point2f Point_1;
 					ResultPoint Point_2;
-					if (shape_type)
-					{
-						Point_1 = MatchPicture_Halcon(patternMat, tempMap(areaMatRect), false);
+					//if (shape_type)
+					//{
+				//	cv::Point2f  Point_1 = MatchPicture_Halcon(patternMat_Halcon, tempMap(areaMatchRect_Haclon), false);
 
-					//	 Point_1 = MatchPicture(patternMat, tempMap(areaMatRect), false);
+					Point2f	 Point_1 = MatchPicture(patternMat, tempMap(areaMatRect), false);
 
 						 pattern_Flag = false;
 						 resultPointF.setX(Point_1.x);
@@ -280,7 +292,7 @@ void ProcessingThread::run()
 						 int total_time = timedebuge.elapsed();
 
 						 emit signal_patternResult(resultPointF, total_time);
-					}
+					//}
 					
 					if (resultPointF.x() != -m_width && resultPointF.y() != m_height) {
 						QPainter painter(&newPixmap_1);
@@ -470,11 +482,13 @@ cv::Point2f ProcessingThread::MatchPicture_Halcon(cv::Mat m_matDst, cv::Mat m_ma
 	//ho_Image 特征图
 	// Local iconic v
 	HObject ho_Image = MatToHImage(m_matDst);
+	Rgb1ToGray(ho_Image, &ho_Image);
+
 	HObject   ho_ROI, ho_ImageReduced;
 
 	// Local control variables
-	HTuple  hv_ModelID, hv_NumImages, hv_Index, hv_T0;
-	HTuple  hv_Row, hv_Column, hv_Angle, hv_Score, hv_T1, hv_Time;
+	HTuple  hv_ModelID, hv_T0, hv_Row, hv_Column;
+	HTuple  hv_Angle, hv_Score, hv_T1, hv_Time;
 
 	//
 	//*****************************************************
@@ -482,30 +496,39 @@ cv::Point2f ProcessingThread::MatchPicture_Halcon(cv::Mat m_matDst, cv::Mat m_ma
 	//*****************************************************
 	//
 	//Create the ncc model.
-	CreateNccModel(ho_Image, "auto", HTuple(0).TupleRad(), HTuple(0).TupleRad(),
+	CreateNccModel(ho_Image, "auto", HTuple(0).TupleRad(), HTuple(360).TupleRad(),
 		"auto", "use_polarity", &hv_ModelID);
+	int modeLength = hv_ModelID.Length();
 	//
 	//*****************************************************
 	//2. Find objects (online step)                       *
 	//*****************************************************
 
-		HTuple end_val25 = hv_NumImages;
-		HTuple step_val25 = 1;
 
 		HObject ho_Image_Source = MatToHImage(m_matSrc);
-
+		Rgb1ToGray(ho_Image_Source, &ho_Image_Source);
 			//
 			//Find the ncc model and use the MinScore to decide if it is the CE logo.
 			CountSeconds(&hv_T0);
 			FindNccModel(ho_Image_Source, hv_ModelID, HTuple(0).TupleRad(), HTuple(360).TupleRad(),
 				0.7, 1, 0.5, "true", 0, &hv_Row, &hv_Column, &hv_Angle, &hv_Score);
 			CountSeconds(&hv_T1);
-			double score = hv_Score.D();
+			double score;
+			try {
+				int xx = hv_Score.Length();
+				score = hv_Score[0].D();
+			}
+			catch (HException& except) {
+				HString ex = except.ErrorMessage();
+				string lociString = ex.ToUtf8();
+				int x = 10;
+			}
+
 			if (score > 0.7)
 			{
 				hv_Time = (hv_T1 - hv_T0) * 1000;
-				double x = hv_Column.D();
-				double y = hv_Row.D();
+				double x = hv_Column[0].D();
+				double y = hv_Row[0].D();
 				return cv::Point2f(x, y);
 			}
 				
@@ -548,6 +571,86 @@ HalconCpp::HObject ProcessingThread::MatToHImage(cv::Mat& cv_img)
 		delete[] B;
 	}
 	return H_img;
+}
+
+cv::Rect ProcessingThread::readImageWithSource(QString stringPath)
+{
+	QSettings* settings = new QSettings(stringPath, QSettings::IniFormat);
+	settings->beginGroup("pattern_info");
+	QString sourceX = settings->value("source_rect_info.x", "0").toString();
+	QString sourceY = settings->value("source_rect_info.y", "0").toString();
+	QString sourceWidth = settings->value("source_rect_info.width", "0").toString();
+	QString sourceHeight = settings->value("source_rect_info.height", "0").toString();
+
+	QString fullPath_width = settings->value("source_width", "0").toString();
+	QString fullPath_height = settings->value("source_height", "0").toString();
+	double sourceX_Dou = sourceX.toDouble();
+	double sourceY_Dou = sourceY.toDouble();
+	double sourceWidth_Dou = sourceWidth.toDouble();
+	double sourceHeight_Dou = sourceHeight.toDouble();
+	delete settings;
+	return cv::Rect(sourceX_Dou, sourceY_Dou, sourceWidth_Dou, sourceHeight_Dou);
+}
+
+cv::Rect ProcessingThread::readandDecectMattchWithSource(QString stringPath)
+{
+	string strValue = stringPath.toLocal8Bit().constData();
+
+	 patternMat = imread(strValue, CV_8UC1);
+
+	if (patternMat.empty())
+	{
+		emit signal_modelPictureReadFlag();
+		//模板图读取错误!!!
+		return cv::Rect();
+	}
+	///////////////////设置模板图
+
+	m_TemplData.clear();
+
+	int iTopLayer = GetTopLayer(&patternMat, (int)sqrt((double)256));
+	cv::buildPyramid(patternMat, m_TemplData.vecPyramid, iTopLayer);
+	s_TemplData* templData = &m_TemplData;
+	templData->iBorderColor = mean(patternMat).val[0] < 128 ? 255 : 0;
+	int iSize = templData->vecPyramid.size();
+	templData->resize(iSize);
+	for (int i = 0; i < iSize; i++)
+	{
+		double invArea = 1. / ((double)templData->vecPyramid[i].rows * templData->vecPyramid[i].cols);
+		cv::Scalar templMean, templSdv;
+		double templNorm = 0, templSum2 = 0;
+
+		meanStdDev(templData->vecPyramid[i], templMean, templSdv);
+		templNorm = templSdv[0] * templSdv[0] + templSdv[1] * templSdv[1] + templSdv[2] * templSdv[2] + templSdv[3] * templSdv[3];
+
+		if (templNorm < DBL_EPSILON)
+		{
+			templData->vecResultEqual1[i] = true;
+		}
+		templSum2 = templNorm + templMean[0] * templMean[0] + templMean[1] * templMean[1] + templMean[2] * templMean[2] + templMean[3] * templMean[3];
+
+
+		templSum2 /= invArea;
+		templNorm = std::sqrt(templNorm);
+		templNorm /= std::sqrt(invArea); // care of accuracy here
+
+
+		templData->vecInvArea[i] = invArea;
+		templData->vecTemplMean[i] = templMean;
+		templData->vecTemplNorm[i] = templNorm;
+	}
+
+	//设置输出点坐标
+	//centerPointInProcess.setX(centerPoint.x());
+	//centerPointInProcess.setY(centerPoint.y());
+
+	//patternRectCenterPointInProcess.setX(patternRectCenterPoint.x());
+	//patternRectCenterPointInProcess.setY(patternRectCenterPoint.y());
+
+	//initialDistance = calculateInitialDistance(patternRectCenterPoint, centerPoint);    // Initial distance between A and B
+	//initialDirection = calculateInitialDirection(patternRectCenterPoint, centerPoint);  // Initial direction angle in degrees
+//	setAngleMatchInformation();
+	templData->bIsPatternLearned = true;
 }
 
 //模板图,原图
@@ -1393,9 +1496,8 @@ void ProcessingThread::slot_processMatchPicture(QImage patternImage, QImage sour
 
 	QTime timedebuge;//声明一个时钟对象
 	timedebuge.start();//开始计时
-	cv::Point2d resultPoint = MatchPicture_Halcon(patternImageMat, sourceImageMat, true);
 
-//	cv::Point2d resultPoint = MatchPicture(patternImageMat, sourceImageMat, true);
+	cv::Point2d resultPoint = MatchPicture(patternImageMat, sourceImageMat, true);
 
 	int total_time = timedebuge.elapsed();
 	
@@ -1776,6 +1878,12 @@ void ProcessingThread::get_Info_From_industrial_circle(QPointF centerP, qreal nR
 	PatternInfo_circle PatternInfo_item(cv::Point2d(centerP.x(), centerP.y()),  nRadius, dMeasureLength, dMeasureHeight,
 		dSigma,  nThreshold,  nTranslation,  nMesureNums,  nCircleSize, nSampleDirection,roi);
 	shapeMatch_Patten_Circle.append(PatternInfo_item);
+}
+
+void ProcessingThread::receiveInformationToItem(QStringList informationItem)
+{
+	informationItemWithMattch = informationItem;
+	currentMattchIndex = 0;
 }
 
 
