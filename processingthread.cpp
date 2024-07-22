@@ -54,7 +54,8 @@ void ProcessingThread::run()
 	{
 			if (m_imageVector_1.size() == 1)
 			{
-				Mat tempMap = m_imageVector_1.at(0);
+				Mat tempMap = m_imageVector_1.at(0).clone();
+			//	tempMap = imread("G:/Halcon/test/0/Image_20240722102933911.bmp");
 				QPixmap newPixmap_1 = cvMatToPixmap(tempMap);
 		
 				//执行形状匹配
@@ -265,7 +266,7 @@ void ProcessingThread::run()
 					}
 					QString currentModelPath = informationItemWithMattch.at(currentMattchIndex++);
 					QString picturePath = currentModelPath + "model.bmp";
-					readandDecectMattchWithSource(picturePath);
+					//readandDecectMattchWithSource(picturePath);
 					QString iniPath = currentModelPath + "model.ini";
 					areaMatRect = readImageWithSource(iniPath);
 			
@@ -281,9 +282,11 @@ void ProcessingThread::run()
 					ResultPoint Point_2;
 					//if (shape_type)
 					//{
-				//	cv::Point2f  Point_1 = MatchPicture_Halcon(patternMat_Halcon, tempMap(areaMatchRect_Haclon), false);
+					patternMat = imread(picturePath.toLocal8Bit().toStdString().c_str());
+					cvtColor(patternMat, patternMat, COLOR_RGB2GRAY);
+					cv::Point2f  Point_1 = MatchPicture_Halcon(patternMat, tempMap(areaMatRect), false);
 
-					Point2f	 Point_1 = MatchPicture(patternMat, tempMap(areaMatRect), false);
+				//	Point2f	 Point_1 = MatchPicture(patternMat, tempMap(areaMatRect), false);
 
 						 pattern_Flag = false;
 						 resultPointF.setX(Point_1.x);
@@ -479,8 +482,7 @@ void ProcessingThread::slot_recievePatternImage(QString pattern_Path,QRectF patt
 
 cv::Point2f ProcessingThread::MatchPicture_Halcon(cv::Mat m_matDst, cv::Mat m_matSrc, bool is_NCC)
 {
-	//ho_Image 特征图
-	// Local iconic v
+
 	HObject ho_Image = MatToHImage(m_matDst);
 	Rgb1ToGray(ho_Image, &ho_Image);
 
@@ -490,46 +492,101 @@ cv::Point2f ProcessingThread::MatchPicture_Halcon(cv::Mat m_matDst, cv::Mat m_ma
 	HTuple  hv_ModelID, hv_T0, hv_Row, hv_Column;
 	HTuple  hv_Angle, hv_Score, hv_T1, hv_Time;
 
-	//
 	//*****************************************************
-	//1. Creation of the NCC model (offline step)         *
+	//1.Create the ncc model.
 	//*****************************************************
-	//
-	//Create the ncc model.
 	CreateNccModel(ho_Image, "auto", HTuple(0).TupleRad(), HTuple(360).TupleRad(),
 		"auto", "use_polarity", &hv_ModelID);
-	int modeLength = hv_ModelID.Length();
 	//
 	//*****************************************************
 	//2. Find objects (online step)                       *
 	//*****************************************************
 
+	imwrite("temp.bmp", m_matSrc);
+	QString tempImg = "temp.bmp";
+	HObject ho_Image_Source;
+	ReadImage(&ho_Image_Source, HTuple(tempImg.toLocal8Bit().toStdString().c_str()));
+	Rgb1ToGray(ho_Image_Source, &ho_Image_Source);
 
-		HObject ho_Image_Source = MatToHImage(m_matSrc);
-		Rgb1ToGray(ho_Image_Source, &ho_Image_Source);
-			//
-			//Find the ncc model and use the MinScore to decide if it is the CE logo.
-			CountSeconds(&hv_T0);
+			CountSeconds(&hv_T0); 
 			FindNccModel(ho_Image_Source, hv_ModelID, HTuple(0).TupleRad(), HTuple(360).TupleRad(),
 				0.7, 1, 0.5, "true", 0, &hv_Row, &hv_Column, &hv_Angle, &hv_Score);
 			CountSeconds(&hv_T1);
-			double score;
+			double score = 0;
+			int xx = 0;
 			try {
-				int xx = hv_Score.Length();
+				 xx = hv_Score.Length();
 				score = hv_Score[0].D();
 			}
 			catch (HException& except) {
 				HString ex = except.ErrorMessage();
 				string lociString = ex.ToUtf8();
-				int x = 10;
+				return cv::Point2f(10000,10000);
 			}
 
-			if (score > 0.7)
+			if (score > 0.8)
 			{
+
 				hv_Time = (hv_T1 - hv_T0) * 1000;
-				double x = hv_Column[0].D();
-				double y = hv_Row[0].D();
-				return cv::Point2f(x, y);
+				double x_Value = hv_Column[0].D();
+				double y_Value = hv_Row[0].D();
+				double angle = hv_Angle[0].D();
+
+				if (angle < 0 && rotationDirection == 0)
+				{
+					//如果小于0，转换成为逆时针的360度范围
+					angle += 360;
+				}
+				else if (angle < 0 && rotationDirection == 1)
+				{
+					//由逆时针--->转为顺时针。   
+					angle = abs(angle);
+
+				}
+				else if (angle > 0 && rotationDirection == 0)
+				{
+
+				}
+				else if (angle > 0 && rotationDirection == 1)
+				{
+					angle = 360 - angle;
+				}
+				if (angle == 360) {
+					angle = 0;
+				}
+				//Test Subpixel
+				//存出MATCH ROI
+
+				if (x_Value > 0 && y_Value > 0) {
+			
+					lastResult.setX(areaMatRect.x + x_Value);
+					lastResult.setY(areaMatRect.y + y_Value);
+					resultPoint.x = areaMatRect.x + x_Value;
+					resultPoint.y = areaMatRect.y + y_Value;
+
+
+					//有输出点
+			/*		if ((!(centerPointInProcess.x() == 0 && centerPointInProcess.y() == 0)))
+					{
+
+						QPoint centerPointx = calculateOffsetB(patternRectCenterPointInProcess, centerPointInProcess, initialDistance, initialDirection, QPoint(lastResult.x(), lastResult.y()));
+						lastResult.setX(centerPointx.x());
+						lastResult.setY(centerPointx.y());
+					}*/
+					//绘图的中心点
+					drawCenterPoint.x = lastResult.x();
+					drawCenterPoint.y = lastResult.y();
+
+					lastResult.setX(lastResult.x() - (m_width / 2));  //向右为x正方向
+					lastResult.setY((m_height / 2) - lastResult.y());//向上为y正方向
+
+
+					finall_Total_Result.ptCenter = cv::Point2d(lastResult.x(), lastResult.y());
+					finall_Total_Result.dMatchedAngle = angle;
+					finall_Total_Result.pattern_flag = true;
+					finall_Total_Result.flag = true;
+				}
+				return finall_Total_Result.ptCenter;
 			}
 				
 			return cv::Point2f();

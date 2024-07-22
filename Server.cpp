@@ -14,7 +14,7 @@ Server::Server()
 	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
 	settings->beginGroup("Idus");
 	//定时设置时间
-	QString timevalueQString = settings->value("timevalue","3000").toString();
+	QString timevalueQString = settings->value("timevalue","4000").toString();
 	timestart = timevalueQString.toInt();
 	if (server->listen(QHostAddress::LocalHost, 1000)) {
 		emit logoString("服务器已启动，等待客户端连接...", "GREEN");
@@ -58,9 +58,9 @@ void Server::onReadyRead()
 	emit logoString(logStringFromClient, "GREEN");
 
 	//20240720 新增请求
-	if (message=="Marking finish"||message.contains("finish"))
+	if (message=="Marking finish"||message.contains("finish")||message == "OK")
 	{
-		processNextRequest();
+		//processNextRequest();
 		return;
 	}
 
@@ -114,15 +114,15 @@ QString Server::recvMsg(QString receiveMessage)
 		finall_Total_Result.pattern_flag = false;
 		});
 
-	//timer.start(timestart); // 启动定时器，设置超时时间为1秒
+	timer.start(timestart); // 启动定时器，设置超时时间为1秒
 
 	while (!finall_Total_Result.flag) {
 		// 在这里等待，直到定时器触发或flag变为true
 		QCoreApplication::processEvents(); // 允许Qt事件处理
 	}
 	//定时器停止
-	//timer.stop();
-	//timer.deleteLater();
+	timer.stop();
+	timer.deleteLater();
 	// 
 	//重置flag值 
 	finall_Total_Result.flag = false;
