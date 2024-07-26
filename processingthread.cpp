@@ -577,9 +577,10 @@ cv::Point2f ProcessingThread::MatchPicture_Halcon(cv::Mat m_matDst, cv::Mat m_ma
 					drawCenterPoint.x = lastResult.x();
 					drawCenterPoint.y = lastResult.y();
 
-					lastResult.setX(lastResult.x() - (m_width / 2));  //向右为x正方向
-					lastResult.setY((m_height / 2) - lastResult.y());//向上为y正方向
+					//lastResult.setX(lastResult.x() - (m_width / 2));  //向右为x正方向
+					//lastResult.setY((m_height / 2) - lastResult.y());//向上为y正方向
 
+					cv::Point2f robotPoint = pixPointToRobotPoint(drawCenterPoint);
 
 					finall_Total_Result.ptCenter = cv::Point2d(lastResult.x(), lastResult.y());
 					finall_Total_Result.dMatchedAngle = angle;
@@ -708,6 +709,66 @@ cv::Rect ProcessingThread::readandDecectMattchWithSource(QString stringPath)
 	//initialDirection = calculateInitialDirection(patternRectCenterPoint, centerPoint);  // Initial direction angle in degrees
 //	setAngleMatchInformation();
 	templData->bIsPatternLearned = true;
+}
+
+cv::Point2f ProcessingThread::pixPointToRobotPoint(cv::Point2f pointItem)
+{
+	// Local control variables
+	HTuple  hv_Rows, hv_Cols, hv_X, hv_Y, hv_HomMat2D;
+	HTuple  hv_Rows1, hv_Columns1, hv_Qx1, hv_Qy1;
+	//Y
+	hv_Rows.Clear();
+	hv_Rows[0] = 194;
+	hv_Rows[1] = 590;
+	hv_Rows[2] = 1273;
+	hv_Rows[3] = 176;
+	hv_Rows[4] = 584;
+	hv_Rows[5] = 1272;
+	hv_Rows[6] = 203;
+	hv_Rows[7] = 583;
+	hv_Rows[8] = 1271;
+	//X
+	hv_Cols.Clear();
+	hv_Cols[0] = 987;
+	hv_Cols[1] = 1004;
+	hv_Cols[2] = 1006;
+	hv_Cols[3] = 1574;
+	hv_Cols[4] = 1576;
+	hv_Cols[5] = 1589;
+	hv_Cols[6] = 2167;
+	hv_Cols[7] = 2142;
+	hv_Cols[8] = 2144;
+
+	hv_X.Clear();
+	hv_X[0] = 194;
+	hv_X[1] = 590;
+	hv_X[2] = 1273;
+	hv_X[3] = 176;
+	hv_X[4] = 584;
+	hv_X[5] = 1272;
+	hv_X[6] = 203;
+	hv_X[7] = 583;
+	hv_X[8] = 1271;
+	hv_Y.Clear();
+	hv_Y[0] = 987 + 80;
+	hv_Y[1] = 1004 + 80;
+	hv_Y[2] = 1006 + 80;
+	hv_Y[3] = 1574 + 80;
+	hv_Y[4] = 1576 + 80;
+	hv_Y[5] = 1589 + 80;
+	hv_Y[6] = 2167 + 80;
+	hv_Y[7] = 2142 + 80;
+	hv_Y[8] = 2144 + 80;
+
+	VectorToHomMat2d(hv_Rows, hv_Cols, hv_X, hv_Y, &hv_HomMat2D);
+
+	hv_Rows1 = pointItem.x;
+	hv_Columns1 = pointItem.y;
+	AffineTransPoint2d(hv_HomMat2D, hv_Rows1, hv_Columns1, &hv_Qx1, &hv_Qy1);
+	double xPoint = hv_Qx1.D();
+	double yPoint = hv_Qy1.D();
+	return cv::Point2f(xPoint, yPoint);
+
 }
 
 //模板图,原图
