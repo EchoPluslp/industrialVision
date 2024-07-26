@@ -26,7 +26,7 @@ public slots:
 	{
 		if (client->state() == QModbusDevice::ConnectedState)
 		{
-			QModbusDataUnit readUnit(QModbusDataUnit::HoldingRegisters, 500, 2); 
+			QModbusDataUnit readUnit(QModbusDataUnit::HoldingRegisters, 1500, 1); 
 			if (auto* reply = client->sendReadRequest(readUnit, 1)) 
 			{
 				if (!reply->isFinished())
@@ -36,17 +36,19 @@ public slots:
 							if (reply->error() == QModbusDevice::NoError)
 							{
 								int tim = reply->result().value(0);
-								int tim3 = reply->result().value(1);
 								if (tim == 1)
 								{
 									emit takeMattchPhoto();
+									QModbusDataUnit unit(QModbusDataUnit::HoldingRegisters, 1500, 1);
+									unit.setValue(0, 0);
+									client->sendWriteRequest(unit, 1);							
 								}
 								// Process the response
 								//qDebug() << "PLC Value:" << reply->result().value(0);
 							}
 							else
 							{
-							//	qDebug() << "Read response error:" << reply->error();
+								reply->error();
 							}
 							reply->deleteLater();
 						});

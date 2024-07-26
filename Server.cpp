@@ -71,17 +71,17 @@ void Server::onNewConnection()
 }
 void Server::onReadyRead()
 {
-	QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
+	//QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
 
-	if (!clientSocket) {
-		QString logStringFromClient = "onReadyRead: 请重启";
-		return;
-	}
+	//if (!clientSocket) {
+	//	QString logStringFromClient = "onReadyRead: 请重启";
+	//	return;
+	//}
 
 	//QByteArray data = clientSocket->readAll();
 	//QString message = QString(data);
 
-	QString logStringFromClient = "接收到来自客户端的消息: ";// + message;
+	QString logStringFromClient = "检测到到来自PLC的值变动 ";// + message;
 	emit logoString(logStringFromClient, "GREEN");
 
 
@@ -145,18 +145,19 @@ QString Server::recvMsg(QString receiveMessage)
 		finall_Total_Result.pattern_flag = false;
 		});
 
-	timer.start(timestart); // 启动定时器，设置超时时间为1秒
+	//timer.start(timestart); // 启动定时器，设置超时时间为1秒
 
-	while (!finall_Total_Result.flag) {
-		// 在这里等待，直到定时器触发或flag变为true
-		QCoreApplication::processEvents(); // 允许Qt事件处理
-	}
+	//while (!finall_Total_Result.flag) {
+	//	// 在这里等待，直到定时器触发或flag变为true
+	//	QCoreApplication::processEvents(); // 允许Qt事件处理
+	//}
 	//定时器停止
 	timer.stop();
 	timer.deleteLater();
 	
 	////重置flag值 
 	finall_Total_Result.flag = false;
+	finall_Total_Result.pattern_flag = true;
 	if (finall_Total_Result.pattern_flag) {
 		//char s[10];
 		//char xx[10];
@@ -168,21 +169,20 @@ QString Server::recvMsg(QString receiveMessage)
 		//send_buf.append(xx);
 		//send_buf.append(" ");
 		//send_buf.append("\r\n");
-		QModbusDataUnit unit(QModbusDataUnit::HoldingRegisters, 500, 0);
+		finall_Total_Result.ptCenter.x = 4522;
+		finall_Total_Result.ptCenter.y = 1222;
+
+		QModbusDataUnit unit(QModbusDataUnit::HoldingRegisters, 500, 2);
 		unit.setValue(0, finall_Total_Result.ptCenter.x);
+		unit.setValue(1, finall_Total_Result.ptCenter.y);
+
 		QModbusReply* reply = client->sendWriteRequest(unit, 1);
 		if (reply)
 		{
 			reply->deleteLater();
 		}
 
-		QModbusDataUnit unit(QModbusDataUnit::HoldingRegisters, 500, 1);
-		unit.setValue(0, finall_Total_Result.ptCenter.y);
-		QModbusReply* reply = client->sendWriteRequest(unit, 1);
-		if (reply)
-		{
-			reply->deleteLater();
-		}
+	
 
 	}
 	else {
