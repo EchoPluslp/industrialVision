@@ -12,8 +12,15 @@
 #include <QtNetwork>
 #include <QTcpServer>
 #include <QTcpSocket>
-#include <QCoreApplication>
+#include "PlcWorker.h"
 
+#include <QModbusTcpClient>
+#include <QModbusDataUnit>  //Êý¾ÝÈÝÆ÷
+#include <QModbusReply> 
+
+
+
+#include <QCoreApplication>
 #include<opencv2\opencv.hpp>
 #include <opencv2/imgproc/imgproc_c.h>
 #pragma execution_character_set("utf-8")
@@ -67,6 +74,9 @@ private:
 	//bool coreFunc();
 	SOCKET servSock;
 	QTcpServer* server;
+
+	QModbusTcpClient* client;
+
 	bool isBusy = false;
 	std::list<SOCKET> clientList;
 	QQueue<QTcpSocket*> clientQueue;

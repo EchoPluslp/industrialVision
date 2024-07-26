@@ -14,15 +14,42 @@ Server::Server()
 	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
 	settings->beginGroup("Idus");
 	//定时设置时间
-	QString timevalueQString = settings->value("timevalue","4000").toString();
+	QString timevalueQString = settings->value("timevalue","40000").toString();
 	timestart = timevalueQString.toInt();
 	if (server->listen(QHostAddress::LocalHost, 1000)) {
-		emit logoString("服务器已启动，等待客户端连接...", "GREEN");
+	//	emit logoString("服务器已启动，等待客户端连接...", "GREEN");
 	}
 	else {
-			emit logoString("无法启动服务器...", "GREEN");
+		//	emit logoString("无法启动服务器...", "GREEN");
 	}
+
+	client = new QModbusTcpClient(this);
+	const QUrl url = QUrl::fromUserInput("192.168.3.100:2000"); //;//获取IP和端口号
+
+	client->setConnectionParameter(QModbusDevice::NetworkAddressParameter, url.host());
+	client->setConnectionParameter(QModbusDevice::NetworkPortParameter, url.port());
+	client->setTimeout(2000);
+	client->setNumberOfRetries(3);
+
+	bool ti = client->connectDevice();
+
+	
+	// Create and start the PLC worker thread
+	QThread* thread = new QThread;
+	PlcWorker* worker = new PlcWorker(client);
+	worker->moveToThread(thread);
+
+	connect(thread, &QThread::started, worker, [worker]() { worker->startPolling(1000); }); // Poll every 1 second
+
+	connect(thread, &QThread::finished, worker, &QObject::deleteLater);
+
+	connect(worker, &PlcWorker::takeMattchPhoto, this,&Server::onReadyRead); // Poll every 1 second
+
+
+	thread->start();
+
 }
+
 
 void Server::onNewConnection()
 {
@@ -47,30 +74,24 @@ void Server::onReadyRead()
 	QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
 
 	if (!clientSocket) {
-		QString logStringFromClient = "服务端接受到消息异常: 请重启";
+		QString logStringFromClient = "onReadyRead: 请重启";
 		return;
 	}
 
-	QByteArray data = clientSocket->readAll();
-	QString message = QString(data);
+	//QByteArray data = clientSocket->readAll();
+	//QString message = QString(data);
 
-	QString logStringFromClient =  "接收到来自客户端的消息: " + message;
+	QString logStringFromClient = "接收到来自客户端的消息: ";// + message;
 	emit logoString(logStringFromClient, "GREEN");
 
-	//20240720 新增请求
-	if (message=="Marking finish"||message.contains("finish")||message == "OK")
-	{
-		//processNextRequest();
-		return;
-	}
 
 	QString sendMessager;
 	
 		//判断接受的数据格式 不是json
 
-		//在这里可以对客户端消息进行处理s
-		 sendMessager = recvMsg(message);
-		 clientSocket->write(sendMessager.toUtf8());
+		//在这里可以对客户端消息进行处理
+		 sendMessager = recvMsg("");
+		// clientSocket->write(sendMessager.toUtf8());
 		 QString logStringToClient = "给客户端发送数据:" + sendMessager;
 
 		 emit logoString(logStringToClient, "GREEN");
@@ -92,13 +113,23 @@ Server::~Server()
 
 QString Server::recvMsg(QString receiveMessage)
 {
-	QString send_buf = "E3_StartMark X=";
-	if (receiveMessage <= 0)
+
+
+	if (client->state() == QModbusDevice::ConnectedState)
 	{
-		QString logStringToClient = "接受receiveMessage函数异常:";
-		emit logoString(logStringToClient, "RED");
-		return false;
+		emit logoString("连接到plc", "GREEN");
+
+		//return;
 	}
+
+
+	QString send_buf = "E3_StartMark X=";
+	//if (receiveMessage <= 0)
+	//{
+	//	QString logStringToClient = "接受receiveMessage函数异常:";
+	//	emit logoString(logStringToClient, "RED");
+	//	return false;
+	//}
 	emit triggerPattern(); 	
 	// 创建一个定时器
 	QTimer timer;
@@ -123,23 +154,39 @@ QString Server::recvMsg(QString receiveMessage)
 	//定时器停止
 	timer.stop();
 	timer.deleteLater();
-	// 
-	//重置flag值 
+	
+	////重置flag值 
 	finall_Total_Result.flag = false;
-	if (finall_Total_Result.pattern_flag){
-		char s[10];
-		char xx[10];
-		sprintf(s, "%.1f", finall_Total_Result.ptCenter.x);
-		send_buf.append(s);
-		send_buf.append(" Y=");
+	if (finall_Total_Result.pattern_flag) {
+		//char s[10];
+		//char xx[10];
+		//sprintf(s, "%.1f", finall_Total_Result.ptCenter.x);
+		//send_buf.append(s);
+		//send_buf.append(" Y=");
 
-		sprintf(xx, "%.1f", finall_Total_Result.ptCenter.y);
-		send_buf.append(xx);
-		send_buf.append(" ");
-		send_buf.append("\r\n");
+		//sprintf(xx, "%.1f", finall_Total_Result.ptCenter.y);
+		//send_buf.append(xx);
+		//send_buf.append(" ");
+		//send_buf.append("\r\n");
+		QModbusDataUnit unit(QModbusDataUnit::HoldingRegisters, 500, 0);
+		unit.setValue(0, finall_Total_Result.ptCenter.x);
+		QModbusReply* reply = client->sendWriteRequest(unit, 1);
+		if (reply)
+		{
+			reply->deleteLater();
+		}
+
+		QModbusDataUnit unit(QModbusDataUnit::HoldingRegisters, 500, 1);
+		unit.setValue(0, finall_Total_Result.ptCenter.y);
+		QModbusReply* reply = client->sendWriteRequest(unit, 1);
+		if (reply)
+		{
+			reply->deleteLater();
+		}
+
 	}
 	else {
-		QString errSend  = "T;1;100;0;1;0,999,999,999#;";
+		QString errSend = "T;1;100;0;1;0,999,999,999#;";
 		return errSend;
 	}
 	return send_buf;

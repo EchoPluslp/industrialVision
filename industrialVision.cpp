@@ -691,7 +691,7 @@ void industrialVision::setModelXMLFile() {
 		QMessageBox::information(nullptr, "Confirmation", "当前文件夹下没有目录信息");
 		return;
 	}
-	int sortNameSize = fileSortedName.size() - 1;
+	int sortNameSize = fileSortedName.size();
 	QString returnString = "共有" + QString::number(sortNameSize); +"个步骤，是否继续?";
 	// 添加确认弹窗
 	QMessageBox::StandardButton reply;

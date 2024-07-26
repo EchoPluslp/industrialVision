@@ -55,7 +55,7 @@
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <QtInstall>5.12.3</QtInstall>
-    <QtModules>charts;core;gui;websockets;widgets</QtModules>
+    <QtModules>charts;core;gui;serialbus;serialport;websockets;widgets</QtModules>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
     <Import Project="$(QtMsBuild)\qt.props" />
@@ -84,7 +84,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-      <AdditionalIncludeDirectories>$(HALCONROOT)/include/halconcpp;$(HALCONROOT)/include;.\;F:\MVS\Development\Includes;$(QTDIR)\include\QtXml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(QTDIR)\include\QtSerialBus;$(HALCONROOT)/include/halconcpp;$(HALCONROOT)/include;.\;F:\MVS\Development\Includes;$(QTDIR)\include\QtXml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Optimization>Disabled</Optimization>
     </ClCompile>
@@ -176,6 +176,7 @@
     <QtMoc Include="ncc_modelmatch.h" />
     <QtMoc Include="Server.h" />
     <QtMoc Include="smallMainWindow.h" />
+    <QtMoc Include="PlcWorker.h" />
     <ClInclude Include="SharedData.h" />
     <QtMoc Include="TransmitSignals.h" />
     <QtMoc Include="connectServer.h" />

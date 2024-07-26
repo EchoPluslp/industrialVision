@@ -152,6 +152,7 @@ public:
 	 HalconCpp::HObject MatToHImage(cv::Mat& cv_img);
 	 cv::Rect readImageWithSource(QString stringPath);
 	 cv::Rect readandDecectMattchWithSource(QString stringPath);
+	 cv::Point2f pixPointToRobotPoint(cv::Point2f pointItem);
 
 	//模板匹配相关函数::
 	cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc, bool modelflag);

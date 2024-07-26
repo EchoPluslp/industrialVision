@@ -5,29 +5,6 @@ bool checkOnly();
 
 
 int main(int argc, char *argv[]){
-	cv::Point center(1263, 1413);
-	cv::Point right(1446, 1402);
-	cv::Point left(1250, 1181);
-
-	double cal = cv::norm(center-right);
-	double calsf = cv::norm(center - left);
-
-	// 向量1 (pt1 -> pt2)
-	cv::Point2f vector1 = center - right;
-	// 向量2 (pt3 -> pt4)
-	cv::Point2f vector2 = center - left;
-
-	// 计算向量的点积和模
-	double dotProduct = vector1.x * vector2.x + vector1.y * vector2.y;
-	double magnitude1 = std::sqrt(vector1.x * vector1.x + vector1.y * vector1.y);
-	double magnitude2 = std::sqrt(vector2.x * vector2.x + vector2.y * vector2.y);
-
-	// 计算夹角（弧度）
-	double angleRad = std::acos(dotProduct / (magnitude1 * magnitude2));
-
-	// 将弧度转换为度数
-	double angleDeg = angleRad * 180.0 / CV_PI;
-
 #if (QT_VERSION > QT_VERSION_CHECK(5,6,0))
 	QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif

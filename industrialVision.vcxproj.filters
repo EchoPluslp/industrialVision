@@ -231,6 +231,9 @@
     <QtMoc Include="matchParam.h">
       <Filter>Header Files\creataModel</Filter>
     </QtMoc>
+    <QtMoc Include="PlcWorker.h">
+      <Filter>Header Files\connect</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="login.ui">
