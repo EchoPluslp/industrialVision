@@ -511,9 +511,8 @@ createModel::createModel(QWidget* parent) :
     on2DModeTriggered();
 
 	//°×É«Ìî³ä×óÉÏ½ÇÍ¼±ê
-	QPixmap pixmap(100, 100);
-	pixmap.fill(Qt::white);
-	setWindowIcon(QIcon(pixmap));
+	setWindowIcon(QIcon("icon.ico"));
+
 }
 
 createModel::~createModel()

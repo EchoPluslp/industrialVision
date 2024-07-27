@@ -22,9 +22,8 @@ login::login(QWidget* parent) :
 	setWindowFlags(Qt::WindowStaysOnTopHint);
 
 	//白色填充左上角图标
-	QPixmap pixmap(100, 100);
-	pixmap.fill(Qt::white);
-	setWindowIcon(QIcon(pixmap));
+	setWindowIcon(QIcon("icon.ico"));
+
 	connect(&w, &industrialVision::sign_switchLogin,this,&login::slot_switchLog,Qt::DirectConnection);
 }
 

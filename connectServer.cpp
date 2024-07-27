@@ -10,9 +10,8 @@ connectServer::connectServer(QMainWindow*parent)
 	//QObject::connect(subThread, &QThread::started, itemInfo, &connectItemInfo::Thread_deal);
 	
 	//°×É«Ìî³ä×óÉÏ½ÇÍ¼±ê
-	QPixmap pixmap(100, 100);
-	pixmap.fill(Qt::white);
-	setWindowIcon(QIcon(pixmap));
+	setWindowIcon(QIcon("icon.ico"));
+
 
   connect(this, &connectServer::send_ipAndPort, itemInfo, &connectItemInfo::reveive_ipAndPort);
   connect(subThread, &QThread::started, itemInfo, &connectItemInfo::Thread_deal);

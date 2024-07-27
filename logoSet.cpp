@@ -15,9 +15,8 @@ logoSet::logoSet(QWidget* parent) :
 	ui->lineEdit->setText(logDirectory);
 
 	//白色填充左上角图标
-	QPixmap pixmap(100, 100);
-	pixmap.fill(Qt::white);
-	setWindowIcon(QIcon(pixmap));
+	setWindowIcon(QIcon("icon.ico"));
+
 	setWindowTitle("日志管理");
 	setWindowFlags(Qt::WindowCloseButtonHint);
 
