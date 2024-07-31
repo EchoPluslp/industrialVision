@@ -20,7 +20,7 @@
 #include "myCCaliperGUI.h"
 #include "HalconCpp.h"
 #include "HDevThread.h"
-
+#include <QMessageBox>
 using namespace HalconCpp;
 
 
@@ -153,7 +153,9 @@ public:
 	 cv::Rect readImageWithSource(QString stringPath);
 	 cv::Rect readandDecectMattchWithSource(QString stringPath);
 	 cv::Point2f pixPointToRobotPoint(cv::Point2f pointItem);
-
+	 //读取匹配中点坐标
+	 cv::Point2f readMatchCenterPointWithSourceNew(QString stringPath);
+	 bool visionErrorOption = true;
 	//模板匹配相关函数::
 	cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc, bool modelflag);
 	int GetTopLayer(cv::Mat* matTempl, int iMinDstLength);
@@ -185,6 +187,7 @@ signals:
 	void signal_patternResult(QPointF qpointf,int dateTime);
 	void signal_modelPictureReadFlag();
 	void QPointSendtoFileControl(QPoint resulePoint,int modelTotalTime);
+	void showErrorMessageBox();
 public slots:
 	void slot_recievePatternImage(QString pattern_Path, QRectF pattern_Rect, QRectF areaRect,QPoint centerPoint, QPoint patternRectCenterPoint);
 	void slot_processThread_Pattren();
@@ -256,7 +259,8 @@ private:
 	 //718
 	 QStringList informationItemWithMattch;
 	 int currentMattchIndex = 0;
-
+	 //730,像素比例设置
+	 float pixelPerMm = 1;
 
 };
 #endif // PROCESSINGTHREAD_H

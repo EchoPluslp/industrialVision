@@ -260,6 +260,7 @@ private slots:
          void actionLogAndPathAction();
          void actionuserSwitch();
          void actionAngleParam();
+         void displayErrorMessageBox();
 signals:
     void sendQimageToVisualTemplate(QImage data);
     void cameraTovisualTemplate(QImage img,QString path);

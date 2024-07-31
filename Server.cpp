@@ -17,14 +17,14 @@ Server::Server()
 	QString timevalueQString = settings->value("timevalue","40000").toString();
 	timestart = timevalueQString.toInt();
 	if (server->listen(QHostAddress::LocalHost, 1000)) {
-	//	emit logoString("服务器已启动，等待客户端连接...", "GREEN");
+		emit logoString("服务器已启动，等待客户端连接...", "GREEN");
 	}
 	else {
-		//	emit logoString("无法启动服务器...", "GREEN");
+			emit logoString("无法启动服务器...", "GREEN");
 	}
 
 	client = new QModbusTcpClient(this);
-	const QUrl url = QUrl::fromUserInput("192.168.3.100:2000"); //;//获取IP和端口号
+	const QUrl url = QUrl::fromUserInput("192.168.0.80:5001"); //;//获取IP和端口号
 
 	client->setConnectionParameter(QModbusDevice::NetworkAddressParameter, url.host());
 	client->setConnectionParameter(QModbusDevice::NetworkPortParameter, url.port());
@@ -71,38 +71,42 @@ void Server::onNewConnection()
 }
 void Server::onReadyRead()
 {
+	
 	//QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
+	QTcpSocket* clientSocket = clientQueue.at(0);
 
-	//if (!clientSocket) {
-	//	QString logStringFromClient = "onReadyRead: 请重启";
-	//	return;
-	//}
+	if (!clientSocket) {
+		QString logStringFromClient = "onReadyRead: 请重启";
+		return;
+	}
 
 	//QByteArray data = clientSocket->readAll();
 	//QString message = QString(data);
 
 	QString logStringFromClient = "检测到到来自PLC的值变动 ";// + message;
 	emit logoString(logStringFromClient, "GREEN");
-
-
-	QString sendMessager;
 	
 		//判断接受的数据格式 不是json
 
-		//在这里可以对客户端消息进行处理
-		 sendMessager = recvMsg("");
-		// clientSocket->write(sendMessager.toUtf8());
-		 QString logStringToClient = "给客户端发送数据:" + sendMessager;
+		//在这里可以对客户端消息进行处理，触发匹配
+	QString sendMessager = recvMsg("");
+	if (finall_Total_Result.ptCenter.x ==8888 && finall_Total_Result.ptCenter.y == 8888)
+	{
+		QString logStringFromClient = "从第一面开始，重新开始匹配 ";
+		return;
+	}
+	clientSocket->write(sendMessager.toUtf8());
+	QString logStringToClient = "给客户端发送数据:" + sendMessager;
+		emit logoString(logStringToClient, "GREEN");
 
-		 emit logoString(logStringToClient, "GREEN");
+		QString logStringToFace = "当前面数:" + QString::number(finall_Total_Result.currentIndex);
+		logStringToFace += "!";
+		emit logoString(logStringToFace, "GREEN");
 
 
 	// 发送处理后的消息回客户端
 	// 处理完请求后，继续处理下一个请求
 	processNextRequest();
-
-	
-
 }
 
 
@@ -145,48 +149,35 @@ QString Server::recvMsg(QString receiveMessage)
 		finall_Total_Result.pattern_flag = false;
 		});
 
-	//timer.start(timestart); // 启动定时器，设置超时时间为1秒
+	timer.start(timestart); // 启动定时器，设置超时时间为4秒
 
-	//while (!finall_Total_Result.flag) {
-	//	// 在这里等待，直到定时器触发或flag变为true
-	//	QCoreApplication::processEvents(); // 允许Qt事件处理
-	//}
+	while (!finall_Total_Result.flag) {
+		// 在这里等待，直到定时器触发或flag变为true
+		QCoreApplication::processEvents(); // 允许Qt事件处理
+	}
 	//定时器停止
 	timer.stop();
 	timer.deleteLater();
-	
-	////重置flag值 
+
+	//填充
 	finall_Total_Result.flag = false;
-	finall_Total_Result.pattern_flag = true;
 	if (finall_Total_Result.pattern_flag) {
-		//char s[10];
-		//char xx[10];
-		//sprintf(s, "%.1f", finall_Total_Result.ptCenter.x);
-		//send_buf.append(s);
-		//send_buf.append(" Y=");
+		char xx[10];
+		char xxx[10];
 
-		//sprintf(xx, "%.1f", finall_Total_Result.ptCenter.y);
-		//send_buf.append(xx);
-		//send_buf.append(" ");
-		//send_buf.append("\r\n");
-		finall_Total_Result.ptCenter.x = 4522;
-		finall_Total_Result.ptCenter.y = 1222;
+		float ptCentX = finall_Total_Result.ptCenter.x / 2;
+		sprintf(xxx, "%.3f", ptCentX);
+		send_buf.append(xxx);
+		send_buf.append(" Y=");
+		sprintf(xx, "%.3f", finall_Total_Result.ptCenter.y / 2);
 
-		QModbusDataUnit unit(QModbusDataUnit::HoldingRegisters, 500, 2);
-		unit.setValue(0, finall_Total_Result.ptCenter.x);
-		unit.setValue(1, finall_Total_Result.ptCenter.y);
-
-		QModbusReply* reply = client->sendWriteRequest(unit, 1);
-		if (reply)
-		{
-			reply->deleteLater();
-		}
-
-	
-
+		send_buf.append(xx);
+		send_buf.append(" ");
+		send_buf.append("\r\n");
 	}
 	else {
-		QString errSend = "T;1;100;0;1;0,999,999,999#;";
+		QString errSend = "E3_StartMark";
+		send_buf.append("\r\n");
 		return errSend;
 	}
 	return send_buf;
@@ -278,12 +269,12 @@ void Server::processNextRequest()
 	}
 
 	// 从队列中取出下一个客户端连接
-	QTcpSocket* clientSocket = clientQueue.dequeue();
+	//QTcpSocket* clientSocket = clientQueue.dequeue();
 
-	// 处理客户端请求
-	isBusy = true;
-	//onReadyRead();
-	connect(clientSocket, &QTcpSocket::readyRead, this, &Server::onReadyRead);
+	//// 处理客户端请求
+	//isBusy = true;
+	////onReadyRead();
+	//connect(clientSocket, &QTcpSocket::readyRead, this, &Server::onReadyRead);
 }
 
 bool Server::isJsonString(const QString& str) {

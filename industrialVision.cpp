@@ -39,6 +39,9 @@ industrialVision::industrialVision(QWidget *parent)
 
 	connect(m_processingThread, &ProcessingThread::signal_patternResult, this, &industrialVision::slot_get_patternResult, Qt::BlockingQueuedConnection);
 
+	connect(m_processingThread, &ProcessingThread::showErrorMessageBox, this, &industrialVision::displayErrorMessageBox, Qt::BlockingQueuedConnection);
+
+
 	connect(this, &industrialVision::singal_sendPatternImage, m_processingThread, &ProcessingThread::slot_recievePatternImage, Qt::QueuedConnection);
 	
 	connect(this, &industrialVision::singal_sendPatternImageWithMaskEllipse, m_processingThread, &ProcessingThread::slot_recievePatternImageWithMask, Qt::QueuedConnection);
@@ -376,9 +379,9 @@ void industrialVision::createOncePattern()
           AppendText("【提示】触发接受匹配完成,匹配成功",Green);
 		  char xxx[10];
 		  char yyy[10];
-		  sprintf(xxx, "%.1f", finall_Total_Result.ptCenter.x);
-		  sprintf(yyy, "%.1f", finall_Total_Result.ptCenter.y);
-
+		  sprintf(xxx, "%.3f", finall_Total_Result.ptCenter.x);
+		  sprintf(yyy, "%.3f", finall_Total_Result.ptCenter.y);
+		  
           QString  resultFont  = "x:坐标";
 
           resultFont.append(QString::fromLocal8Bit(xxx));
@@ -1349,6 +1352,61 @@ void industrialVision::actionuserSwitch()
 //设置旋转界面
 void industrialVision::actionAngleParam() {
 	angeleMatchParamItem.show();
+}
+
+void industrialVision::displayErrorMessageBox() {
+	if (m_cameraThread->isRunning())
+	{
+		m_cameraThread->setSwitchFlag(false);
+		m_cameraThread->requestInterruption();
+
+		//m_cameraThread->start();
+	}
+	if (m_processingThread->isRunning())
+	{
+		m_processingThread->setSwitchFlag(false);
+		m_processingThread->requestInterruption();
+
+		//m_processingThread->start();
+	}
+
+	QMessageBox msgBox;
+	msgBox.setIcon(QMessageBox::Warning);
+	msgBox.setText("视觉匹配失败");
+	msgBox.setInformativeText("继续默认匹配？");
+	msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+	msgBox.setDefaultButton(QMessageBox::Yes);
+
+	int ret = msgBox.exec();
+
+
+		m_cameraThread->setSwitchFlag(true);
+		m_cameraThread->start();
+
+
+		m_processingThread->setSwitchFlag(true);
+		m_processingThread->start();
+	
+
+
+	switch (ret) {
+	case QMessageBox::Yes:
+		// 处理“继续”的逻辑
+		m_processingThread->visionErrorOption = true;
+		break;
+	case QMessageBox::No:
+		// 处理“不继续”的逻辑
+		m_processingThread->visionErrorOption = false;
+		break;
+	default:
+		// 处理其他情况
+		break;
+	}
+	//重启相机
+	//click_stopOperation();
+
+	//click_continuousOperation();
+
 }
 
 void industrialVision::actionLogAndPathAction()

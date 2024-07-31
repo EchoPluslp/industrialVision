@@ -34,6 +34,7 @@ struct s_SingleTargetMatch
 	int width;
 	int height;
 	bool pattern_flag = false;
+	int currentIndex;
 };
 class CustomData {
 public:
@@ -81,7 +82,7 @@ private:
 	std::list<SOCKET> clientList;
 	QQueue<QTcpSocket*> clientQueue;
 	void processNextRequest();
-	int timestart = 1000;
+	int timestart = 4000;
 signals:
 	void triggerPattern();
 	void logoString(QString message, QString color);

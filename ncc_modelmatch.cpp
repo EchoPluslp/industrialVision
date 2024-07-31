@@ -557,6 +557,8 @@ void NCCMainWindow::on_action_ringexpansion_triggered() {
 		settings->setValue("pattern_rect_info.y", QString::number(ncc_patten_rect_info_item->m_rect.y()));
 		settings->setValue("pattern_rect_info.width", QString::number(ncc_patten_rect_info_item->m_rect.width()));
 		settings->setValue("pattern_rect_info.height", QString::number(ncc_patten_rect_info_item->m_rect.height()));
+		settings->setValue("pattern_rect_info_midPoint.width", QString::number(ncc_patten_rect_info_item->m_rect.x()+ ncc_patten_rect_info_item->m_rect.width()/2));
+		settings->setValue("pattern_rect_info_midPoint.height", QString::number(ncc_patten_rect_info_item->m_rect.y()+ ncc_patten_rect_info_item->m_rect.height()/2));
 		}
 	}	//保存多边形的特征信息
 	else if (pattern_polygon_index != -1)
@@ -613,7 +615,10 @@ void NCCMainWindow::on_action_ringexpansion_triggered() {
 	
 	
 	//保存当前图片
-
+	if (ncc_patten_rect_info_item==nullptr)
+	{
+		return;
+	}
 	QString fullpath = filePathIn_ + "model.bmp";
 	QRect region(ncc_patten_rect_info_item->m_rect.x(), ncc_patten_rect_info_item->m_rect.y(), ncc_patten_rect_info_item->m_rect.width(), 
 		ncc_patten_rect_info_item->m_rect.height());

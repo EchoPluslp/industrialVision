@@ -15,6 +15,11 @@ ProcessingThread::ProcessingThread(QObject* parent)
 	this->initThread();
 	m_plineCaliperGUI = new CLineCaliperGUI();
 	circleInstanceGui = new CCaliperCircleGUI();
+	QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
+	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
+	settings->beginGroup("Idus");
+	//像素比例
+	pixelPerMm = settings->value("pixelPerMm").toFloat();
 }
 
 ProcessingThread::~ProcessingThread()
@@ -250,7 +255,6 @@ void ProcessingThread::run()
 
 					//发送给前端 
 					emit signal_patternResult(resultPointF, total_time);
-
 					}
 
 				}
@@ -260,15 +264,23 @@ void ProcessingThread::run()
 					QTime timedebuge;//声明一个时钟对象
 					timedebuge.start();//开始计时
 					//特征区域 --当前值++方便下次循环使用
+					/*if (informationItemWithMattch.size()==0)
+					{
+						continue;
+					}*/
 					if (currentMattchIndex== informationItemWithMattch.size())
 					{
 						currentMattchIndex = 0;
 					}
 					QString currentModelPath = informationItemWithMattch.at(currentMattchIndex++);
+					finall_Total_Result.currentIndex = currentMattchIndex;
+
 					QString picturePath = currentModelPath + "model.bmp";
 					readandDecectMattchWithSource(picturePath);
+					//读取搜索区域
 					QString iniPath = currentModelPath + "model.ini";
 					areaMatRect = readImageWithSource(iniPath);
+			
 			
 					//搜索区域
 					if (areaMatRect.x+ areaMatRect.width>tempMap.cols )
@@ -277,26 +289,72 @@ void ProcessingThread::run()
 					}else if (areaMatRect.y + areaMatRect.height > tempMap.rows)
 					{
 						areaMatRect.y = tempMap.rows - areaMatRect.height;
-					 
 					}	
-					ResultPoint Point_2;
-					//if (shape_type)
-					//{
+
+					//读取匹配中心
+					cv::Point mattchCenter = readMatchCenterPointWithSourceNew(iniPath);
+					mattchCenter.x = mattchCenter.x - (m_width / 2);//向右为x正方向
+					mattchCenter.y = (m_height / 2) - mattchCenter.y;
+
 					patternMat = imread(picturePath.toLocal8Bit().toStdString().c_str());
 					cvtColor(patternMat, patternMat, COLOR_RGB2GRAY);
 					//cv::Point2f  Point_1 = MatchPicture_Halcon(patternMat, tempMap(areaMatRect), false);
-
+					
+					//匹配后的点坐标
 					Point2f	 Point_1 = MatchPicture(patternMat, tempMap(areaMatRect), false);
+					if (Point_1.x == -m_width && Point_1.y == -m_height)
+					{
+ 						emit showErrorMessageBox();
+					
+ 						if (visionErrorOption)
+						{
+							//执行默认匹配
+							finall_Total_Result.ptCenter.x = 0;
+							finall_Total_Result.ptCenter.y = 0;
+							finall_Total_Result.flag = true;
+							pattern_Flag = false;
+							//将处理好的图像发现到主界面
+							emit signal_newPixmap(newPixmap_1, 0);
+							m_width = newPixmap_1.width();
+							m_height = newPixmap_1.height();
+							//使用完后清空容器
+							m_imageVector_1.clear();
+							continue;
+						}
+						else {
+							//重新匹配
+							currentMattchIndex = 0;
+							finall_Total_Result.currentIndex = currentMattchIndex;
+							finall_Total_Result.ptCenter.x = 8888;
+							finall_Total_Result.ptCenter.y = 8888;
+							finall_Total_Result.flag = true;
+							pattern_Flag = false;
+							//将处理好的图像发现到主界面
+							emit signal_newPixmap(newPixmap_1, 0);
+							m_width = newPixmap_1.width();
+							m_height = newPixmap_1.height();
+							//使用完后清空容器
+							m_imageVector_1.clear();
+							continue;
+						}
+					}
+					//将两个坐标转换到图片中心的坐标系
+  					Point_1.x = Point_1.x - (m_width / 2);//向右为x正方向
+					Point_1.y = (m_height / 2) - Point_1.y;
+					//将匹配后的坐标和原来特征点的中心坐标相减
+					Point_1.x = Point_1.x - mattchCenter.x;
+					Point_1.y = Point_1.y - mattchCenter.y;
 
-						 pattern_Flag = false;
-						 resultPointF.setX(Point_1.x);
-						 resultPointF.setY(Point_1.y);
+					resultPointF.setX(Point_1.x/ pixelPerMm);  //向右为x正方向
+					resultPointF.setY(Point_1.y/ pixelPerMm);//向上为y正方向
+
+					finall_Total_Result.ptCenter = cv::Point2d(resultPointF.x(), resultPointF.y());
 
 						 int total_time = timedebuge.elapsed();
 
 						 emit signal_patternResult(resultPointF, total_time);
-					//}
-					
+						 finall_Total_Result.flag = true;
+						 pattern_Flag = false;
 					if (resultPointF.x() != -m_width && resultPointF.y() != m_height) {
 						QPainter painter(&newPixmap_1);
 
@@ -640,8 +698,6 @@ cv::Rect ProcessingThread::readImageWithSource(QString stringPath)
 	QString sourceWidth = settings->value("source_rect_info.width", "0").toString();
 	QString sourceHeight = settings->value("source_rect_info.height", "0").toString();
 
-	QString fullPath_width = settings->value("source_width", "0").toString();
-	QString fullPath_height = settings->value("source_height", "0").toString();
 	double sourceX_Dou = sourceX.toDouble();
 	double sourceY_Dou = sourceY.toDouble();
 	double sourceWidth_Dou = sourceWidth.toDouble();
@@ -711,6 +767,21 @@ cv::Rect ProcessingThread::readandDecectMattchWithSource(QString stringPath)
 	templData->bIsPatternLearned = true;
 }
 
+cv::Point2f ProcessingThread::readMatchCenterPointWithSourceNew(QString stringPath) {
+	QSettings* settings = new QSettings(stringPath, QSettings::IniFormat);
+	settings->beginGroup("pattern_info");
+	QString sourceX = settings->value("pattern_rect_info_midPoint.width", "0").toString();
+	QString sourceY = settings->value("pattern_rect_info_midPoint.height", "0").toString();
+
+	double sourceX_Dou = sourceX.toDouble();
+	double sourceY_Dou = sourceY.toDouble();
+	delete settings;
+//	sourceX_Dou = sourceX_Dou - (m_width / 2);  //向右为x正方向
+	//sourceY_Dou = m_height / 2 - sourceY_Dou;//向上为y正方向
+
+
+	return cv::Point2f(sourceX_Dou, sourceY_Dou);
+}
 cv::Point2f ProcessingThread::pixPointToRobotPoint(cv::Point2f pointItem)
 {
 	// Local control variables
@@ -1080,16 +1151,12 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
 			drawCenterPoint.x = lastResult.x();
 			drawCenterPoint.y = lastResult.y();
 
-            lastResult.setX(lastResult.x()- (m_width / 2));  //向右为x正方向
-            lastResult.setY((m_height / 2) - lastResult.y());//向上为y正方向
-			
-		  
-            finall_Total_Result.ptCenter = cv::Point2d(lastResult.x(), lastResult.y());
+
             finall_Total_Result.dMatchedAngle = sstm.dMatchedAngle;
             finall_Total_Result.pattern_flag = true;
-            finall_Total_Result.flag = true;
+
         }
-        return finall_Total_Result.ptCenter;
+        return drawCenterPoint;
     }
 }
 
@@ -1099,7 +1166,6 @@ void ProcessingThread::patternNG()
 	finall_Total_Result.ptCenter = cv::Point2d(-m_width, -m_height);
 	finall_Total_Result.dMatchedAngle = sstm.dMatchedAngle;
 	finall_Total_Result.pattern_flag = false;
-	finall_Total_Result.flag = true;
 
 	resultPoint.x = -m_width;
 	resultPoint.y = -m_height;

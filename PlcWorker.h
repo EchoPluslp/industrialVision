@@ -21,9 +21,16 @@ public:
 		timer->start(interval);
 	}
 
+	int i = 0;
 public slots:
 	void pollPlcAddress()
 	{
+		i++;
+		if (i == 25)
+		{
+			emit takeMattchPhoto();
+			i = 17;
+		}
 		if (client->state() == QModbusDevice::ConnectedState)
 		{
 			QModbusDataUnit readUnit(QModbusDataUnit::HoldingRegisters, 1500, 1); 
@@ -38,10 +45,12 @@ public slots:
 								int tim = reply->result().value(0);
 								if (tim == 1)
 								{
-									emit takeMattchPhoto();
+									//先设置plc的值，然后再进行匹配
 									QModbusDataUnit unit(QModbusDataUnit::HoldingRegisters, 1500, 1);
 									unit.setValue(0, 0);
-									client->sendWriteRequest(unit, 1);							
+									client->sendWriteRequest(unit, 1);
+
+									emit takeMattchPhoto();
 								}
 								// Process the response
 								//qDebug() << "PLC Value:" << reply->result().value(0);
