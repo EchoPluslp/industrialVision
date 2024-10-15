@@ -9,6 +9,7 @@ Server::Server()
 	connect(this, &Server::triggerPattern, &TransmitSignals::GetInstance(), &TransmitSignals::create_once_pattern, Qt::UniqueConnection);
 	connect(this, &Server::logoString, &TransmitSignals::GetInstance(), &TransmitSignals::sendToIndustrString,Qt::QueuedConnection);
 
+
 	//  //读取上次关闭时的状态
 	QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
 	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
@@ -22,19 +23,8 @@ Server::Server()
 	else {
 			emit logoString("无法启动服务器...", "GREEN");
 	}
-
-	client = new QModbusTcpClient(this);
-	const QUrl url = QUrl::fromUserInput("192.168.0.80:5001"); //;//获取IP和端口号
-
-	client->setConnectionParameter(QModbusDevice::NetworkAddressParameter, url.host());
-	client->setConnectionParameter(QModbusDevice::NetworkPortParameter, url.port());
-	client->setTimeout(2000);
-	client->setNumberOfRetries(3);
-
-	bool ti = client->connectDevice();
-
 	
-	// Create and start the PLC worker thread
+	//// Create and start the PLC worker thread
 	QThread* thread = new QThread;
 	PlcWorker* worker = new PlcWorker(client);
 	worker->moveToThread(thread);
@@ -43,12 +33,22 @@ Server::Server()
 
 	connect(thread, &QThread::finished, worker, &QObject::deleteLater);
 
-	connect(worker, &PlcWorker::takeMattchPhoto, this,&Server::onReadyRead); // Poll every 1 second
+	connect(worker, &PlcWorker::takeMattchPhoto, this,&Server::onReadyRead); 
 
+	connect(worker, &PlcWorker::Relayer, this, &Server::RelayerServer); 
 
 	thread->start();
 
 }
+
+
+
+void Server::RelayerServer()
+{
+	GlobalUniqueFace = 0;
+}
+
+
 
 
 void Server::onNewConnection()
@@ -69,10 +69,9 @@ void Server::onNewConnection()
 		processNextRequest();
 	}
 }
+
 void Server::onReadyRead()
 {
-	
-	//QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
 	QTcpSocket* clientSocket = clientQueue.at(0);
 
 	if (!clientSocket) {
@@ -80,35 +79,57 @@ void Server::onReadyRead()
 		return;
 	}
 
-	//QByteArray data = clientSocket->readAll();
-	//QString message = QString(data);
-
-	QString logStringFromClient = "检测到到来自PLC的值变动 ";// + message;
+	QString logStringFromClient = "检测到到来自PLC的值变动 ";// + message;    
 	emit logoString(logStringFromClient, "GREEN");
-	
-		//判断接受的数据格式 不是json
-
-		//在这里可以对客户端消息进行处理，触发匹配
-	QString sendMessager = recvMsg("");
+	if (FaceStringListItemInfo.isEmpty())
+	{
+		return;
+	}
+	if (checkCurrFaceIsMatch(FaceStringListItemInfo.at(GlobalUniqueFace)))
+	{
+		//执行一次匹配
+		sendMessager = recvMsg("");
+	}
 	if (finall_Total_Result.ptCenter.x ==8888 && finall_Total_Result.ptCenter.y == 8888)
 	{
 		QString logStringFromClient = "从第一面开始，重新开始匹配 ";
+		GlobalUniqueFace = 0;
 		return;
 	}
-	clientSocket->write(sendMessager.toUtf8());
+
 	QString logStringToClient = "给客户端发送数据:" + sendMessager;
-		emit logoString(logStringToClient, "GREEN");
+	emit logoString(logStringToClient, "GREEN");
 
-		QString logStringToFace = "当前面数:" + QString::number(finall_Total_Result.currentIndex);
-		logStringToFace += "!";
-		emit logoString(logStringToFace, "GREEN");
+	clientSocket->write("E3_DISSELENT ALLLAYER\r\n");
+	QString logStringFromClient_Layer = "E3_SELECTLAYER";
+	logStringFromClient_Layer.append(" ");
+	logStringFromClient_Layer.append(FaceStringListItemInfo.at(GlobalUniqueFace++));
+	logStringFromClient_Layer.append("\r\n");
+	clientSocket->write(logStringFromClient_Layer.toUtf8());
 
+	clientSocket->write("E3_SelectEnt ALL\r\n");
+	if (!sendMessager.isEmpty())
+	{
+		clientSocket->write(sendMessager.toUtf8());
+	}
+	else {
+			//如果第一个没有设置视觉点，则默认设置
+		clientSocket->write("E3_StartMark Select\r\n");
+	}
 
 	// 发送处理后的消息回客户端
 	// 处理完请求后，继续处理下一个请求
+	if ((GlobalUniqueFace >= FaceStringListItemInfo.size()))
+	{
+		//从头开始
+		GlobalUniqueFace = 0;
+	}
+	QString logStringToFace = "当前未执行的面数:" + FaceStringListItemInfo.at(GlobalUniqueFace);
+	logStringToFace += "!";
+	emit logoString(logStringToFace, "GREEN");
+
 	processNextRequest();
 }
-
 
 Server::~Server()
 {
@@ -119,15 +140,10 @@ QString Server::recvMsg(QString receiveMessage)
 {
 
 
-	if (client->state() == QModbusDevice::ConnectedState)
-	{
-		emit logoString("连接到plc", "GREEN");
 
-		//return;
-	}
+		//emit logoString("执行", "GREEN");
 
-
-	QString send_buf = "E3_StartMark X=";
+	QString send_buf = "E3_StartMark Select X=";
 	//if (receiveMessage <= 0)
 	//{
 	//	QString logStringToClient = "接受receiveMessage函数异常:";
@@ -149,35 +165,53 @@ QString Server::recvMsg(QString receiveMessage)
 		finall_Total_Result.pattern_flag = false;
 		});
 
-	timer.start(timestart); // 启动定时器，设置超时时间为4秒
+	timer.start(timestart); // 启动定时器，设置超时时间为4秒v      
 
 	while (!finall_Total_Result.flag) {
 		// 在这里等待，直到定时器触发或flag变为true
 		QCoreApplication::processEvents(); // 允许Qt事件处理
-	}
+	} 
 	//定时器停止
 	timer.stop();
 	timer.deleteLater();
 
-	//填充
+	//填充            
 	finall_Total_Result.flag = false;
 	if (finall_Total_Result.pattern_flag) {
 		char xx[10];
 		char xxx[10];
 
 		float ptCentX = finall_Total_Result.ptCenter.x / 2;
-		sprintf(xxx, "%.3f", ptCentX);
+		float decimalPartX = ptCentX - static_cast<int>(ptCentX);
+		//if (abs(decimalPartX) < 0.2) {
+		//	// 舍掉小数部分
+		//	finall_Total_Result.ptCenter.x = static_cast<int>(ptCentX);
+		//}
+		//else {
+		//	finall_Total_Result.ptCenter.x = ptCentX;
+		//}
+
+		sprintf(xxx, "%.1f", ptCentX);
 		send_buf.append(xxx);
+
 		send_buf.append(" Y=");
-		sprintf(xx, "%.3f", finall_Total_Result.ptCenter.y / 2);
+		float ptCentY = finall_Total_Result.ptCenter.y / 2;
+		float decimalPartY = ptCentY - static_cast<int>(ptCentY);
+		//if (abs(decimalPartY) < 0.2) {
+		//	// 舍掉小数部分
+		//	finall_Total_Result.ptCenter.y = static_cast<int>(ptCentY);
+		//}
+		//else {
+		//	finall_Total_Result.ptCenter.y = ptCentY;
+		//}
+		sprintf(xx, "%.1f", ptCentY);
 
 		send_buf.append(xx);
 		send_buf.append(" ");
 		send_buf.append("\r\n");
 	}
 	else {
-		QString errSend = "E3_StartMark";
-		send_buf.append("\r\n");
+		QString errSend = "E3_StartMark Select\r\n";
 		return errSend;
 	}
 	return send_buf;
@@ -281,3 +315,8 @@ bool Server::isJsonString(const QString& str) {
 	QJsonDocument doc = QJsonDocument::fromJson(str.toUtf8());
 	return !doc.isNull() && !doc.isEmpty() && doc.isObject();
 }
+bool Server::checkCurrFaceIsMatch(QString currentFace)
+{
+	return VisionPointListItemInfo.contains(currentFace);
+}
+

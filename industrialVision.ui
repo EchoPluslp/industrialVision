@@ -1113,7 +1113,7 @@ border-color: #000000;
 	</string>
              </property>
              <property name="text">
-              <string>运行次数:</string>
+              <string>下次执行图层</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>

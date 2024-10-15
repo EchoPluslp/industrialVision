@@ -13,11 +13,7 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include "PlcWorker.h"
-
-#include <QModbusTcpClient>
-#include <QModbusDataUnit>  //数据容器
-#include <QModbusReply> 
-
+#include "globalvar.h"
 
 
 #include <QCoreApplication>
@@ -71,6 +67,13 @@ public:
 	bool operator_TCPCanSend = false;
 //	void setTCPCanSendStatus(bool flag);
 	bool isJsonString(const QString& str);
+
+
+	//第一次匹配结果
+	QString sendMessager;
+
+	//判断当前的顺序是否满足要求
+	bool checkCurrFaceIsMatch(QString currentFace);
 private:
 	//bool coreFunc();
 	SOCKET servSock;
@@ -89,4 +92,5 @@ signals:
 public slots:
 	void onNewConnection();
 	void onReadyRead();
+	void RelayerServer();
 };

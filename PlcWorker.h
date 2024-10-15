@@ -3,6 +3,8 @@
 #include <QModbusTcpClient>
 #include <QModbusDataUnit>
 #include <QTimer>
+#include <QFile>
+#include <QTextStream>
 
 class PlcWorker : public QObject
 {
@@ -25,57 +27,37 @@ public:
 public slots:
 	void pollPlcAddress()
 	{
-		i++;
-		if (i == 25)
-		{
-			emit takeMattchPhoto();
-			i = 17;
+		QFile file("C:/tmp/temp.txt");
+		if (!file.open(QIODevice::ReadWrite | QIODevice::Text)) {
+			// 如果文件无法打开，可以选择抛出一个异常，返回一个错误消息，或者返回一个空字符串
+			return ; // 这里简单地返回一个空字符串
 		}
-		if (client->state() == QModbusDevice::ConnectedState)
-		{
-			QModbusDataUnit readUnit(QModbusDataUnit::HoldingRegisters, 1500, 1); 
-			if (auto* reply = client->sendReadRequest(readUnit, 1)) 
-			{
-				if (!reply->isFinished())
-				{
-					connect(reply, &QModbusReply::finished, this, [this, reply]()
-						{
-							if (reply->error() == QModbusDevice::NoError)
-							{
-								int tim = reply->result().value(0);
-								if (tim == 1)
-								{
-									//先设置plc的值，然后再进行匹配
-									QModbusDataUnit unit(QModbusDataUnit::HoldingRegisters, 1500, 1);
-									unit.setValue(0, 0);
-									client->sendWriteRequest(unit, 1);
 
-									emit takeMattchPhoto();
-								}
-								// Process the response
-								//qDebug() << "PLC Value:" << reply->result().value(0);
-							}
-							else
-							{
-								reply->error();
-							}
-							reply->deleteLater();
-						});
-				}
-				else
-				{
-					reply->deleteLater();
-				}
-			}
-		}
-		else
+		QTextStream in(&file);
+		QString content = in.readAll(); // 读取文件的全部内容
+		file.close(); // 显式关闭文件（虽然析构时也会自动关闭）
+
+		if (content=="1")
 		{
-			client->connectDevice();
-			//qDebug() << "PLC not connected!";
+			QFile Wfile("C:/tmp/temp.txt");
+			if (!Wfile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+				// 如果文件无法打开，可以选择抛出一个异常，返回一个错误消息，或者返回一个空字符串
+				return; // 这里简单地返回一个空字符串
+			}
+
+			QTextStream out(&Wfile);
+			out << "0"; // 写入新的内容，这将覆盖文件中的所有旧内容
+			emit takeMattchPhoto();
+
+		}else if (content == "2")
+		{
+			emit Relayer();
 		}
+
 	}
 signals:
 	void takeMattchPhoto();
+	void Relayer();
 private:
 	QModbusTcpClient* client;
 	QTimer* timer;

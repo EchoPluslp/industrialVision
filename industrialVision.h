@@ -34,6 +34,7 @@
 #include "mainwindow.h"
 #include "ncc_modelmatch.h"
 #include "matchParam.h"
+#include "layerSetting.h"
 using namespace cv;
 using namespace std;
 
@@ -55,6 +56,7 @@ public:
 
 	 connectServer connectValual;
 
+	 QTimer* timeref = new QTimer;  //初始化定时器
 private:
 	static void __stdcall ImageCallback(unsigned char* pData, MV_FRAME_OUT_INFO_EX* pFrameInfo, void* pUser);
     BOOL                    m_bSoftWareTriggerCheck;
@@ -88,7 +90,7 @@ private:
     cv::Mat rotaete_imgTemp;
 	QPoint centerPoint;
 	QRect originalGeometry; // 用于保存初始窗口位置和大小
-    
+
     //旋转参数设置
     matchParam angeleMatchParamItem;
     double                      m_dToleranceAngle =0;
@@ -103,6 +105,9 @@ private:
     bool                  open_mv = false;//相机打开标志
 
     bool flag_90 = false;//90度标识符
+
+    //当前面数展示
+    layerSetting setcurrentFaceItem;
     //菜单栏按钮
 	QMenu* SettingMenus;
 
@@ -112,6 +117,7 @@ private:
     QAction *action_SetAttributes;
     QAction *action_password;
 	QAction* action_angleParam;
+	QAction* action_setCurrentFace;
 
 
     //界面计时器
@@ -121,6 +127,7 @@ private:
 	bool isStart = false;        //记录是否已经开始计时
 	QPoint patternRectCenterPoint;
     bool m_h_Value_Swap_Flag = true;
+    QModbusTcpClient* client;
 private:
 	Ui::industrialVision ui;
     logoSet logoset;
@@ -203,8 +210,10 @@ public:
      //717获取文件夹下的文件名字
      QStringList  getSortedFolderNamesAsNumbers(const QString& folderPath);
      int CurrentExecutionOrder;
+     int sortNameSize;
+     //导入工程的文件夹
+	  QString newFolderPath;
 
-     
 	 protected:
 		 void closeEvent(QCloseEvent* event) override {
 			 // 创建 QMessageBox 对话框
@@ -259,8 +268,12 @@ private slots:
          void actionPasswordAction();
          void actionLogAndPathAction();
          void actionuserSwitch();
+         void actionCurrentFace();
          void actionAngleParam();
          void displayErrorMessageBox();
+         void getCurrentFaceValue(int value);
+
+
 signals:
     void sendQimageToVisualTemplate(QImage data);
     void cameraTovisualTemplate(QImage img,QString path);
@@ -273,7 +286,7 @@ signals:
     void send_Grade(QString grade);
     void setdefultCamare(bool flag);
     void openSourceArea(bool flag);
-    void sign_switchLogin();
+    void sign_switchLogin(); 
     void singal_sendPatternImageWithMaskEllipse(QString patternImage_Path, QRectF patternRect, QRectF qrect, QPoint centerPoint, QPoint patternRectCenterPoint);
 	void singal_sendPatternImageWithMaskPolygon(QString patternImage_Path, QPolygonF patternPolygon, QRectF qrect, QPoint centerPoint, QPoint patternRectCenterPoint);
 

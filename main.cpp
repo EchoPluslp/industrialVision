@@ -3,13 +3,6 @@
 #include <QCoreApplication>
 bool checkOnly();
 int main(int argc, char *argv[]){
-	 
-	//cv::Point item1(1881,1428);
-	//cv::Point item2(2177,1429);
-	//double xe = cv::norm(item1 - item2);
-	//double li = 16;//per/16mm
-	//double perMM = xe / li;
-
 #if (QT_VERSION > QT_VERSION_CHECK(5,6,0))
 	QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
@@ -18,7 +11,6 @@ int main(int argc, char *argv[]){
 		QMessageBox::critical(NULL, "错误信息", "视觉软件已经启动,请关闭后再重新打开");
 		return NULL;
 	}
-
 	QApplication a(argc, argv);
 	 
 	//  //读取上次关闭时的状态

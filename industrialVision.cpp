@@ -11,8 +11,7 @@
 industrialVision::industrialVision(QWidget *parent)
 	: QMainWindow(parent)
 {
-    industrialVision::ui.setupUi(this);
-
+	industrialVision::ui.setupUi(this);
 	QFont myFont;
 	//设置文字大小
 	//myFont.setPointSize(30);
@@ -116,6 +115,12 @@ industrialVision::industrialVision(QWidget *parent)
 	connect(action_angleParam, &QAction::triggered,
 		this, &industrialVision::actionAngleParam);
 
+	action_setCurrentFace = new QAction();
+	action_setCurrentFace->setText("图层设置");
+	action_setCurrentFace->setFont(QFont(tr("宋体"), 40, QFont::Bold, false));
+	connect(action_setCurrentFace, &QAction::triggered,
+		this, &industrialVision::actionCurrentFace);
+
 	SettingMenus = new QMenu("&设置", ui.menuBar);
 	ui.menuBar->addMenu(SettingMenus);
 	
@@ -148,6 +153,9 @@ industrialVision::industrialVision(QWidget *parent)
 	connect(this, &industrialVision::sentInformationToItem, m_processingThread, &ProcessingThread::receiveInformationToItem, Qt::QueuedConnection);
 
 	
+	connect(&setcurrentFaceItem, &layerSetting::setCurrentFaceToProcess, this, &industrialVision::getCurrentFaceValue, Qt::QueuedConnection);
+
+
     //开启服务端
 	connectValual.create_server();
 	ui.pushButton_manualOperation->setEnabled(false);
@@ -156,14 +164,14 @@ industrialVision::industrialVision(QWidget *parent)
 	ui.menuBar->setStyleSheet("color: rgb(255, 255, 255); background-color: rgba(26, 45, 77, 1);");
 	setButtonClickLimits(false);
 	//白色填充左上角图标
-    setWindowTitle("V-Gp System V1.0");
+    setWindowTitle("V-Gp System V1.1");
 	setWindowIcon(QIcon("icon.ico"));
      AppendText("系统启动成功",Green);
+	 
 }
 
 
  void industrialVision::click_continuousOperation() {
-     
      AppendText("点击连续工作按钮",Green);
 	 if (m_bOpenDevice) {
 		 AppendText("相机已经启动", Red);
@@ -280,7 +288,6 @@ void industrialVision::sendImgToVisualContinue(QString data)
 void industrialVision::click_createServer()
 {
 	connectValual.show();
-
 } 
 
 void industrialVision::receive_ServerCreateInfo(QString flag)
@@ -379,9 +386,8 @@ void industrialVision::createOncePattern()
           AppendText("【提示】触发接受匹配完成,匹配成功",Green);
 		  char xxx[10];
 		  char yyy[10];
-		  sprintf(xxx, "%.3f", finall_Total_Result.ptCenter.x);
-		  sprintf(yyy, "%.3f", finall_Total_Result.ptCenter.y);
-		  
+		  sprintf(xxx, "%.1f", finall_Total_Result.ptCenter.x /2);
+		  sprintf(yyy, "%.1f", finall_Total_Result.ptCenter.y / 2); 		  
           QString  resultFont  = "x:坐标";
 
           resultFont.append(QString::fromLocal8Bit(xxx));
@@ -406,15 +412,25 @@ void industrialVision::createOncePattern()
 
 		  ui.texstBrowser_titleStatus->setPixmap(QPixmap("Image/industory/NG.png"));
       }
-      ui.run_time_edit_count->clear();
-	  QString setCount(QString::number(OK_count));
-      setCount.append("/");
-      setCount.append(QString::number(total_count));
-      ui.run_time_edit_count->setText(setCount);
+   //   ui.run_time_edit_count->clear();
+	  ////QString setCount(QString::number(OK_count));
+   ////   setCount.append("/");
+   ////   setCount.append(QString::number(total_count));
+		 //QString setCount(QString::number(GlobalUniqueFace));
+		 // //finall_Total_Result.currentIndex
+   //   ui.run_time_edit_count->setText(setCount);
 }
 
 void industrialVision::addTextBrower(QString text,QString flag)
 {
+	//当前面数
+	ui.run_time_edit_count->clear();
+	if (!FaceStringListItemInfo.isEmpty())
+	{
+		ui.run_time_edit_count->setText(FaceStringListItemInfo.at(GlobalUniqueFace));
+	}
+
+
     if (flag == Green)
     {
 		ui.textBrowser_record->setTextColor(Qt::green);
@@ -452,7 +468,7 @@ void industrialVision::addTextBrower(QString text,QString flag)
 	}
 	QString str_now = datetime.toString("yyyy_MM_dd_hh");
 	QString filename = logDirectory + "\\" + "idav_" + str_now + ".log";
-	QFile file(filename);
+	QFile file(filename); 
 	if (!file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
 	{
 		ui.textBrowser_record->append("【提示】日志文件打开失败。\r\n"+ file.fileName());
@@ -462,6 +478,8 @@ void industrialVision::addTextBrower(QString text,QString flag)
 	file.write(text.toUtf8()+"\r\n");
 	file.close();
 }
+
+
 
 void industrialVision::getXMLPATH(QString xmlPath)
 {
@@ -479,6 +497,7 @@ void industrialVision::getXMLPATH(QString xmlPath)
 		AppendText("加载xml模板失败" + xmlPath, Red);
 	}
 }
+
 void industrialVision::AppendText(const QString& text,QString flag)
 {
     emit SLOTAppendText(text, flag);
@@ -622,8 +641,12 @@ void industrialVision::setCURRENT_ROLE(QString currentROle)
 	//密码设置
 	SettingMenus->addAction(action_password);
 
-	//密码设置
+	//选抓参数设置
 	SettingMenus->addAction(action_angleParam);
+
+	//面数设置
+	SettingMenus->addAction(action_setCurrentFace);
+	
 }
 
 //搜索区域按钮
@@ -678,24 +701,24 @@ void industrialVision::openshizixian()
 
 //2024717 读取文件夹路径
 void industrialVision::setModelXMLFile() {
-	QString folderPath = QFileDialog::getExistingDirectory(
+	 newFolderPath = QFileDialog::getExistingDirectory(
 		nullptr,
 		"Select Folder",
 		QCoreApplication::applicationDirPath(),
 		QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-	if (folderPath.isEmpty())
+	if (newFolderPath.isEmpty())
 	{
 		return;
 	}
 	//获取创建List和文件
-	QStringList fileSortedName = getSortedFolderNamesAsNumbers(folderPath);
+	QStringList fileSortedName = getSortedFolderNamesAsNumbers(newFolderPath);
 	if (fileSortedName.isEmpty())
 	{
 		QMessageBox::information(nullptr, "Confirmation", "当前文件夹下没有目录信息");
 		return;
 	}
-	int sortNameSize = fileSortedName.size();
-	QString returnString = "共有" + QString::number(sortNameSize); +"个步骤，是否继续?";
+	 sortNameSize = fileSortedName.size();
+	QString returnString = "共有" + QString::number(sortNameSize) +"个步骤，是否继续?";
 	// 添加确认弹窗
 	QMessageBox::StandardButton reply;
 	reply = QMessageBox::question(nullptr, "Confirmation",
@@ -714,6 +737,8 @@ void industrialVision::setModelXMLFile() {
 
 	}
 
+	//执行图层顺序设计
+	actionCurrentFace();
 
 }
 
@@ -745,7 +770,7 @@ void industrialVision::click_manualOperation()
 		ui.pixelformat_edit->setStyleSheet("background-color: grey;");
 
 		//将字体颜色修改为红色
-		ui.pushButton_manualOperation->setStyleSheet("/* 证券 */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* 背景/4 页签选中色 */ background: #285790; color: rgb(255, 0, 0); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
+		ui.pushButton_manualOperation->setStyleSheet("QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* 背景/4 页签选中色 */ background: #285790; color: rgb(255, 0, 0); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
 		ui.pushButton_manualOperation->setText("解锁状态");
 
 		//锁定状态,设置当前旋转方向为默认方向
@@ -955,7 +980,7 @@ int industrialVision::SetGain()
 int industrialVision::GetFrameRate()
 {
 	MVCC_FLOATVALUE stFloatValue = { 0 };
-
+	 
 	int nRet = m_pcMyCamera->GetFloatValue("ResultingFrameRate", &stFloatValue);
 	if (MV_OK != nRet)
 	{
@@ -1349,9 +1374,18 @@ void industrialVision::actionuserSwitch()
 	emit sign_switchLogin();
 	//close();
 }
-//设置旋转界面
+
+//设置旋转参数
 void industrialVision::actionAngleParam() {
 	angeleMatchParamItem.show();
+}
+
+//设置当前面数量
+void industrialVision::actionCurrentFace() {
+	setcurrentFaceItem.sortNameSize = this->sortNameSize;
+	//当前工程目录
+	setcurrentFaceItem.saveFolderPath = newFolderPath;
+	setcurrentFaceItem.show();
 }
 
 void industrialVision::displayErrorMessageBox() {
@@ -1407,6 +1441,11 @@ void industrialVision::displayErrorMessageBox() {
 
 	//click_continuousOperation();
 
+}
+
+void industrialVision::getCurrentFaceValue(int value)
+{
+	GlobalUniqueFace = value;
 }
 
 void industrialVision::actionLogAndPathAction()

@@ -20,12 +20,30 @@ ProcessingThread::ProcessingThread(QObject* parent)
 	settings->beginGroup("Idus");
 	//像素比例
 	pixelPerMm = settings->value("pixelPerMm").toFloat();
+
+	stringListItemInfo = AnalyzeLayerList(settings->value("AnalyzeLayerList").toString());
 }
 
 ProcessingThread::~ProcessingThread()
 {
 
 }
+
+QList<QString>  ProcessingThread::AnalyzeLayerList(QString layerItem)
+{
+	QStringList list = layerItem.split(","); // 使用英文逗号分割字符串
+	// 去除每个字符串前后的空格
+	for (int i = 0; i < list.size(); ++i) {
+		list[i] = list[i].trimmed();
+	}
+	// 将 QStringList 中的元素添加到 QList<QString>
+	QList<QString> qList;
+	for (const QString& item : list) {
+		qList.append(item);
+	}
+	return qList;
+}
+
 
 void ProcessingThread::initThread()   //初始化图像处理线程
 {
@@ -35,7 +53,7 @@ void ProcessingThread::initThread()   //初始化图像处理线程
 }
 
 void ProcessingThread::setThreadId(int id)
-{
+{                                                                         
 	m_threadId = id;
 }
 
@@ -52,6 +70,7 @@ bool ProcessingThread::getmodelAndRealSclar()
 {
 	return  modelAndRealSclar;
 }
+
 void ProcessingThread::run()
 {
 	modelAndRealSclar = true;
@@ -60,9 +79,8 @@ void ProcessingThread::run()
 			if (m_imageVector_1.size() == 1)
 			{
 				Mat tempMap = m_imageVector_1.at(0).clone();
-			//	tempMap = imread("G:/Halcon/test/0/Image_20240722102933911.bmp");
 				QPixmap newPixmap_1 = cvMatToPixmap(tempMap);
-		
+ 
 				//执行形状匹配
 				if (pattern_Flag && shape_match)
 				{
@@ -264,16 +282,14 @@ void ProcessingThread::run()
 					QTime timedebuge;//声明一个时钟对象
 					timedebuge.start();//开始计时
 					//特征区域 --当前值++方便下次循环使用
-					/*if (informationItemWithMattch.size()==0)
+			
+					if (informationItemWithMattch.size()==0)
 					{
-						continue;
-					}*/
-					if (currentMattchIndex== informationItemWithMattch.size())
-					{
-						currentMattchIndex = 0;
+						return;
 					}
-					QString currentModelPath = informationItemWithMattch.at(currentMattchIndex++);
-					finall_Total_Result.currentIndex = currentMattchIndex;
+					int currentFaceInVisionListIndex = getVisionPointListItemInfoIndex(FaceStringListItemInfo.at(GlobalUniqueFace));
+					QString currentModelPath = informationItemWithMattch.at(currentFaceInVisionListIndex);
+					finall_Total_Result.currentIndex = GlobalUniqueFace;
 
 					QString picturePath = currentModelPath + "model.bmp";
 					readandDecectMattchWithSource(picturePath);
@@ -292,16 +308,29 @@ void ProcessingThread::run()
 					}	
 
 					//读取匹配中心
-					cv::Point mattchCenter = readMatchCenterPointWithSourceNew(iniPath);
+					cv::Point2f mattchCenter = readMatchCenterPointWithSourceNew(iniPath);
 					mattchCenter.x = mattchCenter.x - (m_width / 2);//向右为x正方向
 					mattchCenter.y = (m_height / 2) - mattchCenter.y;
 
 					patternMat = imread(picturePath.toLocal8Bit().toStdString().c_str());
 					cvtColor(patternMat, patternMat, COLOR_RGB2GRAY);
-					//cv::Point2f  Point_1 = MatchPicture_Halcon(patternMat, tempMap(areaMatRect), false);
+
+					QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
+					QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
+					settings->beginGroup("Idus");
+					//像素比例
+					halconDemo = settings->value("halconDemo").toUInt();
+					cv::Point2f  Point_1;
+					if (halconDemo)
+					{
+						Point_1 = MatchPicture_Halcon(patternMat, tempMap(areaMatRect), false);
+
+					}
+					else {
+						Point_1 = MatchPicture(patternMat, tempMap(areaMatRect), false);
+					}
 					
 					//匹配后的点坐标
-					Point2f	 Point_1 = MatchPicture(patternMat, tempMap(areaMatRect), false);
 					if (Point_1.x == -m_width && Point_1.y == -m_height)
 					{
  						emit showErrorMessageBox();
@@ -323,8 +352,7 @@ void ProcessingThread::run()
 						}
 						else {
 							//重新匹配
-							currentMattchIndex = 0;
-							finall_Total_Result.currentIndex = currentMattchIndex;
+							finall_Total_Result.currentIndex = GlobalUniqueFace;
 							finall_Total_Result.ptCenter.x = 8888;
 							finall_Total_Result.ptCenter.y = 8888;
 							finall_Total_Result.flag = true;
@@ -2063,10 +2091,10 @@ void ProcessingThread::get_Info_From_industrial_circle(QPointF centerP, qreal nR
 	shapeMatch_Patten_Circle.append(PatternInfo_item);
 }
 
+//从前端接收信息
 void ProcessingThread::receiveInformationToItem(QStringList informationItem)
 {
 	informationItemWithMattch = informationItem;
-	currentMattchIndex = 0;
 }
 
 
@@ -2115,4 +2143,16 @@ QPoint ProcessingThread::calculateOffsetB(QPoint A, QPoint B, double initialDist
 void ProcessingThread::setShapeType(int value)
 {
 	shape_type = value;
+}
+
+
+int  ProcessingThread::getVisionPointListItemInfoIndex(QString layerItem) {
+	for (int i = 0;i<VisionPointListItemInfo.size();i++)
+	{
+		if (layerItem == VisionPointListItemInfo.at(i))
+		{
+			return i;
+		}
+	}
+	return -1;
 }

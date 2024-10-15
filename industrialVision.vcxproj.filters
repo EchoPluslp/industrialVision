@@ -163,6 +163,9 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="layerSetting.cpp">
+      <Filter>Source Files\modelMatch</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="login.h">
@@ -234,6 +237,9 @@
     <QtMoc Include="PlcWorker.h">
       <Filter>Header Files\connect</Filter>
     </QtMoc>
+    <QtMoc Include="layerSetting.h">
+      <Filter>Header Files\creataModel</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="login.ui">
@@ -271,6 +277,9 @@
     </QtUic>
     <QtUic Include="mattchParam.ui">
       <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="layerSetting.ui">
+      <Filter>Form Files\modelMatch</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>

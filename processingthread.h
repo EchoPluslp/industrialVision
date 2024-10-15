@@ -182,6 +182,14 @@ public:
 	};
 	//设置匹配角度的信息
 	void setAngleMatchInformation();
+
+
+	//QModbusTcpClient* client;
+
+	//默认全进入
+	QList<QString>  AnalyzeLayerList(QString layerItem);
+	//返回再vision中的顺序
+	int getVisionPointListItemInfoIndex(QString layerItem);
 signals: 
 	void signal_newPixmap(QPixmap newPixmap, int id);
 	void signal_patternResult(QPointF qpointf,int dateTime);
@@ -207,6 +215,7 @@ public slots:
 		qreal nSampleDirection , QRectF roi);
 
 	void receiveInformationToItem(QStringList informationItem);
+
 private:
 	cv::Point2d drawCenterPoint;
 	bool startFlag = false;
@@ -253,14 +262,13 @@ private:
 	 QList< PatternInfo> shapeMatch_Patten;
 
 	 QList< PatternInfo_circle> shapeMatch_Patten_Circle;
-
+	 QList<QString> stringListItemInfo;
 	 int rotationDirection = 0;
 
 	 //718
-	 QStringList informationItemWithMattch;
-	 int currentMattchIndex = 0;
+	 QStringList informationItemWithMattch;	 
 	 //730,像素比例设置
 	 float pixelPerMm = 1;
-
+	 int halconDemo = 0;
 };
 #endif // PROCESSINGTHREAD_H
