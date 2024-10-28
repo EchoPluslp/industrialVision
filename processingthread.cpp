@@ -115,6 +115,7 @@ void ProcessingThread::run()
 					painter.drawLine(QPoint(result[0].x, result[0].y),
 						QPoint(result[1].x, result[1].y));
 					}
+					//代表两条新
 					else if (shapeMatch_Patten.size() == 2)
 					{
 						vector<cv::Point2f> Two_Line_Result;
@@ -189,7 +190,144 @@ void ProcessingThread::run()
 							QPoint(Two_Line_Result[1].x, Two_Line_Result[1].y));
 						painter.drawLine(QPoint(Two_Line_Result[2].x, Two_Line_Result[2].y),
 							QPoint(Two_Line_Result[3].x, Two_Line_Result[3].y));
-					}                         
+					}
+					else if (shapeMatch_Patten.size() >= 3)
+					{
+						//获取主线条
+						PatternInfo item_mainLine = shapeMatch_Patten.at(0);
+						//将当前Qpixmap 发送给匹配代码
+						Mat src = tempMap(item_mainLine.roi).clone();
+						m_plineCaliperGUI->createLineKaChi(src, item_mainLine.pt_begin_cv2, item_mainLine.pt_end_cv2, item_mainLine.height,
+							item_mainLine.width, 1, item_mainLine.nthresholdValuel, item_mainLine.nSampleDirection, item_mainLine.nMeasureNums);
+						Point2d pdLineStart_mainLine(0, 0), pdLineEnd_mainLine(0, 0);
+						double dAngle = 0;
+						m_plineCaliperGUI->lineEdgePointSetsFit(pdLineStart_mainLine, pdLineEnd_mainLine, dAngle);
+						pdLineStart_mainLine.x = item_mainLine.roi.tl().x + pdLineStart_mainLine.x;
+						pdLineStart_mainLine.y = item_mainLine.roi.tl().y + pdLineStart_mainLine.y;
+						pdLineEnd_mainLine.x = item_mainLine.roi.tl().x + pdLineEnd_mainLine.x;
+						pdLineEnd_mainLine.y = item_mainLine.roi.tl().y + pdLineEnd_mainLine.y;
+						
+
+						//找到剩下的线条
+						vector<cv::Point2f> Two_Line_Result;
+						for (int i = 1; i < shapeMatch_Patten.size(); i++)
+						{
+							PatternInfo item = shapeMatch_Patten.at(i);
+
+							//将当前Qpixmap 发送给匹配代码
+							Mat src = tempMap(item.roi).clone();
+
+							m_plineCaliperGUI->createLineKaChi(src, item.pt_begin_cv2, item.pt_end_cv2, item.height,
+								item.width, 1, item.nthresholdValuel, item.nSampleDirection, item.nMeasureNums);
+
+							Point2d pdLineStart(0, 0), pdLineEnd(0, 0);
+							double dAngle = 0;
+							m_plineCaliperGUI->lineEdgePointSetsFit(pdLineStart, pdLineEnd, dAngle);
+							pdLineStart.x = item.roi.tl().x + pdLineStart.x;
+							pdLineStart.y = item.roi.tl().y + pdLineStart.y;
+							pdLineEnd.x = item.roi.tl().x + pdLineEnd.x;
+							pdLineEnd.y = item.roi.tl().y + pdLineEnd.y;
+
+							//计算得到最终线段的begin和end
+							vector<cv::Point2f> result = m_plineCaliperGUI->get_intersection(pdLineStart, pdLineEnd, item.pt_start_line, item.pt_end_line);
+							for (auto num : result) {
+								Two_Line_Result.push_back(num);
+							}
+ 						}
+						if (Two_Line_Result.size()!=8)
+						{
+							return;
+						}
+						//主线和其他线检测完成。
+ 						//计算夹角
+						double angleDeg_1_realTime = m_plineCaliperGUI->findangle(Two_Line_Result.at(0), Two_Line_Result.at(1), Two_Line_Result.at(2), Two_Line_Result.at(3));
+						double angleDeg_2_realTime = m_plineCaliperGUI->findangle(Two_Line_Result.at(4), Two_Line_Result.at(5), Two_Line_Result.at(6), Two_Line_Result.at(7));
+						//计算交点1		
+						cv::Point2f Intersection_1_realTime(-1, -1);
+						m_plineCaliperGUI->findIntersection(Two_Line_Result.at(0), Two_Line_Result.at(1), Two_Line_Result.at(2), Two_Line_Result.at(3), Intersection_1_realTime);
+						//计算交点2	
+						cv::Point2f Intersection_2_realTime(-1, -1);
+						m_plineCaliperGUI->findIntersection(Two_Line_Result.at(4), Two_Line_Result.at(5), Two_Line_Result.at(6), Two_Line_Result.at(7), Intersection_2_realTime);
+						//计算点线距离
+						double pointToLineDistance_1_realTime = m_plineCaliperGUI->pointToLineDistance(Intersection_1_realTime, pdLineStart_mainLine, pdLineEnd_mainLine);
+						double pointToLineDistance_2_realTime = m_plineCaliperGUI->pointToLineDistance(Intersection_2_realTime, pdLineStart_mainLine, pdLineEnd_mainLine);
+						//判断标准--------------------------------
+						double percentageA = 0.05;    // 10%
+						double lowerBoundA_1 = angleDeg_1_newp * (1 - percentageA);
+						double upperBoundA_1 = angleDeg_1_newp * (1 + percentageA);
+						resultPointF.setX(1);
+						resultPointF.setY(1);
+
+						if (angleDeg_1_realTime < lowerBoundA_1 || angleDeg_1_realTime > upperBoundA_1)
+						{
+							resultPointF.setX(100);
+							resultPointF.setY(100);
+						}
+
+						double lowerBoundA_2 = angleDeg_2_newp * (1 - percentageA);
+						double upperBoundA_2 = angleDeg_2_newp * (1 + percentageA);
+						if (angleDeg_2_realTime < lowerBoundA_2 || angleDeg_2_realTime > upperBoundA_2)
+						{
+							resultPointF.setX(101);
+							resultPointF.setY(101);
+						} 
+						// 计算两个点之间的距离--------------------------------
+						double percentagePP = 0.05; // 10%
+						double distance_1 = cv::norm(Intersection_1_realTime - Intersection_1_newP);
+						// 计算新的交点的最大允许距离
+						double maxDistance_1 = cv::norm(Intersection_1_newP) * percentagePP;
+						if (distance_1 > maxDistance_1)
+						{
+							resultPointF.setX(102);
+							resultPointF.setY(102);
+						}
+						double distance_2 = cv::norm(Intersection_2_realTime - Intersection_2_newP);
+						// 计算新的交点的最大允许距离
+						double maxDistance_2 = cv::norm(Intersection_2_newP) * percentagePP;
+						if (distance_2 > maxDistance_2)
+						{
+							resultPointF.setX(103);
+							resultPointF.setY(103);
+						}
+						// 计算点线之间的距离--------------------------------
+						double percentagePX = 0.05;    // 10%
+						double lowerBoundPX_1 = pointToLineDistance_1_newP * (1 - percentagePX);
+						double upperBoundPX_1 = pointToLineDistance_1_newP * (1 + percentagePX);
+						if (pointToLineDistance_1_realTime < lowerBoundPX_1 || pointToLineDistance_1_realTime > upperBoundPX_1)
+						{
+							resultPointF.setX(104);
+							resultPointF.setY(104);
+						}
+
+						double lowerBoundPX_2 = pointToLineDistance_2_newP * (1 - percentagePX);
+						double upperBoundPX_2 = pointToLineDistance_2_newP * (1 + percentagePX);
+						if (pointToLineDistance_2_realTime < lowerBoundPX_2 || pointToLineDistance_2_realTime > upperBoundPX_2)
+						{
+							resultPointF.setX(105);
+							resultPointF.setY(105);
+						}
+
+						//给temp画线
+						QPainter painter(&newPixmap_1);
+						QPen pen;
+						pen.setStyle(Qt::SolidLine);            //定义画笔的风格，直线、虚线等
+						pen.setWidth(2);                        //定义画笔的大小
+						pen.setBrush(Qt::green);
+						painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+						painter.setPen(pen);
+						painter.drawLine(QPoint(Two_Line_Result[0].x, Two_Line_Result[0].y),
+							QPoint(Two_Line_Result[1].x, Two_Line_Result[1].y));
+						painter.drawLine(QPoint(Two_Line_Result[2].x, Two_Line_Result[2].y),
+							QPoint(Two_Line_Result[3].x, Two_Line_Result[3].y));
+						painter.drawLine(QPoint(Two_Line_Result[4].x, Two_Line_Result[4].y),
+							QPoint(Two_Line_Result[5].x, Two_Line_Result[5].y));	
+						painter.drawLine(QPoint(Two_Line_Result[6].x, Two_Line_Result[6].y),
+								QPoint(Two_Line_Result[7].x, Two_Line_Result[7].y));
+						painter.drawLine(QPoint(Two_Line_Result[8].x, Two_Line_Result[8].y),
+							QPoint(Two_Line_Result[9].x, Two_Line_Result[9].y));
+						//发送给前端 
+						emit signal_patternResult(resultPointF, 0);
+					}
 					if (shapeMatch_Patten_Circle.size() == 1) {
 					//找圆
 					PatternInfo_circle item = shapeMatch_Patten_Circle.at(0);
@@ -317,7 +455,6 @@ void ProcessingThread::run()
 					QPainter painter(&newPixmap_1);
 					painter.setPen(pen);
 					painter.drawRect(areaMatRect.x, areaMatRect.y, areaMatRect.width, areaMatRect.height);
-					
 				}
 				else if (shape_match) {
 					QPen pen;
@@ -955,7 +1092,6 @@ void ProcessingThread::CCOEFF_Denominator(cv::Mat& matSrc, s_TemplData* pTemplDa
 			rrow[j] = (float)num;
 		}
 	}
-
 }
 
 Point ProcessingThread::GetNextMaxLoc(Mat& matResult, Point ptMaxLoc, Size sizeTemplate, double& dMaxValue, double dMaxOverlap, s_BlockMax& blockMax)
@@ -1652,6 +1788,18 @@ void ProcessingThread::slot_recievePatternImageWithPolygonMask(QString pattern_P
 
 }
 
+void ProcessingThread::get_Info_From_industrial_pictureInfo(double angleDeg_1_newp, double angleDeg_2_newp, QPointF Intersection_1_newP
+	, QPointF Intersection_2_newP, double pointToLineDistance_1_newP, double pointToLineDistance_2_newP) {
+	this->angleDeg_1_newp = angleDeg_1_newp;
+	this->angleDeg_2_newp = angleDeg_2_newp;
+	this->Intersection_1_newP.x = Intersection_1_newP.x();
+	this->Intersection_1_newP.y = Intersection_1_newP.y();
+	this->Intersection_2_newP.x = Intersection_2_newP.x();
+	this->Intersection_2_newP.y = Intersection_2_newP.y();
+	this->pointToLineDistance_1_newP = pointToLineDistance_1_newP;
+	this->pointToLineDistance_2_newP = pointToLineDistance_2_newP;
+
+}
 void ProcessingThread::get_Info_From_industrial(QPointF pt_begin_cv2, QPointF pt_end_cv2, qreal height, qreal width, qreal nthresholdValue, qreal nSampleDirection, qreal nMeasureNums, QRect roi,
 	QPointF  pt_start_line, QPointF pt_end_line)
 {

@@ -272,6 +272,9 @@ signals:
         qreal width, qreal nthresholdValue, qreal nSampleDirection, qreal nMeasureNums, QRect roi,
         QPointF pt_begin_line,QPointF pt_end_line);
   
+	void sendInfo_shapeMatch_pictureInfo(double angleDeg_1_newp, double angleDeg_2_newp,QPointF Intersection_1_newP
+        ,QPointF Intersection_2_newP, double pointToLineDistance_1_newP, double pointToLineDistance_2_newP);
+
     void sendInfo_shapeMatch_CIRCLE(QPointF centerP,qreal nRadius,qreal dMeasureLength, qreal dMeasureHeight,
        qreal dSigma,qreal nThreshold,qreal nTranslation,qreal nMesureNums,qreal nCircleSize,
         qreal nSampleDirection, QRectF roi);

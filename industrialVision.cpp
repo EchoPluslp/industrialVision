@@ -54,6 +54,9 @@ industrialVision::industrialVision(QWidget *parent)
 	
 	connect(this, &industrialVision::sendInfo_shapeMatch_Value, m_processingThread, &ProcessingThread::get_Info_From_industrial, Qt::QueuedConnection);
 
+	connect(this, &industrialVision::sendInfo_shapeMatch_pictureInfo, m_processingThread, &ProcessingThread::get_Info_From_industrial_pictureInfo, Qt::QueuedConnection);
+
+
 	connect(this, &industrialVision::sendInfo_shapeMatch_CIRCLE, m_processingThread, &ProcessingThread::get_Info_From_industrial_circle, Qt::QueuedConnection);
 
 	connect(&TransmitSignals::GetInstance(), &TransmitSignals::create_once_pattern, m_processingThread, &ProcessingThread::slot_processThread_Pattren);
@@ -385,6 +388,15 @@ void industrialVision::getImageOneFrame(QString imageType) {
 
 void industrialVision::createOncePattern()
 {		
+	if (resultPointF.x()==1&& resultPointF.y()==1)
+	{
+		AppendText("【提示】触发接受匹配完成,匹配成功", Green);
+		return;
+	}
+	else {
+		AppendText("【错误】触发接受匹配完成,匹配失败", Red);
+
+	}
 		  if (resultPointF.x() != -m_width && resultPointF.y() != -m_height)
       {
           AppendText("【提示】触发接受匹配完成,匹配成功",Green);
@@ -1355,14 +1367,14 @@ void industrialVision::Setinitializationparameters()
 		}
 		//xml路径
 		QString m_xmlFilePath = settings->value("m_xmlFilePath").toString();
-		if (m_xmlFilePath.isEmpty())
-		{
-			AppendText("xml默认路径为空,请设置模板文件路径", Red);
-		}
-		else {
-			getXMLPATH(m_xmlFilePath);
-			AppendText("加载路径读取xml文件完成", Green);
-		}
+		//if (m_xmlFilePath.isEmpty())
+		//{
+		//	AppendText("xml默认路径为空,请设置模板文件路径", Red);
+		//}
+		//else {
+		//	//getXMLPATH(m_xmlFilePath);
+		//	AppendText("加载路径读取xml文件完成", Green);
+		//}
 
     //设置参数
     OnBnClickedSetParameterButton();
@@ -1620,6 +1632,20 @@ bool industrialVision::read_info_from_ini(QString path)
 	foreach(const QString & groupName, groups) {
 		// 进入特定分组
 		settings.beginGroup(groupName);
+		if (groupName.contains("shape_info"))
+		{
+			double angleDeg_1_newp = settings.value("angleDeg_1_newp", 0).toDouble();
+			double angleDeg_2_newp = settings.value("angleDeg_2_newp", 0).toDouble();
+			double Intersection_1_newPX = settings.value("Intersection_1_newP.x", 0).toDouble();
+			double Intersection_1_newPY = settings.value("Intersection_1_newP.y", 0).toDouble();
+			double Intersection_2_newPX = settings.value("Intersection_2_newP.x", 0).toDouble();
+			double Intersection_2_newPY = settings.value("Intersection_2_newP.y", 0).toDouble();
+			double pointToLineDistance_1_newP = settings.value("pointToLineDistance_1_newP", 0).toDouble();
+			double pointToLineDistance_2_newP = settings.value("pointToLineDistance_2_newP", 0).toDouble();
+			int x = 10;
+			emit sendInfo_shapeMatch_pictureInfo(angleDeg_1_newp, angleDeg_1_newp,QPointF(Intersection_1_newPX, Intersection_1_newPY),QPointF(Intersection_2_newPX, Intersection_2_newPY),
+				pointToLineDistance_1_newP, pointToLineDistance_2_newP);
+		}
 		//判断是圆或者直线
 		if (groupName.contains("line"))
 		{
@@ -1657,7 +1683,7 @@ bool industrialVision::read_info_from_ini(QString path)
 		m_processingThread->setShape_match(true);
 		// 退出分组
 	}
-	if (groupName.contains("circle"))
+		if (groupName.contains("circle"))
 	{
 		double pdCenterX = settings.value("pdCenter.x", 0).toDouble();
 		double pdCenterY = settings.value("pdCenter.y", 0).toDouble();

@@ -271,6 +271,9 @@
     <ClCompile Include="bee_point.cpp">
       <Filter>Source Files\shapeMatch</Filter>
     </ClCompile>
+    <ClCompile Include="server1.cpp">
+      <Filter>Source Files\connect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="listwidget.h">
@@ -390,6 +393,9 @@
     <QtMoc Include="bee_point.h">
       <Filter>Header Files\shapeMatch</Filter>
     </QtMoc>
+    <QtMoc Include="server1.h">
+      <Filter>Header Files\connect</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="login.ui">
@@ -430,6 +436,9 @@
     </QtUic>
     <QtUic Include="ncc_mainwindow.ui">
       <Filter>Form Files\modelMatch</Filter>
+    </QtUic>
+    <QtUic Include="server1.ui">
+      <Filter>Form Files\connect</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>

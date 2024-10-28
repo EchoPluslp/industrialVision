@@ -948,6 +948,21 @@ double CLineCaliperGUI::findangle(cv::Point p_1, cv::Point p_2, cv::Point p_3, c
 
 }
 
+double CLineCaliperGUI::pointToLineDistance(const cv::Point2f& point, const cv::Point2d& lineStart, const cv::Point2d& lineEnd) {
+	cv::Point2d lineVector = lineEnd - lineStart; // 线段的向量
+	cv::Point2d pointVector = cv::Point2d(point.x, point.y) - lineStart; // 转换并计算
+
+	double lineLength = cv::norm(lineVector); // 线段的长度
+	if (lineLength == 0) return cv::norm(cv::Point2d(point.x, point.y) - lineStart); // 点到线段起点的距离
+
+	double t = (lineVector.dot(pointVector)) / (lineLength * lineLength); // 投影比例
+	if (t < 0) return cv::norm(cv::Point2d(point.x, point.y) - lineStart); // 点在起点左侧
+	if (t > 1) return cv::norm(cv::Point2d(point.x, point.y) - lineEnd); // 点在终点右侧
+
+	cv::Point2d projection = lineStart + t * lineVector; // 投影点
+	return cv::norm(cv::Point2d(point.x, point.y) - projection); // 点到投影点的距离
+}
+
 vector<cv::Point2f> CLineCaliperGUI::get_intersection(cv::Point2f pt1, cv::Point2f pt2, cv::Point2f begin, cv::Point2f end)
 {
 	qreal k1;
@@ -992,7 +1007,6 @@ vector<cv::Point2f> CLineCaliperGUI::get_intersection(cv::Point2f pt1, cv::Point
 
 	return result;
 }
-
 
 void CLineCaliperGUI::findIntersection(cv::Point p_1, cv::Point p_2, cv::Point p_3, cv::Point p_4, cv::Point2f& intersection)
 {

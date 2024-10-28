@@ -414,7 +414,24 @@ void MainWindow::fitline()
 
 
 	ui->statusBar->showMessage(str);
-	}	
+	}else if (resultLinePoint.size() == 10)
+	{
+		//计算夹角
+		 angleDeg_1_newp = m_plineCaliperGUI->findangle(resultLinePoint.at(2), resultLinePoint.at(3), resultLinePoint.at(4), resultLinePoint.at(5));
+		 angleDeg_2_newp = m_plineCaliperGUI->findangle(resultLinePoint.at(6), resultLinePoint.at(7), resultLinePoint.at(8), resultLinePoint.at(9));
+
+		//计算交点1		
+		// cv::Point2f Intersection_1(-1, -1);
+		m_plineCaliperGUI->findIntersection(resultLinePoint.at(2), resultLinePoint.at(3), resultLinePoint.at(4), resultLinePoint.at(5), Intersection_1_newP);
+		//计算交点2	
+		//cv::Point2f Intersection_2(-1, -1);
+		m_plineCaliperGUI->findIntersection(resultLinePoint.at(6), resultLinePoint.at(7), resultLinePoint.at(8), resultLinePoint.at(9), Intersection_2_newP);
+		//计算点线距离
+		pointToLineDistance_1_newP = m_plineCaliperGUI->pointToLineDistance(Intersection_1_newP, resultLinePoint.at(0), resultLinePoint.at(1));
+		pointToLineDistance_2_newP = m_plineCaliperGUI->pointToLineDistance(Intersection_2_newP, resultLinePoint.at(0), resultLinePoint.at(1));
+		bool_newP = true;
+	}
+		
 }
 
 
@@ -569,7 +586,20 @@ void MainWindow::saveInfo()
 	settings->setValue("source_width", ImageItem->pixmap().width());
 	settings->setValue("source_height", ImageItem->pixmap().height());
 	settings->setValue("shape_info_item", 1);
-
+	if (bool_newP)
+	{
+		//设置匹配标准参数
+		settings->setValue("angleDeg_1_newp", QString::number(angleDeg_1_newp));
+		settings->setValue("angleDeg_2_newp", QString::number(angleDeg_2_newp));
+		settings->setValue("Intersection_1_newP.x", QString::number(Intersection_1_newP.x));
+		settings->setValue("Intersection_1_newP.y", QString::number(Intersection_2_newP.y));
+		settings->setValue("Intersection_2_newP.x", QString::number(Intersection_2_newP.x));
+		settings->setValue("Intersection_2_newP.y", QString::number(Intersection_2_newP.y));
+		settings->setValue("pointToLineDistance_1_newP", QString::number(pointToLineDistance_1_newP));
+		settings->setValue("pointToLineDistance_2_newP", QString::number(pointToLineDistance_2_newP));
+		bool_newP = false;
+		
+	}
 	
 	settings->endGroup();
 	
@@ -599,7 +629,9 @@ void MainWindow::saveInfo()
 	settings->setValue("pt_begin_line.y", QString::number(my_Item->pt_begin_line.y));
 	settings->setValue("pt_end_line.x", QString::number(my_Item->pt_end_line.x));
 	settings->setValue("pt_end_line.y", QString::number(my_Item->pt_end_line.y));
+
 	settings->endGroup();
+
 	//delete my_Item;
 	}
 	//保存圆的信息

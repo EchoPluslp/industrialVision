@@ -132,5 +132,13 @@ private:
     int currentIndexs_line = 0;
 	CControlLine* lineitem;
     QList<cv::Point> resultLinePoint;
+
+    double angleDeg_1_newp;
+	double angleDeg_2_newp;
+	cv::Point2f Intersection_1_newP;
+	cv::Point2f Intersection_2_newP;
+    double pointToLineDistance_1_newP;
+	double pointToLineDistance_2_newP;
+    bool bool_newP =false;
 };
 #endif // MAINWINDOW_H

@@ -185,6 +185,9 @@ public slots:
 	void get_Info_From_industrial(QPointF pt_begin_cv2, QPointF pt_end_cv2, qreal height, qreal width, qreal nthresholdValue, qreal nSampleDirection, qreal nMeasureNums, QRect roi,
 		QPointF pt_start_line, QPointF pt_end_line);
 
+	void get_Info_From_industrial_pictureInfo(double angleDeg_1_newp, double angleDeg_2_newp, QPointF Intersection_1_newP
+		, QPointF Intersection_2_newP, double pointToLineDistance_1_newP, double pointToLineDistance_2_newP);
+
 	void get_Info_From_industrial_circle(QPointF centerP, qreal nRadius, qreal dMeasureLength, qreal dMeasureHeight,
 		qreal dSigma, qreal nThreshold, qreal nTranslation, qreal nMesureNums, qreal nCircleSize,
 		qreal nSampleDirection , QRectF roi);
@@ -235,6 +238,14 @@ private:
 
 	 QList< PatternInfo_circle> shapeMatch_Patten_Circle;
 
+	 //–Œ◊¥∆•≈‰£¨≈–∂œ„–÷µ
+	 double angleDeg_1_newp;
+	 double angleDeg_2_newp;
+	 cv::Point2f Intersection_1_newP;
+	 cv::Point2f Intersection_2_newP;
+	 double pointToLineDistance_1_newP;
+	 double pointToLineDistance_2_newP;
+	 bool bool_newP = false;
 
 };
 #endif // PROCESSINGTHREAD_H

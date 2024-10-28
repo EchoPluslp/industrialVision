@@ -204,7 +204,7 @@ public:
 	vector<Point2d> getEdgePoints();
 	vector<Point2d> getExcepetEdgePoints();
 	vector<cv::Point2f> get_intersection(cv::Point2f pt1, cv::Point2f pt2, cv::Point2f begin, cv::Point2f end);
-
+	double pointToLineDistance(const cv::Point2f& point, const cv::Point2d& lineStart, const cv::Point2d& lineEnd);
 	//’“µΩº–Ω«
 	double findangle(cv::Point p_1, cv::Point p_2, cv::Point p_3, cv::Point p_4);
 

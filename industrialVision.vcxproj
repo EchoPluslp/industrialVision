@@ -154,6 +154,7 @@
     <ClCompile Include="processingthread.cpp" />
     <ClCompile Include="rect.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="server1.cpp" />
     <ClCompile Include="shape.cpp" />
     <ClCompile Include="smallMainWindow.cpp" />
     <ClCompile Include="squarepen.cpp" />
@@ -174,6 +175,7 @@
     <QtUic Include="mainwindow.ui" />
     <QtUic Include="ncc_mainwindow.ui" />
     <QtUic Include="passwordSet.ui" />
+    <QtUic Include="server1.ui" />
     <QtUic Include="smallMainWindow.ui" />
     <QtUic Include="statusbar.ui" />
   </ItemGroup>
@@ -213,6 +215,7 @@
     <QtMoc Include="Server.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
+    <QtMoc Include="server1.h" />
     <ClInclude Include="shape.h" />
     <QtMoc Include="smallMainWindow.h" />
     <ClInclude Include="SharedData.h" />
