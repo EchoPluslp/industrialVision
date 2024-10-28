@@ -51,7 +51,7 @@
   </ImportGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <QtInstall>5.12.3</QtInstall>
-    <QtModules>charts;core;gui;websockets;widgets</QtModules>
+    <QtModules>charts;core;gui;network;websockets;widgets</QtModules>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <QtInstall>5.12.3</QtInstall>
@@ -144,6 +144,7 @@
     <ClCompile Include="myglwidget.cpp" />
     <ClCompile Include="mygraphicsitems.cpp" />
     <ClCompile Include="mygraphicsview.cpp" />
+    <ClCompile Include="mymodbus.cpp" />
     <ClCompile Include="myqgraphicsview.cpp" />
     <ClCompile Include="ncc_modelmatch.cpp" />
     <ClCompile Include="paintscene.cpp" />
@@ -208,6 +209,7 @@
     <QtMoc Include="passwordSet.h" />
     <ClInclude Include="myCCaliperGUI.h" />
     <ClInclude Include="mycorneritem.h" />
+    <QtMoc Include="mymodbus.h" />
     <ClInclude Include="myqgraphicsview.h" />
     <QtMoc Include="ncc_modelmatch.h" />
     <ClInclude Include="point.h" />

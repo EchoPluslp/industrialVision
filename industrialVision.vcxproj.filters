@@ -274,6 +274,9 @@
     <ClCompile Include="server1.cpp">
       <Filter>Source Files\connect</Filter>
     </ClCompile>
+    <ClCompile Include="mymodbus.cpp">
+      <Filter>Source Files\connect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="listwidget.h">
@@ -394,6 +397,9 @@
       <Filter>Header Files\shapeMatch</Filter>
     </QtMoc>
     <QtMoc Include="server1.h">
+      <Filter>Header Files\connect</Filter>
+    </QtMoc>
+    <QtMoc Include="mymodbus.h">
       <Filter>Header Files\connect</Filter>
     </QtMoc>
   </ItemGroup>
