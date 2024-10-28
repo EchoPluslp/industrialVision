@@ -1,5 +1,4 @@
 #include "server1.h"
-#include "ui_server1.h"
 #include <QtNetwork> //在pro文件里面添加QT+=network
 #include <QMessageBox>
 #include <QStatusBar> 
@@ -7,9 +6,9 @@
 #include<QDebug>
 //#pragma execution_character_set("utf-8")
 
-Server::Server(QWidget *parent)
+Server1::Server1(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::Server)
+    , ui(new Ui::Server1)
     , timer(new QTimer(this))// 定时器成为Server的子对象  
     , currentAddress(0) // 初始化当前地址（可选
 {
@@ -69,11 +68,11 @@ Server::Server(QWidget *parent)
 
 
     // 连接定时器的timeout信号到读取Modbus数据的槽函数  
-    connect(timer, &QTimer::timeout, this, &Server::readModbusDataPeriodically);
+    connect(timer, &QTimer::timeout, this, &Server1::readModbusDataPeriodically);
 
 
 }
-void Server::onTextReady1(const QString& text)
+void Server1::onTextReady1(const QString& text)
 {
     qDebug() << "text:" << text;
     ui->plainTextEdit_Send_Msg->setPlainText(text); // 将接收到的文本设置到plainTextEdit上  
@@ -99,7 +98,7 @@ void Server::onTextReady1(const QString& text)
 
 
 //“删除”菜单，断开指定Client
-void Server:: slot_delmenu()
+void Server1:: slot_delmenu()
 {
     if(  lwdgitem != NULL )
     {
@@ -118,7 +117,7 @@ void Server:: slot_delmenu()
     }
 }
 
-void Server::slot_newConnectionClient()
+void Server1::slot_newConnectionClient()
 {
     while(tcpServer->hasPendingConnections())
     {
@@ -134,14 +133,14 @@ void Server::slot_newConnectionClient()
 
     }
 }
-QString Server::GetCurrentTimeStr()
+QString Server1::GetCurrentTimeStr()
 {
     QDateTime current_time=QDateTime::currentDateTime();
    // QString str_time=current_time.toString("yyyy-MM-dd hh:mm:ss.zzz ddd");//ddd--周五，zzz毫秒
     QString str_time=current_time.toString("yyyy-MM-dd hh:mm:ss");//ddd--周五，zzz毫秒
     return str_time;
 }
-void Server::slot_readData()
+void Server1::slot_readData()
 {
     QTcpSocket *obj=(QTcpSocket*)sender();
     QByteArray buf=obj->readAll();
@@ -161,7 +160,7 @@ void Server::slot_readData()
 
 
 }
-void Server::slot_disconnectedClient()
+void Server1::slot_disconnectedClient()
 {
   if(!tcpClients.isEmpty())
   {
@@ -184,7 +183,7 @@ void Server::slot_disconnectedClient()
 }
 
 
-QString Server::GetLocalIP()
+QString Server1::GetLocalIP()
 {
     QList<QHostAddress> list=QNetworkInterface::allAddresses();
     foreach(QHostAddress address,list)
@@ -197,13 +196,13 @@ QString Server::GetLocalIP()
     return "";
 }
 
-Server::~Server()
+Server1::~Server1()
 {
     delete ui;
 }
 
 
-void Server::on_pushButton_StartToListen_clicked()
+void Server1::on_pushButton_StartToListen_clicked()
 {
     if(ui->pushButton_StartToListen->text()=="停止")
     {
@@ -238,7 +237,7 @@ void Server::on_pushButton_StartToListen_clicked()
 }
 
 
-void Server::on_listWidget_IP_customContextMenuRequested(const QPoint &pos)
+void Server1::on_listWidget_IP_customContextMenuRequested(const QPoint &pos)
 {
     lwdgitem = ui->listWidget_IP->itemAt(pos);
     if(lwdgitem!=NULL)
@@ -248,7 +247,7 @@ void Server::on_listWidget_IP_customContextMenuRequested(const QPoint &pos)
 
 }
 
-void Server::on_pushButton_Send_clicked()
+void Server1::on_pushButton_Send_clicked()
 {
     if(ui->listWidget_IP->selectedItems().length()>0)
     {
@@ -274,7 +273,7 @@ void Server::on_pushButton_Send_clicked()
 }
 
 
-void Server::initWidget()
+void Server1::initWidget()
 {
     //初始化MyModbus对象
     m_myModsbus = new MyModbus();
@@ -284,7 +283,7 @@ void Server::initWidget()
 
 }
 
-void Server::slot_stateChanged(bool flag)
+void Server1::slot_stateChanged(bool flag)
 {
     if (flag)
     {
@@ -306,12 +305,12 @@ void Server::slot_stateChanged(bool flag)
     }
 }
 
-void Server::onOpen() {
+void Server1::onOpen() {
     mopen = 1;
 }
 
 //写入0
-void Server::BaoSucc() {
+void Server1::BaoSucc() {
     if (PLCOK)
     {
         //int startAdd = ui->le_addressM->text().toInt();
@@ -328,7 +327,7 @@ void Server::BaoSucc() {
     }  
 }
 
-void Server::writequality(QString quality) {
+void Server1::writequality(QString quality) {
 
     /*int startAdd = ui->le_addressM->text().toInt();*/
     int startAdd = 1010;
@@ -351,7 +350,7 @@ void Server::writequality(QString quality) {
     }
 }
 
-void Server::slot_readCoils(QVector<quint16> vAllData)
+void Server1::slot_readCoils(QVector<quint16> vAllData)
 {
     // LOGDEBUG << "readCoils size:" << vAllData.size();
     QString logMessage = QString("readCoils size: %1").arg(vAllData.size());
@@ -374,7 +373,7 @@ void Server::slot_readCoils(QVector<quint16> vAllData)
 
 
 
-void Server::slot_readRegisters(int resultNum)
+void Server1::slot_readRegisters(int resultNum)
 {
     //LOGDEBUG << "resultNum:" << resultNum;
 
@@ -389,7 +388,7 @@ void Server::slot_readRegisters(int resultNum)
     }
 }
 
-void Server::on_pb_connect_clicked()
+void Server1::on_pb_connect_clicked()
 {
     QString ip = ui->le_ip->text();
     int port = ui->le_port->text().toInt();
@@ -403,7 +402,7 @@ void Server::on_pb_connect_clicked()
     m_myModsbus->connectToModbus(ip, port);
 }
 
-void Server::on_pb_readM_clicked()//读取地址
+void Server1::on_pb_readM_clicked()//读取地址
 {
     int startAdd = ui->le_addressM->text().toInt();
     // LOGDEBUG << "startAdd:" << startAdd;
@@ -418,7 +417,7 @@ void Server::on_pb_readM_clicked()//读取地址
 
 
 }
-void Server::on_pb_start_clicked()
+void Server1::on_pb_start_clicked()
 {
     // 启动定时器，每隔50毫秒调用一次readModbusDataPeriodically  
     timer->start(2000);
@@ -433,7 +432,7 @@ void Server::on_pb_start_clicked()
     currentAddress = ui->le_addressD->text().toInt();
     
 }
-void Server::readModbusDataPeriodically()
+void Server1::readModbusDataPeriodically()
 {
     // 使用currentAddress读取Modbus数据  
     if (!m_myModsbus->readModbusData(3, currentAddress, 2))
@@ -448,7 +447,7 @@ void Server::readModbusDataPeriodically()
     // 或者你可能需要实现某种形式的速率限制或错误处理。  
 }
 
-void Server::on_pb_stop_clicked()
+void Server1::on_pb_stop_clicked()
 {
     timer->stop();
     // 可以在这里添加一些停止后的用户反馈，比如更新UI等  
@@ -456,7 +455,7 @@ void Server::on_pb_stop_clicked()
 
 
 
-void Server::on_pb_writeM_clicked()
+void Server1::on_pb_writeM_clicked()
 {
     int startAdd = ui->le_addressM->text().toInt();
     int writeNum = ui->le_dataM->text().toInt();
@@ -472,7 +471,7 @@ void Server::on_pb_writeM_clicked()
     }
 }
 
-void Server::on_pb_readD_clicked()
+void Server1::on_pb_readD_clicked()
 {
     int startAdd = ui->le_addressD->text().toInt();
     // LOGDEBUG << "startAdd:" << startAdd;
@@ -484,7 +483,7 @@ void Server::on_pb_readD_clicked()
     }
 }
 
-void Server::on_pb_writeD_clicked()
+void Server1::on_pb_writeD_clicked()
 {
     int startAdd = ui->le_addressD->text().toInt();
     int writeNum = ui->le_dataD->text().toInt();;

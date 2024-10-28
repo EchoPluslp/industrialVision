@@ -1,9 +1,11 @@
+#pragma once
 #ifndef MYMODBUS_H
 #define MYMODBUS_H
 
 #include <QObject>
 #include <QtSerialBus/qmodbustcpclient.h>
 #include<QtSerialBus/qmodbusdataunit.h>
+
 #include <QDebug>
 #include<iostream>
 
@@ -18,31 +20,31 @@ using namespace std;
 
 class MyModbus : public QObject
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    explicit MyModbus(QObject *parent = nullptr);
-    ~MyModbus();
+	explicit MyModbus(QObject* parent = nullptr);
+	~MyModbus();
 
-    void initModbus();
+	void initModbus();
 
-    void connectToModbus(QString ip,int port);
+	void connectToModbus(QString ip, int port);
 
-    bool readModbusData(int typeNum,int startAdd,quint16 numbers);
-    bool writeModbusData(int typeNum,int startAdd,int writeNum);
-   // void outputMessage(QtMsgType type, const QMessageLogContext& context, const QString& msg);
-
+	bool readModbusData(int typeNum, int startAdd, quint16 numbers);
+	bool writeModbusData(int typeNum, int startAdd, int writeNum);
+	// void outputMessage(QtMsgType type, const QMessageLogContext& context, const QString& msg);
+	  
 signals:
-    void signal_stateChanged(bool flag);
-    void signal_readCoils(QVector<quint16> vAllData);
-    void signal_readRegisters(int resultNum);
+	void signal_stateChanged(bool flag);
+	void signal_readCoils(QVector<quint16> vAllData);
+	void signal_readRegisters(int resultNum);
 
 private slots:
-    void slot_stateChanged();
-    void slot_readReadyCoils();
-    void slot_readReadyRegisters();
+	void slot_stateChanged();
+	void slot_readReadyCoils();
+	void slot_readReadyRegisters();
 
 private:
-    QModbusTcpClient *myClient;
+	QModbusTcpClient* myClient;
 
 };
 #endif // MYMODBUS_H

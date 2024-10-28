@@ -199,9 +199,6 @@
     <ClCompile Include="smallMainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Server.cpp">
-      <Filter>Source Files\connect</Filter>
-    </ClCompile>
     <ClCompile Include="camerathread.cpp">
       <Filter>Source Files\Tools</Filter>
     </ClCompile>
@@ -271,10 +268,7 @@
     <ClCompile Include="bee_point.cpp">
       <Filter>Source Files\shapeMatch</Filter>
     </ClCompile>
-    <ClCompile Include="server1.cpp">
-      <Filter>Source Files\connect</Filter>
-    </ClCompile>
-    <ClCompile Include="mymodbus.cpp">
+    <ClCompile Include="Server.cpp">
       <Filter>Source Files\connect</Filter>
     </ClCompile>
   </ItemGroup>
@@ -348,9 +342,6 @@
     <QtMoc Include="smallMainWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="Server.h">
-      <Filter>Header Files\connect</Filter>
-    </QtMoc>
     <QtMoc Include="createModel.h">
       <Filter>Header Files\creataModel</Filter>
     </QtMoc>
@@ -396,10 +387,7 @@
     <QtMoc Include="bee_point.h">
       <Filter>Header Files\shapeMatch</Filter>
     </QtMoc>
-    <QtMoc Include="server1.h">
-      <Filter>Header Files\connect</Filter>
-    </QtMoc>
-    <QtMoc Include="mymodbus.h">
+    <QtMoc Include="Server.h">
       <Filter>Header Files\connect</Filter>
     </QtMoc>
   </ItemGroup>
@@ -442,9 +430,6 @@
     </QtUic>
     <QtUic Include="ncc_mainwindow.ui">
       <Filter>Form Files\modelMatch</Filter>
-    </QtUic>
-    <QtUic Include="server1.ui">
-      <Filter>Form Files\connect</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>

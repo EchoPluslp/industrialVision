@@ -5,7 +5,7 @@
 //}
 //#pragma execution_character_set("utf-8")
 #pragma execution_character_set("utf-8")
-#include "mymodbus.h"
+#include "MyModbus.h"
 #include <QMutex>
 #include <QDateTime> 
 #include <QApplication>
@@ -13,7 +13,7 @@
 #include<qdir.h>
 #include <QDebug>
 #include <QMessageBox>
-MyModbus::MyModbus(QObject *parent) : QObject(parent)
+MyModbus::MyModbus(QObject* parent) : QObject(parent)
 {
     this->initModbus();
 }
@@ -23,32 +23,32 @@ MyModbus::~MyModbus()
 
 }
 
-//ÂàùÂßãÂåñ
+//≥ı ºªØ
 void MyModbus::initModbus()
 {
     myClient = new QModbusTcpClient();
     //connect(myClient,SIGNAL(stateChanged()),this,SLOT(slot_stateChanged()));
-    connect(myClient,&QModbusClient::stateChanged,this,&MyModbus::slot_stateChanged);
+    connect(myClient, &QModbusClient::stateChanged, this, &MyModbus::slot_stateChanged);
 }
 
 
 
 
 
-//ËøûÊé•Âà∞modbusËÆæÂ§á
-void MyModbus::connectToModbus(QString ip,int port)
+//¡¨Ω”µΩmodbus…Ë±∏
+void MyModbus::connectToModbus(QString ip, int port)
 {
-    if(!myClient)
+    if (!myClient)
     {
         return;
     }
 
-    //Âà§Êñ≠ÂΩìÂâçËøûÊé•Áä∂ÊÄÅÊòØÂê¶‰∏∫Êñ≠ÂºÄÁä∂ÊÄÅ
-    if(myClient->state() != QModbusDevice::ConnectedState)
+    //≈–∂œµ±«∞¡¨Ω”◊¥Ã¨ «∑ÒŒ™∂œø™◊¥Ã¨
+    if (myClient->state() != QModbusDevice::ConnectedState)
     {
-        //ÈÖçÁΩÆModbusTcpÁöÑËøûÊé•ÂèÇÊï∞IP+Port
-        myClient->setConnectionParameter(QModbusDevice::NetworkAddressParameter,ip);
-        myClient->setConnectionParameter(QModbusDevice::NetworkPortParameter,port);
+        //≈‰÷√ModbusTcpµƒ¡¨Ω”≤Œ ˝IP+Port
+        myClient->setConnectionParameter(QModbusDevice::NetworkAddressParameter, ip);
+        myClient->setConnectionParameter(QModbusDevice::NetworkPortParameter, port);
         myClient->connectDevice();
     }
     //else
@@ -57,54 +57,54 @@ void MyModbus::connectToModbus(QString ip,int port)
     //}
 }
 
-//ËØªÂèñmodbusËÆæÂ§áÂêÑÂØÑÂ≠òÂô®Êï∞ÊçÆ
-//typeNum:1_Á∫øÂúà 2_Á¶ªÊï£ËæìÂÖ• 3_‰øùÊåÅ 4_ËæìÂÖ•
-bool MyModbus::readModbusData(int typeNum,int startAdd,quint16 numbers)
+//∂¡»°modbus…Ë±∏∏˜ºƒ¥Ê∆˜ ˝æ›
+//typeNum:1_œﬂ»¶ 2_¿Î…¢ ‰»Î 3_±£≥÷ 4_ ‰»Î
+bool MyModbus::readModbusData(int typeNum, int startAdd, quint16 numbers)
 {
-    if(myClient->state() != QModbusDevice::ConnectedState)
+    if (myClient->state() != QModbusDevice::ConnectedState)
     {
         return false;
     }
 
-    //Á°ÆÂÆöÂØÑÂ≠òÂô®Á±ªÂûã
+    //»∑∂®ºƒ¥Ê∆˜¿‡–Õ
     QModbusDataUnit ReadUnit;
-    if(typeNum == 1)
+    if (typeNum == 1)
     {
-        ReadUnit = QModbusDataUnit(QModbusDataUnit::Coils,startAdd,numbers);
+        ReadUnit = QModbusDataUnit(QModbusDataUnit::Coils, startAdd, numbers);
     }
-    else if(typeNum == 2)
+    else if (typeNum == 2)
     {
-        ReadUnit = QModbusDataUnit(QModbusDataUnit::DiscreteInputs,startAdd,numbers);
+        ReadUnit = QModbusDataUnit(QModbusDataUnit::DiscreteInputs, startAdd, numbers);
     }
-    else if(typeNum == 3)
+    else if (typeNum == 3)
     {
-        ReadUnit = QModbusDataUnit(QModbusDataUnit::HoldingRegisters,startAdd,numbers);
+        ReadUnit = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, startAdd, numbers);
     }
-    else if(typeNum == 4)
+    else if (typeNum == 4)
     {
-        ReadUnit = QModbusDataUnit(QModbusDataUnit::InputRegisters,startAdd,numbers);
+        ReadUnit = QModbusDataUnit(QModbusDataUnit::InputRegisters, startAdd, numbers);
     }
     else
     {
-                //  LOGDEBUG<<"ËØªÂèñÂØÑÂ≠òÂô®Á±ªÂûãÈîôËØØ";
-        LOGDEBUG("ËØªÂèñÂØÑÂ≠òÂô®Á±ªÂûãÈîôËØØ\n");
-     //   qDebug() << "Read register type error";
+        //  LOGDEBUG<<"∂¡»°ºƒ¥Ê∆˜¿‡–Õ¥ÌŒÛ";
+        LOGDEBUG("∂¡»°ºƒ¥Ê∆˜¿‡–Õ¥ÌŒÛ\n");
+        //   qDebug() << "Read register type error";
         return false;
     }
-   // LOGDEBUG<<"readModbusData typeNum:"<<typeNum;
+    // LOGDEBUG<<"readModbusData typeNum:"<<typeNum;
     LOGDEBUG("readModbusData typeNum:" << typeNum);
-    //Â§öËØª
-    if(auto *reply = myClient->sendReadRequest(ReadUnit,1))
+    //∂‡∂¡
+    if (auto* reply = myClient->sendReadRequest(ReadUnit, 1))
     {
-        if(!reply->isFinished())
+        if (!reply->isFinished())
         {
-            if((typeNum == 1) || (typeNum == 2))
+            if ((typeNum == 1) || (typeNum == 2))
             {
-                QObject::connect(reply,&QModbusReply::finished,this,&MyModbus::slot_readReadyCoils);   //ËØªÂèñÁ∫øÂúà
+                QObject::connect(reply, &QModbusReply::finished, this, &MyModbus::slot_readReadyCoils);   //∂¡»°œﬂ»¶
             }
-            if((typeNum == 3) || (typeNum == 4))
+            if ((typeNum == 3) || (typeNum == 4))
             {
-                QObject::connect(reply,&QModbusReply::finished,this,&MyModbus::slot_readReadyRegisters);   //ËØªÂèñÂØÑÂ≠òÂô®
+                QObject::connect(reply, &QModbusReply::finished, this, &MyModbus::slot_readReadyRegisters);   //∂¡»°ºƒ¥Ê∆˜
             }
             //reply->deleteLater();
             return true;
@@ -117,77 +117,77 @@ bool MyModbus::readModbusData(int typeNum,int startAdd,quint16 numbers)
     }
     else
     {
-       // LOGDEBUG<<"ËØªÂèñÈîôËØØ:" + myClient->errorString();
-        QString errorMsg = "ËØªÂèñÈîôËØØ:" + myClient->errorString();
+        // LOGDEBUG<<"∂¡»°¥ÌŒÛ:" + myClient->errorString();
+        QString errorMsg = "∂¡»°¥ÌŒÛ:" + myClient->errorString();
         LOGDEBUG(errorMsg);
 
 
 
-      //  qDebug() << "ËØªÂèñÈîôËØØ";
+        //  qDebug() << "∂¡»°¥ÌŒÛ";
         return false;
     }
 }
 
-//ÂØπmodbusËÆæÂ§áÂêÑÂØÑÂ≠òÂô®ÂÜôÂÖ•Êï∞ÊçÆ
-//typeNum:1_Á∫øÂúà 2_‰øùÊåÅ (Ëøô‰∏§Á±ªÂØÑÂ≠òÂô®ÂèØËØªÂèØÂÜô,ÂÖ∂‰ΩôÁöÑÂè™ËØª)
-bool MyModbus::writeModbusData(int typeNum,int startAdd,int writeNum)
+//∂‘modbus…Ë±∏∏˜ºƒ¥Ê∆˜–¥»Î ˝æ›
+//typeNum:1_œﬂ»¶ 2_±£≥÷ (’‚¡Ω¿‡ºƒ¥Ê∆˜ø…∂¡ø…–¥,∆‰”‡µƒ÷ª∂¡)
+bool MyModbus::writeModbusData(int typeNum, int startAdd, int writeNum)
 {
-    if(myClient->state() != QModbusDevice::ConnectedState)
+    if (myClient->state() != QModbusDevice::ConnectedState)
     {
         return false;
     }
 
-    //Á°ÆÂÆöÂØÑÂ≠òÂô®Á±ªÂûã
+    //»∑∂®ºƒ¥Ê∆˜¿‡–Õ
     QModbusDataUnit writeUnit;
-    if(typeNum == 1)
+    if (typeNum == 1)
     {
-        writeUnit = QModbusDataUnit(QModbusDataUnit::Coils,startAdd,1);   //ÂÜôÂÖ•‰∏Ä‰∏™Êï∞ÊçÆ
-        writeUnit.setValue(0,writeNum);
+        writeUnit = QModbusDataUnit(QModbusDataUnit::Coils, startAdd, 1);   //–¥»Î“ª∏ˆ ˝æ›
+        writeUnit.setValue(0, writeNum);
 
-        //ÂçïÂÜô
+        //µ•–¥
         //bool ok;
-        //quint16 hexData = writeData.toInt(&ok,16);   //ËΩ¨16ËøõÂà∂
+        //quint16 hexData = writeData.toInt(&ok,16);   //◊™16Ω¯÷∆
     }
-    else if(typeNum == 2)
+    else if (typeNum == 2)
     {
-        writeUnit = QModbusDataUnit(QModbusDataUnit::HoldingRegisters,startAdd,2);   //ÂÜôÂÖ•‰∏§‰∏™Êï∞ÊçÆ
-        quint16 uData16[2] = {0};
+        writeUnit = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, startAdd, 2);   //–¥»Î¡Ω∏ˆ ˝æ›
+        quint16 uData16[2] = { 0 };
         uData16[0] = writeNum & 0xffff;
         uData16[1] = (writeNum >> 16) & 0xffff;
-        writeUnit.setValue(0,uData16[0]);
-        writeUnit.setValue(1,uData16[1]);
+        writeUnit.setValue(0, uData16[0]);
+        writeUnit.setValue(1, uData16[1]);
         //LOGDEBUG<<"uData16[0]:"<<uData16[0]<<"   uData16[1]:"<<uData16[1]<<"   writeNum:"<<writeNum;
     }
     else
     {
-                                     // LOGDEBUG<<"ÂÜôÂÖ•ÂØÑÂ≠òÂô®Á±ªÂûãÈîôËØØ";
-        LOGDEBUG("ÂÜôÂÖ•ÂØÑÂ≠òÂô®Á±ªÂûãÈîôËØØ\n");
-       // qDebug() << "Write register type error";
+        // LOGDEBUG<<"–¥»Îºƒ¥Ê∆˜¿‡–Õ¥ÌŒÛ";
+        LOGDEBUG("–¥»Îºƒ¥Ê∆˜¿‡–Õ¥ÌŒÛ\n");
+        // qDebug() << "Write register type error";
         return false;
     }
     //LOGDEBUG<<"writeModbusData typeNum:"<<typeNum<<"   writeNum:"<<writeNum;
-    if(auto *reply = myClient->sendWriteRequest(writeUnit,1))
+    if (auto* reply = myClient->sendWriteRequest(writeUnit, 1))
     {
-        if(!reply->isFinished())
+        if (!reply->isFinished())
         {
-            connect(reply,&QModbusReply::finished,this,[reply]()
-            {
-                if(reply->error() == QModbusDevice::NoError)
+            connect(reply, &QModbusReply::finished, this, [reply]()
                 {
-                    reply->deleteLater();
-                    return true;
-                }
-                else
-                {
-                    /*LOGDEBUG<<"ÂÜôÂÖ•ËøîÂõûÈîôËØØ:"<<reply->error();
-                    
-                    reply->deleteLater();*/
-                    LOGDEBUG(QString("ÂÜôÂÖ•ËøîÂõûÈîôËØØ: %1").arg(reply->error()));
-                    reply->deleteLater();
-                  //  qDebug() << "ÂÜôÂÖ•ËøîÂõûÈîôËØØ";
-                    return false;
-                }
-            });
+                    if (reply->error() == QModbusDevice::NoError)
+                    {
+                        reply->deleteLater();
+                        return true;
+                    }
+                    else
+                    {
+                        /*LOGDEBUG<<"–¥»Î∑µªÿ¥ÌŒÛ:"<<reply->error();
+
+                        reply->deleteLater();*/
+                        LOGDEBUG(QString("–¥»Î∑µªÿ¥ÌŒÛ: %1").arg(reply->error()));
+                        reply->deleteLater();
+                        //  qDebug() << "–¥»Î∑µªÿ¥ÌŒÛ";
+                        return false;
+                    }
+                });
         }
         else
         {
@@ -197,46 +197,46 @@ bool MyModbus::writeModbusData(int typeNum,int startAdd,int writeNum)
     }
     else
     {
-       
-         //LOGDEBUG<<"ÂÜôÂÖ•ÈîôËØØ:" + myClient->errorString();
-        LOGDEBUG("ÂÜôÂÖ•ÈîôËØØ:" + myClient->errorString());
+
+        //LOGDEBUG<<"–¥»Î¥ÌŒÛ:" + myClient->errorString();
+        LOGDEBUG("–¥»Î¥ÌŒÛ:" + myClient->errorString());
         //qDebug() << "Write error";
         return false;
     }
     return true;
 }
 
-//ÁõëÂê¨TCPËøûÊé•ÁöÑÁä∂ÊÄÅ,Ëã•Áä∂ÊÄÅÂèëÁîüÊîπÂèò,ÂèëÂá∫ÂØπÂ∫îÁöÑ‰ø°Âè∑
+//º‡Ã˝TCP¡¨Ω”µƒ◊¥Ã¨,»Ù◊¥Ã¨∑¢…˙∏ƒ±‰,∑¢≥ˆ∂‘”¶µƒ–≈∫≈
 void MyModbus::slot_stateChanged()
 {
-   // LOGDEBUG<<myClient->state();
+    // LOGDEBUG<<myClient->state();
     LOGDEBUG(myClient->state());
 
-            cout<<"111"<<myClient->state()<<QModbusDevice::ConnectedState;
-    if(myClient->state() == QModbusDevice::ConnectedState)
+    cout << "111" << myClient->state() << QModbusDevice::ConnectedState;
+    if (myClient->state() == QModbusDevice::ConnectedState)
     {
         emit signal_stateChanged(true);
-        cout<<"111"<<myClient->state()<<QModbusDevice::ConnectedState;
+        cout << "111" << myClient->state() << QModbusDevice::ConnectedState;
     }
-    else if(myClient->state() == QModbusDevice::UnconnectedState)
+    else if (myClient->state() == QModbusDevice::UnconnectedState)
     {
         emit signal_stateChanged(false);
-        qDebug()<<"222"<<myClient->state()<<QModbusDevice::ConnectedState;
+        qDebug() << "222" << myClient->state() << QModbusDevice::ConnectedState;
     }
 }
 
-//Êé•Êî∂Âà∞ËØªÂèñÁ∫øÂúà/Á¶ªÊï£ËæìÂÖ•ÂØÑÂ≠òÂô®ËØ∑Ê±ÇÂêéÊâßË°åÁöÑÊßΩÂáΩÊï∞
+//Ω” ’µΩ∂¡»°œﬂ»¶/¿Î…¢ ‰»Îºƒ¥Ê∆˜«Î«Û∫Û÷¥––µƒ≤€∫Ø ˝
 void MyModbus::slot_readReadyCoils()
 {
     QVector<quint16> vAllData;
-    QModbusReply *reply = qobject_cast<QModbusReply *>(sender());
-    if(!reply)
+    QModbusReply* reply = qobject_cast<QModbusReply*>(sender());
+    if (!reply)
     {
-                                 // LOGDEBUG<<"ËØªÂèñÁ∫øÂúà/Á¶ªÊï£ËæìÂÖ•ÂØÑÂ≠òÂô®ÈîôËØØ";
-        LOGDEBUG("ËØªÂèñÁ∫øÂúà/Á¶ªÊï£ËæìÂÖ•ÂØÑÂ≠òÂô®ÈîôËØØ\n");
+        // LOGDEBUG<<"∂¡»°œﬂ»¶/¿Î…¢ ‰»Îºƒ¥Ê∆˜¥ÌŒÛ";
+        LOGDEBUG("∂¡»°œﬂ»¶/¿Î…¢ ‰»Îºƒ¥Ê∆˜¥ÌŒÛ\n");
         return;
     }
-    if(reply->error() == QModbusDevice::NoError)
+    if (reply->error() == QModbusDevice::NoError)
     {
         const QModbusDataUnit unit = reply->result();
         vAllData = unit.values();
@@ -244,32 +244,32 @@ void MyModbus::slot_readReadyCoils()
     }
     else
     {
-       // LOGDEBUG<<"Á∫øÂúà/Á¶ªÊï£ËæìÂÖ•ÂØÑÂ≠òÂô®ÂõûÂ§çÈîôËØØ:"<<reply->error();
-        QString errorMessage = "Á∫øÂúà/Á¶ªÊï£ËæìÂÖ•ÂØÑÂ≠òÂô®ÂõûÂ§çÈîôËØØ: " + reply->errorString();
+        // LOGDEBUG<<"œﬂ»¶/¿Î…¢ ‰»Îºƒ¥Ê∆˜ªÿ∏¥¥ÌŒÛ:"<<reply->error();
+        QString errorMessage = "œﬂ»¶/¿Î…¢ ‰»Îºƒ¥Ê∆˜ªÿ∏¥¥ÌŒÛ: " + reply->errorString();
         LOGDEBUG(errorMessage);
 
     }
     reply->deleteLater();
 }
 
-//Êé•Êî∂Âà∞ËØªÂèñ‰øùÊåÅ/ËæìÂÖ•ÂØÑÂ≠òÂô®ËØ∑Ê±ÇÂêéÊâßË°åÁöÑÊßΩÂáΩÊï∞
+//Ω” ’µΩ∂¡»°±£≥÷/ ‰»Îºƒ¥Ê∆˜«Î«Û∫Û÷¥––µƒ≤€∫Ø ˝
 void MyModbus::slot_readReadyRegisters()
 {
-    QModbusReply *reply = qobject_cast<QModbusReply *>(sender());
-    if(!reply)
+    QModbusReply* reply = qobject_cast<QModbusReply*>(sender());
+    if (!reply)
     {
-                                       // LOGDEBUG<<"ËØªÂèñ‰øùÊåÅ/ËæìÂÖ•ÂØÑÂ≠òÂô®ÈîôËØØ";
-        LOGDEBUG("ËØªÂèñ‰øùÊåÅ/ËæìÂÖ•ÂØÑÂ≠òÂô®ÈîôËØØ\n");
+        // LOGDEBUG<<"∂¡»°±£≥÷/ ‰»Îºƒ¥Ê∆˜¥ÌŒÛ";
+        LOGDEBUG("∂¡»°±£≥÷/ ‰»Îºƒ¥Ê∆˜¥ÌŒÛ\n");
         return;
     }
-    if(reply->error() == QModbusDevice::NoError)
+    if (reply->error() == QModbusDevice::NoError)
     {
         const QModbusDataUnit unit = reply->result();
         auto valueList = unit.values();
         int nSize = valueList.size();
-        if(nSize == 2)
+        if (nSize == 2)
         {
-            quint16 uData16[2] = {0};
+            quint16 uData16[2] = { 0 };
             uData16[0] = valueList[0];
             uData16[1] = valueList[1];
             int resultNum = uData16[0] | (uData16[1] << 16);
@@ -278,16 +278,16 @@ void MyModbus::slot_readReadyRegisters()
         }
         else
         {
-           // LOGDEBUG<<"‰øùÊåÅÂØÑÂ≠òÂô®ËøîÂõûÊï∞ÊçÆÈîôËØØ,‰∏™Êï∞:"<<nSize;
-            // ‰ΩøÁî® QString ÁöÑÊûÑÈÄ†Âíå + Êìç‰ΩúÁ¨¶Êù•ÁªÑÂêàÂ≠óÁ¨¶‰∏≤  
-            QString logMessage = QString("‰øùÊåÅÂØÑÂ≠òÂô®ËøîÂõûÊï∞ÊçÆÈîôËØØ,‰∏™Êï∞:%1").arg(nSize);
+            // LOGDEBUG<<"±£≥÷ºƒ¥Ê∆˜∑µªÿ ˝æ›¥ÌŒÛ,∏ˆ ˝:"<<nSize;
+             //  π”√ QString µƒππ‘Ï∫Õ + ≤Ÿ◊˜∑˚¿¥◊È∫œ◊÷∑˚¥Æ  
+            QString logMessage = QString("±£≥÷ºƒ¥Ê∆˜∑µªÿ ˝æ›¥ÌŒÛ,∏ˆ ˝:%1").arg(nSize);
             LOGDEBUG(logMessage.toUtf8().constData());
         }
     }
     else
     {
-       // LOGDEBUG<<"‰øùÊåÅ/ËæìÂÖ•ÂØÑÂ≠òÂô®ÂõûÂ§çÈîôËØØ:"<<reply->error();
-        QString errorMessage1 = "‰øùÊåÅ/ËæìÂÖ•ÂØÑÂ≠òÂô®ÂõûÂ§çÈîôËØØ:: " + reply->errorString();
+        // LOGDEBUG<<"±£≥÷/ ‰»Îºƒ¥Ê∆˜ªÿ∏¥¥ÌŒÛ:"<<reply->error();
+        QString errorMessage1 = "±£≥÷/ ‰»Îºƒ¥Ê∆˜ªÿ∏¥¥ÌŒÛ:: " + reply->errorString();
         LOGDEBUG(errorMessage1);
     }
     reply->deleteLater();

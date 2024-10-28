@@ -1,5 +1,5 @@
-#ifndef SERVER_H
-#define SERVER_H
+#ifndef SERVER1_H
+#define SERVER1_H
 
 #include <QMainWindow>
 #include <QTcpSocket>
@@ -9,8 +9,9 @@
 //#include"printdetect.h"
 #include <QFileDialog>
 #include <QDateTime>
+#include "ui_server1.h"
 
-#include "mymodbus.h"
+#include "MyModbus.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class Server;
 
@@ -19,17 +20,17 @@ namespace Ui { class Server;
 QT_END_NAMESPACE
 class QTcpServer;
 
-class Server : public QMainWindow
+class Server1 : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    Server(QWidget *parent = nullptr);
-    ~Server();
+    Server1(QWidget *parent = nullptr);
+    ~Server1();
     void initWidget();
    
 private:
-    Ui::Server *ui;
+    Ui::Server1 *ui;
 
     QTcpServer *tcpServer;
     QTcpSocket *client;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Server</class>
- <widget class="QMainWindow" name="Server">
+ <class>Server1</class>
+ <widget class="QMainWindow" name="Server1">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -319,7 +319,7 @@
      <x>0</x>
      <y>0</y>
      <width>1236</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
