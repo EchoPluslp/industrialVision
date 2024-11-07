@@ -271,6 +271,12 @@
     <ClCompile Include="Server.cpp">
       <Filter>Source Files\connect</Filter>
     </ClCompile>
+    <ClCompile Include="serverplc.cpp">
+      <Filter>Source Files\connect</Filter>
+    </ClCompile>
+    <ClCompile Include="mymodbus.cpp">
+      <Filter>Source Files\connect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="listwidget.h">
@@ -390,6 +396,12 @@
     <QtMoc Include="Server.h">
       <Filter>Header Files\connect</Filter>
     </QtMoc>
+    <QtMoc Include="serverplc.h">
+      <Filter>Header Files\connect</Filter>
+    </QtMoc>
+    <QtMoc Include="mymodbus.h">
+      <Filter>Header Files\connect</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="login.ui">
@@ -430,6 +442,9 @@
     </QtUic>
     <QtUic Include="ncc_mainwindow.ui">
       <Filter>Form Files\modelMatch</Filter>
+    </QtUic>
+    <QtUic Include="serverplc.ui">
+      <Filter>Form Files\connect</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>

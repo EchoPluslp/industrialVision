@@ -1,10 +1,11 @@
 #pragma once
+#pragma once
 #ifndef MYMODBUS_H
 #define MYMODBUS_H
 
-#include <QObject>
 #include <QtSerialBus/qmodbustcpclient.h>
-#include<QtSerialBus/qmodbusdataunit.h>
+#include <QtSerialBus/qmodbusdataunit.h>
+//#include "qmodbustcpclient.h"
 
 #include <QDebug>
 #include<iostream>
@@ -32,7 +33,7 @@ public:
 	bool readModbusData(int typeNum, int startAdd, quint16 numbers);
 	bool writeModbusData(int typeNum, int startAdd, int writeNum);
 	// void outputMessage(QtMsgType type, const QMessageLogContext& context, const QString& msg);
-	  
+
 signals:
 	void signal_stateChanged(bool flag);
 	void signal_readCoils(QVector<quint16> vAllData);

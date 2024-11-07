@@ -5,7 +5,7 @@
 //}
 //#pragma execution_character_set("utf-8")
 #pragma execution_character_set("utf-8")
-#include "MyModbus.h"
+#include "mymodbus.h"
 #include <QMutex>
 #include <QDateTime> 
 #include <QApplication>
