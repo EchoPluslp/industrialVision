@@ -13,6 +13,7 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QCoreApplication>
+#include "PlcWorker.h"
 
 #include<opencv2\opencv.hpp>
 #include <opencv2/imgproc/imgproc_c.h>
@@ -63,6 +64,7 @@ public:
 	bool operator_TCPCanSend = false;
 //	void setTCPCanSendStatus(bool flag);
 	bool isJsonString(const QString& str);
+
 private:
 	//bool coreFunc();
 	SOCKET servSock;

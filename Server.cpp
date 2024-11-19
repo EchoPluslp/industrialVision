@@ -22,6 +22,23 @@ Server::Server()
 	else {
 			emit logoString("无法启动服务器...", "GREEN");
 	}
+
+	//// Create and start the PLC worker thread
+	QThread* thread = new QThread;
+	PlcWorker* worker = new PlcWorker();
+	worker->moveToThread(thread);
+
+	connect(thread, &QThread::started, worker, [worker]() { worker->startPolling(1000); }); // Poll every 1 second
+
+	connect(thread, &QThread::finished, worker, &QObject::deleteLater);
+
+	connect(worker, &PlcWorker::takeMattchPhoto, this, &Server::onReadyRead);
+
+//	connect(worker, &PlcWorker::Relayer, this, &Server::RelayerServer);
+
+	thread->start();
+
+
 }
 
 void Server::onNewConnection()
@@ -42,20 +59,24 @@ void Server::onNewConnection()
 		processNextRequest();
 	}
 }
+
 void Server::onReadyRead()
 {
 	QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
 
-	if (!clientSocket) {
-		QString logStringFromClient = "服务端接受到消息异常: 请重启";
-		return;
-	}
+	//if (!clientSocket) {
+	//	QString logStringFromClient = "服务端接受到消息异常: 请重启";
+	//	return;
+	//}
 
-	QByteArray data = clientSocket->readAll();
-	QString message = QString(data);
+	//QByteArray data = clientSocket->readAll();
+	QString message = QString();
 
-	QString logStringFromClient =  "接收到来自客户端的消息: " + message;
+	QString logStringFromClient =  "接收到PLC触发拍照: " + message;
 	emit logoString(logStringFromClient, "GREEN");
+	recvMsg("");
+	return;
+
 	QString sendMessager;
 	if (isJsonString(message)) {
 		//取得ID
@@ -106,13 +127,13 @@ Server::~Server()
 
 QString Server::recvMsg(QString receiveMessage)
 {
-	QString send_buf = "T;1;100;1;1;1,";
-	if (receiveMessage <= 0)
-	{
-		QString logStringToClient = "接受receiveMessage函数异常:";
-		emit logoString(logStringToClient, "RED");
-		return false;
-	}
+	//QString send_buf = "T;1;100;1;1;1,";
+	//if (receiveMessage <= 0)
+	//{
+	//	QString logStringToClient = "接受receiveMessage函数异常:";
+	//	emit logoString(logStringToClient, "RED");
+	//	return false;
+	//}
 	emit triggerPattern(); 	
 	// 创建一个定时器
 	QTimer timer;
@@ -139,33 +160,52 @@ QString Server::recvMsg(QString receiveMessage)
 	timer.deleteLater();
 	//重置flag值 
 	finall_Total_Result.flag = false;
-	if (finall_Total_Result.pattern_flag){
-		char s[10];
-		char xx[10];
-		sprintf(s, "%.1f", finall_Total_Result.ptCenter.x);
-		send_buf.append(s);
-		send_buf.append(",");
+	if (finall_Total_Result.pattern_flag) {
 
-		sprintf(xx, "%.1f", finall_Total_Result.ptCenter.y);
-		send_buf.append(xx);
-		send_buf.append(",");
+		QFile Wfile("C:/tmp/temp2.txt");
+		if (!Wfile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+			// 如果文件无法打开，可以选择抛出一个异常，返回一个错误消息，或者返回一个空字符串
+			return ""; // 这里简单地返回一个空字符串
+		}
+		QTextStream out(&Wfile);
 
-		std::ostringstream out;
-		//保留1个小数点
-		out << std::fixed << std::setprecision(1) << finall_Total_Result.dMatchedAngle;
-		std::string angle_String = out.str();
+		if (finall_Total_Result.ptCenter.x == 1 && finall_Total_Result.ptCenter.y == 1)
+		{
+			out << "0";  //没问题
+		}
+		else {
+			out << "1"; //有问题
 
-		char* p = new char[strlen(angle_String.c_str()) + 1];
-		strcpy(p, angle_String.c_str());
-		send_buf.append(p);
-		send_buf.append("#;");
-		delete[] p;
+		}
+
+		//char s[10];
+		//char xx[10];
+		//sprintf(s, "%.1f", finall_Total_Result.ptCenter.x);
+		//send_buf.append(s);
+		//send_buf.append(",");
+
+		//sprintf(xx, "%.1f", finall_Total_Result.ptCenter.y);
+		//send_buf.append(xx);
+		//send_buf.append(",");
+
+		//std::ostringstream out;
+		////保留1个小数点
+		//out << std::fixed << std::setprecision(1) << finall_Total_Result.dMatchedAngle;
+		//std::string angle_String = out.str();
+
+		//char* p = new char[strlen(angle_String.c_str()) + 1];
+		//strcpy(p, angle_String.c_str());
+		//send_buf.append(p);
+		//send_buf.append("#;");
+		//delete[] p;
+		return "";
 	}
 	else {
 		QString errSend  = "T;1;100;0;1;0,999,999,999#;";
 		return errSend;
 	}
-	return send_buf;
+	return "";
+	//return send_buf;
 }
 
 QJsonObject Server::recvMsgByJson(QString receiveMessage, QString cmdID)

@@ -144,7 +144,6 @@
     <ClCompile Include="myglwidget.cpp" />
     <ClCompile Include="mygraphicsitems.cpp" />
     <ClCompile Include="mygraphicsview.cpp" />
-    <ClCompile Include="mymodbus.cpp" />
     <ClCompile Include="myqgraphicsview.cpp" />
     <ClCompile Include="ncc_modelmatch.cpp" />
     <ClCompile Include="paintscene.cpp" />
@@ -155,7 +154,6 @@
     <ClCompile Include="processingthread.cpp" />
     <ClCompile Include="rect.cpp" />
     <ClCompile Include="Server.cpp" />
-    <ClCompile Include="serverplc.cpp" />
     <ClCompile Include="shape.cpp" />
     <ClCompile Include="smallMainWindow.cpp" />
     <ClCompile Include="squarepen.cpp" />
@@ -176,7 +174,6 @@
     <QtUic Include="mainwindow.ui" />
     <QtUic Include="ncc_mainwindow.ui" />
     <QtUic Include="passwordSet.ui" />
-    <QtUic Include="serverplc.ui" />
     <QtUic Include="smallMainWindow.ui" />
     <QtUic Include="statusbar.ui" />
   </ItemGroup>
@@ -209,15 +206,14 @@
     <QtMoc Include="passwordSet.h" />
     <ClInclude Include="myCCaliperGUI.h" />
     <ClInclude Include="mycorneritem.h" />
-    <QtMoc Include="mymodbus.h" />
     <ClInclude Include="myqgraphicsview.h" />
     <QtMoc Include="ncc_modelmatch.h" />
+    <QtMoc Include="PlcWorker.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="rect.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
     <QtMoc Include="Server.h" />
-    <QtMoc Include="serverplc.h" />
     <ClInclude Include="shape.h" />
     <QtMoc Include="smallMainWindow.h" />
     <ClInclude Include="SharedData.h" />

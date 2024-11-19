@@ -944,6 +944,7 @@ void MainWindow::on_action_1_to_1_triggered()
 
 void MainWindow::sendImgToControllerShape(QImage image)
 {
+
 	 fileName = image.text("name");
 
  

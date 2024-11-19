@@ -161,7 +161,10 @@ industrialVision::industrialVision(QWidget *parent)
 		 QMessageBox::critical(this, "错误信息", "相机已经启动");
 		 return;
 	 }
-	 if (!DisplayWindowInitial()){
+
+
+	 	 
+	 if (!DisplayWindowInitial()) {
 		 AppendText("相机状态异常", Red);
 		 return;
 	 }
@@ -1022,30 +1025,39 @@ bool industrialVision::DisplayWindowInitial()
 		return false;
 	}
 	 int m_deviceNum = m_stDevList.nDeviceNum;
-	if (m_deviceNum !=1)
-	{
-		QMessageBox::warning(this, "警告", "请检查相机是否正常连接！");
-		return false;
-	}
-	for (int i = 0; i < m_deviceNum; i++)
-	{
-		MV_CC_DEVICE_INFO* pDeviceInfo = m_stDevList.pDeviceInfo[i];
+	//if (m_deviceNum !=1)
+	//{
+	//	QMessageBox::warning(this, "警告", "请检查相机是否正常连接！");
+	//	return false;
+	//}
+
+		 //读取哪个相机
+	 QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
+	 QSettings settings(settingPath, QSettings::IniFormat);
+	 // 获取所有分组
+	 QStringList groups = settings.childGroups();
+	 settings.beginGroup("Idus");
+
+	 int cameraIndex = settings.value("cameraIndex").toInt();
+
+		MV_CC_DEVICE_INFO* pDeviceInfo = m_stDevList.pDeviceInfo[cameraIndex];
 		if(!m_pcMyCamera->IsDeviceConnected()){
 			int nRet = m_pcMyCamera->Open(pDeviceInfo);   //打开相机
 			if (MV_OK != nRet)
 			{
-				//delete m_pcMyCamera;
-				//m_pcMyCamera = NULL;
+				delete m_pcMyCamera;
+				m_pcMyCamera = NULL;
 				QMessageBox::warning(this, "警告", "打开设备失败！");
 				return false;
 			}
 			m_cameraThread->setCameraPtr(m_pcMyCamera);
-			m_cameraThread->setCameraIndex(i);
-			m_processingThread->setThreadId(i);
+			m_cameraThread->setCameraIndex(0);
+			m_processingThread->setThreadId(0);
+			open_mv = true;
+			return	true;
 		}
-        open_mv = true;
-	}
-	return true;
+	
+	return false;
 }
 
 void industrialVision::setButtonClickLimits(bool flag)
@@ -1056,7 +1068,7 @@ void industrialVision::setButtonClickLimits(bool flag)
 	//ui.pushButton->setEnabled(flag);
 	ui.pushButton_stopOperation->setEnabled(flag);
 }
-// 
+
 //通用方法 返回弹窗
 void industrialVision::ShowErrorMsg(QString csMessage, int nErrorNum)
 {
@@ -1642,7 +1654,6 @@ bool industrialVision::read_info_from_ini(QString path)
 			double Intersection_2_newPY = settings.value("Intersection_2_newP.y", 0).toDouble();
 			double pointToLineDistance_1_newP = settings.value("pointToLineDistance_1_newP", 0).toDouble();
 			double pointToLineDistance_2_newP = settings.value("pointToLineDistance_2_newP", 0).toDouble();
-			int x = 10;
 			emit sendInfo_shapeMatch_pictureInfo(angleDeg_1_newp, angleDeg_1_newp,QPointF(Intersection_1_newPX, Intersection_1_newPY),QPointF(Intersection_2_newPX, Intersection_2_newPY),
 				pointToLineDistance_1_newP, pointToLineDistance_2_newP);
 		}

@@ -59,6 +59,11 @@ void ProcessingThread::run()
 				//执行形状匹配
 				if (pattern_Flag && shape_match)
 				{
+					finall_Total_Result.ptCenter = cv::Point2d(1, 1);
+					finall_Total_Result.dMatchedAngle = 0;
+					finall_Total_Result.pattern_flag = true;
+					finall_Total_Result.flag = true;
+					return;
 					QTime timedebuge;//声明一个时钟对象
 					timedebuge.start();//开始计时
 
@@ -311,7 +316,7 @@ void ProcessingThread::run()
 						QPainter painter(&newPixmap_1);
 						QPen pen;
 						pen.setStyle(Qt::SolidLine);            //定义画笔的风格，直线、虚线等
-						pen.setWidth(2);                        //定义画笔的大小
+						pen.setWidth(10);                        //定义画笔的大小
 						pen.setBrush(Qt::green);
 						painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 						painter.setPen(pen);
@@ -326,6 +331,11 @@ void ProcessingThread::run()
 						painter.drawLine(QPoint(Two_Line_Result[8].x, Two_Line_Result[8].y),
 							QPoint(Two_Line_Result[9].x, Two_Line_Result[9].y));
 						//发送给前端 
+						finall_Total_Result.ptCenter = cv::Point2d(resultPointF.x(), resultPointF.y());
+						finall_Total_Result.dMatchedAngle = 0;
+						finall_Total_Result.pattern_flag = true;
+						finall_Total_Result.flag = true;
+
 						emit signal_patternResult(resultPointF, 0);
 					}
 					if (shapeMatch_Patten_Circle.size() == 1) {
