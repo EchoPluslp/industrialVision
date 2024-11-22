@@ -34,6 +34,7 @@
 #include "SharedData.h"
 #include "mainwindow.h"
 #include "ncc_modelmatch.h"
+#include "basicSetting.h"
 using namespace cv;
 using namespace std;
 
@@ -109,6 +110,7 @@ private:
     QAction *action_SetModelFile;
     QAction *action_RestoreWindow;
     QAction *action_setLogoPath;
+	QAction* action_BasicSettings;
     QAction *action_SetAttributes;
     QAction *action_password;
 
@@ -123,7 +125,7 @@ private:
 	Ui::industrialVision ui;
     logoSet logoset;
 	logoPath logoPathItem;
-
+    basicSetting basicSettingItem;
     /*ch:最开始时的窗口初始化 | en:Window initialization*/
     bool DisplayWindowInitial();
     void setButtonClickLimits(bool flag);
@@ -251,6 +253,7 @@ private slots:
          void getRotateValue(int x);
          void actionPasswordAction();
          void actionLogAndPathAction();
+         void actionBasicSettingsAction();
          void actionuserSwitch();
 signals:
     void sendQimageToVisualTemplate(QImage data);

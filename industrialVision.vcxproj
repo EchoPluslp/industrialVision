@@ -100,6 +100,7 @@
     <ClCompile Include="algorithmLibrary.cpp" />
     <ClCompile Include="area.cpp" />
     <ClCompile Include="areacontroller.cpp" />
+    <ClCompile Include="basicSetting.cpp" />
     <ClCompile Include="bee_calibercircle.cpp" />
     <ClCompile Include="bee_caliberline.cpp" />
     <ClCompile Include="bee_circle.cpp" />
@@ -163,6 +164,7 @@
     <ClCompile Include="transmitsignals.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="basicSetting.ui" />
     <QtUic Include="connectServer.ui" />
     <QtUic Include="createModel.ui" />
     <QtUic Include="drawfinisheddialog.ui" />
@@ -190,6 +192,7 @@
     <QtMoc Include="bee_calibercircle.h" />
     <QtMoc Include="bee_caliberline.h" />
     <QtMoc Include="bee_circle.h" />
+    <QtMoc Include="basicSetting.h" />
     <ClInclude Include="bee_concencircle.h" />
     <QtMoc Include="bee_point.h" />
     <QtMoc Include="bee_polygon.h" />
@@ -250,6 +253,9 @@
     <ClInclude Include="polygon.h" />
     <ClInclude Include="preHeader.h" />
     <ClInclude Include="MvCamera.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

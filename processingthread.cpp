@@ -100,6 +100,8 @@ void ProcessingThread::run()
 					resultPointF.setX(lastResult.x());
 					resultPointF.setY(lastResult.y());
 
+				
+
 
 					//·¢ËÍ¸øÇ°¶Ë 
 					emit signal_patternResult(resultPointF, total_time);                       
@@ -274,6 +276,7 @@ void ProcessingThread::run()
 						 pattern_Flag = false;
 						 resultPointF.setX(Point_1.x);
 						 resultPointF.setY(Point_1.y);
+					
 
 						 int total_time = timedebuge.elapsed();
 
@@ -286,6 +289,7 @@ void ProcessingThread::run()
 						int total_time = timedebuge.elapsed();
 						resultPointF.setX(Point_2.X);
 						resultPointF.setY(Point_2.Y);
+					
 
 						emit signal_patternResult(resultPointF, total_time);
 

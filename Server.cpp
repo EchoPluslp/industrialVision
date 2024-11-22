@@ -140,6 +140,17 @@ QString Server::recvMsg(QString receiveMessage)
 	//ÖØÖÃflagÖµ 
 	finall_Total_Result.flag = false;
 	if (finall_Total_Result.pattern_flag){
+		QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
+		QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
+		settings->beginGroup("Idus");
+		QString YFLAG = settings->value("Y_Flag").toString();
+
+		if (YFLAG == "1")
+		{
+			finall_Total_Result.ptCenter.y = 0;
+		}
+		                                                     
+
 		char s[10];
 		char xx[10];
 		sprintf(s, "%.1f", finall_Total_Result.ptCenter.x);
