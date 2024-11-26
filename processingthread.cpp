@@ -59,11 +59,6 @@ void ProcessingThread::run()
 				//执行形状匹配
 				if (pattern_Flag && shape_match)
 				{
-					finall_Total_Result.ptCenter = cv::Point2d(1, 1);
-					finall_Total_Result.dMatchedAngle = 0;
-					finall_Total_Result.pattern_flag = true;
-					finall_Total_Result.flag = true;
-					return;
 					QTime timedebuge;//声明一个时钟对象
 					timedebuge.start();//开始计时
 
@@ -211,7 +206,7 @@ void ProcessingThread::run()
 						pdLineStart_mainLine.y = item_mainLine.roi.tl().y + pdLineStart_mainLine.y;
 						pdLineEnd_mainLine.x = item_mainLine.roi.tl().x + pdLineEnd_mainLine.x;
 						pdLineEnd_mainLine.y = item_mainLine.roi.tl().y + pdLineEnd_mainLine.y;
-						
+	
 
 						//找到剩下的线条
 						vector<cv::Point2f> Two_Line_Result;
@@ -257,7 +252,7 @@ void ProcessingThread::run()
 						double pointToLineDistance_1_realTime = m_plineCaliperGUI->pointToLineDistance(Intersection_1_realTime, pdLineStart_mainLine, pdLineEnd_mainLine);
 						double pointToLineDistance_2_realTime = m_plineCaliperGUI->pointToLineDistance(Intersection_2_realTime, pdLineStart_mainLine, pdLineEnd_mainLine);
 						//判断标准--------------------------------
-						double percentageA = 0.05;    // 10%
+						double percentageA = 0.3;    // 10%
 						double lowerBoundA_1 = angleDeg_1_newp * (1 - percentageA);
 						double upperBoundA_1 = angleDeg_1_newp * (1 + percentageA);
 						resultPointF.setX(1);
@@ -277,10 +272,13 @@ void ProcessingThread::run()
 							resultPointF.setY(101);
 						} 
 						// 计算两个点之间的距离--------------------------------
-						double percentagePP = 0.05; // 10%
+						double percentagePP = 0.3; // 10%
 						double distance_1 = cv::norm(Intersection_1_realTime - Intersection_1_newP);
 						// 计算新的交点的最大允许距离
 						double maxDistance_1 = cv::norm(Intersection_1_newP) * percentagePP;
+						cv::circle(tempMap, Intersection_1_newP, 10, cv::Scalar(0, 0, 0), cv::FILLED); // 绿色填充的点
+						cv::circle(tempMap, Intersection_1_realTime, 10, cv::Scalar(0, 0, 0), cv::FILLED); // 绿色填充的点
+
 						if (distance_1 > maxDistance_1)
 						{
 							resultPointF.setX(102);
@@ -295,7 +293,7 @@ void ProcessingThread::run()
 							resultPointF.setY(103);
 						}
 						// 计算点线之间的距离--------------------------------
-						double percentagePX = 0.05;    // 10%
+						double percentagePX = 0.3;    // 10%
 						double lowerBoundPX_1 = pointToLineDistance_1_newP * (1 - percentagePX);
 						double upperBoundPX_1 = pointToLineDistance_1_newP * (1 + percentagePX);
 						if (pointToLineDistance_1_realTime < lowerBoundPX_1 || pointToLineDistance_1_realTime > upperBoundPX_1)
@@ -450,9 +448,9 @@ void ProcessingThread::run()
 					}
 				}
 				//可以执行匹配,但是比例不对的情况,也就说不同比例时,触发了匹配,匹配错误
-				if (pattern_Flag && modelAndRealSclar == false) {
+			/*	if (pattern_Flag && modelAndRealSclar == false) {
 					patternNG();
-				}
+				}*/
 
 				pattern_Flag = false;
 				//判断是否需要展示范围图
@@ -931,7 +929,7 @@ cv::Point2f ProcessingThread::MatchPicture(cv::Mat m_matDst, cv::Mat m_matSrc,bo
 void ProcessingThread::patternNG()
 {
 	//没匹配上
-	finall_Total_Result.ptCenter = cv::Point2d(-m_width, -m_height);
+		finall_Total_Result.ptCenter = cv::Point2d(-m_width, -m_height);
 	finall_Total_Result.dMatchedAngle = sstm.dMatchedAngle;
 	finall_Total_Result.pattern_flag = false;
 	finall_Total_Result.flag = true;
@@ -1513,7 +1511,7 @@ ResultPoint ProcessingThread::slot_processMatchPictureWithSource( cv::Mat source
 	{
 		temp = 0;
 		//第一次就没找到
-		//patternNG();
+		patternNG();
 		//return ResultPoint(-m_width, -m_height,0,0);
 	}
 	double angle = 0;

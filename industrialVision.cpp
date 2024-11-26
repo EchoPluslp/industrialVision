@@ -1024,24 +1024,34 @@ bool industrialVision::DisplayWindowInitial()
 		QMessageBox::warning(this, "警告", "请检查相机是否正常连接！");
 		return false;
 	}
-	 int m_deviceNum = m_stDevList.nDeviceNum;
+	int m_deviceNum = m_stDevList.nDeviceNum;
 	//if (m_deviceNum !=1)
 	//{
 	//	QMessageBox::warning(this, "警告", "请检查相机是否正常连接！");
 	//	return false;
 	//}
 
-		 //读取哪个相机
-	 QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
-	 QSettings settings(settingPath, QSettings::IniFormat);
-	 // 获取所有分组
-	 QStringList groups = settings.childGroups();
-	 settings.beginGroup("Idus");
+	int cameraIndex = -1;
+	for (int i = 0; i < 3; i++) {
+	MV_CC_DEVICE_INFO* pDeviceInfo = m_stDevList.pDeviceInfo[i];
+	unsigned char* modelName = pDeviceInfo->SpecialInfo.stGigEInfo.chSerialNumber;
 
-	 int cameraIndex = settings.value("cameraIndex").toInt();
+	// 转换 unsigned char* 为 std::string
+	std::string dataStr(reinterpret_cast<char*>(modelName));
 
-		MV_CC_DEVICE_INFO* pDeviceInfo = m_stDevList.pDeviceInfo[cameraIndex];
+	if (dataStr == "DA4730098")
+	{
+		cameraIndex = i;
+		break;
+	}
+}
+	if (cameraIndex==-1)
+	{
+		cameraIndex = 0;
+	}
 		if(!m_pcMyCamera->IsDeviceConnected()){
+			MV_CC_DEVICE_INFO* pDeviceInfo = m_stDevList.pDeviceInfo[cameraIndex];
+
 			int nRet = m_pcMyCamera->Open(pDeviceInfo);   //打开相机
 			if (MV_OK != nRet)
 			{

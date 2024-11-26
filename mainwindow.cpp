@@ -592,13 +592,12 @@ void MainWindow::saveInfo()
 		settings->setValue("angleDeg_1_newp", QString::number(angleDeg_1_newp));
 		settings->setValue("angleDeg_2_newp", QString::number(angleDeg_2_newp));
 		settings->setValue("Intersection_1_newP.x", QString::number(Intersection_1_newP.x));
-		settings->setValue("Intersection_1_newP.y", QString::number(Intersection_2_newP.y));
+		settings->setValue("Intersection_1_newP.y", QString::number(Intersection_1_newP.y));
 		settings->setValue("Intersection_2_newP.x", QString::number(Intersection_2_newP.x));
 		settings->setValue("Intersection_2_newP.y", QString::number(Intersection_2_newP.y));
 		settings->setValue("pointToLineDistance_1_newP", QString::number(pointToLineDistance_1_newP));
 		settings->setValue("pointToLineDistance_2_newP", QString::number(pointToLineDistance_2_newP));
 		bool_newP = false;
-		
 	}
 	
 	settings->endGroup();

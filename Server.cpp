@@ -62,7 +62,7 @@ void Server::onNewConnection()
 
 void Server::onReadyRead()
 {
-	QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
+	//QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
 
 	//if (!clientSocket) {
 	//	QString logStringFromClient = "服务端接受到消息异常: 请重启";
@@ -75,45 +75,48 @@ void Server::onReadyRead()
 	QString logStringFromClient =  "接收到PLC触发拍照: " + message;
 	emit logoString(logStringFromClient, "GREEN");
 	recvMsg("");
+	// 发送处理后的消息回客户端
+// 处理完请求后，继续处理下一个请求
+	//processNextRequest();
 	return;
 
-	QString sendMessager;
-	if (isJsonString(message)) {
-		//取得ID
-		QJsonDocument jsonDocument = QJsonDocument::fromJson(message.toUtf8());
-		// 获取JSON对象
-		QJsonObject jsonObject = jsonDocument.object();
+	//QString sendMessager;
+	//if (isJsonString(message)) {
+	//	//取得ID
+	//	QJsonDocument jsonDocument = QJsonDocument::fromJson(message.toUtf8());
+	//	// 获取JSON对象
+	//	QJsonObject jsonObject = jsonDocument.object();
 
-		QJsonValue nameValue = jsonObject.value("CmdId");
-		QString cmdID = nameValue.toString();
+	//	QJsonValue nameValue = jsonObject.value("CmdId");
+	//	QString cmdID = nameValue.toString();
 
-		//是json
-		QJsonObject sendMessager = recvMsgByJson(message, cmdID);
-		QJsonDocument document;
+	//	//是json
+	//	QJsonObject sendMessager = recvMsgByJson(message, cmdID);
+	//	QJsonDocument document;
 
-		document.setObject(sendMessager);
+	//	document.setObject(sendMessager);
 
-		QByteArray abyte = document.toJson(QJsonDocument::Compact);
+	//	QByteArray abyte = document.toJson(QJsonDocument::Compact);
 
-		clientSocket->write(abyte);
-		QString logStringToClient = "给客户端发送数据:" + abyte;
+	//	//clientSocket->write(abyte);
+	//	QString logStringToClient = "给客户端发送数据:" + abyte;
 
-		emit logoString(logStringToClient, "GREEN");
-	}
-	else {
-		//判断接受的数据格式 不是json
+	//	emit logoString(logStringToClient, "GREEN");
+	//}
+	//else {
+	//	//判断接受的数据格式 不是json
 
-		//在这里可以对客户端消息进行处理
-		 sendMessager = recvMsg(message);
-		 clientSocket->write(sendMessager.toUtf8());
-		 QString logStringToClient = "给客户端发送数据:" + sendMessager;
+	//	//在这里可以对客户端消息进行处理
+	//	 sendMessager = recvMsg(message);
+	//	// clientSocket->write(sendMessager.toUtf8());
+	//	 QString logStringToClient = "给客户端发送数据:" + sendMessager;
 
-		 emit logoString(logStringToClient, "GREEN");
-	}
+	//	 emit logoString(logStringToClient, "GREEN");
+	//}
 
-	// 发送处理后的消息回客户端
-	// 处理完请求后，继续处理下一个请求
-	processNextRequest();
+	//// 发送处理后的消息回客户端
+	//// 处理完请求后，继续处理下一个请求
+	//processNextRequest();
 
 	
 
@@ -134,30 +137,31 @@ QString Server::recvMsg(QString receiveMessage)
 	//	emit logoString(logStringToClient, "RED");
 	//	return false;
 	//}
+	finall_Total_Result.flag = false;
 	emit triggerPattern(); 	
 	// 创建一个定时器
-	QTimer timer;
-	timer.setSingleShot(true); // 设置为单次触发
+	//QTimer timer;
+	//timer.setSingleShot(true); // 设置为单次触发
 
-	// 连接定时器的timeout信号到一个槽函数，该槽函数在定时器超时时触发
-	QObject::connect(&timer, &QTimer::timeout, [&]() {
-		// 在定时器超时时执行中断处理
-		QString logStringToClient = "定时器触发，中断当前处理";
-		emit logoString(logStringToClient, "GRAY");
+	//// 连接定时器的timeout信号到一个槽函数，该槽函数在定时器超时时触发
+	//QObject::connect(&timer, &QTimer::timeout, [&]() {
+	//	// 在定时器超时时执行中断处理
+	//	QString logStringToClient = "定时器触发，中断当前处理";
+	//	emit logoString(logStringToClient, "GRAY");
 
-		finall_Total_Result.flag = true; // 修改flag的值
-		finall_Total_Result.pattern_flag = false;
-		});
+	//	finall_Total_Result.flag = true; // 修改flag的值
+	//	finall_Total_Result.pattern_flag = false;
+	//	});
 
-	timer.start(timestart); // 启动定时器，设置超时时间为1秒
+	//timer.start(1000); // 启动定时器，设置超时时间为1秒
 
 	while (!finall_Total_Result.flag) {
 		// 在这里等待，直到定时器触发或flag变为true
 		QCoreApplication::processEvents(); // 允许Qt事件处理
 	}
-	//定时器停止
-	timer.stop();
-	timer.deleteLater();
+	////定时器停止
+	//timer.stop();
+	//timer.deleteLater();
 	//重置flag值 
 	finall_Total_Result.flag = false;
 	if (finall_Total_Result.pattern_flag) {
@@ -171,13 +175,13 @@ QString Server::recvMsg(QString receiveMessage)
 
 		if (finall_Total_Result.ptCenter.x == 1 && finall_Total_Result.ptCenter.y == 1)
 		{
-			out << "0";  //没问题
+			out << "1";  //没问题
 		}
 		else {
-			out << "1"; //有问题
+			out << "2"; //有问题
 
 		}
-
+		Wfile.close();
 		//char s[10];
 		//char xx[10];
 		//sprintf(s, "%.1f", finall_Total_Result.ptCenter.x);
