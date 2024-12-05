@@ -1669,7 +1669,7 @@ bool industrialVision::read_info_from_ini(QString path)
 		//设置为ini模式
 		m_processingThread->setShape_match(true);
 		// 退出分组
-	}
+	       }
 	if (groupName.contains("circle"))
 	{
 		double pdCenterX = settings.value("pdCenter.x", 0).toDouble();

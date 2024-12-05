@@ -41,8 +41,8 @@ MainWindow::MainWindow(QWidget *parent)
 	  ui->action_caliberline->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
 	  ui->action_calibercircle->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
 	  ui->action_polygon->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
-
-
+	  saveIntersection.x = 10000;
+	  saveIntersection.y = 10000;
 }
 
 
@@ -403,6 +403,7 @@ void MainWindow::fitline()
 
 	cv::Point2f Intersection(-1, -1);
 	m_plineCaliperGUI->findIntersection(resultLinePoint.at(0), resultLinePoint.at(1), resultLinePoint.at(2), resultLinePoint.at(3), Intersection);
+	saveIntersection = Intersection;
 	//输出结果
 	QString str = tr(" =(%1,%2),直线交点=(%3,%4),角度=%5").
 		arg(ImageItem->pixmap().width()).
@@ -569,9 +570,16 @@ void MainWindow::saveInfo()
 	settings->setValue("source_width", ImageItem->pixmap().width());
 	settings->setValue("source_height", ImageItem->pixmap().height());
 	settings->setValue("shape_info_item", 1);
-
-	
+	//记录交点信息
+	if (my_caliberline_List.size()==2)
+	{
+		QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
+		QSettings* settingPathpoint = new QSettings(settingPath, QSettings::IniFormat);
+		settingPathpoint->setValue("saveIntersection.x", QString::number(saveIntersection.x));
+		settingPathpoint->setValue("saveIntersection.y", QString::number(saveIntersection.y));
+	}
 	settings->endGroup();
+	
 	
 	for (int i = 0; i < my_caliberline_List.size(); i++)
 	{
@@ -580,7 +588,6 @@ void MainWindow::saveInfo()
 	//保存线的信息
 	QString group("shapeMatch_line_");
 	group.append(QString::number(i + 1));
-
 	settings->beginGroup(group);
 	settings->setValue("pt_begin_cv2.x", QString::number(my_Item->pt_begin_cv2.x));
 	settings->setValue("pt_begin_cv2.y", QString::number(my_Item->pt_begin_cv2.y));
@@ -623,7 +630,6 @@ void MainWindow::saveInfo()
 		settings->setValue("roi.y", QString::number(my_Item->boundingRect().y()));
 		settings->setValue("roi.width", QString::number(my_Item->boundingRect().width()));
 		settings->setValue("roi.height", QString::number(my_Item->boundingRect().height()));
-
 		settings->endGroup();
 	}
 	delete settings;

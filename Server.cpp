@@ -205,7 +205,7 @@ QJsonObject Server::recvMsgByJson(QString receiveMessage, QString cmdID)
 		finall_Total_Result.pattern_flag = false;
 		});
 
-	timer.start(timestart); // 启动定时器，设置超时时间为1秒
+	timer.start(100000); // 启动定时器，设置超时时间为1秒
 
 	while (!finall_Total_Result.flag) {
 		// 在这里等待，直到定时器触发或flag变为true
@@ -218,8 +218,7 @@ QJsonObject Server::recvMsgByJson(QString receiveMessage, QString cmdID)
 	finall_Total_Result.flag = false;
 
 		jsonObject["CmdId"] = cmdID;	    
-		jsonObject["ErrCode"] = "0";
-		jsonObject["ErrDesc"] = "";
+
 		// 设置 "Datas" 数组
 		QJsonArray datasArray;
 		QJsonObject dataObject;
@@ -228,9 +227,13 @@ QJsonObject Server::recvMsgByJson(QString receiveMessage, QString cmdID)
 		if (finall_Total_Result.pattern_flag) {
 
 			dataObject["isOK"] = "OK";
+			jsonObject["ErrCode"] = "0";
+			jsonObject["ErrDesc"] = "";
 		}
 		else {
 			dataObject["isOK"] = "NG";
+			jsonObject["ErrCode"] = "1";
+			jsonObject["ErrDesc"] = "未找到特征";
 		}
 
 		dataObject["x"] = QString::number(finall_Total_Result.ptCenter.x, 'f', 1);

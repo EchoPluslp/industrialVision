@@ -151,7 +151,7 @@ void ProcessingThread::run()
 							//计算错误,没有满足条件
 							return;
 						}
-
+						
 						//	//计算夹角。        
 						double angleDeg = m_plineCaliperGUI->findangle(Two_Line_Result.at(0), Two_Line_Result.at(1), Two_Line_Result.at(2),Two_Line_Result.at(3));
 						//--------------------------计算交点
@@ -168,13 +168,30 @@ void ProcessingThread::run()
 						finall_Total_Result.ptCenter = cv::Point2d(lastResult.x(), lastResult.y());
 						finall_Total_Result.dMatchedAngle = angleDeg;
 						finall_Total_Result.pattern_flag = true;
-						finall_Total_Result.flag = true;
 
 						pattern_Flag = false;
 						int total_time = timedebuge.elapsed();
 						resultPointF.setX(lastResult.x());
 						resultPointF.setY(lastResult.y());
 
+						//获取保存的模板信息
+						
+						QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
+						QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
+
+							//如果没有则不设置默认值
+							double saveIntersectionX = settings->value("saveIntersection.x").toDouble();
+							double saveIntersectionY = settings->value("saveIntersection.y").toDouble();
+							Point2f saveIntersection(saveIntersectionX, saveIntersectionY);
+
+							// 计算欧几里得距离
+							float distance = cv::norm(saveIntersection - Intersection);
+							if (distance > 30)
+							{
+								finall_Total_Result.pattern_flag = false;
+
+							}
+							finall_Total_Result.flag = true;
 
 						//发送给前端 
 						emit signal_patternResult(resultPointF, total_time);
@@ -209,10 +226,10 @@ void ProcessingThread::run()
 					QPainter painter(&newPixmap_1);
 					QPen pen;
 					pen.setStyle(Qt::SolidLine);            //
-					pen.setWidth(2);    
+					pen.setWidth(6);    
 					painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 					//
-					pen.setBrush(Qt::green);
+					pen.setBrush(Qt::red);
 					painter.setPen(pen);
 					painter.drawEllipse(pdCenter.x - dRadius, pdCenter.y - dRadius,2*dRadius,2*dRadius);
 					painter.drawPoint(pdCenter.x, pdCenter.y );
@@ -240,6 +257,13 @@ void ProcessingThread::run()
 					finall_Total_Result.pattern_flag = true;
 					finall_Total_Result.flag = true;
 
+					cv::Point model_center = item.pdCenter;
+					double distance = sqrt(pow(pdCenter.x - model_center.x, 2) + pow(pdCenter.y - model_center.y, 2));
+
+					if (distance > 30)
+					{
+						finall_Total_Result.pattern_flag = false;
+					}
 			
 
 					pattern_Flag = false;

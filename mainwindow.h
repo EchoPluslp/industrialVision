@@ -132,5 +132,8 @@ private:
     int currentIndexs_line = 0;
 	CControlLine* lineitem;
     QList<cv::Point> resultLinePoint;
+
+	cv::Point2f saveIntersection;
+
 };
 #endif // MAINWINDOW_H

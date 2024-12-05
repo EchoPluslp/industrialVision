@@ -20,10 +20,11 @@ void CControlLine::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
 		Q_UNUSED(widget)
 
 	QPen mPen(Qt::green);
-	mPen.setWidth(0);
+	mPen.setWidth(3);
 	painter->setPen(mPen);
 	painter->drawLine(linestart, lineend);
-	 
+	//painter->drawEllipse(circle_Center, circle_Radius, circle_Radius);
+
 	if (draw_edge)
 	{
 		QBrush brush1(Qt::green, Qt::SolidPattern);
@@ -38,9 +39,9 @@ void CControlLine::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
 		}
 	}
 
-	if (draw_expect)
+	if (draw_expect)  
 	{
-		mPen.setWidth(5);
+		mPen.setWidth(8);
 
 		mPen.setColor(Qt::yellow);
 		QBrush brush(Qt::yellow, Qt::SolidPattern);
@@ -60,10 +61,16 @@ void CControlLine::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
 	}
 	if (draw_circle)
 	{
-		mPen.setWidth(2);
-		painter->setPen(mPen);
+		QBrush brush1(Qt::green, Qt::NoBrush);
+
+		QPen mPenc; 
+		mPenc.setColor(Qt::green);
+		mPenc.setWidth(8);
+
+		painter->setBrush(brush1);
+		painter->setPen(mPenc);
 		painter->setRenderHint(QPainter::Antialiasing, true);
-		painter->drawEllipse(circle_Center,circle_Radius,circle_Radius);
+		painter->drawEllipse(circle_Center, circle_Radius, circle_Radius);
 	}
 
 	scene()->update();
