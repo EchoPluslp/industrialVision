@@ -16,11 +16,28 @@ Server::Server()
 	//定时设置时间
 	QString timevalueQString = settings->value("timevalue","1000").toString();
 	timestart = timevalueQString.toInt();
+
+	system_language = settings->value("system_language", "zh").toString();
+
 	if (server->listen(QHostAddress::LocalHost, 60000)) {
-		emit logoString("服务器已启动，等待客户端连接...", "GREEN");
+		if (system_language == "zh")
+		{
+			emit logoString("服务器已启动，等待客户端连接...", "GREEN");
+		}
+		else if (system_language == "en")
+		{
+			emit logoString("The server has started and is waiting for the client to connect", "GREEN");
+		}
 	}
 	else {
-			emit logoString("无法启动服务器...", "GREEN");
+			if (system_language == "zh")
+			{
+				emit logoString("无法启动服务器...", "GREEN");
+			}
+			else if (system_language == "en")
+			{
+				emit logoString("Unable to start server", "GREEN");
+			}
 	}
 }
 
@@ -28,8 +45,17 @@ void Server::onNewConnection()
 {
 	QTcpSocket* clientSocket = server->nextPendingConnection();
 	QString x = QString::number(clientSocket->peerPort());
-	QString logString =  "客户端 " + clientSocket->peerAddress().toString() + ":" + x + " 连接成功";
-	emit logoString(logString, "GREEN");
+	if (system_language == "zh")
+	{
+		QString logString = "客户端 " + clientSocket->peerAddress().toString() + ":" + x + " 连接成功";
+		emit logoString(logString, "GREEN");
+
+	}
+	else if (system_language == "en")
+	{
+		QString logString = "Client " + clientSocket->peerAddress().toString() + ":" + x + " Connection successful";
+		emit logoString(logString, "GREEN");
+	}
 
 	clientQueue.clear();
 	isBusy = false;
@@ -47,15 +73,34 @@ void Server::onReadyRead()
 	QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
 
 	if (!clientSocket) {
-		QString logStringFromClient = "服务端接受到消息异常: 请重启";
+	
+		if (system_language == "zh")
+		{
+			QString logStringFromClient = "服务端接受到消息异常: 请重启";
+			emit logoString(logStringFromClient, "GREEN");
+		}
+		else if (system_language == "en")
+		{
+			QString logStringFromClient = "Server received message exception: Please restart";
+			emit logoString(logStringFromClient, "GREEN");
+		}
 		return;
 	}
 
 	QByteArray data = clientSocket->readAll();
 	QString message = QString(data);
 
-	QString logStringFromClient =  "接收到来自客户端的消息: " + message;
-	emit logoString(logStringFromClient, "GREEN");
+
+	if (system_language == "zh")
+	{
+		QString logStringFromClient = "接收到来自客户端的消息: " + message;
+		emit logoString(logStringFromClient, "GREEN");
+	}
+	else if (system_language == "en")
+	{
+		QString logStringFromClient = "Received message from client: " + message;
+		emit logoString(logStringFromClient, "GREEN");
+	}
 	QString sendMessager;
 	if (isJsonString(message)) {
 		//取得ID
@@ -75,9 +120,19 @@ void Server::onReadyRead()
 		QByteArray abyte = document.toJson(QJsonDocument::Compact);
 
 		clientSocket->write(abyte);
-		QString logStringToClient = "给客户端发送数据:" + abyte;
 
-		emit logoString(logStringToClient, "GREEN");
+		if (system_language == "zh")
+		{
+			QString logStringToClient = "给客户端发送数据:" + abyte;
+
+			emit logoString(logStringToClient, "GREEN");
+		}
+		else if (system_language == "en")
+		{
+			QString logStringToClient = "Send data to the client:" + abyte;
+
+			emit logoString(logStringToClient, "GREEN");
+		}
 	}
 	else {
 		//判断接受的数据格式 不是json
@@ -85,9 +140,18 @@ void Server::onReadyRead()
 		//在这里可以对客户端消息进行处理
 		 sendMessager = recvMsg(message);
 		 clientSocket->write(sendMessager.toUtf8());
-		 QString logStringToClient = "给客户端发送数据:" + sendMessager;
 
-		 emit logoString(logStringToClient, "GREEN");
+		 if (system_language == "zh")
+		 {
+			 QString logStringToClient = "给客户端发送数据:" + sendMessager;
+			 emit logoString(logStringToClient, "GREEN");
+		 }
+		 else if (system_language == "en")
+		 {
+			 QString logStringToClient = "Send data to the client:" + sendMessager;
+			 emit logoString(logStringToClient, "GREEN");
+		 }
+
 	}
 
 	// 发送处理后的消息回客户端
@@ -109,8 +173,17 @@ QString Server::recvMsg(QString receiveMessage)
 	QString send_buf = "T;1;100;1;1;1,";
 	if (receiveMessage <= 0)
 	{
-		QString logStringToClient = "接受receiveMessage函数异常:";
-		emit logoString(logStringToClient, "RED");
+		if (system_language == "zh")
+		{
+			QString logStringToClient = "接受receiveMessage函数异常:";
+			emit logoString(logStringToClient, "RED");
+		}
+		else if (system_language == "en")
+		{
+			QString logStringToClient = "Accepting the received Message function exception";
+			emit logoString(logStringToClient, "RED");
+		}
+
 		return false;
 	}
 	emit triggerPattern(); 	
@@ -121,8 +194,17 @@ QString Server::recvMsg(QString receiveMessage)
 	// 连接定时器的timeout信号到一个槽函数，该槽函数在定时器超时时触发
 	QObject::connect(&timer, &QTimer::timeout, [&]() {
 		// 在定时器超时时执行中断处理
-		QString logStringToClient = "定时器触发，中断当前处理";
-		emit logoString(logStringToClient, "GRAY");
+		if (system_language == "zh")
+		{
+			QString logStringToClient = "定时器触发，中断当前处理";
+			emit logoString(logStringToClient, "GRAY");
+		}
+		else if (system_language == "en")
+		{
+			QString logStringToClient = "Timer triggered, interrupts current processing";
+			emit logoString(logStringToClient, "GRAY");
+		}
+
 
 		finall_Total_Result.flag = true; // 修改flag的值
 		finall_Total_Result.pattern_flag = false;
@@ -186,8 +268,16 @@ QJsonObject Server::recvMsgByJson(QString receiveMessage, QString cmdID)
 
 	if (receiveMessage <= 0)
 	{
-		QString logStringToClient = "接受receiveMessage函数异常:";
-		emit logoString(logStringToClient, "RED");
+		if (system_language == "zh")
+		{
+			QString logStringToClient = "接受receiveMessage函数异常:";
+			emit logoString(logStringToClient, "RED");
+		}
+		else if (system_language == "en")
+		{
+			QString logStringToClient = "Accepting the received Message function exception";
+			emit logoString(logStringToClient, "RED");
+		}
 		return jsonObject;
 	}
 	emit triggerPattern();
@@ -198,8 +288,17 @@ QJsonObject Server::recvMsgByJson(QString receiveMessage, QString cmdID)
 	// 连接定时器的timeout信号到一个槽函数，该槽函数在定时器超时时触发
 	QObject::connect(&timer, &QTimer::timeout, [&]() {
 		// 在定时器超时时执行中断处理
-		QString logStringToClient = "定时器触发，中断当前处理";
-		emit logoString(logStringToClient, "GRAY");
+		if (system_language == "zh")
+		{
+			QString logStringToClient = "定时器触发，中断当前处理";
+			emit logoString(logStringToClient, "GRAY");
+		}
+		else if (system_language == "en")
+		{
+			QString logStringToClient = "Timer triggered, interrupts current processing";
+			emit logoString(logStringToClient, "GRAY");
+		}
+
 
 		finall_Total_Result.flag = true; // 修改flag的值
 		finall_Total_Result.pattern_flag = false;
@@ -233,7 +332,14 @@ QJsonObject Server::recvMsgByJson(QString receiveMessage, QString cmdID)
 		else {
 			dataObject["isOK"] = "NG";
 			jsonObject["ErrCode"] = "1";
-			jsonObject["ErrDesc"] = "未找到特征";
+			if (system_language == "zh")
+			{
+				jsonObject["ErrDesc"] = "未找到特征";
+			}
+			else if (system_language == "en")
+			{
+				jsonObject["ErrDesc"] = "No features found";
+			}
 		}
 
 		dataObject["x"] = QString::number(finall_Total_Result.ptCenter.x, 'f', 1);

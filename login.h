@@ -22,8 +22,9 @@ private:
 	industrialVision w;
 	QString passwordAdmin;
 	QString passwordUser;
-
-
+	QString system_language;
+	QStringList  usersWithRoleUser = { "操作员", "operator", "operador" };
+	QStringList  usersWithRoleAdmin = { "管理员", "administrator", "administrador" };
 public slots:
 	void login_in();
 	void slot_switchLog();

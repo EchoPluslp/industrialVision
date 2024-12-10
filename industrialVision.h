@@ -5,8 +5,7 @@
 #pragma once
 #pragma execution_character_set("utf-8")
 #define SAFE_DELETE(p) { if (p) { delete (p);     (p) = nullptr; } }
-#define ROLE_USER "操作员"
-#define ROLE_ADMIN "管理员"
+
 
 #include <QtWidgets/QMainWindow>
 #include "ui_industrialVision.h"
@@ -175,6 +174,7 @@ private:
 public:
      //Mat转QImage
      QImage Mat2QImage(const cv::Mat InputMat);
+	 QString system_language = "zh";
 
      bool industrialVision::visualTemplate_Control = false;
      passwordSet passwordSetItem;
@@ -202,14 +202,30 @@ public:
      bool read_info_from_ini(QString path);
 	 protected:
 		 void closeEvent(QCloseEvent* event) override {
-			 // 创建 QMessageBox 对话框
-			 QMessageBox msgBox(QMessageBox::Question, "确认关闭", "确定要关闭窗口吗？", QMessageBox::Yes | QMessageBox::No, this);
+			 int result;
 
-			 msgBox.setButtonText(QMessageBox::Yes, "是");
-			 msgBox.setButtonText(QMessageBox::No, "否");
+             if (system_language=="zh")
+             {
+				 // 创建 QMessageBox 对话框
+				 QMessageBox msgBox(QMessageBox::Question, "确认关闭", "确定要关闭窗口吗？", QMessageBox::Yes | QMessageBox::No, this);
+
+				 msgBox.setButtonText(QMessageBox::Yes, "是");
+				 msgBox.setButtonText(QMessageBox::No, "否");
+				  result = msgBox.exec();
+
+             }else if (system_language=="en")
+             {
+				 // 创建 QMessageBox 对话框
+				 QMessageBox msgBox(QMessageBox::Question, "Sure Close?", "Are you sure you want to close the window？", QMessageBox::Yes | QMessageBox::No, this);
+
+				 msgBox.setButtonText(QMessageBox::Yes, "Yes");
+				 msgBox.setButtonText(QMessageBox::No, "No");
+				  result = msgBox.exec();
+
+             }
+		
 
 			 // 显示对话框，获取用户选择
-			 int result = msgBox.exec();
 			 if (result == QMessageBox::Yes) {
 				 // 用户点击了确认按钮，关闭窗口
 				 event->accept();

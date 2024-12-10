@@ -15,7 +15,18 @@ connectServer::connectServer(QMainWindow*parent)
 
   connect(this, &connectServer::send_ipAndPort, itemInfo, &connectItemInfo::reveive_ipAndPort);
   connect(subThread, &QThread::started, itemInfo, &connectItemInfo::Thread_deal);
-
+  
+  //¶ÁÈ¡ÓïÑÔ
+  QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
+  QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
+  settings->beginGroup("Idus");
+  system_language = settings->value("system_language").toString();
+  if (system_language == "en")
+  {
+	  ui.label_2->setText("Port£º");
+	  ui.pushButton_create_server->setText("Create server");
+	  setWindowTitle("CONNECT");
+  }
 	//this->setWindowFlags( Qt::WindowTitleHint);
 }
 

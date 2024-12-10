@@ -12,13 +12,6 @@ industrialVision::industrialVision(QWidget *parent)
 	: QMainWindow(parent)
 {
     industrialVision::ui.setupUi(this);
-
-	QFont myFont;
-	//设置文字大小
-	//myFont.setPointSize(30);
-	//设置文字字体
-	setFont(myFont);
-
 	ui.menuBar->setStyleSheet("QMenu::item{padding:5px 15px;margin:1px 2px;color:#222222;font - size:40px;}");
 	ui.lcdNumber->setDigitCount(8);
 	ui.lcdNumber->setSegmentStyle(QLCDNumber::Flat);
@@ -71,10 +64,21 @@ industrialVision::industrialVision(QWidget *parent)
 	//connect(action_shizixian, &QAction::triggered,
 	//	this, &industrialVision::openShiShiPiPei);
 
-
+	//读取语言
+	QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
+	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
+	settings->beginGroup("Idus");
+	system_language = settings->value("system_language").toString();
 
 	action_RestoreWindow = new QAction();
-	action_RestoreWindow->setText("实时显示");
+	if (system_language == "zh")
+	{
+		action_RestoreWindow->setText(tr("实时显示"));
+	}else if (system_language == "en")
+	{
+		action_RestoreWindow->setText(tr("SmallWindow"));
+	}
+
 	action_RestoreWindow->setFont(QFont(tr("宋体"), 40, QFont::Bold, false));
 	ui.menuBar->addAction(action_RestoreWindow);
 	connect(action_RestoreWindow, &QAction::triggered,
@@ -82,7 +86,17 @@ industrialVision::industrialVision(QWidget *parent)
 
 	action_SetModelFile = new QAction();
 	action_SetModelFile->setFont(QFont(tr("宋体"), 60, QFont::Bold, false));//宋体26号，加粗，斜体字
-    action_SetModelFile->setText("工程导入");
+    action_SetModelFile->setText(tr("工程导入"));
+	action_RestoreWindow = new QAction();
+	if (system_language == "zh")
+	{
+		action_SetModelFile->setText(tr("工程导入"));
+	}
+	else if (system_language == "en")
+	{
+		action_SetModelFile->setText(tr("Import"));
+	}
+
     ui.menuBar->addAction(action_SetModelFile);
     connect(action_SetModelFile, &QAction::triggered,
         this, &industrialVision::setModelXMLFile);
@@ -90,42 +104,94 @@ industrialVision::industrialVision(QWidget *parent)
 
 	 
 	action_SetAttributes = new QAction();
-	action_SetAttributes->setText("图标设置");
+	if (system_language == "zh")
+	{
+		action_SetAttributes->setText(tr("图标设置"));
+	}
+	else if (system_language == "en")
+	{
+		action_SetAttributes->setText(tr("Icon"));
+	}
 	action_SetAttributes->setFont(QFont(tr("宋体"),40, QFont::Bold, false));
 	connect(action_SetAttributes, &QAction::triggered,
 		this, &industrialVision::action_AttributesSet);
 
 	action_password = new QAction();
-	action_password->setText("密码设置");
+	if (system_language == "zh")
+	{
+		action_password->setText(tr("密码设置"));
+	}
+	else if (system_language == "en")
+	{
+		action_password->setText(tr("Password"));
+	}
 	action_password->setFont(QFont(tr("宋体"), 40, QFont::Bold, false));
 	connect(action_password, &QAction::triggered,
 		this, &industrialVision::actionPasswordAction);
 
 	 action_setLogoPath = new QAction();
-	action_setLogoPath->setText("日志设置");
+	if (system_language == "zh")
+	{
+		action_setLogoPath->setText(tr("日志设置"));
+	}
+	else if (system_language == "en")
+	{
+		action_setLogoPath->setText(tr("Log"));
+	}
 	action_setLogoPath->setFont(QFont(tr("宋体"), 40, QFont::Bold, false));
 	connect(action_setLogoPath, &QAction::triggered,
 		this, &industrialVision::actionLogAndPathAction);
 
 
 	action_BasicSettings = new QAction();
-	action_BasicSettings->setText("通用设置");
+	if (system_language == "zh")
+	{
+		action_BasicSettings->setText(tr("通用设置"));
+	}
+	else if (system_language == "en")
+	{
+		action_BasicSettings->setText(tr("Setting"));
+	}
 	action_BasicSettings->setFont(QFont(tr("宋体"), 40, QFont::Bold, false));
 	connect(action_BasicSettings, &QAction::triggered,
 		this, &industrialVision::actionBasicSettingsAction);
 
-	SettingMenus = new QMenu("&设置", ui.menuBar);
-	ui.menuBar->addMenu(SettingMenus);
+	if (system_language == "zh")
+	{
+		SettingMenus = new QMenu(tr("&设置"), ui.menuBar);
+		ui.menuBar->addMenu(SettingMenus);
+	}
+	else if (system_language == "en")
+	{
+		SettingMenus = new QMenu(tr("Setting"), ui.menuBar);
+		ui.menuBar->addMenu(SettingMenus);
+	}
+
 	
 	auto action_userSwitch = new QAction();
-	action_userSwitch->setText("用户切换");
+	action_userSwitch->setText(tr("用户切换"));
+	if (system_language == "zh")
+	{
+		action_userSwitch->setText(tr("用户切换"));
+	}
+	else if (system_language == "en")
+	{
+		action_userSwitch->setText(tr("Switch"));
+	}
 	action_userSwitch->setFont(QFont(tr("宋体"), 40, QFont::Bold, false));
 	ui.menuBar->addAction(action_userSwitch);
 	connect(action_userSwitch, &QAction::triggered,
 		this, &industrialVision::actionuserSwitch);
 
 	auto action_helpInfo = new QAction();
-    action_helpInfo->setText("帮助");
+	if (system_language == "zh")
+	{
+		action_helpInfo->setText(tr("帮助"));
+	}
+	else if (system_language == "en")
+	{
+		action_helpInfo->setText(tr("Help"));
+	}
     action_helpInfo->setFont(QFont(tr("宋体"),40, QFont::Bold, false));
 	ui.menuBar->addAction(action_helpInfo);
 	connect(action_helpInfo, &QAction::triggered,
@@ -153,20 +219,79 @@ industrialVision::industrialVision(QWidget *parent)
 	//白色填充左上角图标
     setWindowTitle("V-Gp System V1.0");
 	setWindowIcon(QIcon("icon.ico"));
-     AppendText("系统启动成功",Green);
+	 if (system_language == "zh")
+	 {
+		 AppendText(tr("系统启动成功"), Green);
+	 }
+	 else if (system_language == "en")
+	 {
+		 AppendText(tr("System on Success"), Green);
+	 }
+
+	 //设置当前界面
+	 if (system_language == "en")
+	 {
+		 //设置当前界面
+		 ui.pushButton_continuousOperation->setText("Start");
+		 ui.pushButton_editVision->setText("Templates");
+		 ui.pushButton_manualOperation->setText("Locked state");
+		 ui.pushButton_connect->setText("Communication");
+		 ui.pushButton_stopOperation->setText("Stop");
+		 ui.label_9->setText("State");
+		 ui.textEdit_2->setText("Logging");
+		 ui.label_8->setText("Camera parameters");
+		 ui.get_camera_Parameter_button->setText("Get parameters");
+		 ui.set_camera_Parameter_button->setText("Set parameters");
+		 ui.label_10->setText("Camera model:");
+		 ui.label_5->setText("Image width:");
+		 ui.label_6->setText("Image height:");
+		 ui.label_4->setText("Pixel format:");
+		 ui.label->setText("Exposure time:");
+		 ui.label_2->setText("Camera gain:");
+		 ui.label_3->setText("Frame rate:");
+		 ui.label_7->setText("Score setting:");
+
+		 action_SetModelFile->setText("Import");
+		 action_RestoreWindow->setText("Display");
+		 action_SetAttributes->setText("Icon");
+		 action_password->setText("Password");
+		 action_setLogoPath->setText("Log");
+		 SettingMenus->setTitle("Setting");
+		 action_userSwitch->setText("Switching");
+		 action_helpInfo->setText("Help");
+		 ui.run_time_label->setText("Run time");
+		 ui.lineEdit->setText("Runs");
+		 ui.pushButton_shapematch->setText("Shape");
+	 }
 }
 
 
  void industrialVision::click_continuousOperation() {
      
-     AppendText("点击连续工作按钮",Green);
+    // AppendText(tr("点击连续工作按钮"),Green);
+
 	 if (m_bOpenDevice) {
-		 AppendText("相机已经启动", Red);
-		 QMessageBox::critical(this, "错误信息", "相机已经启动");
+		 if (system_language == "zh")
+		 {
+			 AppendText(tr("相机已经启动"), Red);
+			 QMessageBox::critical(this, "错误信息", "相机已经启动");
+		 }
+		 else if (system_language == "en")
+		 {
+			 AppendText(tr("The camera has been started"), Red);
+			 QMessageBox::critical(this, "ERROR", "The camera has been started");
+		 }
 		 return;
 	 }
 	 if (!DisplayWindowInitial()){
-		 AppendText("相机状态异常", Red);
+		 if (system_language == "zh")
+		 {
+			 AppendText("相机状态异常", Red);
+		 }
+		 else if (system_language == "en")
+		 {
+			 AppendText("Camera status abnormal", Red);
+		 }
 		 return;
 	 }
 	 //设置按钮权限
@@ -232,8 +357,17 @@ industrialVision::industrialVision(QWidget *parent)
 			 }
 			 else
 			 {
-				 AppendText("无法识别的设备", Red);
-				 QMessageBox::critical(this, "错误信息", "无法识别的设备");
+				 
+				 if (system_language == "zh")
+				 {
+					 AppendText("无法识别的设备", Red);
+					 QMessageBox::critical(this, "错误信息", "无法识别的设备");
+				 }
+				 else if (system_language == "en")
+				 {
+					 AppendText("Unrecognized device", Red);
+					 QMessageBox::critical(this, "ERROR", "Unrecognized device");
+				 }
 			 }
 		 }
 
@@ -282,10 +416,24 @@ void industrialVision::receive_ServerCreateInfo(QString flag)
 {
 	if (flag == "TRUE")
 	{
-		AppendText("服务端开启成功", Green);
+		if (system_language == "zh")
+		{
+			AppendText("服务端开启成功", Green);
+		}
+		else if (system_language == "en")
+		{
+			AppendText("Server successfully opened", Green);
+		}
 		return;
 	}
-	AppendText("服务端已经开启或者开启失败", Red);
+	if (system_language == "zh")
+	{
+		AppendText("服务端已经开启或者开启失败", Red);
+	}
+	else if (system_language == "en")
+	{
+		AppendText("The server has already been turned on or failed to be turned on", Green);
+	}
 }
 
 //void industrialVision::click_editVision()
@@ -324,7 +472,14 @@ void industrialVision::click_editVision()
 
 	nccmatchWindow.show();
     //更新xml文件
-    AppendText("打开视觉模板界面",Green);
+	if (system_language == "zh")
+	{
+		AppendText("打开视觉模板界面", Green);
+	}
+	else if (system_language == "en")
+	{
+		AppendText("Open the visual template interface", Green);
+	}
 }
 
 
@@ -394,20 +549,48 @@ void industrialVision::createOncePattern()
 {		
 		  if (resultPointF.x() != -m_width && resultPointF.y() != -m_height)
       {
-          AppendText("【提示】触发接受匹配完成,匹配成功",Green);
+		  if (system_language == "zh")
+		  {
+			  AppendText("【提示】触发接受匹配完成,匹配成功", Green);
+		  }
+		  else if (system_language == "en")
+		  {
+			  AppendText("[Tip] Trigger acceptance of matching completed, matching successful", Green);
+		  }
 		  char xxx[10];
 		  char yyy[10];
 		  sprintf(xxx, "%.1f", finall_Total_Result.ptCenter.x);
 		  sprintf(yyy, "%.1f", finall_Total_Result.ptCenter.y);
 
-          QString  resultFont  = "x:坐标";
-
+		  QString  resultFont;
+		  if (system_language == "zh")
+		  {
+			  resultFont.append("x:坐标");
+		  }
+		  else if (system_language == "en")
+		  {
+			  resultFont.append("x:POS-");
+		  }
           resultFont.append(QString::fromLocal8Bit(xxx));
 		  resultFont.append(",");
-		  resultFont.append("y:坐标");
+		  if (system_language == "zh")
+		  {
+			  resultFont.append("y:坐标");
+		  }
+		  else if (system_language == "en")
+		  {
+			  resultFont.append("y:POS-");
+		  }
 		  resultFont.append(QString::fromLocal8Bit(yyy));
 		  resultFont.append(".");
-		  resultFont.append("匹配用时:");
+		  if (system_language == "zh")
+		  {
+			  resultFont.append("匹配用时:");
+		  }
+		  else if (system_language == "en")
+		  {
+			  resultFont.append("time:");
+		  }
 		  resultFont.append(QString::number(matchTime_total));
 
 		  AppendText(resultFont,Green);
@@ -418,7 +601,14 @@ void industrialVision::createOncePattern()
           ui.texstBrowser_titleStatus->setPixmap(QPixmap("Image/industory/OK.png"));
 	  }
       else {
-          AppendText("【错误】触发接受匹配完成,匹配失败",Red);
+			  if (system_language == "zh")
+			  {
+				  AppendText("【错误】触发接受匹配完成,匹配失败", Red);
+			  }
+			  else if (system_language == "en")
+			  {
+				  AppendText("[Error] Triggered acceptance of matching completion, matching failed", Red);
+			  }
           ui.texstBrowser_titleStatus->clear();
 		  total_count++;
 
@@ -464,7 +654,14 @@ void industrialVision::addTextBrower(QString text,QString flag)
 		bool res = dir.mkpath(logDirectory);
 		if (res != true)
 		{
-			ui.textBrowser_record->append("【提示】log文件夹创建失败。\r\n");
+			if (system_language == "zh")
+			{
+				ui.textBrowser_record->append("【提示】log文件夹创建失败。\r\n");
+			}
+			else if (system_language == "en")
+			{
+				ui.textBrowser_record->append("[Tip] The creation of the log folder has failed.\r\n");
+			}
 			return;
 		}
 	}
@@ -473,7 +670,14 @@ void industrialVision::addTextBrower(QString text,QString flag)
 	QFile file(filename);
 	if (!file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
 	{
-		ui.textBrowser_record->append("【提示】日志文件打开失败。\r\n"+ file.fileName());
+		if (system_language == "zh")
+		{
+			ui.textBrowser_record->append("【提示】日志文件打开失败。\r\n" + file.fileName());
+		}
+		else if (system_language == "en")
+		{
+			ui.textBrowser_record->append("[Tip] Failed to open log file.\r\n");
+		}
 		return;//打开文件失败
 	}
 	file.write(now.toUtf8()+"\r\n");
@@ -483,18 +687,50 @@ void industrialVision::addTextBrower(QString text,QString flag)
 
 void industrialVision::getXMLPATH(QString xmlPath)
 {
-    AppendText("读取xml路径:"+ xmlPath,Green);
+	if (system_language == "zh")
+	{
+		AppendText("读取INI路径:" + xmlPath, Green);
+	}
+	else if (system_language == "en")
+	{
+		AppendText("Read INI path:" + xmlPath, Green);
+	}
     m_xmlpath = xmlPath;
 	if (read_info_from_ini(m_xmlpath)) {
-	AppendText("加载xml模板成功" + xmlPath, Green);
+	if (system_language == "zh")
+	{
+		AppendText("加载xml模板成功" + xmlPath, Green);
+
+	}
+	else if (system_language == "en")
+	{
+		AppendText("Successfully loaded XML template" + xmlPath, Green);
+
+	}
 	}
 	else {
 		if (!m_processingThread->getmodelAndRealSclar())
 		{
-			AppendText("XML 模板图与当前相机展示的图片比例不一致,无法匹配" + xmlPath, Gray);
+			if (system_language == "zh")
+			{
+				AppendText("INI 模板图与当前相机展示的图片比例不一致,无法匹配" + xmlPath, Gray);
+
+			}
+			else if (system_language == "en")
+			{
+				AppendText("The scale of the INI template image does not match the image displayed by the current camera, making it impossible to match" + xmlPath, Gray);
+			}
 			return;
 		}
-		AppendText("加载xml模板失败" + xmlPath, Red);
+		if (system_language == "zh")
+		{
+			AppendText("加载INI模板失败" + xmlPath, Red);
+
+		}
+		else if (system_language == "en")
+		{
+			AppendText("Failed to load XML template" + xmlPath, Red);
+		}
 	}
 }
 void industrialVision::AppendText(const QString& text,QString flag)
@@ -527,10 +763,21 @@ void industrialVision::restoreWindow()
 	for (int i = 0; i < actions.size(); i++)
 	{
 		QAction* actionItem = actions.at(i);
-		if (actionItem->text() == "退出实时显示")
+		if (system_language == "zh")
 		{
-			actionItem->setText("实时显示");
-			continue;
+			if (actionItem->text() == "退出实时显示")
+			{
+				actionItem->setText("实时显示");
+				continue;
+			}
+		}
+		else if (system_language == "en")
+		{
+			if (actionItem->text() == "QuitSmallWindow")
+			{
+				actionItem->setText("SmallWindow");
+				continue;
+			}
 		}
 		actionItem->setVisible(small_window_flag);
 	}
@@ -553,8 +800,6 @@ void industrialVision::restoreWindow()
 	setGeometry(originalGeometry);
 
     show();
-     //设置视频展示区域的比例
-   // setFixedSize(this->width(), this->height());
 
 }
 
@@ -630,7 +875,7 @@ void industrialVision::setCURRENT_ROLE(QString currentROle)
 	setWindowTitle(title);
 	SettingMenus->clear();
 	//增加设置界面,管理员和操作员分开
-	if (CURRENT_ROLE == ROLE_ADMIN)
+	if (CURRENT_ROLE == "ADMIN")
 	{
 		//图标设置                                                                                                                                                                                                                   
 		SettingMenus->addAction(action_setLogoPath);
@@ -673,22 +918,58 @@ void industrialVision::setModelXMLFile()
 			// 文件后缀名包含ini并发送数据
 			if (!read_info_from_ini(path))
 			{
-				QMessageBox::warning(nullptr, tr("Path"),
-					tr("INI模板图与当前相机展示的图片比例不一致,无法匹配"));
+				if (system_language == "zh")
+				{
+					QMessageBox::warning(nullptr, tr("Path"),
+						tr("INI模板图与当前相机展示的图片比例不一致,无法匹配"));
+				}
+				else if (system_language == "en")
+				{
+					QMessageBox::warning(nullptr, tr("Path"),
+						tr("The INI template image does not match the scale of the image displayed by the current camera, making it impossible to match"));
+				}
+		
 			}
 			else {
-				QMessageBox::warning(nullptr, tr("Path"),
-					tr("INI模板图导入成功"));
+				if (system_language == "zh")
+				{
+					QMessageBox::warning(nullptr, tr("Path"),
+						tr("INI模板图导入成功"));
+				}
+				else if (system_language == "en")
+				{
+					QMessageBox::warning(nullptr, tr("Path"),
+						tr("INI template image imported successfully"));
+				}
+
+				
 			}
 		}
 		else {
-			QMessageBox::warning(nullptr, tr("Path"),
-				tr("模板错误."));
+		
+			if (system_language == "zh")
+			{
+				QMessageBox::warning(nullptr, tr("Path"),
+					tr("模板错误."));
+			}
+			else if (system_language == "en")
+			{
+				QMessageBox::warning(nullptr, tr("Path"),
+					tr("Template error"));
+			}
 		}
     }
     else {
-        QMessageBox::warning(nullptr, tr("Path"),
-            tr("未选择INI模板."));
+		if (system_language == "zh")
+		{
+			QMessageBox::warning(nullptr, tr("Path"),
+				tr("未选择INI模板."));
+		}
+		else if (system_language == "en")
+		{
+			QMessageBox::warning(nullptr, tr("Path"),
+				tr("INI template not selected"));
+		}
     }
 }
 
@@ -721,7 +1002,15 @@ void industrialVision::click_manualOperation()
 
 		//将字体颜色修改为红色
 		ui.pushButton_manualOperation->setStyleSheet("/* 证券 */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* 背景/4 页签选中色 */ background: #285790; color: rgb(255, 0, 0); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
-		ui.pushButton_manualOperation->setText("解锁状态");
+		
+		if (system_language == "zh")
+		{
+			ui.pushButton_manualOperation->setText("解锁状态");
+		}
+		else if (system_language == "en")
+		{
+			ui.pushButton_manualOperation->setText("Unlock status");
+		}
 
 		//锁定状态,设置当前旋转方向为默认方向
 		defaultRotateIndexValue = m_rotateIndexInt;
@@ -738,7 +1027,14 @@ void industrialVision::click_manualOperation()
 
 		//将字体颜色修改为默认颜色
 		ui.pushButton_manualOperation->setStyleSheet("/* 证券 */ QPushButton::hover { background-color: #1450C7; } position: absolute; left: 1px; top: 67px; width: 190px; height: 61px; opacity: 1; /* 背景/4 页签选中色 */ background: #285790; color: rgb(255, 255, 255); box-sizing: border-box; border: 1px solid ; border-image: linear-gradient(180deg, rgba(35,102,211,0.00) 0%, #3797FE 100%) 1;");
-		ui.pushButton_manualOperation->setText("锁定状态");
+		if (system_language == "zh")
+		{
+			ui.pushButton_manualOperation->setText("锁定状态");
+		}
+		else if (system_language == "en")
+		{
+			ui.pushButton_manualOperation->setText("Lock status");
+		}
 	}
 	defaultCamcare = !defaultCamcare;
 }
@@ -1014,13 +1310,27 @@ bool industrialVision::DisplayWindowInitial()
 	int nRet = CMvCamera::EnumDevices(MV_GIGE_DEVICE | MV_USB_DEVICE, &m_stDevList);
 	if (MV_OK != nRet)
 	{
-		QMessageBox::warning(this, "警告", "请检查相机是否正常连接！");
+		if (system_language == "zh")
+		{
+			QMessageBox::warning(this, "警告", "请检查相机是否正常连接！");
+		}
+		else if (system_language == "en")
+		{
+			QMessageBox::warning(this, "warn！", "Please check if the camera is connected properly！");
+		}
 		return false;
 	}
 	 int m_deviceNum = m_stDevList.nDeviceNum;
 	if (m_deviceNum !=1)
 	{
-		QMessageBox::warning(this, "警告", "请检查相机是否正常连接！");
+		if (system_language == "zh")
+		{
+			QMessageBox::warning(this, "警告", "请检查相机是否正常连接！");
+		}
+		else if (system_language == "en")
+		{
+			QMessageBox::warning(this, "warn！", "Please check if the camera is connected properly！");
+		}
 		return false;
 	}
 	for (int i = 0; i < m_deviceNum; i++)
@@ -1032,7 +1342,14 @@ bool industrialVision::DisplayWindowInitial()
 			{
 				//delete m_pcMyCamera;
 				//m_pcMyCamera = NULL;
-				QMessageBox::warning(this, "警告", "打开设备失败！");
+				if (system_language == "zh")
+				{
+					QMessageBox::warning(this, "警告", "打开设备失败！");
+				}
+				else if (system_language == "en")
+				{
+					QMessageBox::warning(this, "warn！", "Failed to open device！");
+				}
 				return false;
 			}
 			m_cameraThread->setCameraPtr(m_pcMyCamera);
@@ -1235,26 +1552,54 @@ void industrialVision::OnBnClickedSetParameterButton()
 	if (nRet != MV_OK)
 	{
 		bIsSetSucceed = false;
-		AppendText("设置曝光时间失败", Red);
-
+		if (system_language == "zh")
+		{
+			AppendText("设置曝光时间失败", Red);
+		}
+		else if (system_language == "en")
+		{
+			AppendText("Failed to set exposure time", Red);
+		}
 	}
 	nRet = SetGain();
 	if (nRet != MV_OK)
 	{
 		bIsSetSucceed = false;
-		AppendText("设置增益失败", Red);
+		if (system_language == "zh")
+		{
+			AppendText("设置增益失败", Red);
+		}
+		else if (system_language == "en")
+		{
+			AppendText("Failed to set gain", Red);
+		}
 	}
 	nRet = SetFrameRate();
 	if (nRet != MV_OK)
 	{
 		bIsSetSucceed = false;
-		AppendText("设置帧率失败", Red);
+		if (system_language == "zh")
+		{
+			AppendText("设置帧率失败", Red);
+		}
+		else if (system_language == "en")
+		{
+			AppendText("Failed to set frame rate", Red);
+		}
 
 	}
 
 	if (true == bIsSetSucceed)
 	{
-		AppendText("参数设置成功",Green);
+		if (system_language == "zh")
+		{
+			AppendText("参数设置成功", Green);
+		}
+		else if (system_language == "en")
+		{
+			AppendText("Parameter setting successful", Green);
+
+		}
 	}
 	//得分
 	QString String_m_grade = ui.grade_edit->text();
@@ -1421,10 +1766,21 @@ void industrialVision::smallwindow_button_click()
 	for (int i = 0; i < actions.size(); i++)
 	{
 		QAction* actionItem = actions.at(i);
-		if (actionItem->text() == "实时显示")
-		{                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
-			actionItem->setText("退出实时显示");
-            continue;
+		if (system_language == "zh")
+		{
+			if (actionItem->text() == "实时显示")
+			{
+				actionItem->setText("退出实时显示");
+				continue;
+			}
+		}
+		else if (system_language == "en")
+		{
+			if (actionItem->text() == tr("SmallWindow"))
+			{
+				actionItem->setText(tr("QuitSmallWindow"));
+				continue;
+			}
 		}
         actionItem->setVisible(small_window_flag);
 	}
@@ -1478,7 +1834,14 @@ void industrialVision::click_shapeMatch()
 	connect(&shapeMainWindow, &MainWindow::getImageFromCamera, this, &industrialVision::getImageOneFrame, Qt::UniqueConnection);
 	
 	shapeMainWindow.show();
-	AppendText("打开形状模板界面", Green);
+	if (system_language == "zh")
+	{
+		AppendText("打开形状模板界面", Green);
+	}
+	else if (system_language == "en")
+	{
+		AppendText("Open the shape template interface", Green);
+	}
 
 }
 
@@ -1502,12 +1865,26 @@ void industrialVision::updateTime()
 
 void industrialVision::slot_modelPictureReadFlag()
 {
-	AppendText("模板图读取过程中错误,请重新设置模板图,或者模板图路径错误", Red);
+	if (system_language == "zh")
+	{
+		AppendText("模板图读取过程中错误,请重新设置模板图,或者模板图路径错误", Red);
+	}
+	else if (system_language == "en")
+	{
+		AppendText("There was an error during the template image reading process. Please reset the template image or the template image path is incorrect", Green);
+	}
 }
 
 void industrialVision::getRotateValue(int x)
 {
-	AppendText("旋转图像...", Green);
+	if (system_language == "zh")
+	{
+		AppendText("旋转图像...", Green);
+	}
+	else if (system_language == "en")
+	{
+		AppendText("rotate image...", Green);
+	}
 	m_cameraThread->setRotateIndex(x);
 	//设置展示图片的长宽,用于模板读取的比例设置
 	
@@ -1519,7 +1896,14 @@ void industrialVision::getRotateValue(int x)
 	if(!m_xmlpath.isEmpty()){
 	if (!read_info_from_ini(m_xmlpath)) {
 		if (!m_processingThread->getmodelAndRealSclar()) {
-			AppendText("INI模板图与当前相机展示的图片比例不一致,无法匹配" + m_xmlpath, Gray);
+			if (system_language == "zh")
+			{
+				AppendText("INI模板图与当前相机展示的图片比例不一致,无法匹配" + m_xmlpath, Gray);
+			}
+			else if (system_language == "en")
+			{
+				AppendText("The INI template image does not match the scale of the image displayed by the current camera, making it impossible to match", Green);
+			}
 			return;
 		}
 	}
@@ -1577,7 +1961,14 @@ int industrialVision::CloseDevice()
 
 void industrialVision::reinitialize() {
 	//设置日志
-	AppendText("切换用户按钮点击", Green);
+	if (system_language == "zh")
+	{
+		AppendText("切换用户按钮点击", Green);
+	}
+	else if (system_language == "en")
+	{
+		AppendText("Switch user button click", Green);
+	}
 	setWindowTitle("V-Gp System V1.0");
 	//重新加载设置界
 	//重新设置标题

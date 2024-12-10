@@ -134,6 +134,6 @@ private:
     QList<cv::Point> resultLinePoint;
 
 	cv::Point2f saveIntersection;
-
+    QString system_language;
 };
 #endif // MAINWINDOW_H

@@ -47,6 +47,30 @@ NCCMainWindow::NCCMainWindow(QWidget* parent)
 	ui->action_polygon->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
 
 	//信号,连接完成处理
+		//读取语言
+	QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
+	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
+	settings->beginGroup("Idus");
+	system_language = settings->value("system_language").toString();
+
+	if (system_language == "en")
+	{
+		ui->action_choosepicture->setText("Image");
+		ui->action_zoomin->setText("Amplify");
+		ui->action_zoomout->setText("Reduce");
+		ui->action_1_to_1->setText("Adaptive");
+		ui->action_fitwin->setText("Original");
+		ui->action_rect->setText("Search");
+		ui->action_rotaterect->setText("Feature");
+		ui->action_polygon->setText("Polygon");
+		ui->action_circle->setText("Circle");
+		ui->action_calibercircle->setText("Point");
+		ui->action_ringexpansion->setText("Save");
+		ui->action_caliberline->setText("Preview");
+		ui->action_concircle->setText("Delete");
+		ui->groupBox->setTitle("Operate");
+		setWindowTitle("TemplateMatching");
+	}
 }
 
 NCCMainWindow::~NCCMainWindow()
@@ -179,6 +203,7 @@ void NCCMainWindow::on_action_choosepicture_triggered()
 	//ui->graphicsView->fitInView(bounds, Qt::KeepAspectRatio);
 	//state_flag_maindow = CHOOSE_PICTURE;
 
+
 	emit getImageFromCamera("patternMatch");
 }
 
@@ -297,15 +322,38 @@ void NCCMainWindow::on_action_ringexpansion_triggered()
 {
 	int item = 0;
 	//判断当前特征区域的标志
-	int pattern_index = getListItem("特征区域");
-	if (pattern_index ==0)
+	int pattern_index;
+
+	if (system_language == "zh")
+	{
+		pattern_index = getListItem("特征区域");
+	}
+	else if (system_language == "en")
+	{
+		pattern_index = getListItem("feature");
+	}
+
+	if (pattern_index <=0)
 	{
 		//没有设置特征区域
 		return;
 	}
-	int pattern_rect_index = getListItem("矩形");
-	int pattern_polygon_index = getListItem("多边形");
-	int pattern_circle_index = getListItem("圆型");
+	int pattern_rect_index;
+	int pattern_polygon_index;
+	int pattern_circle_index;
+
+	if (system_language == "zh")
+	{
+		pattern_rect_index = getListItem("矩形");
+		pattern_polygon_index = getListItem("多边形");
+		pattern_circle_index = getListItem("圆型");
+	}
+	else if (system_language == "en")
+	{
+		pattern_circle_index = getListItem("circle");
+		pattern_rect_index = getListItem("rectangle");
+		pattern_polygon_index = getListItem("polygon");
+	}
 
 	if (pattern_rect_index != -1)
 	{
@@ -335,7 +383,17 @@ void NCCMainWindow::on_action_ringexpansion_triggered()
 	settings->setValue("source_width", ImageItem->pixmap().width());
 	settings->setValue("source_height", ImageItem->pixmap().height());
 
-	int source_rect_index = getListItem("搜索区域");
+	int source_rect_index;
+
+	if (system_language == "zh")
+	{
+		 source_rect_index = getListItem("搜索区域");
+
+	}
+	else if (system_language == "en")
+	{
+		 source_rect_index = getListItem("source");
+	}
 	bee_rect* source_rect_info_item;
 	if (source_rect_index == -1)
 	{
@@ -397,7 +455,16 @@ void NCCMainWindow::on_action_ringexpansion_triggered()
 
 	}
 	//保存输出点
-	int source_point_index = getListItem("输出点");
+	int source_point_index;
+	if (system_language == "zh")
+	{
+		source_point_index = getListItem("输出点");
+
+	}
+	else if (system_language == "en")
+	{
+		source_point_index = getListItem("point");
+	}
 
 	if (source_point_index != -1)
 	{
@@ -438,7 +505,15 @@ void NCCMainWindow::on_action_ringexpansion_triggered()
 	QImage matSrcImage = ImageItem->pixmap().toImage();
 	matSrcImage.save(fullpath, "BMP", 100);
 
-	QMessageBox::warning(0, "通知", "保存成功");
+	if (system_language == "zh")
+	{
+		QMessageBox::warning(0, "通知", "保存成功");
+
+	}
+	else if (system_language == "en")
+	{
+		QMessageBox::warning(0, "Info", "Successfully saved!");
+	}
 	//发送当前的文档路径给前端路径
 	emit sendINIPath(path);
 }
@@ -453,14 +528,30 @@ void NCCMainWindow::on_action_caliberline_triggered()
 	double source_y = 0;
 	double source_width = really_imageItem_width;
 	double source_height;
-	int pattern_index = getListItem("特征区域");
+	int pattern_index;
+	if (system_language == "zh")
+	{
+		pattern_index = getListItem("特征区域");
+	}
+	else if (system_language == "en")
+	{
+		pattern_index = getListItem("feature");
+	}
 	if (pattern_index == -1)
 	{
 		//没有设置特征区域
 		return;
 	}
 	//获得搜索区域
-		int source_rect_index = getListItem("搜索区域");
+		int source_rect_index;
+		if (system_language == "zh")
+		{
+			source_rect_index = getListItem("搜索区域");
+		}
+		else if (system_language == "en")
+		{
+			source_rect_index = getListItem("source");
+		}
 		bee_rect* source_rect_info_item;
 	if (source_rect_index == -1)
 	{
@@ -488,7 +579,15 @@ void NCCMainWindow::on_action_caliberline_triggered()
 	}
 
 	//获取特征区域
-	int pattern_index_rect = getListItem("矩形");
+	int pattern_index_rect;
+	if (system_language == "zh")
+	{
+		pattern_index_rect = getListItem("矩形");
+	}
+	else if (system_language == "en")
+	{
+		pattern_index_rect = getListItem("rectangle");
+	}
 	if (pattern_index_rect != -1)
 	{
 		bee_rect*  pattern_rect_info_item = (bee_rect*)source_rect_List->at(pattern_index_rect);
@@ -637,31 +736,71 @@ void NCCMainWindow::createRECT(int type, int index)
 {
 	if (type==1)
 	{
-		QString itemValue = "搜索区域-";
+		QString itemValue;
+		if (system_language == "zh")
+		{
+			 itemValue.append("搜索区域-");
+		}
+		else if (system_language == "en")
+		{
+			itemValue.append("source-");
+		}
 		itemValue.append(QString::number(index));
 		ui->listWidget->addItem(itemValue);
 		source_rect_List->append(source_rect_info);
 	}
 	else if(type == 2) {
-		QString itemValue = "特征区域-矩形-";
+		QString itemValue;
+		if (system_language == "zh")
+		{
+			itemValue.append("特征区域-矩形-");
+		}
+		else if (system_language == "en")
+		{
+			itemValue.append("feature-rectangle-");
+		}
 		itemValue.append(QString::number(index));
 		ui->listWidget->addItem(itemValue);
 		source_rect_List->append(ncc_patten_rect_info);
 	}
 	else if (type == 3) {
-		QString itemValue = "特征区域-多边形-";
+		QString itemValue;
+		if (system_language == "zh")
+		{
+			itemValue.append("特征区域-多边形-");
+		}
+		else if (system_language == "en")
+		{
+			itemValue.append("feature-polygon-");
+		}
 		itemValue.append(QString::number(index));
 		ui->listWidget->addItem(itemValue);
 		source_rect_List->append(source_polygon_info);
 	}
 	else if (type == 4) {
-		QString itemValue = "特征区域-圆形-";
+		QString itemValue;
+		if (system_language == "zh")
+		{
+			itemValue.append("特征区域-圆形-");
+		}
+		else if (system_language == "en")
+		{
+			itemValue.append("feature-circle-");
+		}
 		itemValue.append(QString::number(index));
 		ui->listWidget->addItem(itemValue);
 		source_rect_List->append(source_circle_info);
 	}
 	else if (type == 5) {
-		QString itemValue = "输出点-";
+		QString itemValue;
+		if (system_language == "zh")
+		{
+			itemValue.append("输出点-");
+		}
+		else if (system_language == "en")
+		{
+			itemValue.append("point-");
+		}
 		itemValue.append(QString::number(index));
 		ui->listWidget->addItem(itemValue);
 		source_rect_List->append(source_point_info);

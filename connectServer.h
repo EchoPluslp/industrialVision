@@ -31,7 +31,7 @@ private:
 	Ui::connectServer ui;
 	connectItemInfo* itemInfo  = new connectItemInfo(this);
 	QThread* subThread = new QThread(this);
-
+	QString system_language;
 };
 
 #endif

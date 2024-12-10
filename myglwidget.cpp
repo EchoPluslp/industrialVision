@@ -3,19 +3,44 @@
 MyGLWidget::MyGLWidget(QWidget* parent)
 	: QOpenGLWidget(parent)
 {
+	QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
+	QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
+	settings->beginGroup("Idus");
+	system_language = settings->value("system_language").toString();
+
 	myText = "";
 	crosshair = new QAction(this);
-	crosshair->setText("十字线");
+	if (system_language == "zh")
+	{
+		crosshair->setText("十字线");
+	}
+	else if (system_language == "en")
+	{
+		crosshair->setText("Crosshair");
+	}
 	crosshair->setFont(QFont(tr("宋体"), 26, QFont::Bold, false));//宋体26号，加粗，斜体字
 	connect(crosshair, &QAction::triggered, this, &MyGLWidget::crosshair_Flag);
 
-
-	rotate = new QAction(tr("旋转"), this);
+	if (system_language == "zh")
+	{
+		rotate = new QAction(tr("旋转"), this);
+	}
+	else if (system_language == "en")
+	{
+		rotate = new QAction(tr("Rotate"), this);
+	}
 	rotate->setFont(QFont(tr("宋体"), 26, QFont::Bold, false));//宋体26号，加粗，斜体字
 	connect(rotate, &QAction::triggered, this, &MyGLWidget::rotate_Flag);
 
 	//connect(quitSreenShot, SIGNAL(triggered()), this, SLOT(MenuClose()));
-	restore = new QAction(tr("还原图片"), this);
+	if (system_language == "zh")
+	{
+		restore = new QAction(tr("还原图片"), this);
+	}
+	else if (system_language == "en")
+	{
+		restore = new QAction(tr("Restore image"), this);
+	}
 	restore->setFont(QFont(tr("宋体"), 26, QFont::Bold, false));//宋体26号，加粗，斜体字
 	connect(restore, &QAction::triggered, this, &MyGLWidget::restore_Flag);
 
@@ -61,27 +86,69 @@ void MyGLWidget::setMouseClickFlag(bool flag)
 	{
 
 		// 设置 crosshair 的文本并禁用点击触发事件
-		crosshair->setText(tr("十字线（已锁定）"));
+		if (system_language == "zh")
+		{
+			crosshair->setText(tr("十字线（已锁定）"));
+		}
+		else if (system_language == "en")
+		{
+			crosshair->setText(tr("Cross line (locked)"));
+		}
 		crosshair->setDisabled(flag);
 
 		//// 设置 rotate 的文本并禁用点击触发事件
-		rotate->setText(tr("旋转（已锁定）"));
+		if (system_language == "zh")
+		{
+			rotate->setText(tr("旋转（已锁定）"));
+		}
+		else if (system_language == "en")
+		{
+			rotate->setText(tr("Rotation (locked)"));
+		}
 		rotate->setDisabled(flag);
 
 		//// 设置 restore 的文本并禁用点击触发事件
-		restore->setText(tr("还原图片（已锁定）"));
+		if (system_language == "zh")
+		{
+			restore->setText(tr("还原图片（已锁定）"));
+		}
+		else if (system_language == "en")
+		{
+			restore->setText(tr("Restore image (locked)"));
+		}
 		restore->setDisabled(flag);
 	}else {
 		// 设置 crosshair 的文本并禁用点击触发事件
-		crosshair->setText(tr("十字线"));
+		if (system_language == "zh")
+		{
+			crosshair->setText(tr("十字线"));
+		}
+		else if (system_language == "en")
+		{
+			crosshair->setText(tr("Crosshair"));
+		}
 		crosshair->setDisabled(flag);
 
 		//// 设置 rotate 的文本并禁用点击触发事件
-		rotate->setText(tr("旋转"));
+		if (system_language == "zh")
+		{
+			rotate->setText(tr("旋转"));
+		}
+		else if (system_language == "en")
+		{
+			rotate->setText(tr("rotate"));
+		}
 		rotate->setDisabled(flag);
 
 		//// 设置 restore 的文本并禁用点击触发事件
-		restore->setText(tr("还原图片"));
+		if (system_language == "zh")
+		{
+			restore->setText(tr("还原图片"));
+		}
+		else if (system_language == "en")
+		{
+			restore->setText(tr("Restore image"));
+		}
 		restore->setDisabled(flag);
 	}
 }

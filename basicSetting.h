@@ -24,6 +24,7 @@ private:
 
 public slots:
 	void onRadioButtonClicked();
-
+	void onRadioButton_ZH_Clicked();
+	void onRadioButton_EN_Clicked();
 };
 #endif

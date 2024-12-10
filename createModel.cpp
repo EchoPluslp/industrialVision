@@ -569,7 +569,7 @@ void createModel::onCloseFileTriggered() {
     //判断是否关闭
 	QMessageBox::StandardButton reply;
 	reply = QMessageBox::question(this, "确认关闭", "确定要关闭文件吗?", QMessageBox::Yes | QMessageBox::No);
-
+  
 	if (reply == QMessageBox::Yes) {
 		// 用户选择了"是"
 		CloseImageCommand* closeImageCommand = new CloseImageCommand(fileController);

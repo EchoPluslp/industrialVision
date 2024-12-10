@@ -10,6 +10,8 @@
 #include  <QtMath>
 #include<QMenu>
 #include<QLabel>
+#include <QSettings>
+#include <QCoreApplication>
 #pragma execution_character_set("utf-8")
 extern int m_rotateIndexInt;
 extern int defaultRotateIndexValue;
@@ -59,6 +61,7 @@ private:
 	QAction* restore; //»¹Ô­Í¼Æ¬
 	QMenu* RightButtonMenu; //ÓÒ¼ü²Ëµ¥
 	const 	std::vector<int> angleArc = { 0,90,180,270 };
+	QString system_language;
 public slots:
 	void crosshair_Flag();
 	void rotate_Flag();

@@ -538,4 +538,7 @@
   <ItemGroup>
     <None Include="cpp.hint" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico" />
+  </ItemGroup>
 </Project>

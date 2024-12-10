@@ -43,6 +43,39 @@ MainWindow::MainWindow(QWidget *parent)
 	  ui->action_polygon->setFont(QFont("Microsoft YaHei", 15, QFont::Bold));
 	  saveIntersection.x = 10000;
 	  saveIntersection.y = 10000;
+	  
+	  //读取语言
+	  QString settingPath = QCoreApplication::applicationDirPath() + "/setting.ini";
+	  QSettings* settings = new QSettings(settingPath, QSettings::IniFormat);
+	  settings->beginGroup("Idus");
+	  system_language = settings->value("system_language").toString();
+	  
+	  if (system_language=="en")
+	  {
+		  ui->action_choosepicture->setText("Image");
+		  ui->action_zoomin->setText("Amplify");
+		  ui->action_zoomout->setText("Reduce");
+		  ui->action_1_to_1->setText("Adaptive");
+		  ui->action_fitwin->setText("Original");
+		  ui->action_calibercircle->setText("Circle");
+		  ui->action_ringexpansion->setText("Delelte");
+		  ui->action_caliberline->setText("Line");
+		  ui->action_caliberline->setText("LINE");
+		  ui->groupBox->setTitle("Circleparam");
+		  ui->groupBox_3->setTitle("Lineparam");
+		  ui->groupBox_2->setTitle("Test");
+		  ui->pushButton->setText("Test");
+		  ui->pushButton_save_currentInfo->setText("Save");
+		  ui->label_4->setText("number");
+		  ui->label_7->setText("projection");
+		  ui->label_5->setText("threshold");
+		  ui->label_8->setText("polarity");
+		  ui->label_9->setText("number");
+		  ui->label_10->setText("threshold");
+		  ui->label_11->setText("polarity");
+		  ui->groupBox_4->setTitle("IMAGE");
+		  setWindowTitle("ShapeMatching");
+	  }
 }
 
 

@@ -72,6 +72,7 @@ private:
 	QQueue<QTcpSocket*> clientQueue;
 	void processNextRequest();
 	int timestart = 1000;
+	QString system_language;
 signals:
 	void triggerPattern();
 	void logoString(QString message, QString color);
