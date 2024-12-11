@@ -252,16 +252,19 @@ void ProcessingThread::run()
 						double pointToLineDistance_1_realTime = m_plineCaliperGUI->pointToLineDistance(Intersection_1_realTime, pdLineStart_mainLine, pdLineEnd_mainLine);
 						double pointToLineDistance_2_realTime = m_plineCaliperGUI->pointToLineDistance(Intersection_2_realTime, pdLineStart_mainLine, pdLineEnd_mainLine);
 						//判断标准--------------------------------
-						double percentageA = 0.3;    // 10%
+						double percentageA = 0.2;    // 10%
 						double lowerBoundA_1 = angleDeg_1_newp * (1 - percentageA);
 						double upperBoundA_1 = angleDeg_1_newp * (1 + percentageA);
 						resultPointF.setX(1);
 						resultPointF.setY(1);
+						finall_Total_Result.pattern_flag = true;
 
 						if (angleDeg_1_realTime < lowerBoundA_1 || angleDeg_1_realTime > upperBoundA_1)
 						{
 							resultPointF.setX(100);
 							resultPointF.setY(100);
+							finall_Total_Result.pattern_flag = false;
+
 						}
 
 						double lowerBoundA_2 = angleDeg_2_newp * (1 - percentageA);
@@ -270,9 +273,11 @@ void ProcessingThread::run()
 						{
 							resultPointF.setX(101);
 							resultPointF.setY(101);
+							finall_Total_Result.pattern_flag = false;
+
 						} 
 						// 计算两个点之间的距离--------------------------------
-						double percentagePP = 0.3; // 10%
+						double percentagePP = 0.2; // 10%
 						double distance_1 = cv::norm(Intersection_1_realTime - Intersection_1_newP);
 						// 计算新的交点的最大允许距离
 						double maxDistance_1 = cv::norm(Intersection_1_newP) * percentagePP;
@@ -291,15 +296,19 @@ void ProcessingThread::run()
 						{
 							resultPointF.setX(103);
 							resultPointF.setY(103);
+							finall_Total_Result.pattern_flag = false;
+
 						}
 						// 计算点线之间的距离--------------------------------
-						double percentagePX = 0.3;    // 10%
+						double percentagePX = 0.2;    // 10%
 						double lowerBoundPX_1 = pointToLineDistance_1_newP * (1 - percentagePX);
 						double upperBoundPX_1 = pointToLineDistance_1_newP * (1 + percentagePX);
 						if (pointToLineDistance_1_realTime < lowerBoundPX_1 || pointToLineDistance_1_realTime > upperBoundPX_1)
 						{
 							resultPointF.setX(104);
 							resultPointF.setY(104);
+							finall_Total_Result.pattern_flag = false;
+
 						}
 
 						double lowerBoundPX_2 = pointToLineDistance_2_newP * (1 - percentagePX);
@@ -308,6 +317,7 @@ void ProcessingThread::run()
 						{
 							resultPointF.setX(105);
 							resultPointF.setY(105);
+							finall_Total_Result.pattern_flag = false;
 						}
 
 						//给temp画线
@@ -331,7 +341,6 @@ void ProcessingThread::run()
 						//发送给前端 
 						finall_Total_Result.ptCenter = cv::Point2d(resultPointF.x(), resultPointF.y());
 						finall_Total_Result.dMatchedAngle = 0;
-						finall_Total_Result.pattern_flag = true;
 						finall_Total_Result.flag = true;
 
 						emit signal_patternResult(resultPointF, 0);

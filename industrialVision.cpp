@@ -391,16 +391,16 @@ void industrialVision::getImageOneFrame(QString imageType) {
 
 void industrialVision::createOncePattern()
 {		
-	if (resultPointF.x()==1&& resultPointF.y()==1)
-	{
-		AppendText("【提示】触发接受匹配完成,匹配成功", Green);
-		return;
-	}
-	else {
-		AppendText("【错误】触发接受匹配完成,匹配失败", Red);
+	//if (resultPointF.x()==1&& resultPointF.y()==1)
+	//{
+	//	AppendText("【提示】触发接受匹配完成,匹配成功", Green);
+	//	return;
+	//}
+	//else {
+	//	AppendText("【错误】触发接受匹配完成,匹配失败", Red);
 
-	}
-		  if (resultPointF.x() != -m_width && resultPointF.y() != -m_height)
+	//}
+		  if (resultPointF.x() == 1 && resultPointF.y() == 1)
       {
           AppendText("【提示】触发接受匹配完成,匹配成功",Green);
 		  char xxx[10];
@@ -1032,7 +1032,7 @@ bool industrialVision::DisplayWindowInitial()
 	//}
 
 	int cameraIndex = -1;
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i <3; i++) {
 	MV_CC_DEVICE_INFO* pDeviceInfo = m_stDevList.pDeviceInfo[i];
 	unsigned char* modelName = pDeviceInfo->SpecialInfo.stGigEInfo.chSerialNumber;
 
